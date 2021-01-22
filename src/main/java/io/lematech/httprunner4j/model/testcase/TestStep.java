@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,17 +19,17 @@ import java.util.List;
  */
 @NoArgsConstructor
 @Data
-public class TestStep extends BaseModel{
+public class TestStep<T> extends BaseModel{
 
     private String name;
     /**
      * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）、列表，暂定义为键值对
      */
-    private List<HashMap<String, String>> extract;
+    private T extract;
     /**
      * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）或者纯对象
      */
-    private List<HashMap<String, String>> validate;
+    private List<Map<String, Object>> validate;
 
     /**
      * 1、http请独有

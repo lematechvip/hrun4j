@@ -1,8 +1,11 @@
 package io.lematech.httprunner4j.model.testcase;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.lematech.httprunner4j.model.base.BaseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 /**
  * @author lematech@foxmail.com
@@ -18,10 +21,11 @@ public class Config extends BaseModel {
     /**
      * 必填
      */
+    @JsonProperty(value = "name")
     private String name;
-
+    @JSONField(name = "base_url")
     private String baseUrl;
-
-    private Boolean verify;
+    @JsonProperty(value = "verify")
+    private Boolean verify ;
 
 }

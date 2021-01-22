@@ -14,7 +14,7 @@ import java.util.HashMap;
  * @publicWechat lematech
  */
 @Data
-public class CustomRequest {
+public class CustomRequest<T> {
     private HttpMethod method;
     private String url;
     /**
@@ -28,7 +28,7 @@ public class CustomRequest {
      * 2、request body in application/x-www-form-urlencoded format
      * 3、request body prepared with function, or reference a variable
      */
-    private HashMap<String,Object> data;
+    private T data;
 
     /**
      * TODO: 2021/1/20 可选键值对、字符串（包含变量引用或方法引用字符串），暂定义为键值对
