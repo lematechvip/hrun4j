@@ -15,6 +15,6 @@ public class HandlerTest {
     private Handler handler = new Handler();
     @Test
     public void testYamlLoad(){
-        handler.loadFile("testcase");
+        handler.load("demo_testcase_request.yml");
     }
 }

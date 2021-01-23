@@ -3,6 +3,11 @@
     base_url: http://127.0.0.1:5000
     variables:
       device_sn: ${gen_random_string(15)}
+- config:
+    name: testcase description
+    base_url: http://127.0.0.1:5000
+    variables:
+      device_sn: ${gen_random_string(15)}
 
 - test:
     name: /api/get-token

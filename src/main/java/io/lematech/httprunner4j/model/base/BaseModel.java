@@ -1,8 +1,11 @@
 package io.lematech.httprunner4j.model.base;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lematech@foxmail.com
@@ -17,14 +20,17 @@ public class BaseModel {
     /**
      * TODO: 2021/1/20 可选键值对、列表、字符串，暂定义为键值对
      */
+    @JsonProperty(value = "setup_hooks")
     private HashMap<String,Object> setupHooks;
     /**
      * TODO: 2021/1/20 可选键值对、列表、字符串，暂定义为键值对
      */
+    @JsonProperty(value = "teardown_hooks")
     private HashMap<String,Object> teardownHooks;
 
     /**
      * TODO: 2021/1/20 可选键值对、列表、字符串，暂定义为键值对
      */
-    private HashMap<String, Object> variables;
+    @JsonProperty(value = "variables")
+    private Map<String, Object> variables;
 }
