@@ -33,9 +33,14 @@ public class HandlerTest {
         }
         handler.load("demo_testcase_request.yml");
     }
+    @Test
+    public void testExecutor(){
+        Executor executor = new Executor();
+        executor.execute("demo_testcase_request.yml");
 
+    }
     @Test
     public  void testHttpClient(){
-        System.out.println(  PooledHttpClientUtil.getHttpClientInstance().doGet("https://postman-echo.com/get"));;
+        System.out.println(PooledHttpClientUtil.getHttpClientInstance().doGet("https://postman-echo.com/get"));;
     }
 }

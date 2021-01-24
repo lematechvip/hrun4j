@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -20,7 +21,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -31,12 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class PooledHttpClientUtil {
     private static final int DEFAULT_POOL_MAX_TOTAL = 200;
     private static final int DEFAULT_POOL_MAX_PER_ROUTE = 200;
 
-    private static final int DEFAULT_CONNECT_TIMEOUT = 500;
-    private static final int DEFAULT_CONNECT_REQUEST_TIMEOUT = 500;
+    private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
+    private static final int DEFAULT_CONNECT_REQUEST_TIMEOUT = 5000;
     private static final int DEFAULT_SOCKET_TIMEOUT = 2000;
 
     private PoolingHttpClientConnectionManager gcm = null;
@@ -148,6 +149,7 @@ public class PooledHttpClientUtil {
             }
 
             int statusCode = response.getStatusLine().getStatusCode();
+            log.info("响应状态码：{}",statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity entityRes = response.getEntity();
                 if (entityRes != null) {
@@ -200,6 +202,7 @@ public class PooledHttpClientUtil {
             }
 
             int statusCode = response.getStatusLine().getStatusCode();
+            log.info("响应状态码：{}",statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity entityRes = response.getEntity();
                 if (entityRes != null) {

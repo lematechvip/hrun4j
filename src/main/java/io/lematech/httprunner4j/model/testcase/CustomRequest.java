@@ -1,8 +1,8 @@
 package io.lematech.httprunner4j.model.testcase;
 
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.common.HttpMethod;
 import lombok.Data;
+
 import java.util.HashMap;
 
 /**
@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 @Data
 public class CustomRequest<T> {
-    private HttpMethod method;
+    private String method;
     private String url;
     /**
      * TODO: 2021/1/20 可选键值对（对象）
