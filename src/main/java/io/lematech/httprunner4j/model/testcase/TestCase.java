@@ -15,5 +15,5 @@ import java.util.List;
 @Data
 public class TestCase {
     private Config config;
-    private List<TestStep> teststeps;
+    private List<TestStep> testSteps;
 }

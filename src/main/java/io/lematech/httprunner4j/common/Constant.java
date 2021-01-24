@@ -9,4 +9,5 @@ package io.lematech.httprunner4j.common;
  * @publicWechat lematech
  */
 public class Constant {
+    public static final String ENV_FILE_NAME = ".env";
 }

@@ -1,9 +1,7 @@
 package io.lematech.httprunner4j.model.base;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
 import java.util.HashMap;
 import java.util.Map;
 
