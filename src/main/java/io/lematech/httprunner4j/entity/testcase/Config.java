@@ -1,8 +1,8 @@
-package io.lematech.httprunner4j.model.testcase;
+package io.lematech.httprunner4j.entity.testcase;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.lematech.httprunner4j.model.base.BaseModel;
+import io.lematech.httprunner4j.entity.base.BaseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

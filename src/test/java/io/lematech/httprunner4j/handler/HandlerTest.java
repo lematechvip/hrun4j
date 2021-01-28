@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j.handler;
 
+import com.alibaba.fastjson.JSON;
+import io.lematech.httprunner4j.utils.MyHttpClient;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
@@ -19,7 +21,6 @@ public class HandlerTest {
     private Handler handler = new Handler();
     @Test
     public void testYamlLoad(){
-
         Properties props = System.getProperties();
         props.list(System.out);
         System.out.print("-----------------");
@@ -31,6 +32,16 @@ public class HandlerTest {
             System.out.print(entry.getKey()+"=");
             System.out.println(entry.getValue());
         }
-      //  handler.load("demo_testcase_request.yml");
+        handler.load("demo_testcase_request.yml");
+    }
+    @Test
+    public void testExecutor(){
+        Executor executor = new Executor();
+        executor.execute("demo_testcase_request.yml");
+
+    }
+    @Test
+    public  void testHttpClient(){
+        System.out.println(JSON.toJSONString(MyHttpClient.doGet("https://postman-echo.com/get")));
     }
 }

@@ -3,7 +3,7 @@ package io.lematech.httprunner4j.handler;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.lematech.httprunner4j.model.testcase.TestCase;
+import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -21,6 +21,7 @@ import java.io.InputStream;
 public class Handler {
     private ObjectMapper objectMapper = new ObjectMapper();
     private String testCaseName;
+
 
     public Handler() {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

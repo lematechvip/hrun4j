@@ -1,8 +1,8 @@
-package io.lematech.httprunner4j.model.testcase;
+package io.lematech.httprunner4j.entity.http;
 
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.common.HttpMethod;
 import lombok.Data;
+
 import java.util.HashMap;
 
 /**
@@ -14,8 +14,9 @@ import java.util.HashMap;
  * @publicWechat lematech
  */
 @Data
-public class CustomRequest<T> {
-    private HttpMethod method;
+public class RequestEntity<T> {
+    private String method;
+
     private String url;
     /**
      * TODO: 2021/1/20 可选键值对（对象）
@@ -40,7 +41,6 @@ public class CustomRequest<T> {
      * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
      */
     private HashMap<String,String> headers;
-
     /**
      * How many seconds to wait for the server to send data before giving up
      */

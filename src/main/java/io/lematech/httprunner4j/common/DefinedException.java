@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.common;
 
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
  * @created 2021/1/21 4:42 下午
  * @publicWechat lematech
  */
+
 @Slf4j
+
 public class DefinedException extends RuntimeException{
     private String msg;
     public DefinedException(String msg){
