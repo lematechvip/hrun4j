@@ -3,7 +3,7 @@ package io.lematech.httprunner4j.entity.http;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lematech@foxmail.com
@@ -22,7 +22,7 @@ public class RequestEntity<T> {
      * TODO: 2021/1/20 可选键值对（对象）
      * 1、query string for request url
      */
-    private HashMap<String,Object> params;
+    private Map<String,Object> params;
     /**
      * TODO: 2021/1/20 可选键值对、字符串（包含变量引用或方法引用字符串），暂定义为键值对
      * 1、request body in json format
@@ -40,7 +40,7 @@ public class RequestEntity<T> {
     /**
      * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
      */
-    private HashMap<String,String> headers;
+    private Map<String,String> headers;
     /**
      * How many seconds to wait for the server to send data before giving up
      */

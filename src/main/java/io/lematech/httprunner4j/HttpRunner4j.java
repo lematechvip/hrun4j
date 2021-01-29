@@ -19,6 +19,7 @@ public class HttpRunner4j {
      public static class DefinedFunctionAdd extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
+            // java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Number
             Number left = FunctionUtils.getNumberValue(arg1, env);
             Number right = FunctionUtils.getNumberValue(arg2, env);
             return new AviatorBigInt(Math.addExact(left.intValue(), right.intValue()));

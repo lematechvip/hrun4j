@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -93,8 +96,8 @@ public class MyHttpClient {
     public static ResponseEntity doPost(String url){
         return doPost(url, Collections.EMPTY_MAP);
     }
-    public static ResponseEntity doPost(String url,Map<String, String> headers){
-        return doPost(url,headers,Collections.EMPTY_MAP);
+    public static ResponseEntity doPost(String url,Map<String, Object> params){
+        return doPost(url,Collections.EMPTY_MAP,params);
     }
     public static ResponseEntity doPost(String url,Map<String, String> headers,Map<String, Object> params){
         RequestConfig requestConfig = RequestConfig.custom()
@@ -146,27 +149,68 @@ public class MyHttpClient {
             }
         }
     }
+    public static ResponseEntity doPostJson(String url){
+        return doPostJson(url, new String());
+    }
+    public static ResponseEntity doPostJson(String url,String json){
+        return doPostJson(url,Collections.EMPTY_MAP,json);
+    }
+    public static ResponseEntity doPostJson(String url,Map<String, String> headers,String json){
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .build();
+        return doPostJson(url,headers,json,requestConfig);
+    }
+    public static ResponseEntity doPostJson(String url,Map<String, String> headers,String json,RequestConfig requestConfig){
+        return doPostJson(url,headers,json,new BasicCookieStore(),requestConfig);
+    }
+    public static ResponseEntity doPostJson(String url,Map<String, String> headers,String json,CookieStore httpCookieStore,RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPost httpPost = new HttpPost(url);
 
-    public static ResponseEntity executeReq(RequestEntity requestEntity){
-        ResponseEntity responseEntity = null;
-        String method = requestEntity.getMethod();
-        String url = requestEntity.getUrl();
-        Map<String, String> headers = requestEntity.getHeaders();
-        Map<String, Object> params = requestEntity.getParams();
-        if("GET".equalsIgnoreCase(requestEntity.getMethod())){
-            responseEntity = doGet(url,headers,params,null);
-        }else if ("POST".equalsIgnoreCase(method)){
-            responseEntity = doPost(url,headers,params,null);
-        }else if ("CONNECT".equalsIgnoreCase(method)){
-
-        }else if ("TRACE".equalsIgnoreCase(method)){
-
-        }else if ("PUT".equalsIgnoreCase(method)){
-
-        }else if ("OPTIONS".equalsIgnoreCase(method)){
-
+        if (!StrUtil.isEmpty(json)) {
+            StringEntity jsonContent = null;
+            try {
+                jsonContent = new StringEntity(JSON.toJSONString(json));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            httpPost.setEntity(jsonContent);
         }
-        return responseEntity;
+        httpPost.setConfig(requestConfig);
+        if (headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPost.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        httpPost.setHeader("Content-Type","application/json;charset=UTF-8");
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpPost);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response,elapsedTime,httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: "+e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: "+e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: "+e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.warn("release connection exception");
+                }
+            }
+        }
     }
 
     private static ResponseEntity wrapperResponseEntity(CloseableHttpResponse response
@@ -222,7 +266,6 @@ public class MyHttpClient {
         }
         return sb.toString();
     }
-
     private static HttpEntity getUrlEncodedFormEntity(Map<String, Object> params) {
         List<NameValuePair> pairList = new ArrayList<NameValuePair>(params.size());
         for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -233,4 +276,25 @@ public class MyHttpClient {
         return new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8"));
     }
 
+    public static ResponseEntity executeReq(RequestEntity requestEntity){
+        ResponseEntity responseEntity = null;
+        String method = requestEntity.getMethod();
+        String url = requestEntity.getUrl();
+        Map<String, String> headers = requestEntity.getHeaders();
+        Map<String, Object> params = requestEntity.getParams();
+        if("GET".equalsIgnoreCase(requestEntity.getMethod())){
+            responseEntity = doGet(url,headers,params,null);
+        }else if ("POST".equalsIgnoreCase(method)){
+            responseEntity = doPost(url,headers,params,null);
+        }else if ("CONNECT".equalsIgnoreCase(method)){
+
+        }else if ("TRACE".equalsIgnoreCase(method)){
+
+        }else if ("PUT".equalsIgnoreCase(method)){
+
+        }else if ("OPTIONS".equalsIgnoreCase(method)){
+
+        }
+        return responseEntity;
+    }
 }
