@@ -51,7 +51,7 @@ public class Executor {
             }else if ("PUT".equalsIgnoreCase(method)){
 
             }else if ("OPTIONS".equalsIgnoreCase(method)){
-
+                
             }
             log.info("===============================用例执行结束===============================");
             //结果验证
