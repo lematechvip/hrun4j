@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.model.testcase;
+package io.lematech.httprunner4j.entity.testcase;
 
 import lombok.Data;
 

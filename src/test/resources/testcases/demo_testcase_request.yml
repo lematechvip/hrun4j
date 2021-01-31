@@ -58,7 +58,7 @@ teststeps:
     variables:
         foo1: bar11
         foo2: bar21
-        sum_v: "${sum_two(1, 2)}"
+        sum_v: "${add(1, 2)}"
     request:
         method: GET
         url: /get
@@ -67,7 +67,7 @@ teststeps:
             foo2: $foo2
             sum_v: $sum_v
         headers:
-            User-Agent: HttpRunner/${get_httprunner_version()}
+            User-Agent: HttpRunner/${subtract(2,2)}
     extract:
         foo3: "body.args.foo2"
     validate:
@@ -84,12 +84,13 @@ teststeps:
         method: POST
         url: /post
         headers:
-            User-Agent: HttpRunner/${get_httprunner_version()}
+            User-Agent: HttpRunner/${subtract(3,2)}
             Content-Type: "text/plain"
         data: "This is expected to be sent back as part of response body: $foo1-$foo2-$foo3."
     validate:
         - eq: ["status_code", 200]
         - eq: ["body.data", "This is expected to be sent back as part of response body: bar12-$expect_foo2-bar32."]
+          
 -
     name: post form data
     variables:
@@ -98,7 +99,7 @@ teststeps:
         method: POST
         url: /post
         headers:
-            User-Agent: HttpRunner/${get_httprunner_version()}
+            User-Agent: HttpRunner/${subtract(3,2)}
             Content-Type: "application/x-www-form-urlencoded"
         data: "foo1=$foo1&foo2=$foo2&foo3=$foo3"
     validate:

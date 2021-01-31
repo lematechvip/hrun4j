@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.model.base;
+package io.lematech.httprunner4j.entity.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

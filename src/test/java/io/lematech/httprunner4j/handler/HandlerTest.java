@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.handler;
 
-import io.lematech.httprunner4j.utils.PooledHttpClientUtil;
+import com.alibaba.fastjson.JSON;
+import io.lematech.httprunner4j.utils.MyHttpClient;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
@@ -41,6 +42,6 @@ public class HandlerTest {
     }
     @Test
     public  void testHttpClient(){
-        System.out.println(PooledHttpClientUtil.getHttpClientInstance().doGet("https://postman-echo.com/get"));;
+        System.out.println(JSON.toJSONString(MyHttpClient.doGet("https://postman-echo.com/get")));
     }
 }

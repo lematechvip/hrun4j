@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.utils;
 
+import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -32,10 +33,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class PooledHttpClientUtil {
+public class HttpClientUtil {
+
     private static final int DEFAULT_POOL_MAX_TOTAL = 200;
     private static final int DEFAULT_POOL_MAX_PER_ROUTE = 200;
-
     private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
     private static final int DEFAULT_CONNECT_REQUEST_TIMEOUT = 5000;
     private static final int DEFAULT_SOCKET_TIMEOUT = 2000;
@@ -58,26 +59,26 @@ public class PooledHttpClientUtil {
     // tcp io的读写超时时间
     private final int socketTimeout;
 
-    private static PooledHttpClientUtil pooledHttpClient;
+    private static HttpClientUtil pooledHttpClient;
 
-    public static PooledHttpClientUtil getHttpClientInstance(){
+    public static HttpClientUtil getHttpClientInstance(){
         if (pooledHttpClient == null){
-            pooledHttpClient = new PooledHttpClientUtil();
+            pooledHttpClient = new HttpClientUtil();
         }
         return pooledHttpClient;
     }
 
-    private PooledHttpClientUtil() {
+    private HttpClientUtil() {
         this(
-                PooledHttpClientUtil.DEFAULT_POOL_MAX_TOTAL,
-                PooledHttpClientUtil.DEFAULT_POOL_MAX_PER_ROUTE,
-                PooledHttpClientUtil.DEFAULT_CONNECT_TIMEOUT,
-                PooledHttpClientUtil.DEFAULT_CONNECT_REQUEST_TIMEOUT,
-                PooledHttpClientUtil.DEFAULT_SOCKET_TIMEOUT
+                HttpClientUtil.DEFAULT_POOL_MAX_TOTAL,
+                HttpClientUtil.DEFAULT_POOL_MAX_PER_ROUTE,
+                HttpClientUtil.DEFAULT_CONNECT_TIMEOUT,
+                HttpClientUtil.DEFAULT_CONNECT_REQUEST_TIMEOUT,
+                HttpClientUtil.DEFAULT_SOCKET_TIMEOUT
         );
     }
 
-    private PooledHttpClientUtil(
+    private HttpClientUtil(
             int maxTotal,
             int maxPerRoute,
             int connectTimeout,
@@ -111,21 +112,20 @@ public class PooledHttpClientUtil {
                 .setConnectionManager(this.gcm)
                 .setDefaultRequestConfig(requestConfig)
                 .build();
-
         idleThread = new IdleConnectionMonitorThread(this.gcm);
         idleThread.start();
 
     }
 
-    public String doGet(String url) {
+    public ResponseEntity doGet(String url) {
         return this.doGet(url, Collections.EMPTY_MAP, Collections.EMPTY_MAP);
     }
 
-    public String doGet(String url, Map<String, Object> params) {
+    public ResponseEntity doGet(String url, Map<String, Object> params) {
         return this.doGet(url, Collections.EMPTY_MAP, params);
     }
 
-    public String doGet(String url,
+    public ResponseEntity doGet(String url,
                         Map<String, String> headers,
                         Map<String, Object> params
     ) {
@@ -141,19 +141,22 @@ public class PooledHttpClientUtil {
             }
         }
 
+        ResponseEntity responseEntity = new ResponseEntity();
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(httpGet);
+
             if (response == null || response.getStatusLine() == null) {
                 return null;
             }
-
             int statusCode = response.getStatusLine().getStatusCode();
-            log.info("响应状态码：{}",statusCode);
+            responseEntity.setStatusCode(statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity entityRes = response.getEntity();
                 if (entityRes != null) {
-                    return EntityUtils.toString(entityRes, "UTF-8");
+                    String responseContent = EntityUtils.toString(entityRes, "UTF-8");
+                    responseEntity.setResponseContent(responseContent);
+                    return responseEntity;
                 }
             }
             return null;
@@ -169,13 +172,13 @@ public class PooledHttpClientUtil {
         return null;
     }
 
-    public String doPost(String apiUrl, Map<String, Object> params) {
+    public ResponseEntity doPost(String apiUrl, Map<String, Object> params) {
         return this.doPost(apiUrl, Collections.EMPTY_MAP, params);
     }
 
-    public String doPost(String apiUrl,
-                         Map<String, String> headers,
-                         Map<String, Object> params
+    public ResponseEntity doPost(String apiUrl,
+                                 Map<String, String> headers,
+                                 Map<String, Object> params
     ) {
 
         HttpPost httpPost = new HttpPost(apiUrl);
@@ -193,7 +196,7 @@ public class PooledHttpClientUtil {
             httpPost.setEntity(entityReq);
         }
 
-
+        ResponseEntity responseEntity = new ResponseEntity();
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(httpPost);
@@ -202,11 +205,14 @@ public class PooledHttpClientUtil {
             }
 
             int statusCode = response.getStatusLine().getStatusCode();
-            log.info("响应状态码：{}",statusCode);
+
+            responseEntity.setStatusCode(statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity entityRes = response.getEntity();
                 if (entityRes != null) {
-                    return EntityUtils.toString(entityRes, "UTF-8");
+                    String responseContent = EntityUtils.toString(entityRes, "UTF-8");
+                    responseEntity.setResponseContent(responseContent);
+                    return responseEntity;
                 }
             }
             return null;
