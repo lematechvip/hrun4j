@@ -37,7 +37,7 @@ public class HandlerTest {
     @Test
     public void testExecutor(){
         Executor executor = new Executor();
-        executor.execute("demo_testcase_request.yml");
+        executor.execute("hrun4j_demo_testcase.yml");
 
     }
     @Test

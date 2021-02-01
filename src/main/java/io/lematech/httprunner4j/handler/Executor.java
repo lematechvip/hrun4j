@@ -6,6 +6,7 @@ import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
+import io.lematech.httprunner4j.utils.AssertUtil;
 import io.lematech.httprunner4j.utils.ExpressHandler;
 import io.lematech.httprunner4j.utils.MyHttpClient;
 import lombok.extern.slf4j.Slf4j;
@@ -61,12 +62,11 @@ public class Executor {
             RequestEntity requestNewEntity = (RequestEntity)expressHandler.buildNewObj(requestEntity);
             ResponseEntity responseEntity = MyHttpClient.executeReq(requestNewEntity);
             log.info("响应信息：{}", responseEntity);
-            log.info("類型----"+testStep.getValidate().getClass());
-            //testStep.getValidate();
+            List<Map<String,Object>> validateList = testStep.getValidate();
+            AssertUtil.assertList(validateList);
             log.info("===============================用例执行结束===============================");
             //结果验证
             //参数提取
-
         }
     }
 
