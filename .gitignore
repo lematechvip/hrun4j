@@ -1,6 +1,6 @@
 # Compiled class file
 *.class
-
+.gitee
 # Log file
 *.log
 .idea
@@ -9,6 +9,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 target
+logs
 *.iml
 # Package Files #
 *.jar
