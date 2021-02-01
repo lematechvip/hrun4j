@@ -89,7 +89,7 @@ public class ExpressHandler<T> {
                 if(attributeClass == String.class && StrUtil.isEmpty(String.valueOf(fieldValue))){
                     continue;
                 }
-                log.info("类型：{}",attributeClass);
+               // log.info("类型：{}",attributeClass);
                 if(attributeClass== BigDecimal.class){
                     Method setMethod=object.getClass().getMethod("set"+methodName,BigDecimal.class);
                     setMethod.invoke(object,new BigDecimal(0));

@@ -37,9 +37,10 @@ public class Executor {
     private void execute(){
         Config config = testCase.getConfig();
         List<TestStep> testSteps  = testCase.getTestSteps();
-        RequestEntity requestEntity = new RequestEntity();
+
         for(TestStep testStep : testSteps){
             String url = String.format("%s%s",config.getBaseUrl(),testStep.getRequest().getUrl());
+            log.info("步驟名稱："+testStep.getName());
             //单个用例
             //数据验证 支持全量、单个
             //序列化
@@ -49,21 +50,19 @@ public class Executor {
             //提取器
             //批量用例
             //借助testng构建测试用例集
-            String method =testStep.getRequest().getMethod();
             log.info("===============================用例执行开始===============================");
-
-            Map<String, String> headers = (Map)expressHandler.handleExpress(testStep.getRequest().getHeaders());
-            Map<String, Object> params = (Map)expressHandler.handleExpress(testStep.getRequest().getParams());
-
+            Map<String,Object> configVars = config.getVariables();
+            Map<String,Object> testStepVars = testStep.getVariables();
+            RequestEntity requestEntity = testStep.getRequest();
+            requestEntity.setUrl(url);
             //处理参数优先级
-            expressHandler.buildCurrentEnv(this.testContext
-                    ,config.getVariables()
-                    ,testStep.getVariables());
+            expressHandler.buildCurrentEnv(testContext,configVars,testStepVars);
             //表达式求值
-
-
-            ResponseEntity responseEntity = MyHttpClient.executeReq(requestEntity);
+            RequestEntity requestNewEntity = (RequestEntity)expressHandler.buildNewObj(requestEntity);
+            ResponseEntity responseEntity = MyHttpClient.executeReq(requestNewEntity);
             log.info("响应信息：{}", responseEntity);
+            log.info("類型----"+testStep.getValidate().getClass());
+            //testStep.getValidate();
             log.info("===============================用例执行结束===============================");
             //结果验证
             //参数提取

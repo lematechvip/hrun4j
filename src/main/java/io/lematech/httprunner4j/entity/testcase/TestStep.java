@@ -29,8 +29,8 @@ public class TestStep<T> extends BaseModel{
     /**
      * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）或者纯对象
      */
-    private List<Map<String, Object>> validate;
-
+    private List<Map<String,Object>> validate;
+    
     /**
      * 1、http请独有
      */
