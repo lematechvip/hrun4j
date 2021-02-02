@@ -1,11 +1,14 @@
 package io.lematech.httprunner4j.handler;
 
 
+import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
+import io.lematech.httprunner4j.utils.AssertUtil;
+import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
 import io.lematech.httprunner4j.utils.ExpressHandler;
 import io.lematech.httprunner4j.utils.MyHttpClient;
 import lombok.extern.slf4j.Slf4j;
@@ -60,13 +63,19 @@ public class Executor {
             //表达式求值
             RequestEntity requestNewEntity = (RequestEntity)expressHandler.buildNewObj(requestEntity);
             ResponseEntity responseEntity = MyHttpClient.executeReq(requestNewEntity);
-            log.info("响应信息：{}", responseEntity);
-            log.info("類型----"+testStep.getValidate().getClass());
-            //testStep.getValidate();
+            //JSONObject resJsonEntity = JSON.parseObject(responseEntity);
+            Object response = JSON.toJSON(responseEntity);
+            log.info("响应信息：{}", JSON.toJSON(responseEntity));
+
+            List<Map<String,Object>> validateList = testStep.getValidate();
+            AssertUtil.assertList(validateList);
+            Map<String,Object> res = new HashMap<>();
+            res.put("response",response);
+            Object resx = AviatorEvaluatorUtil.execute("response.headers.Content-Type",res);
+            log.info("提取结果：{}",resx);
             log.info("===============================用例执行结束===============================");
             //结果验证
             //参数提取
-
         }
     }
 

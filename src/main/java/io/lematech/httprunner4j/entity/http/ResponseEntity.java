@@ -17,6 +17,6 @@ public class ResponseEntity {
     private Integer statusCode;
     private Map<String,String> headers;
     private Double responseTime;
-    private String responseContent;
+    private Object responseContent;
     private Map<String,String> cookies;
 }

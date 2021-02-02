@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.config;
 
 import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
+import io.lematech.httprunner4j.handler.Executor;
 import io.lematech.httprunner4j.utils.AssertUtil;
 import io.lematech.httprunner4j.utils.ExpressHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,10 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +26,7 @@ import java.util.Map;
  * @publicWechat lematech
  */
 @Slf4j
-public class EnvTest<T> {
+public class EnvTest {
     @Test
     public void testYamlLoad() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
 
@@ -57,8 +61,13 @@ public class EnvTest<T> {
         method.invoke(object, 4);*/
     }
 
+    private Executor executor = new Executor();
     @Test
-    public void testAssertRelect(){
+    public void testExecutor(){
+        executor.execute("hrun4j_demo_testcase.yml");
+    }
+    @Test
+    public void testAssertRelect1(){
        // assertThat("xxx", startsWith("Ma"));
         try {
 //https://segmentfault.com/q/1010000017134039
@@ -90,16 +99,32 @@ public class EnvTest<T> {
     }
 
     @Test
-    public void testAssert(){
+    public void testAssert() {
         try {
             Class<?> clzValue = Class.forName("org.hamcrest.Matchers");
-            for ( Method method : clzValue.getDeclaredMethods ())
-            {
-               log.info("方法名：{},方法参数：{}",method.getName(),method.getParameterTypes());
+            for (Method method : clzValue.getDeclaredMethods()) {
+                log.info("方法名：{},方法参数：{}", method.getName(), method.getParameterTypes());
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testAssertRelect(){
+            Map<String,Object> comp1 = new HashMap<>();
+            comp1.put("check","lexin");
+            comp1.put("expect","le1");
+            comp1.put("comparator","sw");
+            Map<String,Object> comp2 = new HashMap<>();
+            comp2.put("check","lexin");
+            comp2.put("expect","xin1");
+            comp2.put("comparator","ew");
+            List<Map<String,Object>> validateList = new ArrayList();
+            validateList.add(comp1);
+            validateList.add(comp2);
+            AssertUtil.assertList(validateList);
+
     }
 
     @Test
@@ -127,5 +152,64 @@ public class EnvTest<T> {
         requestEntity.setUrl("/api/test/${add(a,b)}&${subtract(a,c)}&${divide(a,c)}");
         RequestEntity newReqEntity = (RequestEntity)handler.buildNewObj(requestEntity);
         log.info(JSON.toJSONString(newReqEntity));
+    }
+
+    @Test
+    public void testAlisaMap(){
+        Map<String, List> methodMap = new HashMap<>();
+        int simpleLength = 0;
+        try {
+            Class matcherClz = Class.forName("org.hamcrest.Matchers");
+            Method [] methods = matcherClz.getDeclaredMethods();
+            for(Method method : methods){
+                Type[] types = method.getParameterTypes();
+                String methodName = method.getName();
+                List<String> typeList = new ArrayList<>();
+                for(Type type : types){
+                    typeList.add(type.getTypeName());
+                }
+                methodMap.put(methodName,typeList);
+                if (isSetAlisa(methodName)) {
+                    simpleLength++;
+                    String methodAlisa = transferMethodAlisa(methodName);
+                    Integer parameterSize = typeList.size();
+                    if(parameterSize == 1){
+                        methodMap.put(methodAlisa,typeList);
+                    }else {
+                        String overrideMethodName = String.format("%s_%s",methodAlisa,parameterSize);
+                        methodMap.put(overrideMethodName,typeList);
+                    }
+                }
+            }
+            log.info("总共有多少个方法：{},转换方法数：{},简写方法数：{},完整方法列表及简化列表：{}"
+                    ,methods.length, methodMap.size(),simpleLength,JSON.toJSONString(methodMap));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private boolean isSetAlisa(String methodName){
+        boolean flag = true;
+        if(methodName.length() <= 5){
+            flag = false;
+        }
+        return flag;
+    }
+    private String transferMethodAlisa(String methodName){
+        StringBuilder methodAlisa = new StringBuilder();
+        char[] chars = methodName.toCharArray();
+        for(int index=0 ;index<chars.length ; index++){
+            char letter = chars[index];
+            if(index == 0){
+                methodAlisa.append(letter);
+            }else{
+                if(Character.isUpperCase(letter)){
+                    methodAlisa.append(letter);
+                }
+            }
+        }
+        String simpleMethodName = methodAlisa.toString().toLowerCase();
+        log.info("方法名：{},简写：{}",methodName,simpleMethodName);
+        return simpleMethodName;
     }
 }
