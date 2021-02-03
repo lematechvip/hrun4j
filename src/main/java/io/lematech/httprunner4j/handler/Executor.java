@@ -7,16 +7,12 @@ import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-import io.lematech.httprunner4j.utils.AssertUtil;
-import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
-import io.lematech.httprunner4j.utils.ExpressHandler;
-import io.lematech.httprunner4j.utils.MyHttpClient;
+import io.lematech.httprunner4j.utils.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -68,7 +64,7 @@ public class Executor {
             log.info("响应信息：{}", JSON.toJSON(responseEntity));
 
             List<Map<String,Object>> validateList = testStep.getValidate();
-            AssertUtil.assertList(validateList);
+            AssertUtil.assertList(validateList,responseEntity);
             Map<String,Object> res = new HashMap<>();
             res.put("response",response);
             Object resx = AviatorEvaluatorUtil.execute("response.headers.Content-Type",res);

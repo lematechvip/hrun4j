@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Comparator {
-    private Object check;
+    private String check;
     private String comparator;
     private Object expect;
 }

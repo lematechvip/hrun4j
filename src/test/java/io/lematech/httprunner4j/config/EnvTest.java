@@ -3,7 +3,6 @@ package io.lematech.httprunner4j.config;
 import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.handler.Executor;
-import io.lematech.httprunner4j.utils.AssertUtil;
 import io.lematech.httprunner4j.utils.ExpressHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
@@ -38,7 +37,7 @@ public class EnvTest {
         configVars.put("check",1);
         configVars.put("expect",2);
         configVars.put("comparator","isLessThan");
-        AssertUtil.assertObject(configVars);
+        //AssertUtil.assertObject(configVars);
         //Assert.assertEquals(1,2);
 
        /* Class clz = Class.forName("org.testng.Assert");
@@ -123,7 +122,7 @@ public class EnvTest {
             List<Map<String,Object>> validateList = new ArrayList();
             validateList.add(comp1);
             validateList.add(comp2);
-            AssertUtil.assertList(validateList);
+           // AssertUtil.assertList(validateList);
 
     }
 

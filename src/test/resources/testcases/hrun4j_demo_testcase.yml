@@ -21,6 +21,6 @@ teststeps:
             Content-Type: "application/x-www-form-urlencoded"
         data: "foo1=$foo1&foo2=$foo3"
     validate:
-        - {"check":"actual","comparator":"sw","expect":"actualValue"}
-        - {"check":"value","comparator":"ew","expect":"actualValue"}
-
+        - {"check":"statusCode","comparator":"equalTo","expect":"200"}
+        - {"check":"headers.Content-Type","comparator":"equalTo","expect":"application/json; charset=utf-8"}
+        - {"check":"responseContent.args","comparator":"equalTo","expect":"application/json; charset=utf-8"}

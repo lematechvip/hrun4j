@@ -2,7 +2,9 @@ package io.lematech.httprunner4j.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
@@ -37,7 +39,7 @@ public class AssertUtil {
         }
         return (Matcher)obj;
     }
-    public static void assertObject(Map<String, Object> objectMap) {
+    public static void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity) {
         Map<String,List> methodAlisaMap = comparatorAlisaMap();
         if (objectMap.containsKey("check") && objectMap.containsKey("expect")){
             Comparator comparator = JSON.parseObject(JSON.toJSONString(objectMap), Comparator.class);
@@ -48,10 +50,15 @@ public class AssertUtil {
             if(!methodAlisaMap.containsKey(comparatorName)){
                 throw new DefinedException(String.format("当前不支持 %s 比较器",comparatorName));
             }
+            String exp = comparator.getCheck();
+            JsonNode jsonNode = JsonUtil.getJmesPathResult(exp,JSON.toJSONString(responseEntity));
+            log.info("节点类型：{}",jsonNode.getNodeType());
+            String actual = jsonNode.asText();
+            log.info("表达式：{},提取结果：{}",exp,actual);
             try {
                 Class<?> clz = Class.forName("org.junit.Assert");
                 Method method = clz.getMethod("assertThat",Object.class, Matcher.class);
-                method.invoke(null,comparator.getCheck()
+                method.invoke(null,actual
                         ,buildMatcherObj(comparatorName,methodAlisaMap.get(comparatorName),comparator.getExpect()));
                 log.info("断言成功");
             } catch (ClassNotFoundException | NoSuchMethodException e) {
@@ -64,9 +71,9 @@ public class AssertUtil {
         }
         return;
     }
-    public static void assertList(List<Map<String,Object>> mapList){
+    public static void assertList(List<Map<String,Object>> mapList,ResponseEntity responseEntity){
         for(Map<String,Object> objectMap:mapList){
-            assertObject(objectMap);
+            assertObject(objectMap,responseEntity);
         }
     }
 

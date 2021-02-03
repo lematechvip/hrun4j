@@ -1,5 +1,9 @@
 package io.lematech.httprunner4j.idea;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.burt.jmespath.Expression;
+import io.burt.jmespath.JmesPath;
+import io.burt.jmespath.jackson.JacksonRuntime;
 import io.lematech.httprunner4j.utils.MyHttpClient;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -28,6 +32,25 @@ import java.util.Map;
  * @publicWechat lematech
  */
 public class ShortcutKey {
+    @Test
+    public void testJmesPath(){
+
+// The first thing you need is a runtime. These objects can compile expressions
+// and they are specific to the kind of structure you want to search in.
+// For most purposes you want the Jackson runtime, it can search in JsonNode
+// structures created by Jackson.
+        JmesPath<JsonNode> jmespath = new JacksonRuntime();
+// Expressions need to be compiled before you can search. Compiled expressions
+// are reusable and thread safe. Compile your expressions once, just like database
+// prepared statements.
+        Expression<JsonNode> expression = jmespath.compile("locations[?state == 'WA'].name | sort(@) | {WashingtonCities: join(', ', @)}");
+// This you have to fill in yourself, you're probably using Jackson's ObjectMapper
+// to load JSON data, and that should fit right in here.
+        JsonNode input = null;
+// Finally this is how you search a structure. There's really not much more to it.
+        JsonNode result = expression.search(input);
+
+    }
     @Test
     public void test1() throws Exception{
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {

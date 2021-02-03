@@ -1,6 +1,8 @@
 package io.lematech.httprunner4j.aviator;
 
 import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
+import io.lematech.httprunner4j.utils.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Map;
  * @created 2021/1/25 11:11 上午
  * @publicWechat lematech
  */
+@Slf4j
 public class AviatorTest{
     @Test
     public void testAviatorExp(){
@@ -39,4 +42,31 @@ public class AviatorTest{
 */
     }
 
+
+    @Test
+    public void testJmesJson(){
+
+        String jsonStr = "{\n" +
+                "  \"aggregations\": {\n" +
+                "    \"sales_over_time\": {\n" +
+                "      \"buckets\": [{\n" +
+                "        \"key_as_string\": \"2015-01-01\",\n" +
+                "        \"key\": 1420070400000,\n" +
+                "        \"doc_count\": 3\n" +
+                "      }, {\n" +
+                "        \"key_as_string\": \"2015-02-01\",\n" +
+                "        \"key\": 1422748800000,\n" +
+                "        \"doc_count\": 2\n" +
+                "      }, {\n" +
+                "        \"key_as_string\": \"2015-03-01\",\n" +
+                "        \"key\": 1425168000000,\n" +
+                "        \"doc_count\": 2\n" +
+                "      }]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        String exp = "aggregations.sales_over_time.buckets[*].{key: key_as_string, value: doc_count}";
+        log.info("表达式：{},提取结果：{}",exp,JsonUtil.getJmesPathResult(exp,jsonStr));
+
+    }
 }

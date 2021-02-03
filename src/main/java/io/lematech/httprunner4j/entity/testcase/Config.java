@@ -1,6 +1,5 @@
 package io.lematech.httprunner4j.entity.testcase;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import lombok.Data;
@@ -23,7 +22,7 @@ public class Config extends BaseModel {
      */
     @JsonProperty(value = "name")
     private String name;
-    @JSONField(name = "base_url")
+    @JsonProperty(value = "base_url")
     private String baseUrl;
     @JsonProperty(value = "verify")
     private Boolean verify ;
