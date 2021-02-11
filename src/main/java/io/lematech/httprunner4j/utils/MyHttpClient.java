@@ -239,9 +239,14 @@ public class MyHttpClient {
         responseEntity.setHeaders(headersMap);
         if (statusCode == HttpStatus.SC_OK) {
             HttpEntity entityRes = response.getEntity();
+            String responseContent = EntityUtils.toString(entityRes, "UTF-8");
             if (entityRes != null) {
-                String responseContent = EntityUtils.toString(entityRes, "UTF-8");
-                responseEntity.setResponseContent(responseContent);
+                Header contentType = response.getFirstHeader("Content-Type");
+                if(contentType != null&&contentType.getValue().contains("application/json")){
+                     responseEntity.setResponseContent(JSON.parseObject(responseContent));
+                }else{
+                    responseEntity.setResponseContent(responseContent);
+                }
             }
         }
         return responseEntity;

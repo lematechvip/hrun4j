@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author lematech@foxmail.com
@@ -15,13 +16,15 @@ import io.burt.jmespath.jackson.JacksonRuntime;
  * @created 2021/2/3 5:57 下午
  * @publicWechat lematech
  */
+@Slf4j
 public class JsonUtil {
-    private static JmesPath<JsonNode> jmespath = new JacksonRuntime();;
-    public static JsonNode getJmesPathResult(String expression,String jsonInput){
+    private static JmesPath<JsonNode> jmespath = new JacksonRuntime();
+    public static JsonNode getJmesPathResult(String expression,String jsonobj){
         JsonNode jsonResult = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode actualObj = mapper.readTree(jsonInput);
+            JsonNode actualObj = mapper.readTree(jsonobj);
+            //log.info("转化结构：{}", jsonobj);
             Expression<JsonNode> compileExp = jmespath.compile(expression);
             jsonResult = compileExp.search(actualObj);
         } catch (JsonProcessingException e) {

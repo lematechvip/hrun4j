@@ -7,12 +7,13 @@ import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-import io.lematech.httprunner4j.utils.*;
+import io.lematech.httprunner4j.utils.AssertUtil;
+import io.lematech.httprunner4j.utils.ExpressHandler;
+import io.lematech.httprunner4j.utils.MyHttpClient;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -62,13 +63,34 @@ public class Executor {
             //JSONObject resJsonEntity = JSON.parseObject(responseEntity);
             Object response = JSON.toJSON(responseEntity);
             log.info("响应信息：{}", JSON.toJSON(responseEntity));
-
             List<Map<String,Object>> validateList = testStep.getValidate();
             AssertUtil.assertList(validateList,responseEntity);
+            Object extracts = testStep.getExtract();
+            log.info("extracts 类型：{}",extracts.getClass());
+            Class clz = extracts.getClass();
+            if(clz == ArrayList.class){
+                log.info("list类型");
+                List<Map<String,String>> extractList = (List<Map<String,String>>)extracts;
+                for(Map extractMap : extractList){
+                    Iterator<Map.Entry<String, String>> entries = extractMap.entrySet().iterator();
+                   while (entries.hasNext()){
+                       Map.Entry<String, String> entry = entries.next();
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+                        String transfValue = AssertUtil.dataTransfer(value,responseEntity);
+                       testContext.put(key,transfValue);
+                   }
+                }
+            }else if(clz == Map.class){
+                log.info("Map类型");
+            }else{
+                log.error("暂不支持此种类型");
+            }
+            log.info("参数提取：{}",JSON.toJSONString(testContext));
             Map<String,Object> res = new HashMap<>();
             res.put("response",response);
-            Object resx = AviatorEvaluatorUtil.execute("response.headers.Content-Type",res);
-            log.info("提取结果：{}",resx);
+            //Object resx = AviatorEvaluatorUtil.execute("response.headers.Content-Type",res);
+            //log.info("提取结果：{}",resx);
             log.info("===============================用例执行结束===============================");
             //结果验证
             //参数提取

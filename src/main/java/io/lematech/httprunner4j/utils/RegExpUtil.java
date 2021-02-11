@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class RegExpUtil {
     public static String buildNewString(String str, Map env){
-        String regExpExp = "(.*)\\$\\{(.*?)\\}(.*)";
-        if(match(regExpExp,str)){
+        if(isExp(str)){
             String regExp = "(?<=\\$\\{).*?(?=})";
             List<String> matchList = RegExpUtil.find(regExp,str);
             List<String> matcherList = new ArrayList<>();
@@ -26,6 +26,17 @@ public class RegExpUtil {
             }
         }
         return str;
+    }
+    public static Boolean isExp(String exp){
+        Boolean flag = false;
+        if(StringUtils.isEmpty(exp)){
+            return false;
+        }
+        String regExpExp = "(.*)\\$\\{(.*?)\\}(.*)";
+        if(match(regExpExp,exp)){
+            flag = true;
+        }
+        return flag;
     }
     private static boolean match(String reg, String str) {
         return Pattern.matches(reg, str);

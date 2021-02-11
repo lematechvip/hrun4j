@@ -90,7 +90,7 @@ public class ExpressHandler<T> {
                     continue;
                 }
                // log.info("类型：{}",attributeClass);
-                if(attributeClass== BigDecimal.class){
+                if(attributeClass == BigDecimal.class){
                     Method setMethod=object.getClass().getMethod("set"+methodName,BigDecimal.class);
                     setMethod.invoke(object,new BigDecimal(0));
                 }else if(attributeClass==Long.class){
@@ -126,5 +126,7 @@ public class ExpressHandler<T> {
             return null;
         }
     }
+
+
 
 }

@@ -3,11 +3,15 @@ package io.lematech.httprunner4j.utils;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
+import org.testng.collections.Maps;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,6 +27,7 @@ import java.util.Map;
 @Slf4j
 public class AssertUtil {
     private static Map<String,String> alisaMap = new HashMap<>();
+
     private static Matcher buildMatcherObj(String comparatorName,List<String> params,Object expect){
         Object obj = null;
         try {
@@ -70,6 +75,35 @@ public class AssertUtil {
             }
         }
         return;
+    }
+
+    public static String dataTransfer(String exp, ResponseEntity responseEntity){
+        if(StringUtils.isEmpty(exp)){
+            return "";
+        }
+        //表达式、正则（内容）、jsonpath（内容）、jmespath（内置对象）
+        String respStr = JSON.toJSONString(responseEntity);
+        if(RegExpUtil.isExp(exp)){
+            return RegExpUtil.buildNewString(exp, Maps.newHashMap());
+        }else if(exp.startsWith("^")&&exp.endsWith("$")){
+           // return exp.re
+          String regSearch = RegExpUtil.findString(exp,respStr);
+          return regSearch;
+        }else if(exp.startsWith("$.")){
+            Object document = Configuration.defaultConfiguration().jsonProvider().parse(respStr);
+            Object searchResult = JsonPath.read(document, exp);
+            log.info("查询结果：{}",searchResult);
+        }else {
+            JsonNode jsonNode = null;
+            try{
+                jsonNode = JsonUtil.getJmesPathResult(exp,respStr);
+                log.info("节点类型：{}",jsonNode.getNodeType());
+                exp = jsonNode.asText();
+            }catch (Exception e){
+               return exp;
+            }
+        }
+        return exp;
     }
     public static void assertList(List<Map<String,Object>> mapList,ResponseEntity responseEntity){
         for(Map<String,Object> objectMap:mapList){

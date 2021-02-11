@@ -140,8 +140,18 @@
             <version>1.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
+        <dependency>
+            <groupId>io.burt</groupId>
+            <artifactId>jmespath-jackson</artifactId>
+            <version>0.5.0</version>
+        </dependency>
 
-
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+        </dependency>
         <dependency>
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
