@@ -21,8 +21,6 @@ import java.io.InputStream;
 public class Handler {
     private ObjectMapper objectMapper = new ObjectMapper();
     private String testCaseName;
-
-
     public Handler() {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
@@ -40,7 +38,7 @@ public class Handler {
         Yaml yaml = new Yaml(new Constructor(JSONObject.class));
         InputStream inputStream = this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("testcases/" + this.testCaseName);
+                .getResourceAsStream("testcases/" + this.testCaseName+".yml");
         JSONObject testCaseMetas = yaml.load(inputStream);
         TestCase testCase = testCaseMetas.toJavaObject(TestCase.class);
         return testCase;

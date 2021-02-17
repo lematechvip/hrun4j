@@ -9,4 +9,5 @@ package io.lematech.httprunner4j.control;
  * @publicWechat lematech
  */
 public class TestCaseDefined {
+
 }

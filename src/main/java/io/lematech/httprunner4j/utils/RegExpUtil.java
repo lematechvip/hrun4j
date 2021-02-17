@@ -27,6 +27,10 @@ public class RegExpUtil {
         }
         return str;
     }
+    public static boolean  isFilter(String str){
+        return !match("!.*", str.trim());
+    }
+
     public static Boolean isExp(String exp){
         Boolean flag = false;
         if(StringUtils.isEmpty(exp)){

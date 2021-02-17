@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class Config extends BaseModel {
+public class Config<T> extends BaseModel {
     /**
      * 必填
      */
@@ -26,5 +26,6 @@ public class Config extends BaseModel {
     private String baseUrl;
     @JsonProperty(value = "verify")
     private Boolean verify ;
+    private T parameters;
 
 }

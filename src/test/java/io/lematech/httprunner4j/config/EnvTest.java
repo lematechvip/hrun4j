@@ -63,7 +63,7 @@ public class EnvTest {
     private Executor executor = new Executor();
     @Test
     public void testExecutor(){
-        executor.execute("hrun4j_demo_testcase.yml");
+       // executor.execute("hrun4j_demo_testcase.yml");
     }
     @Test
     public void testAssertRelect1(){

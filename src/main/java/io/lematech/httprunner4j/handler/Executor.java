@@ -26,11 +26,11 @@ import java.util.*;
 public class Executor {
     private TestCase testCase;
     private ExpressHandler expressHandler;
-    private Handler handler = new Handler();
+
     private Map<String,Object> testContext = new HashMap<>();
-    public void execute(String testcaseName){
-         this.testCase = handler.load(testcaseName);
+    public void execute(TestCase testCase){
          expressHandler = new ExpressHandler();
+         this.testCase = testCase;
          execute();
     }
 
