@@ -2,8 +2,7 @@ package io.lematech.httprunner4j.config;
 
 import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
-import io.lematech.httprunner4j.handler.Executor;
-import io.lematech.httprunner4j.utils.ExpressHandler;
+import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
@@ -60,7 +59,7 @@ public class EnvTest {
         method.invoke(object, 4);*/
     }
 
-    private Executor executor = new Executor();
+    //private Executor executor = new Executor();
     @Test
     public void testExecutor(){
        // executor.execute("hrun4j_demo_testcase.yml");
@@ -128,7 +127,7 @@ public class EnvTest {
 
     @Test
     public void testReflect(){
-        ExpressHandler handler = new ExpressHandler();
+        ExpressionProcessor handler = new ExpressionProcessor();
         Map<String,Object> testContext = new HashMap<>();
         testContext.put("a",1);
         Map<String,Object> configVars = new HashMap<>();
@@ -139,8 +138,8 @@ public class EnvTest {
         testStepVars.put("a",6);
         testStepVars.put("c",0);
         testStepVars.put("b",7);
-        handler.buildCurrentEnv(testContext,configVars,testStepVars);
-        log.info(JSON.toJSONString(handler.getCurrentEnv()));
+       // handler.buildCurrentEnv(testContext,configVars,testStepVars);
+       // log.info(JSON.toJSONString(handler.getCurrentEnv()));
        RequestEntity requestEntity = new RequestEntity();
         Map<String,Object> header = new HashMap<>();
         header.put("headerKey","${add(1,2)}");
@@ -149,8 +148,8 @@ public class EnvTest {
         parameters.put("parameterKey","${subtract(1,2)}");
         requestEntity.setParams(parameters);
         requestEntity.setUrl("/api/test/${add(a,b)}&${subtract(a,c)}&${divide(a,c)}");
-        RequestEntity newReqEntity = (RequestEntity)handler.buildNewObj(requestEntity);
-        log.info(JSON.toJSONString(newReqEntity));
+        //RequestEntity newReqEntity = (RequestEntity)handler.buildNewObj(requestEntity);
+        //log.info(JSON.toJSONString(newReqEntity));
     }
 
     @Test

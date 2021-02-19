@@ -43,28 +43,4 @@ public class Handler {
         TestCase testCase = testCaseMetas.toJavaObject(TestCase.class);
         return testCase;
     }
-
-    /*private void generateTestCase(JSONArray testCaseMetas) {
-        TestCase testCase = new TestCase();
-        List<TestStep> testSteps = new ArrayList<>();
-        for (int index = 0; index < testCaseMetas.size(); index++) {
-            HashMap<String, Object> testCaseMeta = testCaseMetas.getObject(index, HashMap.class);
-            for (Map.Entry<String, Object> entry : testCaseMeta.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if ("config".equals(key)) {
-                    Config config = objectMapper.convertValue(value, Config.class);
-                    testCase.setConfig(config);
-                    log.info("config：{},{},{}", config.getBaseUrl(), config.getName(), config.getVerify());
-                } else if ("test".equals(key)) {
-                    TestStep testStep = objectMapper.convertValue(value, TestStep.class);
-                    log.info("testStep：{},{},{}", testStep.getApi(), testStep.getName(), testStep.getRequest());
-                    testSteps.add(testStep);
-                } else {
-                    log.info("位置信息：" + key);
-                }
-
-            }
-        }
-    }*/
 }

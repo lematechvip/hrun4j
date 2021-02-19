@@ -27,7 +27,6 @@ import java.util.Map;
 @Slf4j
 public class AssertUtil {
     private static Map<String,String> alisaMap = new HashMap<>();
-
     private static Matcher buildMatcherObj(String comparatorName,List<String> params,Object expect){
         Object obj = null;
         try {
@@ -77,16 +76,20 @@ public class AssertUtil {
         return;
     }
 
+    /**
+     * support regex/jsonpath/jmespath expression evaluator
+     * @param exp
+     * @param responseEntity
+     * @return
+     */
     public static String dataTransfer(String exp, ResponseEntity responseEntity){
         if(StringUtils.isEmpty(exp)){
             return "";
         }
-        //表达式、正则（内容）、jsonpath（内容）、jmespath（内置对象）
         String respStr = JSON.toJSONString(responseEntity);
         if(RegExpUtil.isExp(exp)){
             return RegExpUtil.buildNewString(exp, Maps.newHashMap());
         }else if(exp.startsWith("^")&&exp.endsWith("$")){
-           // return exp.re
           String regSearch = RegExpUtil.findString(exp,respStr);
           return regSearch;
         }else if(exp.startsWith("$.")){

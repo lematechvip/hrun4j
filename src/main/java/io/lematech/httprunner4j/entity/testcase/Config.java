@@ -17,9 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Config<T> extends BaseModel {
-    /**
-     * 必填
-     */
     @JsonProperty(value = "name")
     private String name;
     @JsonProperty(value = "base_url")

@@ -38,7 +38,7 @@
         <appender-ref ref="CONSOLE-WITH-COLOR"/>
         <appender-ref ref="FILE"/>
     </root>
-    <logger name="com.example.logbackdemo.IndexAction" level="info" additivity="false">
+    <logger name="com.example.logbackdemo.IndexAction" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 </configuration>
