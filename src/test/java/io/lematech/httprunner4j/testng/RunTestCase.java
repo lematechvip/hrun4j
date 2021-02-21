@@ -137,9 +137,7 @@ public class RunTestCase extends TestBase {
     }
     private static String dirPath2pkgName(String pkgPath){
         StringBuffer pkgName = new StringBuffer();
-        pkgName.append(Constant.ROOT_PKG_NAME)
-                .append(".")
-                .append(Constant.TEST_CLASS_ROOT_PKG_NAME);
+        pkgName.append(Constant.ROOT_PKG_NAME);
         if(StrUtil.isEmpty(pkgPath)){
             return pkgName.toString();
         }

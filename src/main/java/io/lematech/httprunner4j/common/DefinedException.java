@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.common;
 
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -13,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-
 public class DefinedException extends RuntimeException{
-    private String msg;
     public DefinedException(String msg){
-        this.msg = msg;
+        if(StrUtil.isEmpty(msg)){
+            log.info("空空");
+        }
         log.error(msg);
     }
 }

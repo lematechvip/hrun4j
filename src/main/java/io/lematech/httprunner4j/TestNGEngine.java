@@ -5,6 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class TestNGEngine {
     private static TestNG testNG;
     private static String suiteName;
+    private static SchemaValidator schemaValidator = new SchemaValidator();
     private static Map<String, List<String>> testCasePkgGroup = new HashMap<>();
     public static TestNG getInstance(){
         if(testNG == null){
@@ -54,16 +56,6 @@ public class TestNGEngine {
         }
         return testNG;
     }
-
-    /**
-     * add test classes
-     * @param classes
-     * @return
-     */
-    public static TestNG setTestClasses(Class[] classes){
-        getInstance().setTestClasses(classes);
-        return testNG;
-    }
     public static void run(String path){
         if(StrUtil.isEmpty(path)){
             path = ".";
@@ -72,6 +64,9 @@ public class TestNGEngine {
         String execPath = currentPath.getAbsolutePath();
         log.debug("execute path : [{}] test cases",execPath);
         traversePkgTestCaseGroup(currentPath);
+        if(preValidationExceptionMap.size()>0){
+            throw new DefinedException(preValidationExceptionMap.toString());
+        }
         if(testCasePkgGroup == null || testCasePkgGroup.size() ==0){
             log.warn("in path [{}] not found valid testcases",execPath);
         }
@@ -96,12 +91,13 @@ public class TestNGEngine {
             String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH,ctx);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
             classes.add(clazz);
-            log.debug("class full path：[{}],pkg path：[{}],class name：{} added done.",fullTestClassName,pkgName,className);
+            log.info("class full path：[{}],pkg path：[{}],class name：{} added done.",fullTestClassName,pkgName,className);
         }
         Class [] execClass = classes.toArray(new Class[0]);
         getInstance().setTestClasses(execClass);
     }
 
+    private static List<String> preValidationExceptionMap =  new ArrayList<>();
     private static void traversePkgTestCaseGroup(File listFile){
         if(!listFile.exists()){
             String exceptionMsg = String.format("file: %s is not exist",listFile.getName());
@@ -116,9 +112,17 @@ public class TestNGEngine {
                 if(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                         ||Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)){
                     if(!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)){
-                        log.warn("file name is invalid java identifier and try to rename it . prefix append hrun4j");
-                        StringBuffer newName = new StringBuffer();
-                        newName.append("hrun4j").append(fileMainName);
+                        String exceptionMsg = String.format("%s.%s,file name is invalid,not apply java identifier,please modify it",pkgPath,fileMainName);
+                        preValidationExceptionMap.add(exceptionMsg);
+                        continue;
+                    }
+                    ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
+                    TestCase testCase = testCaseLoader.load(file);
+                    try{
+                        SchemaValidator.validateTestCaseValid(testCase);
+                    }catch (DefinedException e){
+                        String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s",pkgPath,fileMainName,e.getMessage());
+                        preValidationExceptionMap.add(exceptionMsg);
                     }
                     StringBuffer pkgName = new StringBuffer(dirPath2pkgName(pkgPath));
                     String folderName = file.getParentFile().getName();
@@ -135,7 +139,7 @@ public class TestNGEngine {
                         testCasePkgGroup.put(fullTestClassName,testClassList);
                     }
                 }else {
-                    log.warn("in pkgPath {} file {} not support,only support json or yml",pkgPath,fileMainName);
+                    log.warn("in pkgPath {} file {} not support,only support .json or .yml suffix",pkgPath,fileMainName);
                 }
             }else{
                 traversePkgTestCaseGroup(file);
@@ -145,9 +149,7 @@ public class TestNGEngine {
 
     private static String dirPath2pkgName(String pkgPath){
         StringBuffer pkgName = new StringBuffer();
-        pkgName.append(Constant.ROOT_PKG_NAME)
-                .append(".")
-                .append(Constant.TEST_CLASS_ROOT_PKG_NAME);
+        pkgName.append(Constant.ROOT_PKG_NAME);
         if(StrUtil.isEmpty(pkgPath)){
             return pkgName.toString();
         }

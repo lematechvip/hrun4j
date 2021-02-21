@@ -1,0 +1,57 @@
+{
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "minimum": 0
+        },
+        "detail" : {
+          "type" : "string"
+        },
+        "area" : {
+          "type" : "integer"
+        },
+        "province" : {
+          "type" : "string",
+          "pattern" : "^(北京市|天津市|....|浙江省)$"
+        },
+        "parentArea" : {
+          "type" : "integer"
+        },
+        "lng" : {
+          "type" : "number",
+          "minimum" : 73,
+          "maximum" : 135
+        },
+        "district" : {
+          "type" : "string"
+        },
+        "lat" : {
+          "type" : "number",
+          "minimum" : 4,
+          "maximum" : 54
+        },
+        "city" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "id",
+        "detail",
+        "area",
+        "province",
+        "parentArea",
+        "lng",
+        "district",
+        "lat",
+        "city"
+      ]
+    }
+  },
+  "required" : [
+    "data"
+  ]
+}

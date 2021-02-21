@@ -19,15 +19,4 @@ public class ResponseEntity {
     private Double responseTime;
     private Object responseContent;
     private Map<String,String> cookies;
-
-    @Override
-    public String toString() {
-        return "ResponseEntity{" +
-                "statusCode=" + statusCode +
-                ", headers=" + headers +
-                ", responseTime=" + responseTime +
-                ", responseContent=" + responseContent +
-                ", cookies=" + cookies +
-                '}';
-    }
 }

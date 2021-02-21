@@ -53,24 +53,19 @@ public class TestCaseDefined {
         List<TestStep> testSteps  = testCase.getTestSteps();
         for(int index = 0;index <testSteps.size();index++){
             TestStep testStep = testSteps.get(index);
-            log.info("STEP[{}] : {}",index,testStep.getName());
+            log.info("STEP[{}] : {}",++index,testStep.getName());
             String url = String.format("%s%s",config.getBaseUrl(),testStep.getRequest().getUrl());
-            Map<String,Object> configVars = config.getVariables();
-            Map<String,Object> testStepVars = testStep.getVariables();
-            RequestEntity requestEntity = testStep.getRequest();
+            expressionProcessor.setVariablePriority(testContextVariable,config.getVariables(),testStep.getVariables());
+            RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
             requestEntity.setUrl(url);
-            expressionProcessor.setVariablePriority(testContextVariable,configVars,testStepVars);
-            RequestEntity requestNewEntity = (RequestEntity) expressionProcessor.executeExpression(requestEntity);
-            log.info(requestNewEntity.toString());
-            ResponseEntity responseEntity = MyHttpClient.executeReq(requestNewEntity);
-            log.info(responseEntity.toString());
+            ResponseEntity responseEntity = MyHttpClient.executeReq(requestEntity);
             List<Map<String,Object>> validateList = testStep.getValidate();
             AssertUtil.assertList(validateList,responseEntity);
-            extractsVariable(testStep.getExtract(),responseEntity);
+            extractsVariables(testStep.getExtract(),responseEntity);
         }
     }
 
-    private void extractsVariable(Object extracts,ResponseEntity responseEntity){
+    private void extractsVariables(Object extracts,ResponseEntity responseEntity){
         log.info("extracts 类型：{}",extracts.getClass());
         Class clz = extracts.getClass();
         if(clz == ArrayList.class){

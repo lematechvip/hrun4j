@@ -56,7 +56,6 @@ public class HotLoader {
         return clazz;
     }
 
-
     /**
      *  by src path hot load directory java file
      * @param srcPath

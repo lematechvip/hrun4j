@@ -82,24 +82,4 @@ public class RequestEntity<T> {
     private Boolean stream;
 
 
-    @Override
-    public String toString() {
-        return "RequestEntity{" +
-                "method='" + method + '\'' +
-                ", url='" + url + '\'' +
-                ", params=" + params +
-                ", data=" + data +
-                ", json=" + json +
-                ", headers=" + headers +
-                ", timeout=" + timeout +
-                ", allowRedirects=" + allowRedirects +
-                ", cookies=" + cookies +
-                ", files=" + files +
-                ", auth=" + auth +
-                ", proxies=" + proxies +
-                ", upload=" + upload +
-                ", verify=" + verify +
-                ", stream=" + stream +
-                '}';
-    }
 }

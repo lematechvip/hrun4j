@@ -30,6 +30,7 @@ public class Handler {
         InputStream inputStream = this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("testcases/" + this.testCaseName);
+
         return yaml.load(inputStream);
     }
 

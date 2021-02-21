@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.entity.testcase;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.util.List;
@@ -15,5 +16,6 @@ import java.util.List;
 @Data
 public class TestCase {
     private Config config;
+    @JSONField(name="teststeps")
     private List<TestStep> testSteps;
 }
