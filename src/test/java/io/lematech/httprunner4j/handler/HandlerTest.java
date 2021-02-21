@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 
 public class HandlerTest {
-    private Handler handler = new Handler();
+   // private Handler handler = new Handler();
     @Test
     public void testYamlLoad(){
         Properties props = System.getProperties();
@@ -37,7 +37,7 @@ public class HandlerTest {
             System.out.println(entry.getValue());
         }
 
-        handler.load("demo_testcase_request.yml");
+        //handler.load("demo_testcase_request.yml");
     }
     @Test
     public void testExecutor(){

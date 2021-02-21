@@ -3,14 +3,58 @@ package $pkgName;
 import io.lematech.httprunner4j.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.common.DefinedException;
+import org.testng.annotations.Test;
+import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.entity.testcase.TestCaseMeta;
+import io.lematech.httprunner4j.NGDataProvider;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Method;
+
 public class $className extends TestBase {
-    #foreach($methodName in $methodList)
-    @Test(dataProvider = "dataProvider")
-    public void $methodName(TestCase testCase){
-        TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
-    #end
+    #foreach($instance in $methodList)
+        #set( $methodName = $!{instance.getMethodName()} )
+        #set( $testCase = $!{instance.getTestCase()} )
+        #set( $dataProviderMethodName = "dataProvider_$methodName" )
+
+        @DataProvider
+        public Object[][] $dataProviderMethodName(Method method) {
+            Object[][] objects ;
+            try{
+                String pkgName = fromClassExtractPkg(method.getDeclaringClass().getName());
+                objects = NGDataProvider.dataProviderExistInstance($instance.getTestCase());
+            }catch (Exception e){
+                String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",method.getName(),e.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
+            return objects;
+        }
+        @Test(dataProvider = "$dataProviderMethodName")
+        public void $methodName(TestCase testCase){
+            TestCaseExecutorEngine.getInstance().execute(testCase);
+        }
+        #end
+
+        /**
+        * method.getDeclaringClass().getPackage().getName()
+        * avoid dyn load class ,getpakcage nullpointerexception
+        * @param className
+        * @return
+        */
+        public String fromClassExtractPkg(String className) {
+            if (className == null) {
+                    return null;
+            } else {
+                int index = className.lastIndexOf(".");
+                if (index == -1) {
+                    return "";
+                } else {
+                    String ext = className.substring(0,index);
+                    return ext;
+                }
+            }
+        }
 }
 

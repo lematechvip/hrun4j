@@ -27,6 +27,7 @@ public class TestCaseYmlLoaderImpl implements ITestCaseLoader {
                 .append(".");
         classResourceTestCasePath
                 .append(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
+        log.info("test case resources path: {}",classResourceTestCasePath.toString());
         InputStream inputStream =  this.getClass().getResourceAsStream(classResourceTestCasePath.toString());
         if(inputStream == null){
             String exceptionMsg = String.format("in resources the testcase %s is not exists.",classResourceTestCasePath);

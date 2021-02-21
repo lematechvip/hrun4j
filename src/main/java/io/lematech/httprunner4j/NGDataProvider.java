@@ -21,20 +21,28 @@ import java.util.Map;
 public class NGDataProvider {
 
     public static Object[][] dataProvider(String pkgName, String testCaseName) {
-        Object[][] testCases  = null;
-            String dataFileResourcePath = seekDataFileByRule(pkgName,testCaseName);
-            TestCase testCase = TestCaseLoaderFactory.getLoader("yml")
-                    .load(dataFileResourcePath);
-            SchemaValidator.validateTestCaseValid(testCase);
-            List<TestCase> result = handleMultiGroupData(testCase);
-             testCases = new Object[result.size()][];
-            for (int i = 0; i < result.size(); i++) {
-                testCases[i] = new Object[]{result.get(i)};
-            }
-
+        String dataFileResourcePath = seekDataFileByRule(pkgName,testCaseName);
+        TestCase testCase = TestCaseLoaderFactory.getLoader("yml")
+                .load(dataFileResourcePath);
+        SchemaValidator.validateTestCaseValid(testCase);
+        Object[][] testCases = getObjects(testCase);
         return testCases;
     }
 
+    private static Object[][] getObjects(TestCase testCase) {
+        Object[][] testCases;
+        List<TestCase> result = handleMultiGroupData(testCase);
+        testCases = new Object[result.size()][];
+        for (int i = 0; i < result.size(); i++) {
+            testCases[i] = new Object[]{result.get(i)};
+        }
+        return testCases;
+    }
+
+    public static Object[][] dataProviderExistInstance(TestCase testCase) {
+        Object[][] testCases = getObjects(testCase);
+        return testCases;
+    }
     private static String seekDataFileByRule(String pkgName, String testCaseName) {
         StringBuffer dataFileResourcePath = new StringBuffer();
         dataFileResourcePath.append(Constant.TEST_CASE_DIRECTORY_NAME).append(File.separator);

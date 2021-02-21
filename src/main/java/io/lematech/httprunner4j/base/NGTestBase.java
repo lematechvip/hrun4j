@@ -3,39 +3,22 @@ package io.lematech.httprunner4j.base;
 import io.lematech.httprunner4j.NGDataProvider;
 import io.lematech.httprunner4j.common.DefinedException;
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.*;
+import org.testng.annotations.DataProvider;
 
 import java.lang.reflect.Method;
 
 
 @Slf4j
-public class TestBase {
-    private String testCaseName;
-    @BeforeSuite
-    public void beforeSuite(){
-        log.info("[========================================]@beforeSuite()");
-    }
-    @BeforeMethod
-    public void setUp() {
-        log.info("[===================="+this.testCaseName+"====================]@START");
-    }
-    @AfterMethod
-    public void tearDown() {
-        log.info("[===================="+this.testCaseName+"====================]@END");
-    }
-    @AfterSuite
-    public void afterSuite(){
-        log.info("[========================================]@afterSuite()");
-    }
+public class NGTestBase extends TestBase {
+
     @DataProvider
     public Object[][] dataProvider(Method method) {
         Object[][] objects ;
         try{
-            this.testCaseName = method.getName();
-            String pkgName = method.getDeclaringClass().getPackage().getName();
-            objects = NGDataProvider.dataProvider(pkgName,testCaseName);
+            String pkgName = fromClassExtractPkg(method.getDeclaringClass().getName());
+            objects = NGDataProvider.dataProvider(pkgName,method.getName());
         }catch (Exception e){
-            String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());
+            String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",method.getName(),e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return objects;

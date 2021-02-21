@@ -35,7 +35,7 @@ public class SchemaValidator {
             String exceptionMsg = String.format("load resource {} io exception: %s",Constant.TEST_CASE_SCHEMA,e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
-        JsonNode dataNode = null;
+        JsonNode dataNode;
         try {
             dataNode = JsonLoader.fromString(JSON.toJSONString(testCaseJson));
             JsonSchema schema = factory.getJsonSchema(schemaNode);

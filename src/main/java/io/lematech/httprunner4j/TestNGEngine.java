@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.entity.testcase.TestCaseMeta;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
@@ -26,7 +27,7 @@ public class TestNGEngine {
     private static TestNG testNG;
     private static String suiteName;
     private static SchemaValidator schemaValidator = new SchemaValidator();
-    private static Map<String, List<String>> testCasePkgGroup = new HashMap<>();
+    private static Map<String, List<TestCaseMeta>> testCasePkgGroup = new HashMap<>();
     public static TestNG getInstance(){
         if(testNG == null){
             testNG = new TestNG();
@@ -79,7 +80,7 @@ public class TestNGEngine {
 
     private static void addTestClasses(){
         List<Class> classes = new ArrayList<>();
-        for(Map.Entry<String,List<String>> entry:testCasePkgGroup.entrySet()){
+        for(Map.Entry<String,List<TestCaseMeta>> entry:testCasePkgGroup.entrySet()){
             String fullTestClassName = entry.getKey();
             List methodNameList = entry.getValue();
             String pkgName = StrUtil.subBefore(fullTestClassName,".",true);
@@ -89,9 +90,11 @@ public class TestNGEngine {
             ctx.put("className", className);
             ctx.put("methodList", methodNameList);
             String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH,ctx);
+            log.info("test case content:{}",templateRenderContent);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
             classes.add(clazz);
-            log.info("class full path：[{}],pkg path：[{}],class name：{} added done.",fullTestClassName,pkgName,className);
+
+            log.debug("class full path：[{}],pkg path：[{}],class name：{} added done.",fullTestClassName,pkgName,className);
         }
         Class [] execClass = classes.toArray(new Class[0]);
         getInstance().setTestClasses(execClass);
@@ -123,6 +126,7 @@ public class TestNGEngine {
                     }catch (DefinedException e){
                         String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s",pkgPath,fileMainName,e.getMessage());
                         preValidationExceptionMap.add(exceptionMsg);
+                        continue;
                     }
                     StringBuffer pkgName = new StringBuffer(dirPath2pkgName(pkgPath));
                     String folderName = file.getParentFile().getName();
@@ -130,12 +134,15 @@ public class TestNGEngine {
                     pkgName.append(".").append(testClassName);
                     String fullTestClassName = pkgName.toString();
                     log.debug("full test class name is：{},class file is：{},method name is：{}",fullTestClassName,testClassName,fileMainName);
+                    TestCaseMeta testCaseInstance =  new TestCaseMeta();
+                    testCaseInstance.setMethodName(fileMainName);
+                    testCaseInstance.setTestCase(testCase);
                     if(testCasePkgGroup.containsKey(fullTestClassName)){
-                        List testClassList = testCasePkgGroup.get(fullTestClassName);
-                        testClassList.add(fileMainName);
+                        List<TestCaseMeta> testClassList = testCasePkgGroup.get(fullTestClassName);
+                        testClassList.add(testCaseInstance);
                     }else{
-                        List testClassList = new ArrayList<>();
-                        testClassList.add(fileMainName);
+                        List<TestCaseMeta> testClassList = new ArrayList<>();
+                        testClassList.add(testCaseInstance);
                         testCasePkgGroup.put(fullTestClassName,testClassList);
                     }
                 }else {
