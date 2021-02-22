@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import io.lematech.httprunner4j.utils.MyHttpClient;
+import io.lematech.httprunner4j.utils.HttpClientUtil;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -84,9 +84,9 @@ public class ShortcutKey {
         Map<String,String> headers = new HashMap<>();
         headers.put("Content-Type","application/json;charset=UTF-8");
        // MyHttpClient.doPost("http://httpbin.org/post",formData);
-        System.out.println(MyHttpClient.doPost("http://httpbin.org/post",headers,formData));
+        System.out.println(HttpClientUtil.doPost("http://httpbin.org/post",headers,formData));
         String jsonStr = "{\"code\":\"00\",\"msg\":\"ok！\",\"data\":[{\"testStatus\":3,\"count\":13},{\"testStatus\":4,\"count\":22},{\"testStatus\":5,\"count\":27}]}";
-        System.out.println(MyHttpClient.doPostJson("http://httpbin.org/post",jsonStr));
+        System.out.println(HttpClientUtil.doPostJson("http://httpbin.org/post",jsonStr));
     }
 
 }

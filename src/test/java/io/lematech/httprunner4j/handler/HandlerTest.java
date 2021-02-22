@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.handler;
 
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.utils.MyHttpClient;
+import io.lematech.httprunner4j.utils.HttpClientUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
@@ -83,7 +83,6 @@ public class HandlerTest {
                         map.put(path, object.toString());
                         // System.out.println("["+path+"]:"+object.toString()+" ");
                         path = modifyPath(path);
-
                     }
                 } else {
                     map.put(path, null);
@@ -104,6 +103,6 @@ public class HandlerTest {
 
     @Test
     public  void testHttpClient(){
-        System.out.println(JSON.toJSONString(MyHttpClient.doGet("https://postman-echo.com/get")));
+        System.out.println(JSON.toJSONString(HttpClientUtil.doGet("https://postman-echo.com/get")));
     }
 }

@@ -5,9 +5,9 @@ import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-import io.lematech.httprunner4j.utils.AssertUtil;
+import io.lematech.httprunner4j.AssertChecker;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
-import io.lematech.httprunner4j.utils.MyHttpClient;
+import io.lematech.httprunner4j.utils.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -58,9 +58,9 @@ public class TestCaseDefined {
             expressionProcessor.setVariablePriority(testContextVariable,config.getVariables(),testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
             requestEntity.setUrl(url);
-            ResponseEntity responseEntity = MyHttpClient.executeReq(requestEntity);
+            ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
             List<Map<String,Object>> validateList = testStep.getValidate();
-            AssertUtil.assertList(validateList,responseEntity);
+            AssertChecker.assertList(validateList,responseEntity);
             extractsVariables(testStep.getExtract(),responseEntity);
         }
     }
@@ -77,7 +77,7 @@ public class TestCaseDefined {
                     Map.Entry<String, String> entry = entries.next();
                     String key = entry.getKey();
                     String value = entry.getValue();
-                    String transferValue = AssertUtil.dataTransfer(value,responseEntity);
+                    String transferValue = AssertChecker.dataTransfer(value,responseEntity);
                     testContextVariable.put(key,transferValue);
                 }
             }

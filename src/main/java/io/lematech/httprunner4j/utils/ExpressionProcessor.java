@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.utils;
 
 import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import lombok.Data;
@@ -70,16 +71,14 @@ public class ExpressionProcessor<T> {
      */
     public String executeStringExpression(String str){
         if(RegExpUtil.isExp(str)){
-            String regExp = "(?<=\\$\\{).*?(?=})";
-            List<String> matchList = RegExpUtil.find(regExp,str);
+            List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION,str);
             List<String> matcherList = new ArrayList<>();
             for(String exp : matchList){
                 String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp,currentVariable));
                 matcherList.add(handleResult);
             }
-            String regExpReplace = "\\$\\{.*?}";
             for(String match : matcherList){
-                str = str.replaceFirst(regExpReplace,match);
+                str = str.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE,match);
             }
         }
         return str;
@@ -102,13 +101,12 @@ public class ExpressionProcessor<T> {
      * @param testStepVars
      */
     public void setVariablePriority(Map<String,Object> testContextVariable,Map<String,Object> configVars,Map<String,Object> testStepVars){
-        currentVariable = testContextVariable;
         handleVariablesExpression(configVars,testStepVars);
-        Map<String,Object> resultVariable = new HashMap<>();
-        resultVariable.putAll(configVars);
-        resultVariable.putAll(testStepVars);
-        resultVariable.putAll(testContextVariable);
-        currentVariable = resultVariable;
+        Map<String,Object> resultVariables = new HashMap<>();
+        resultVariables.putAll(configVars);
+        resultVariables.putAll(testContextVariable);
+        resultVariables.putAll(testStepVars);
+        currentVariable = resultVariables;
     }
 
     /**
@@ -146,14 +144,14 @@ public class ExpressionProcessor<T> {
                     setMethod.invoke(object,executeExpression((T) fieldValue));
                 }
             }catch (NoSuchMethodException e) {
-                String execeptionMsg = String.format("no such method exception %s",e.getMessage());
-                throw new DefinedException(execeptionMsg);
+                String exceptionMsg = String.format("no such method exception %s",e.getMessage());
+                throw new DefinedException(exceptionMsg);
             } catch (IllegalAccessException e) {
-                String execeptionMsg = String.format("illegal access exception %s",e.getMessage());
-                throw new DefinedException(execeptionMsg);
+                String exceptionMsg = String.format("illegal access exception %s",e.getMessage());
+                throw new DefinedException(exceptionMsg);
             } catch (InvocationTargetException e) {
-                String execeptionMsg = String.format("invocation target exception %s",e.getMessage());
-                throw new DefinedException(execeptionMsg);
+                String exceptionMsg = String.format("invocation target exception %s",e.getMessage());
+                throw new DefinedException(exceptionMsg);
             }
         }
         return object;

@@ -51,7 +51,6 @@ config:
                      "lastPage": 1
                  }
              }]
-
 teststeps:
 -
     name: get with params

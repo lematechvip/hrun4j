@@ -25,7 +25,7 @@ public class SchemaValidator {
      * @return
      */
     public static void validateTestCaseValid(TestCase testCaseJson){
-        JsonNode schemaNode = null;
+        JsonNode schemaNode;
         try {
             schemaNode = JsonLoader.fromResource(Constant.TEST_CASE_SCHEMA);
         } catch (IOException ioException) {

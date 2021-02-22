@@ -10,13 +10,12 @@ public class TestCaseLoaderFactory {
     public synchronized static ITestCaseLoader getLoader(String extName){
         if(StrUtil.isEmpty(extName)){
             log.info("default set testcase loader is yml");
-            return new TestCaseYmlLoaderImpl();
+            return new TestCaseLoaderImpl();
         }
-        if(extName.equalsIgnoreCase(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME)){
-            return new TestCaseYmlLoaderImpl();
-        } else if(extName.equalsIgnoreCase(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME)){
-            return new TestCaseJsonLoaderImpl();
-        } else{
+        if(extName.equalsIgnoreCase(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME)
+                ||extName.equalsIgnoreCase(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME)){
+            return new TestCaseLoaderImpl();
+        }else{
             String exceptionMsg = String.format("ext name %s not support.",extName);
             throw new DefinedException(exceptionMsg);
         }

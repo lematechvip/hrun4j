@@ -175,7 +175,7 @@ public class HotLoader {
         if(source.contains("$pkgName")){
             replaceSource = source.replace("$pkgName",pkgName);
         }
-        if(source.contains("className")){
+        if(source.contains("$className")){
             replaceSource = replaceSource.replace("className",className);
         }
         log.debug("replace source parameters info : {}",replaceSource);

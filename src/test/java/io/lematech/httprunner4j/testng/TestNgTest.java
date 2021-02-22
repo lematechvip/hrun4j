@@ -23,35 +23,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TestNgTest {
-    @Test
-        public void testNg(){
-        /**初始化testNG对象*/
-        TestNG testNG = new TestNG();
-        TestListenerAdapter listener = new TestListenerAdapter();
-        testNG.addListener(listener);
-        /**添加需要执行的测试类数组*/
-        Class[] classes = new Class[]{TestNgSuiteTest.class};
-        testNG.setTestClasses(classes);
-        /**执行测试用例*/
-        testNG.run();
-        /**汇总分析*/
-        List<ITestResult> pass = listener.getPassedTests();
-        List<ITestResult> failed = listener.getFailedTests();
-        List<Long> interval = pass.stream().map(x -> (x.getEndMillis() - x.getStartMillis())).collect(Collectors.toList());
-        /**最大耗时*/
-        long maxtime = interval.stream().max(Comparator.naturalOrder()).get();
-
-        /**最小耗时*/
-        long mintime = interval.stream().min(Comparator.naturalOrder()).get();
-
-        /**平均耗时*/
-        double avgtime = interval.stream().mapToDouble(i -> i).average().getAsDouble();
-
-        System.out.println(String.format("test result: [success: %s],[failure: %s]",pass.size(),failed.size()));
-
-        System.out.println(String.format("performance analysis: [maxtime: %s(ms)],[mintime: %s(ms),[avgtime: %s(ms)]]",
-                maxtime, mintime, avgtime));
-    }
 
     @Test
     public void dyGenerateTestClass(){
@@ -92,8 +63,8 @@ public class TestNgTest {
     public void testJavaCompiler(){
         try {
             String className = "io.lematech.httprunner4j.testng.TestNgSuiteTest";
-            TestNgSuiteTest testNgSuiteTest = new TestNgSuiteTest();
-            System.out.println("before:" + testNgSuiteTest);
+            //TestNgSuiteTest testNgSuiteTest = new TestNgSuiteTest();
+            //System.out.println("before:" + testNgSuiteTest);
             ClassPool pool = ClassPool.getDefault();
             CtClass cc = pool.get(className);
             CtMethod mthd = CtNewMethod.make("public String test() { return \"test() is called \"+ toString();  }", cc);

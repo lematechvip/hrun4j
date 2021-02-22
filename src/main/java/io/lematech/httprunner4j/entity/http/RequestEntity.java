@@ -1,7 +1,8 @@
 package io.lematech.httprunner4j.entity.http;
 
-import com.alibaba.fastjson.JSONObject;
+
 import lombok.Data;
+import net.sf.json.JSON;
 
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class RequestEntity<T> {
      * 1、request body in json format
      * 2、request body prepared with function, or reference a variable
      */
-    private JSONObject json;
+    private JSON json;
     /**
      * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
      */

@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -8,6 +8,8 @@ import com.jayway.jsonpath.JsonPath;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
+import io.lematech.httprunner4j.utils.JsonUtil;
+import io.lematech.httprunner4j.utils.RegExpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
@@ -25,7 +27,7 @@ import java.util.Map;
  *
  */
 @Slf4j
-public class AssertUtil {
+public class AssertChecker {
     private static Map<String,String> alisaMap = new HashMap<>();
     private static Matcher buildMatcherObj(String comparatorName,List<String> params,Object expect){
         Object obj = null;
@@ -97,7 +99,7 @@ public class AssertUtil {
             Object searchResult = JsonPath.read(document, exp);
             log.info("查询结果：{}",searchResult);
         }else {
-            JsonNode jsonNode = null;
+            JsonNode jsonNode;
             try{
                 jsonNode = JsonUtil.getJmesPathResult(exp,respStr);
                 log.info("节点类型：{}",jsonNode.getNodeType());
@@ -139,7 +141,6 @@ public class AssertUtil {
                     }
                 }
             }
-           // log.info("方法集：{}",JSON.toJSONString(methodMap));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -166,7 +167,6 @@ public class AssertUtil {
             }
         }
         String simpleMethodName = methodAlisa.toString().toLowerCase();
-        //log.info("方法名：{},简写：{}",methodName,simpleMethodName);
         return simpleMethodName;
     }
 }

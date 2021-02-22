@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.utils;
 
+import io.lematech.httprunner4j.common.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -13,35 +14,29 @@ import java.util.regex.Pattern;
 public class RegExpUtil {
     public static String buildNewString(String str, Map env){
         if(isExp(str)){
-            String regExp = "(?<=\\$\\{).*?(?=})";
-            List<String> matchList = RegExpUtil.find(regExp,str);
+            List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION,str);
             List<String> matcherList = new ArrayList<>();
             for(String exp : matchList){
                 String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp,env));
                 matcherList.add(handleResult);
             }
-            String regExpReplace = "\\$\\{.*?}";
             for(String match : matcherList){
-                str = str.replaceFirst(regExpReplace,match);
+                str = str.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE,match);
             }
         }
         return str;
     }
-    public static boolean  isFilter(String str){
-        return !match("!.*", str.trim());
-    }
-
     public static Boolean isExp(String exp){
         Boolean flag = false;
         if(StringUtils.isEmpty(exp)){
             return false;
         }
-        String regExpExp = "(.*)\\$\\{(.*?)\\}(.*)";
-        if(match(regExpExp,exp)){
+        if(match(Constant.REGEX_EXPRESSION_FLAG,exp)){
             flag = true;
         }
         return flag;
     }
+
     private static boolean match(String reg, String str) {
         return Pattern.matches(reg, str);
     }
@@ -63,20 +58,4 @@ public class RegExpUtil {
         }
         return returnStr;
     }
-
-
-
-
-    /*public boolean isTransform(String str) {
-        return this.match(".*" + Keyword.getKeyword("random") + ".*", str);
-    }
-
-    public String replaceRandom(String str) {
-        String findStr = this.findString(Keyword.getKeyword("random"), str);
-        int randomNum = Integer.parseInt(this.findString("(?<=\\{).*(?=\\})",
-                str));
-        String findStr_ = findStr.replaceFirst(Keyword.getKeyword("random"),
-                new TimeString().getRandomNum(randomNum));
-        return str.replace(findStr, findStr_);
-    }*/
 }

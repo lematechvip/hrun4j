@@ -11,7 +11,7 @@ public interface ITestCaseLoader {
      * @param testCaseName
      * @return
      */
-    TestCase load(String testCaseName);
+    TestCase load(String testCaseName,String extName);
 
     /**
      *

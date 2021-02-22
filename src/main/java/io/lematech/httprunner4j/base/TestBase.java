@@ -29,18 +29,18 @@ public class TestBase {
     }
     @DataProvider
     public Object[][] dataProvider(Method method) {
-        Object[][] objects ;
+        Object[][] objects;
+        this.testCaseName = method.getName();
+        String pkgName = method.getDeclaringClass().getPackage().getName();
         try{
-            this.testCaseName = method.getName();
-            String pkgName = method.getDeclaringClass().getPackage().getName();
-            objects = NGDataProvider.dataProvider(pkgName,testCaseName);
+            objects = NGDataProvider.dataProvider(fromClassExtractPkg(pkgName),testCaseName);
         }catch (Exception e){
+            e.printStackTrace();
             String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return objects;
     }
-
     /**
      * method.getDeclaringClass().getPackage().getName()
      * avoid dyn load class ,getpakcage nullpointerexception

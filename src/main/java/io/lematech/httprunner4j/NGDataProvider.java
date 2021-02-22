@@ -10,10 +10,10 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.extern.slf4j.Slf4j;
+import org.testng.collections.Maps;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +21,10 @@ import java.util.Map;
 public class NGDataProvider {
 
     public static Object[][] dataProvider(String pkgName, String testCaseName) {
-        String dataFileResourcePath = seekDataFileByRule(pkgName,testCaseName);
-        TestCase testCase = TestCaseLoaderFactory.getLoader("yml")
-                .load(dataFileResourcePath);
+        String extName = RunnerConfig.getInstance().getTestCaseExtName();
+        String dataFileResourcePath = seekDataFileByRule(pkgName,testCaseName,extName);
+        TestCase testCase = TestCaseLoaderFactory.getLoader(extName)
+                .load(dataFileResourcePath,extName);
         SchemaValidator.validateTestCaseValid(testCase);
         Object[][] testCases = getObjects(testCase);
         return testCases;
@@ -39,27 +40,63 @@ public class NGDataProvider {
         return testCases;
     }
 
-    public static Object[][] dataProviderExistInstance(TestCase testCase) {
-        Object[][] testCases = getObjects(testCase);
-        return testCases;
-    }
-    private static String seekDataFileByRule(String pkgName, String testCaseName) {
+    private static String seekDataFileByRule(String pkgName, String testCaseName,String extName) {
+        List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        if(executePaths.size()>0){
+            for(String path : executePaths){
+                searchTestCaseByName(path,testCaseName);
+                if(!StrUtil.isEmpty(testCasePath)){
+                    break;
+                }
+            }
+            if(StrUtil.isEmpty(testCasePath)){
+                String exceptionMsg = String.format("in %s path,not found  %s.%s",executePaths,testCaseName,extName);
+                throw new DefinedException(exceptionMsg);
+            }
+            return testCasePath;
+        }
+
         StringBuffer dataFileResourcePath = new StringBuffer();
         dataFileResourcePath.append(Constant.TEST_CASE_DIRECTORY_NAME).append(File.separator);
         if(!StrUtil.isEmpty(pkgName)){
             String[] pkgNameMetas = pkgName.split("\\.");
             int pkgNameMetaLength = pkgNameMetas.length;
             if (pkgNameMetaLength >= 2) {
-                log.debug("full package: {},company type,company: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
+                log.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
             }
-            if(pkgNameMetaLength >= 3){
-                for (int index = 3;index< pkgNameMetaLength; index++) {
-                    dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
-                }
+            for(int index = 3;index< pkgNameMetaLength; index++) {
+                dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
             }
         }
         dataFileResourcePath.append(testCaseName);
         return dataFileResourcePath.toString();
+    }
+    private static String testCasePath ;
+    /**
+     *
+     * @param path
+     * @param testCaseName
+     * @return
+     */
+    private static void searchTestCaseByName(String path,String testCaseName){
+        File filesPath = new File(path);
+        File []files = filesPath.listFiles();
+        for(File file : files){
+            if(file.isFile()){
+                StringBuffer testCaseFullName = new StringBuffer();
+                testCaseFullName.append(testCaseName).append(".")
+                        .append(RunnerConfig.getInstance().getTestCaseExtName());
+                if(file.exists()&&file.getName().equalsIgnoreCase(testCaseFullName.toString())){
+                    log.debug("filename {}",file.getName());
+                    log.debug("testCaseFullName:{}",testCaseFullName.toString().trim());
+                    log.debug("file Path {}",file.getPath());
+                    testCasePath = file.getPath();
+                    return ;
+                }
+            }else {
+                searchTestCaseByName(file.getPath(),testCaseName);
+            }
+        }
     }
 
 
@@ -95,27 +132,27 @@ public class NGDataProvider {
                             String exceptionMsg = String.format("testcase deep copy exception : %s", e.getMessage());
                             throw new DefinedException(exceptionMsg);
                         }
-                        Map<String, Object> variables = cpTestCase.getConfig().getVariables();
-                        Map map = new HashMap<>();
-                        Map parameterPro = new HashMap<>();
+                        Map<String, Object> configVariables = cpTestCase.getConfig().getVariables();
+                        Map parameterVariables = Maps.newHashMap();
+                        Map resultVariables = Maps.newHashMap();
                         if (params.length == 1) {
                             String name = params[0];
-                            map.put(name, arr);
+                            parameterVariables.put(name, arr);
                         } else {
                             if (arr instanceof JSONArray) {
                                 JSONArray jsonArray = (JSONArray) arr;
                                 int size = jsonArray.size();
                                 for (int index = 0; index < size; index++) {
                                     String name = params[index];
-                                    map.put(name, jsonArray.get(index));
+                                    parameterVariables.put(name, jsonArray.get(index));
                                 }
                             }
                         }
-                        parameterPro.putAll(map);
-                        parameterPro.putAll(variables);
+                        resultVariables.putAll(configVariables);
+                        resultVariables.putAll(parameterVariables);
                         Config config = cpTestCase.getConfig();
-                        config.setVariables(parameterPro);
-                        config.setParameters(map);
+                        config.setVariables(resultVariables);
+                        config.setParameters(parameterVariables);
                         cpTestCase.setConfig(config);
                         result.add(cpTestCase);
                     }

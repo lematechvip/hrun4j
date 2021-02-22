@@ -1,9 +1,13 @@
 package io.lematech.httprunner4j;
 
-import io.lematech.httprunner4j.common.Constant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainRunner {
     public static void main(String args[]){
-        TestNGEngine.run(Constant.TEST_CASE_FILE_PATH);
+        List<String> executePaths = new ArrayList<>();
+        executePaths.add("./src/test/resources/testcases");
+        RunnerConfig.getInstance().setExecutePaths(executePaths);
+        TestNGEngine.run();
     }
 }

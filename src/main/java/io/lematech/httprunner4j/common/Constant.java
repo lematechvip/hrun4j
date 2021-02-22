@@ -18,9 +18,12 @@ public class Constant {
      */
     public static final String ROOT_PKG_NAME = "io.lematech.httprunner4j";
     public static final String TEST_TEMPLATE_FILE_PATH = "testClass.vm";
-    public static final String TEST_CASE_FILE_PATH = "src/test/resources/testcases";
+    public static final String TEST_CASE_FILE_PATH = "/testcases";
     public static final String SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME = "json";
     public static final String SUPPORT_TEST_CASE_FILE_EXT_YML_NAME = "yml";
     public static final String TEST_CASE_DIRECTORY_NAME = "testcases";
     public static final String TEST_CASE_SCHEMA = "/schemas/testcase.schema.v2.json";
+    public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
+    public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
+    public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
 }

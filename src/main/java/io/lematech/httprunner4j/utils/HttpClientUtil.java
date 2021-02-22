@@ -1,235 +1,293 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className MyHttpClient
+ * @description TODO
+ * @created 2021/1/28 4:59 下午
+ * @publicWechat lematech
+ */
 @Slf4j
 public class HttpClientUtil {
+    private static final int connectTimeout = 10000;
+    private static final int socketTimeout = 10000;
 
-    private static final int DEFAULT_POOL_MAX_TOTAL = 200;
-    private static final int DEFAULT_POOL_MAX_PER_ROUTE = 200;
-    private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
-    private static final int DEFAULT_CONNECT_REQUEST_TIMEOUT = 5000;
-    private static final int DEFAULT_SOCKET_TIMEOUT = 2000;
-
-    private PoolingHttpClientConnectionManager gcm = null;
-
-    private CloseableHttpClient httpClient = null;
-
-    private IdleConnectionMonitorThread idleThread = null;
-
-    // 连接池的最大连接数
-    private final int maxTotal;
-    // 连接池按route配置的最大连接数
-    private final int maxPerRoute;
-
-    // tcp connect的超时时间
-    private final int connectTimeout;
-    // 从连接池获取连接的超时时间
-    private final int connectRequestTimeout;
-    // tcp io的读写超时时间
-    private final int socketTimeout;
-
-    private static HttpClientUtil pooledHttpClient;
-
-    public static HttpClientUtil getHttpClientInstance(){
-        if (pooledHttpClient == null){
-            pooledHttpClient = new HttpClientUtil();
-        }
-        return pooledHttpClient;
+    public static ResponseEntity doGet(String url) {
+        return doGet(url, Collections.EMPTY_MAP);
     }
 
-    private HttpClientUtil() {
-        this(
-                HttpClientUtil.DEFAULT_POOL_MAX_TOTAL,
-                HttpClientUtil.DEFAULT_POOL_MAX_PER_ROUTE,
-                HttpClientUtil.DEFAULT_CONNECT_TIMEOUT,
-                HttpClientUtil.DEFAULT_CONNECT_REQUEST_TIMEOUT,
-                HttpClientUtil.DEFAULT_SOCKET_TIMEOUT
-        );
+    public static ResponseEntity doGet(String url, Map<String, String> headers) {
+        return doGet(url, headers, Collections.EMPTY_MAP);
     }
 
-    private HttpClientUtil(
-            int maxTotal,
-            int maxPerRoute,
-            int connectTimeout,
-            int connectRequestTimeout,
-            int socketTimeout
-    ) {
-
-        this.maxTotal = maxTotal;
-        this.maxPerRoute = maxPerRoute;
-        this.connectTimeout = connectTimeout;
-        this.connectRequestTimeout = connectRequestTimeout;
-        this.socketTimeout = socketTimeout;
-
-        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .build();
-
-        this.gcm = new PoolingHttpClientConnectionManager(registry);
-        this.gcm.setMaxTotal(this.maxTotal);
-        this.gcm.setDefaultMaxPerRoute(this.maxPerRoute);
-
+    public static ResponseEntity doGet(String url, Map<String, String> headers, Map<String, Object> params) {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(this.connectTimeout)                     // 设置连接超时
-                .setSocketTimeout(this.socketTimeout)                       // 设置读取超时
-                .setConnectionRequestTimeout(this.connectRequestTimeout)    // 设置从连接池获取连接实例的超时
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
                 .build();
+        return doGet(url, headers, params, requestConfig);
+    }
 
-        HttpClientBuilder httpClientBuilder = HttpClients.custom();
-        httpClient = httpClientBuilder
-                .setConnectionManager(this.gcm)
-                .setDefaultRequestConfig(requestConfig)
+    public static ResponseEntity doGet(String url, Map<String, String> headers, Map<String, Object> params, RequestConfig requestConfig) {
+        return doGet(url, headers, params, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doGet(String url, Map<String, String> headers, Map<String, Object> params, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
                 .build();
-        idleThread = new IdleConnectionMonitorThread(this.gcm);
-        idleThread.start();
-
-    }
-
-    public ResponseEntity doGet(String url) {
-        return this.doGet(url, Collections.EMPTY_MAP, Collections.EMPTY_MAP);
-    }
-
-    public ResponseEntity doGet(String url, Map<String, Object> params) {
-        return this.doGet(url, Collections.EMPTY_MAP, params);
-    }
-
-    public ResponseEntity doGet(String url,
-                        Map<String, String> headers,
-                        Map<String, Object> params
-    ) {
-
-        // *) 构建GET请求头
         String apiUrl = getUrlWithParams(url, params);
         HttpGet httpGet = new HttpGet(apiUrl);
-
-        // *) 设置header信息
+        httpGet.setConfig(requestConfig);
         if (headers != null && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 httpGet.addHeader(entry.getKey(), entry.getValue());
             }
         }
-
-        ResponseEntity responseEntity = new ResponseEntity();
         CloseableHttpResponse response = null;
         try {
+            long startTime = System.currentTimeMillis();
             response = httpClient.execute(httpGet);
-
-            if (response == null || response.getStatusLine() == null) {
-                return null;
-            }
-            int statusCode = response.getStatusLine().getStatusCode();
-            responseEntity.setStatusCode(statusCode);
-            if (statusCode == HttpStatus.SC_OK) {
-                HttpEntity entityRes = response.getEntity();
-                if (entityRes != null) {
-                    String responseContent = EntityUtils.toString(entityRes, "UTF-8");
-                    responseEntity.setResponseContent(responseContent);
-                    return responseEntity;
-                }
-            }
-            return null;
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
         } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
         } finally {
-            if (response != null) {
+            if (null != response) {
                 try {
                     response.close();
+                    httpClient.close();
                 } catch (IOException e) {
+                    log.warn("release connection exception");
                 }
             }
         }
-        return null;
     }
 
-    public ResponseEntity doPost(String apiUrl, Map<String, Object> params) {
-        return this.doPost(apiUrl, Collections.EMPTY_MAP, params);
+    public static ResponseEntity doPost(String url) {
+        return doPost(url, Collections.EMPTY_MAP);
     }
 
-    public ResponseEntity doPost(String apiUrl,
-                                 Map<String, String> headers,
-                                 Map<String, Object> params
-    ) {
+    public static ResponseEntity doPost(String url, Map<String, Object> params) {
+        return doPost(url, Collections.EMPTY_MAP, params);
+    }
 
-        HttpPost httpPost = new HttpPost(apiUrl);
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .build();
+        return doPost(url, headers, params, requestConfig);
+    }
 
-        // *) 配置请求headers
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, RequestConfig requestConfig) {
+        return doPost(url, headers, params, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPost httpPost = new HttpPost(url);
+        if (params != null && params.size() > 0) {
+            HttpEntity entityReq = getUrlEncodedFormEntity(params);
+            httpPost.setEntity(entityReq);
+        }
+        httpPost.setConfig(requestConfig);
         if (headers != null && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 httpPost.addHeader(entry.getKey(), entry.getValue());
             }
         }
-
-        // *) 配置请求参数
-        if (params != null && params.size() > 0) {
-            HttpEntity entityReq = getUrlEncodedFormEntity(params);
-            httpPost.setEntity(entityReq);
-        }
-
-        ResponseEntity responseEntity = new ResponseEntity();
         CloseableHttpResponse response = null;
         try {
+            long startTime = System.currentTimeMillis();
             response = httpClient.execute(httpPost);
-            if (response == null || response.getStatusLine() == null) {
-                return null;
-            }
-
-            int statusCode = response.getStatusLine().getStatusCode();
-
-            responseEntity.setStatusCode(statusCode);
-            if (statusCode == HttpStatus.SC_OK) {
-                HttpEntity entityRes = response.getEntity();
-                if (entityRes != null) {
-                    String responseContent = EntityUtils.toString(entityRes, "UTF-8");
-                    responseEntity.setResponseContent(responseContent);
-                    return responseEntity;
-                }
-            }
-            return null;
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
         } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
         } finally {
-            if (response != null) {
+            if (null != response) {
                 try {
                     response.close();
+                    httpClient.close();
                 } catch (IOException e) {
+                    log.warn("release connection exception");
                 }
             }
         }
-        return null;
-
     }
 
-    private HttpEntity getUrlEncodedFormEntity(Map<String, Object> params) {
+    public static ResponseEntity doPostJson(String url) {
+        return doPostJson(url, new String());
+    }
+
+    public static ResponseEntity doPostJson(String url, String json) {
+        return doPostJson(url, Collections.EMPTY_MAP, json);
+    }
+
+    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .build();
+        return doPostJson(url, headers, json, requestConfig);
+    }
+
+    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json, RequestConfig requestConfig) {
+        return doPostJson(url, headers, json, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPost httpPost = new HttpPost(url);
+
+        if (!StrUtil.isEmpty(json)) {
+            StringEntity jsonContent = null;
+            try {
+                jsonContent = new StringEntity(json);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            httpPost.setEntity(jsonContent);
+        }
+        httpPost.setConfig(requestConfig);
+        if (headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPost.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpPost);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.warn("release connection exception");
+                }
+            }
+        }
+    }
+
+    private static ResponseEntity wrapperResponseEntity(CloseableHttpResponse response
+            , long elapsedTime
+            , CookieStore httpCookieStore) throws IOException {
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (response == null || response.getStatusLine() == null) {
+            return responseEntity;
+        }
+        int statusCode = response.getStatusLine().getStatusCode();
+        responseEntity.setStatusCode(statusCode);
+        responseEntity.setResponseTime((elapsedTime * 1.0) / 1000);
+        HashMap<String, String> headersMap = new HashMap<>();
+        Header[] headerArr = response.getAllHeaders();
+        for (Header header : headerArr) {
+            headersMap.put(header.getName(), header.getValue());
+        }
+        HashMap<String, String> cookiesMap = new HashMap<>();
+        if (httpCookieStore != null) {
+            List<Cookie> cookies = httpCookieStore.getCookies();
+            for (Cookie cookie : cookies) {
+                cookiesMap.put(cookie.getName(), cookie.getValue());
+            }
+            responseEntity.setCookies(cookiesMap);
+        }
+        responseEntity.setHeaders(headersMap);
+        if (statusCode == HttpStatus.SC_OK) {
+            HttpEntity entityRes = response.getEntity();
+            String responseContent = EntityUtils.toString(entityRes, "UTF-8");
+            if (entityRes != null) {
+                Header contentType = response.getFirstHeader("Content-Type");
+                if (contentType != null && contentType.getValue().contains("application/json")) {
+                    responseEntity.setResponseContent(responseContent);
+                } else {
+                    responseEntity.setResponseContent(responseContent);
+                }
+            }
+        }
+        return responseEntity;
+    }
+
+    private static String getUrlWithParams(String url, Map<String, Object> params) {
+        boolean first = true;
+        StringBuilder sb = new StringBuilder(url);
+        if (params != null) {
+            for (String key : params.keySet()) {
+                char ch = '&';
+                if (first == true) {
+                    ch = '?';
+                    first = false;
+                }
+                String value = params.get(key).toString();
+                try {
+                    String sval = URLEncoder.encode(value, "UTF-8");
+                    sb.append(ch).append(key).append("=").append(sval);
+                } catch (UnsupportedEncodingException e) {
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    private static HttpEntity getUrlEncodedFormEntity(Map<String, Object> params) {
         List<NameValuePair> pairList = new ArrayList<NameValuePair>(params.size());
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             NameValuePair pair = new BasicNameValuePair(entry.getKey(), entry
@@ -239,63 +297,37 @@ public class HttpClientUtil {
         return new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8"));
     }
 
-    private String getUrlWithParams(String url, Map<String, Object> params) {
-        boolean first = true;
-        StringBuilder sb = new StringBuilder(url);
-        for (String key : params.keySet()) {
-            char ch = '&';
-            if (first == true) {
-                ch = '?';
-                first = false;
-            }
-            String value = params.get(key).toString();
-            try {
-                String sval = URLEncoder.encode(value, "UTF-8");
-                sb.append(ch).append(key).append("=").append(sval);
-            } catch (UnsupportedEncodingException e) {
-            }
+    public static ResponseEntity executeReq(RequestEntity requestEntity) {
+        ResponseEntity responseEntity = null;
+        String method = requestEntity.getMethod();
+        String url = requestEntity.getUrl();
+        Map<String, String> headers = requestEntity.getHeaders();
+        Map<String, Object> params = requestEntity.getParams();
+        log.info("Request Info: ");
+        log.info("  Request URL: {}", requestEntity.getUrl());
+        log.info("  Request Method: {}", requestEntity.getMethod());
+        log.info("  Request Headers: {}",headers);
+        log.info("  Request Cookies: {}",requestEntity.getCookies());
+        log.info("  Request Parameters: {}",params);
+        if ("GET".equalsIgnoreCase(requestEntity.getMethod())) {
+            responseEntity = doGet(url, headers, params, null);
+        } else if ("POST".equalsIgnoreCase(method)) {
+            responseEntity = doPost(url, headers, params, null);
+        } else if ("CONNECT".equalsIgnoreCase(method)) {
+
+        } else if ("TRACE".equalsIgnoreCase(method)) {
+
+        } else if ("PUT".equalsIgnoreCase(method)) {
+
+        } else if ("OPTIONS".equalsIgnoreCase(method)) {
+
         }
-        return sb.toString();
-    }
-
-
-    public void shutdown() {
-        idleThread.shutdown();
-    }
-
-    // 监控有异常的链接
-    private class IdleConnectionMonitorThread extends Thread {
-
-        private final HttpClientConnectionManager connMgr;
-        private volatile boolean exitFlag = false;
-
-        public IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
-            this.connMgr = connMgr;
-            setDaemon(true);
-        }
-
-        @Override
-        public void run() {
-            while (!this.exitFlag) {
-                synchronized (this) {
-                    try {
-                        this.wait(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // 关闭失效的连接
-                connMgr.closeExpiredConnections();
-                // 可选的, 关闭30秒内不活动的连接
-                connMgr.closeIdleConnections(30, TimeUnit.SECONDS);
-            }
-        }
-
-        public void shutdown() {
-            this.exitFlag = true;
-            synchronized (this) {
-                notify();
-            }
-        }
+        log.info("Response Info: ");
+        log.info("  Response StatusCode: {}", responseEntity.getStatusCode());
+        log.info("  Response Body: {}", responseEntity.getResponseContent());
+        log.info("  Response Time: {} 秒", responseEntity.getResponseTime());
+        log.info("  Response Headers: {}",responseEntity.getHeaders());
+        log.info("  Response Cookies: {}",responseEntity.getCookies());
+        return responseEntity;
     }
 }
