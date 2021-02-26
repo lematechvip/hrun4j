@@ -1,12 +1,14 @@
 package io.lematech.httprunner4j;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +86,7 @@ public class NGDataProvider {
         for(File file : files){
             if(file.isFile()){
                 StringBuffer testCaseFullName = new StringBuffer();
-                testCaseFullName.append(testCaseName).append(".")
+                testCaseFullName.append(testCaseName).append(Constant.DOT_PATH)
                         .append(RunnerConfig.getInstance().getTestCaseExtName());
                 if(file.exists()&&file.getName().equalsIgnoreCase(testCaseFullName.toString())){
                     log.debug("filename {}",file.getName());
@@ -114,6 +116,11 @@ public class NGDataProvider {
             result.add(testCase);
             return result;
         }
+        if(parameters instanceof Map){
+            parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
+        }
+
+        log.info("class:{}",parameters.getClass());
         if (parameters instanceof JSONObject) {
             JSONObject jsonObject = (JSONObject) parameters;
             for (Map.Entry entry : jsonObject.entrySet()) {

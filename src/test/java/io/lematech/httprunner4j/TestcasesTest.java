@@ -1,7 +1,6 @@
 
 package io.lematech.httprunner4j;
 
-
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;

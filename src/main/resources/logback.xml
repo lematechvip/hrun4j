@@ -34,7 +34,7 @@
             <pattern>${pattern}</pattern>
         </encoder>
     </appender>
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE-WITH-COLOR"/>
         <appender-ref ref="FILE"/>
     </root>

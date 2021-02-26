@@ -1,11 +1,10 @@
-package io.lematech.httprunner4j.control;
+package io.lematech.httprunner4j;
 
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-import io.lematech.httprunner4j.AssertChecker;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import io.lematech.httprunner4j.utils.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;

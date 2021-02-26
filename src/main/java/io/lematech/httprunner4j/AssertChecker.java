@@ -24,8 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className AssertChecker
+ * @description TODO
+ * @created 2021/1/22 4:07 下午
+ * @publicWechat lematech
  */
+
+
 @Slf4j
 public class AssertChecker {
     private static Map<String,String> alisaMap = new HashMap<>();
@@ -45,6 +52,12 @@ public class AssertChecker {
         }
         return (Matcher)obj;
     }
+
+    /**
+     *
+     * @param objectMap
+     * @param responseEntity
+     */
     public static void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity) {
         Map<String,List> methodAlisaMap = comparatorAlisaMap();
         if (objectMap.containsKey("check") && objectMap.containsKey("expect")){

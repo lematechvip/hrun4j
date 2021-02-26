@@ -10,6 +10,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className RegExpUtil
+ * @description TODO
+ * @created 2021/1/22 4:07 下午
+ * @publicWechat lematech
+ */
+
 @Slf4j
 public class RegExpUtil {
     public static String buildNewString(String str, Map env){

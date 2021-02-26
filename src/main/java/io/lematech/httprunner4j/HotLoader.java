@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
@@ -65,7 +66,7 @@ public class HotLoader {
         List<Class<?>> classes = new ArrayList<>();
         File file;
         if(StrUtil.isEmpty(srcPath)){
-            file = new File(".");
+            file = new File(Constant.DOT_PATH);
             log.warn("src path is empty ,file path is set current path.");
         }else{
             file = new File(srcPath);
@@ -107,7 +108,7 @@ public class HotLoader {
                     if(StrUtil.isEmpty(pkgPortionName)){
                         continue;
                     }
-                    pkgNameStr.append(".").append(pkgPortionName);
+                    pkgNameStr.append(Constant.DOT_PATH).append(pkgPortionName);
                 }
                 String className = FileNameUtil.mainName(file.getName());
                 String pkgName = pkgNameStr.toString();

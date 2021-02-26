@@ -5,7 +5,9 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
@@ -88,7 +90,7 @@ public class TestNGEngine {
             ctx.put("className", className);
             ctx.put("methodList", methodNameList);
             String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH,ctx);
-            log.info("test case content:{}",templateRenderContent);
+            log.debug("test case content:{}",templateRenderContent);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
             classes.add(clazz);
             log.debug("class full path：[{}],pkg path：[{}],class name：{} added done.",fullTestClassName,pkgName,className);
@@ -108,7 +110,6 @@ public class TestNGEngine {
             if(file.isFile()){
                 String extName = FileUtil.extName(file);
                 String fileMainName = FileNameUtil.mainName(file.getName());
-
                 if(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                         ||Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)){
                     String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
@@ -117,7 +118,7 @@ public class TestNGEngine {
                         preValidationExceptionMap.add(exceptionMsg);
                         continue;
                     }
-                    log.info("fileMainName :{},extName: {},pkgName: {}",fileMainName,extName,dirPath2pkgName(pkgPath));
+                    log.debug("fileMainName :{},extName: {},pkgName: {}",fileMainName,extName,dirPath2pkgName(pkgPath));
                     ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
                     TestCase testCase = testCaseLoader.load(file);
                     try{
@@ -130,7 +131,7 @@ public class TestNGEngine {
                     StringBuffer pkgName = new StringBuffer(dirPath2pkgName(pkgPath));
                     String folderName = file.getParentFile().getName();
                     String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest",folderName)));
-                    pkgName.append(".").append(testClassName);
+                    pkgName.append(Constant.DOT_PATH).append(testClassName);
                     String fullTestClassName = pkgName.toString();
                     log.debug("full test class name is：{},class file is：{},method name is：{}",fullTestClassName,testClassName,fileMainName);
                     if(testCasePkgGroup.containsKey(fullTestClassName)){
@@ -152,14 +153,15 @@ public class TestNGEngine {
 
     private static String dirPath2pkgName(String pkgPath){
         StringBuffer pkgName = new StringBuffer();
-        pkgName.append(Constant.ROOT_PKG_NAME);
+        String selfPkgName = RunnerConfig.getInstance().getPkgName();
+        pkgName.append(StrUtil.isEmpty(selfPkgName)?Constant.SELF_ROOT_PKG_NAME:selfPkgName);
         if(StrUtil.isEmpty(pkgPath)){
             return pkgName.toString();
         }
-        if(pkgPath.startsWith(".")) {
+        if(pkgPath.startsWith(Constant.DOT_PATH)) {
             pkgPath = pkgPath.replaceFirst("\\.", "");
         }
-        pkgName.append(pkgPath.replaceAll("/","."));
+        pkgName.append(pkgPath.replaceAll("/",Constant.DOT_PATH));
         return pkgName.toString();
     }
 }

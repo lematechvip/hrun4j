@@ -82,5 +82,4 @@ public class RequestEntity<T> {
      */
     private Boolean stream;
 
-
 }

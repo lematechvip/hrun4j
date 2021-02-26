@@ -137,11 +137,11 @@ public class RunTestCase extends TestBase {
     }
     private static String dirPath2pkgName(String pkgPath){
         StringBuffer pkgName = new StringBuffer();
-        pkgName.append(Constant.ROOT_PKG_NAME);
+        pkgName.append(Constant.SELF_ROOT_PKG_NAME);
         if(StrUtil.isEmpty(pkgPath)){
             return pkgName.toString();
         }
-        pkgName.append(pkgPath.replaceAll("/","."));
+        pkgName.append(pkgPath.replaceAll("/",Constant.DOT_PATH));
         return pkgName.toString();
     }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
@@ -73,8 +74,7 @@ public class TestCaseLoaderImpl implements ITestCaseLoader {
                 throw new DefinedException(exceptionMsg);
             }
         }catch (Exception e) {
-            e.printStackTrace();
-            String exceptionMsg = String.format("read file %s.%s occur exception: %s",fileName,extName,e.getMessage());
+            String exceptionMsg = String.format("read file %s occur exception: %s",fileName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return testCase;

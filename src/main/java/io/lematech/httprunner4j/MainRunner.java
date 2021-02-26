@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j;
 
+import io.lematech.httprunner4j.config.RunnerConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
