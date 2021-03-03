@@ -1,0 +1,9 @@
+config:
+  name: "test index api"
+  base_url: "http://127.0.0.1:8000"
+teststeps:
+  - name: "访问首页接口"
+    request:
+      method: GET
+      url: /api/
+    
