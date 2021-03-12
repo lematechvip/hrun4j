@@ -34,11 +34,11 @@
             <pattern>${pattern}</pattern>
         </encoder>
     </appender>
-    <root level="DEBUG">
+    <root level="info">
         <appender-ref ref="CONSOLE-WITH-COLOR"/>
         <appender-ref ref="FILE"/>
     </root>
-    <logger name="com.example.logbackdemo.IndexAction" level="debug" additivity="false">
+    <logger name="com.example.logbackdemo.IndexAction" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 </configuration>

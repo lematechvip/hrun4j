@@ -36,9 +36,9 @@ public class HttpRunner4jController {
     }
 
     @PostMapping(value = "/get-token")
-    public R getToken(@RequestHeader(value="device_sn") String deviceSN ,
-                      @RequestHeader(value="os_platform") String osPlatform ,
-                      @RequestHeader(value="app_version") String appVersion ,
+    public R getToken(@RequestHeader(value = "device_sn") String deviceSN,
+                      @RequestHeader(value = "os_platform", required = false) String osPlatform,
+                      @RequestHeader(value = "app_version", required = false) String appVersion,
                       @RequestBody TokenVO tokenVO){
        String expectToken = tokenServiceImpl.generateToken(deviceSN,osPlatform,appVersion);
        boolean validateResult =  tokenServiceImpl.validateToken(tokenVO.getToken(),expectToken);

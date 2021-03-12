@@ -28,20 +28,20 @@ public class WebLogAspect {
     public void deBefore(JoinPoint joinPoint){
         HttpServletRequest request = ApplicationContextUtil.getHttpServletRequest();
         log.info("========================================== 请求调用开始 ==========================================");
-        log.info("请求地址   : {}", request.getRequestURL().toString());
-        log.info("请求方法    : {}", request.getMethod());
-        log.info("请求参数   : {}", new Gson().toJson(joinPoint.getArgs()));
-        log.info("请求处理器  : {}#{}", joinPoint.getSignature().getDeclaringTypeName()
+        log.info("请求地址: {}", request.getRequestURL().toString());
+        log.info("请求方法: {}", request.getMethod());
+        log.info("请求参数: {}", new Gson().toJson(joinPoint.getArgs()));
+        log.info("请求处理器: {}#{}", joinPoint.getSignature().getDeclaringTypeName()
                 , joinPoint.getSignature().getName());
-        log.info("请求方IP地址             : {}", request.getRemoteAddr());
+        log.info("请求方IP地址: {}", request.getRemoteAddr());
     }
 
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
-        log.info("响应参数: {}",new Gson().toJson(result));
-        log.info("请求耗时 : {} ms", System.currentTimeMillis() - startTime);
+        log.info("响应参数: {}", new Gson().toJson(result));
+        log.info("请求耗时: {} ms", System.currentTimeMillis() - startTime);
         log.info("=========================================== 请求调用结束 ===========================================");
         return result;
     }

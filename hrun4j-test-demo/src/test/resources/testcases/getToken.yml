@@ -1,0 +1,17 @@
+config:
+  name: "获取token信息"
+  base_url: "http://127.0.0.1:8000"
+teststeps:
+  - name: "请求get-token接口获取token信息"
+    request:
+      url: "/api/get-token"
+      method: POST
+      headers:
+        "device_sn": "10086"
+        "os_platform": "Mac OS"
+        "app_version": "1.0.0"
+      json:
+        "tokenVO":
+          "sign": "mysign"
+
+
