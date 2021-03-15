@@ -1,0 +1,12 @@
+config:
+  name: "test index api"
+  base_url: "http://127.0.0.1:8000"
+teststeps:
+  - name: "访问首页接口"
+    request:
+      method: GET
+      url: /api/
+    validate:
+      - {"check":"statusCode","comparator":"equalTo","expect":"200"}
+      - {"check":"responseContent.code","comparator":"equalTo","expect":"00"}
+      - {"check":"responseContent.message","comparator":"equalTo","expect":"Hello,Lematech~!"}
