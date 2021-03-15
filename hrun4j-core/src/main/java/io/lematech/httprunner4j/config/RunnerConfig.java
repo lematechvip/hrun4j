@@ -19,12 +19,18 @@ import java.util.List;
 
 @Data
 public class RunnerConfig {
+    /**
+     * internationalization
+     */
+    private String i18n;
+
     public List<String> getExecutePaths() {
-        if(executePaths.isEmpty()){
+        if (executePaths.isEmpty()) {
             executePaths.add(Constant.DOT_PATH);
         }
         return executePaths;
     }
+
     private String pkgName;
     private List<String> executePaths;
     private String testCaseExtName;
@@ -42,6 +48,7 @@ public class RunnerConfig {
     private RunnerConfig() {
         executePaths = new ArrayList<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
+
     }
     public static RunnerConfig getInstance(){
         return instance;

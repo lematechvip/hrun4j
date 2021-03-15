@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.vo;
 
 import lombok.Data;
 
+
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -12,5 +13,5 @@ import lombok.Data;
  */
 @Data
 public class TokenVO {
-    private String token;
+    private String sign;
 }

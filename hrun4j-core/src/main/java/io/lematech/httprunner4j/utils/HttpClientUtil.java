@@ -1,7 +1,10 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import io.lematech.httprunner4j.I18NFactory;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.common.DefinedException;
@@ -104,108 +107,59 @@ public class HttpClientUtil {
     }
 
     public static ResponseEntity doPost(String url, Map<String, Object> params) {
-        return doPost(url, Collections.EMPTY_MAP, params);
+        return doPost(url, Collections.EMPTY_MAP, params, new String());
     }
 
-    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params) {
+    public static ResponseEntity doPost(String url, Map<String, Object> params, String json) {
+        return doPost(url, Collections.EMPTY_MAP, params, json);
+    }
+
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, String json) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(connectTimeout)
                 .setSocketTimeout(socketTimeout)
                 .build();
-        return doPost(url, headers, params, requestConfig);
+        return doPost(url, headers, params, json, requestConfig);
     }
 
-    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, RequestConfig requestConfig) {
-        return doPost(url, headers, params, new BasicCookieStore(), requestConfig);
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, String json, RequestConfig requestConfig) {
+        return doPost(url, headers, params, json, new BasicCookieStore(), requestConfig);
     }
 
-    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, CookieStore httpCookieStore, RequestConfig requestConfig) {
+    public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, String json, CookieStore httpCookieStore, RequestConfig requestConfig) {
         CloseableHttpClient httpClient = HttpClients
                 .custom()
                 .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
                 .build();
-        HttpPost httpPost = new HttpPost(url);
-        if (params != null && params.size() > 0) {
-            HttpEntity entityReq = getUrlEncodedFormEntity(params);
-            httpPost.setEntity(entityReq);
+        HttpPost httpPost;
+        if (!StrUtil.isEmpty(json)) {
+            url = getUrlWithParams(url, params);
+            httpPost = new HttpPost(url);
+            StringEntity jsonContent;
+            try {
+                jsonContent = new StringEntity(json);
+                jsonContent.setContentType("application/json");
+                jsonContent.setContentEncoding(Constant.CHARSET_UTF_8);
+                httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                String exceptionMsg = String.format("unsupported encoding exception :%s", e.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
+            httpPost.setEntity(jsonContent);
+        } else {
+            httpPost = new HttpPost(url);
+            if (MapUtil.isEmpty(params)) {
+                HttpEntity entityReq = getUrlEncodedFormEntity(params);
+                httpPost.setEntity(entityReq);
+            }
         }
+
         httpPost.setConfig(requestConfig);
         if (headers != null && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 httpPost.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        CloseableHttpResponse response = null;
-        try {
-            long startTime = System.currentTimeMillis();
-            response = httpClient.execute(httpPost);
-            long endTime = System.currentTimeMillis();
-            long elapsedTime = endTime - startTime;
-            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
-        } catch (ClientProtocolException e) {
-            throw new DefinedException("client protocol exception: " + e.getMessage());
-        } catch (ParseException e) {
-            throw new DefinedException("parse exception: " + e.getMessage());
-        } catch (IOException e) {
-            throw new DefinedException("io exception: " + e.getMessage());
-        } finally {
-            if (null != response) {
-                try {
-                    response.close();
-                    httpClient.close();
-                } catch (IOException e) {
-                    log.warn("release connection exception");
-                }
-            }
-        }
-    }
-
-    public static ResponseEntity doPostJson(String url) {
-        return doPostJson(url, new String());
-    }
-
-    public static ResponseEntity doPostJson(String url, String json) {
-        return doPostJson(url, Collections.EMPTY_MAP, json);
-    }
-
-    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json) {
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(connectTimeout)
-                .setSocketTimeout(socketTimeout)
-                .build();
-        return doPostJson(url, headers, json, requestConfig);
-    }
-
-    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json, RequestConfig requestConfig) {
-        return doPostJson(url, headers, json, new BasicCookieStore(), requestConfig);
-    }
-
-    public static ResponseEntity doPostJson(String url, Map<String, String> headers, String json, CookieStore httpCookieStore, RequestConfig requestConfig) {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
-                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
-                .build();
-        HttpPost httpPost = new HttpPost(url);
-
-        if (!StrUtil.isEmpty(json)) {
-            StringEntity jsonContent = null;
-            try {
-                jsonContent = new StringEntity(json);
-                jsonContent.setContentType("application/json");
-                jsonContent.setContentEncoding("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            httpPost.setEntity(jsonContent);
-        }
-        httpPost.setConfig(requestConfig);
-        if (headers.size() > 0) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                httpPost.addHeader(entry.getKey(), entry.getValue());
-            }
-        }
-        httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
         CloseableHttpResponse response = null;
         try {
             long startTime = System.currentTimeMillis();
@@ -240,7 +194,7 @@ public class HttpClientUtil {
         }
         int statusCode = response.getStatusLine().getStatusCode();
         responseEntity.setStatusCode(statusCode);
-        responseEntity.setResponseTime((elapsedTime * 1.0) / 1000);
+        responseEntity.setTime((elapsedTime * 1.0) / 1000);
         HashMap<String, String> headersMap = new HashMap<>();
         Header[] headerArr = response.getAllHeaders();
         for (Header header : headerArr) {
@@ -261,9 +215,14 @@ public class HttpClientUtil {
             if (entityRes != null) {
                 Header contentType = response.getFirstHeader("Content-Type");
                 if (contentType != null && contentType.getValue().contains("application/json")) {
-                    responseEntity.setResponseContent(responseContent);
+                    if (JsonUtil.isJson(responseContent)) {
+                        responseEntity.setContent(JSON.parseObject(responseContent));
+                    } else {
+                        String exceptionMsg = "json格式化失败：" + responseContent;
+                        throw new DefinedException(exceptionMsg);
+                    }
                 } else {
-                    responseEntity.setResponseContent(responseContent);
+                    responseEntity.setContent(responseContent);
                 }
             }
         }
@@ -308,25 +267,16 @@ public class HttpClientUtil {
         Map<String, String> headers = requestEntity.getHeaders();
         Map<String, Object> params = requestEntity.getParams();
         String json = JSON.toJSONString(requestEntity.getJson());
-        log.info("Request Info: ");
-        log.info("  Request URL: {}", requestEntity.getUrl());
-        log.info("  Request Method: {}", requestEntity.getMethod());
-        log.info("  Request Headers: {}",headers);
-        log.info("  Request Cookies: {}",requestEntity.getCookies());
-        log.info("  Request Parameters: {}", params);
-        log.info("  Request JSON: {}", json);
+        log.info(String.format(I18NFactory.getLocaleMessage("requestUrl"), requestEntity.getUrl()));
+        log.info(String.format(I18NFactory.getLocaleMessage("requestMethod"), requestEntity.getMethod()));
+        log.info(String.format(I18NFactory.getLocaleMessage("requestHeader"), requestEntity.getHeaders()));
+        log.info(String.format(I18NFactory.getLocaleMessage("requestCookie"), requestEntity.getCookies()));
+        log.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), requestEntity.getParams()));
+        log.info(String.format(I18NFactory.getLocaleMessage("requestJson"), requestEntity.getJson()));
         if ("GET".equalsIgnoreCase(requestEntity.getMethod())) {
             responseEntity = doGet(url, headers, params, null);
         } else if ("POST".equalsIgnoreCase(method)) {
-            if (StrUtil.isNotEmpty(json)) {
-                responseEntity = doPostJson(url, headers, json, null);
-
-            } else if (Objects.isNull(params)) {
-                responseEntity = doPost(url, headers, params, null);
-
-            }
-
-
+            responseEntity = doPost(url, headers, params, json, null);
         } else if ("CONNECT".equalsIgnoreCase(method)) {
 
         } else if ("TRACE".equalsIgnoreCase(method)) {
@@ -336,12 +286,11 @@ public class HttpClientUtil {
         } else if ("OPTIONS".equalsIgnoreCase(method)) {
 
         }
-        log.info("Response Info: ");
-        log.info("  Response StatusCode: {}", responseEntity.getStatusCode());
-        log.info("  Response Body: {}", responseEntity.getResponseContent());
-        log.info("  Response Time: {} 秒", responseEntity.getResponseTime());
-        log.info("  Response Headers: {}",responseEntity.getHeaders());
-        log.info("  Response Cookies: {}",responseEntity.getCookies());
+        log.info(String.format(I18NFactory.getLocaleMessage("responseStatusCode"), responseEntity.getStatusCode()));
+        log.info(String.format(I18NFactory.getLocaleMessage("responseBody"), responseEntity.getContent()));
+        log.info(String.format(I18NFactory.getLocaleMessage("responseTime"), responseEntity.getTime()));
+        log.info(String.format(I18NFactory.getLocaleMessage("responseHeader"), responseEntity.getHeaders()));
+        log.info(String.format(I18NFactory.getLocaleMessage("responseCookie"), responseEntity.getCookies()));
         return responseEntity;
     }
 }

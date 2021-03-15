@@ -22,26 +22,27 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class RegExpUtil {
-    public static String buildNewString(String str, Map env){
-        if(isExp(str)){
-            List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION,str);
+    public static String buildNewString(String str, Map env) {
+        if (isExp(str)) {
+            List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION, str);
             List<String> matcherList = new ArrayList<>();
-            for(String exp : matchList){
-                String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp,env));
+            for (String exp : matchList) {
+                String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp, env));
                 matcherList.add(handleResult);
             }
-            for(String match : matcherList){
-                str = str.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE,match);
+            for (String match : matcherList) {
+                str = str.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, match);
             }
         }
         return str;
     }
-    public static Boolean isExp(String exp){
+
+    public static Boolean isExp(String exp) {
         Boolean flag = false;
-        if(StringUtils.isEmpty(exp)){
+        if (StringUtils.isEmpty(exp)) {
             return false;
         }
-        if(match(Constant.REGEX_EXPRESSION_FLAG,exp)){
+        if (match(Constant.REGEX_EXPRESSION_FLAG, exp)) {
             flag = true;
         }
         return flag;
@@ -63,9 +64,21 @@ public class RegExpUtil {
     public static String findString(String reg, String str) {
         String returnStr = null;
         List<String> list = find(reg, str);
-        if (list.size() != 0){
+        if (list.size() != 0) {
             returnStr = list.get(0);
         }
         return returnStr;
+    }
+
+    public static boolean isUrl(String s) {
+        try {
+            Pattern patt = Pattern.compile(Constant.URL_REGEX);
+            Matcher matcher = patt.matcher(s);
+            return matcher.matches();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

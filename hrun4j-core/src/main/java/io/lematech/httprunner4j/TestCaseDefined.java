@@ -7,6 +7,7 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import io.lematech.httprunner4j.utils.HttpClientUtil;
+import io.lematech.httprunner4j.utils.RegExpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -49,28 +50,33 @@ public class TestCaseDefined {
         List<TestStep> testSteps  = testCase.getTestSteps();
         for(int index = 0;index <testSteps.size();index++){
             TestStep testStep = testSteps.get(index);
-            log.info("STEP[{}] : {}",++index,testStep.getName());
-            String url = String.format("%s%s",config.getBaseUrl(),testStep.getRequest().getUrl());
-            expressionProcessor.setVariablePriority(testContextVariable,config.getVariables(),testStep.getVariables());
+            log.info("STEP[{}] : {}", (index + 1), testStep.getName());
+            expressionProcessor.setVariablePriority(testContextVariable, config.getVariables(), testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
-            requestEntity.setUrl(url);
+            requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
-            List<Map<String,Object>> validateList = testStep.getValidate();
-            AssertChecker.assertList(validateList,responseEntity);
-            extractsVariables(testStep.getExtract(),responseEntity);
+            List<Map<String, Object>> validateList = testStep.getValidate();
+            AssertChecker.assertList(validateList, responseEntity);
+            extractsVariables(testStep.getExtract(), responseEntity);
         }
     }
 
-    private void extractsVariables(Object extracts,ResponseEntity responseEntity){
-        if(Objects.isNull(extracts)){
+    private String getUrl(String baseUrl, String requestUrl) {
+        if (RegExpUtil.isUrl(requestUrl)) {
+            return requestUrl;
+        }
+        return String.format("%s%s", baseUrl, requestUrl);
+    }
+
+    private void extractsVariables(Object extracts, ResponseEntity responseEntity) {
+        if (Objects.isNull(extracts)) {
             return;
         }
-        log.info("extracts 类型：{}",extracts.getClass());
+        log.debug("extracts 类型：{}", extracts.getClass());
         Class clz = extracts.getClass();
-        if(clz == ArrayList.class){
-            log.info("list类型");
-            List<Map<String,String>> extractList = (List<Map<String,String>>)extracts;
-            for(Map extractMap : extractList){
+        if (clz == ArrayList.class) {
+            List<Map<String, String>> extractList = (List<Map<String, String>>) extracts;
+            for (Map extractMap : extractList) {
                 Iterator<Map.Entry<String, String>> entries = extractMap.entrySet().iterator();
                 while (entries.hasNext()){
                     Map.Entry<String, String> entry = entries.next();

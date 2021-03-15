@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.controller;
 
 import cn.hutool.core.util.RandomUtil;
+import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.core.annotation.ValidateRequest;
 import io.lematech.httprunner4j.core.entity.User;
 import io.lematech.httprunner4j.core.enums.CommonBusinessCode;
@@ -12,6 +13,7 @@ import io.lematech.httprunner4j.vo.base.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -39,17 +41,17 @@ public class HttpRunner4jController {
     public R getToken(@RequestHeader(value = "device_sn") String deviceSN,
                       @RequestHeader(value = "os_platform", required = false) String osPlatform,
                       @RequestHeader(value = "app_version", required = false) String appVersion,
-                      @RequestBody TokenVO tokenVO){
-       String expectToken = tokenServiceImpl.generateToken(deviceSN,osPlatform,appVersion);
-       boolean validateResult =  tokenServiceImpl.validateToken(tokenVO.getToken(),expectToken);
-       if(!validateResult){
-           R.fail(CommonBusinessCode.Authorization_FAILED_EXCEPTION);
-       }
-       String token = RandomUtil.randomString(16);
-       tokenServiceImpl.storyToken(deviceSN,token);
-       TokenVO resultData = new TokenVO();
-       resultData.setToken(token);
-       return R.ok(resultData);
+                      @RequestBody TokenVO tokenVO) {
+        String expectSign = tokenServiceImpl.generateToken(deviceSN, osPlatform, appVersion);
+        boolean validateResult = tokenServiceImpl.validateToken(tokenVO.getSign(), expectSign);
+        if (!validateResult) {
+            return R.fail(CommonBusinessCode.Authorization_FAILED_EXCEPTION);
+        }
+        String token = RandomUtil.randomString(16);
+        tokenServiceImpl.storyToken(deviceSN, token);
+        Map resultData = Maps.newHashMap();
+        resultData.put("token", token);
+        return R.ok(resultData);
     }
 
     @PostMapping(value = "/user/{uid}")

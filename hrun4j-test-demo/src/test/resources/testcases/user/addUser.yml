@@ -11,6 +11,5 @@ teststeps:
         "os_platform": "Mac OS"
         "app_version": "1.0.0"
       json:
-        "tokenVO":
           "sign": "mysign"
     validate:

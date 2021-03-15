@@ -11,7 +11,27 @@ teststeps:
         "os_platform": "Mac OS"
         "app_version": "1.0.0"
       json:
-        "tokenVO":
-          "sign": "mysign"
+        "sign": "263665175867c416497b99fa461dbe757b2e4d31"
+      params:
+        "testParam": "test"
+    validate:
+      - equalTo: [statusCode, "200"]
+      - equalTo: [content.code, "00"]
+    extract:
+      - token: "content.data.token"
+  - name: "添加用户"
+    request:
+      url: "http://127.0.0.1:8000/api/user/2000"
+      method: POST
+      headers:
+        Content-Type: application/json
+        device_sn: 10086
+        token: ${token}
+      json:
+        name: user1
+        password: '123456'
+    validate:
+      - equalTo: [statusCode, "200"]
+      - equalTo: [content.code, "00"]
 
 

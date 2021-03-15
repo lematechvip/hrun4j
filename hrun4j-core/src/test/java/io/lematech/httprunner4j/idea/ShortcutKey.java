@@ -84,9 +84,9 @@ public class ShortcutKey {
         Map<String,String> headers = new HashMap<>();
         headers.put("Content-Type","application/json;charset=UTF-8");
        // MyHttpClient.doPost("http://httpbin.org/post",formData);
-        System.out.println(HttpClientUtil.doPost("http://httpbin.org/post",headers,formData));
+        //System.out.println(HttpClientUtil.doPost("http://httpbin.org/post",headers,formData));
         String jsonStr = "{\"code\":\"00\",\"msg\":\"ok！\",\"data\":[{\"testStatus\":3,\"count\":13},{\"testStatus\":4,\"count\":22},{\"testStatus\":5,\"count\":27}]}";
-        System.out.println(HttpClientUtil.doPostJson("http://httpbin.org/post",jsonStr));
+        //  System.out.println(HttpClientUtil.doPostJson("http://httpbin.org/post",jsonStr));
     }
 
 }

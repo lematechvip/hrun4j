@@ -15,8 +15,8 @@ import java.util.Map;
 @Data
 public class ResponseEntity {
     private Integer statusCode;
-    private Map<String,String> headers;
-    private Double responseTime;
-    private Object responseContent;
-    private Map<String,String> cookies;
+    private Map<String, String> headers;
+    private Double time;
+    private Object content;
+    private Map<String, String> cookies;
 }
