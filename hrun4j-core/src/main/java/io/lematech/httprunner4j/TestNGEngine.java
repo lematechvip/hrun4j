@@ -8,6 +8,7 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
+import io.lematech.httprunner4j.utils.RegularUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
@@ -118,26 +119,29 @@ public class TestNGEngine {
                         preValidationExceptionMap.add(exceptionMsg);
                         continue;
                     }
-                    log.debug("fileMainName :{},extName: {},pkgName: {}",fileMainName,extName,dirPath2pkgName(pkgPath));
+
                     ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
-                    TestCase testCase = testCaseLoader.load(file);
-                    try{
+                    TestCase testCase = testCaseLoader.load(file, TestCase.class);
+                    try {
                         SchemaValidator.validateTestCaseValid(testCase);
-                    }catch (DefinedException e){
-                        String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s",pkgPath,fileMainName,e.getMessage());
+                    } catch (DefinedException e) {
+                        String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s", pkgPath, fileMainName, e.getMessage());
                         preValidationExceptionMap.add(exceptionMsg);
                         continue;
                     }
-                    StringBuffer pkgName = new StringBuffer(dirPath2pkgName(pkgPath));
+                    StringBuffer pkgName = new StringBuffer();
+                    String selfPkgName = RunnerConfig.getInstance().getPkgName();
+                    pkgName.append(StrUtil.isEmpty(selfPkgName) ? Constant.SELF_ROOT_PKG_NAME : selfPkgName);
+                    pkgName.append(RegularUtil.dirPath2pkgName(pkgPath));
                     String folderName = file.getParentFile().getName();
-                    String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest",folderName)));
+                    String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
                     pkgName.append(Constant.DOT_PATH).append(testClassName);
                     String fullTestClassName = pkgName.toString();
-                    log.debug("full test class name is：{},class file is：{},method name is：{}",fullTestClassName,testClassName,fileMainName);
-                    if(testCasePkgGroup.containsKey(fullTestClassName)){
+                    log.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
+                    if (testCasePkgGroup.containsKey(fullTestClassName)) {
                         List<String> testClassList = testCasePkgGroup.get(fullTestClassName);
                         testClassList.add(fileMainName);
-                    }else{
+                    } else {
                         List<String> testClassList = new ArrayList<>();
                         testClassList.add(fileMainName);
                         testCasePkgGroup.put(fullTestClassName,testClassList);
@@ -151,17 +155,5 @@ public class TestNGEngine {
         }
     }
 
-    private static String dirPath2pkgName(String pkgPath){
-        StringBuffer pkgName = new StringBuffer();
-        String selfPkgName = RunnerConfig.getInstance().getPkgName();
-        pkgName.append(StrUtil.isEmpty(selfPkgName)?Constant.SELF_ROOT_PKG_NAME:selfPkgName);
-        if(StrUtil.isEmpty(pkgPath)){
-            return pkgName.toString();
-        }
-        if(pkgPath.startsWith(Constant.DOT_PATH)) {
-            pkgPath = pkgPath.replaceFirst("\\.", "");
-        }
-        pkgName.append(pkgPath.replaceAll("/",Constant.DOT_PATH));
-        return pkgName.toString();
-    }
+
 }

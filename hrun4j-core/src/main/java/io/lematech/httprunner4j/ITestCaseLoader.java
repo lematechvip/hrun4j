@@ -1,6 +1,5 @@
 package io.lematech.httprunner4j;
 
-import io.lematech.httprunner4j.entity.testcase.TestCase;
 
 import java.io.File;
 
@@ -10,12 +9,12 @@ public interface ITestCaseLoader {
      * @param testCaseName
      * @return
      */
-    TestCase load(String testCaseName, String extName);
+    <T> T load(String testCaseName, String extName, Class<T> clazz);
 
     /**
-     *
      * @param fileName
      * @return
      */
-    TestCase load(File fileName);
+    <T> T load(File fileName, Class<T> clazz);
+
 }

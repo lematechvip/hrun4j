@@ -27,12 +27,8 @@ public class Constant {
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
     public static final String DOT_PATH = ".";
-<<<<<<<HEAD:src/main/java/io/lematech/httprunner4j/common/Constant.java
-=======
     public static final String CHARSET_UTF_8 = "UTF-8";
     public static final String I18N_CN = "US";
     public static final String I18N_US = "CN";
     public static final String URL_REGEX = "http(s)?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
-
->>>>>>>origin/master:hrun4j-core/src/main/java/io/lematech/httprunner4j/common/Constant.java
 }

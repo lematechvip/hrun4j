@@ -286,6 +286,9 @@ public class HttpClientUtil {
         } else if ("OPTIONS".equalsIgnoreCase(method)) {
 
         }
+        if (Objects.isNull(responseEntity)) {
+            throw new DefinedException("响应信息为空！");
+        }
         log.info(String.format(I18NFactory.getLocaleMessage("responseStatusCode"), responseEntity.getStatusCode()));
         log.info(String.format(I18NFactory.getLocaleMessage("responseBody"), responseEntity.getContent()));
         log.info(String.format(I18NFactory.getLocaleMessage("responseTime"), responseEntity.getTime()));

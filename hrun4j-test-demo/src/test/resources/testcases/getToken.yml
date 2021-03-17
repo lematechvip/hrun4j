@@ -1,37 +1,9 @@
 config:
   name: "获取token信息"
-  base_url: "http://127.0.0.1:8000"
+  base_url: "http://127.0.0.1:8080"
 teststeps:
   - name: "请求get-token接口获取token信息"
-    request:
-      url: "/api/get-token"
-      method: POST
-      headers:
-        "device_sn": "10086"
-        "os_platform": "Mac OS"
-        "app_version": "1.0.0"
-      json:
-        "sign": "263665175867c416497b99fa461dbe757b2e4d31"
-      params:
-        "testParam": "test"
+    api: "apimodel/get_token.yml"
     validate:
-      - equalTo: [statusCode, "200"]
-      - equalTo: [content.code, "00"]
-    extract:
-      - token: "content.data.token"
-  - name: "添加用户"
-    request:
-      url: "http://127.0.0.1:8000/api/user/2000"
-      method: POST
-      headers:
-        Content-Type: application/json
-        device_sn: 10086
-        token: ${token}
-      json:
-        name: user1
-        password: '123456'
-    validate:
-      - equalTo: [statusCode, "200"]
-      - equalTo: [content.code, "00"]
-
+      - equalTo: [statusCode, "300"]
 

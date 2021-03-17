@@ -19,6 +19,7 @@ import java.util.List;
 
 @Data
 public class RunnerConfig {
+    private String i18n;
     public List<String> getExecutePaths() {
         if(executePaths.isEmpty()){
             executePaths.add(Constant.DOT_PATH);

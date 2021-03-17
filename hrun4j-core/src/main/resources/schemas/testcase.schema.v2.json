@@ -75,36 +75,6 @@
             "name",
             "api"
           ]
-        },
-        {
-          "properties": {
-            "name": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/name"
-            },
-            "testcase": {
-              "description": "testcase reference, value is testcase file relative path",
-              "type": "string"
-            },
-            "variables": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/variables"
-            },
-            "extract": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "setup_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
-            },
-            "teardown_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
-            }
-          },
-          "required": [
-            "name",
-            "testcase"
-          ]
         }
       ]
     }

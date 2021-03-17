@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -11,6 +12,7 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.utils.RegularUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -24,9 +26,9 @@ public class NGDataProvider {
 
     public static Object[][] dataProvider(String pkgName, String testCaseName) {
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        String dataFileResourcePath = seekDataFileByRule(pkgName,testCaseName,extName);
+        String dataFileResourcePath = seekDataFileByRule(pkgName, testCaseName, extName);
         TestCase testCase = TestCaseLoaderFactory.getLoader(extName)
-                .load(dataFileResourcePath,extName);
+                .load(dataFileResourcePath, extName, TestCase.class);
         SchemaValidator.validateTestCaseValid(testCase);
         Object[][] testCases = getObjects(testCase);
         return testCases;
@@ -42,16 +44,39 @@ public class NGDataProvider {
         return testCases;
     }
 
-    private static String seekDataFileByRule(String pkgName, String testCaseName,String extName) {
+    public static String seekModelFileByCasePath(String filePath) {
+        if (!StrUtil.isEmpty(filePath)) {
+            if (filePath.startsWith(Constant.TEST_CASE_FILE_PATH)) {
+                filePath = filePath.replaceFirst(Constant.TEST_CASE_FILE_PATH, "");
+            } else if (filePath.startsWith(Constant.TEST_CASE_DIRECTORY_NAME)) {
+                filePath = filePath.replaceFirst(Constant.TEST_CASE_DIRECTORY_NAME, "");
+            }
+            String extName = FileUtil.extName(filePath);
+            String mainName = FileUtil.mainName(filePath);
+            if (StrUtil.isEmpty(extName)) {
+                extName = RunnerConfig.getInstance().getTestCaseExtName();
+            } else {
+                filePath = RegularUtil.replaceLast(filePath, mainName + Constant.DOT_PATH + extName, "");
+                if (filePath.endsWith("/")) {
+                    filePath = RegularUtil.replaceLast(filePath, "/", "");
+                }
+            }
+            log.info("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
+            return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
+        }
+        return "";
+    }
+
+    private static String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
         List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
-        if(executePaths.size()>0){
-            for(String path : executePaths){
-                searchTestCaseByName(path,testCaseName);
-                if(!StrUtil.isEmpty(testCasePath)){
+        if (executePaths.size() > 0) {
+            for (String path : executePaths) {
+                searchTestCaseByName(path, testCaseName);
+                if (!StrUtil.isEmpty(testCasePath)) {
                     break;
                 }
             }
-            if(StrUtil.isEmpty(testCasePath)){
+            if (StrUtil.isEmpty(testCasePath)) {
                 String exceptionMsg = String.format("in %s path,not found  %s.%s",executePaths,testCaseName,extName);
                 throw new DefinedException(exceptionMsg);
             }
@@ -74,13 +99,13 @@ public class NGDataProvider {
         return dataFileResourcePath.toString();
     }
     private static String testCasePath ;
+
     /**
-     *
      * @param path
      * @param testCaseName
      * @return
      */
-    private static void searchTestCaseByName(String path,String testCaseName){
+    private static String searchTestCaseByName(String path, String testCaseName) {
         File filesPath = new File(path);
         if (!filesPath.exists()) {
             String exceptionMsg = String.format("file %s is not exits", filesPath.getAbsolutePath());
@@ -97,12 +122,13 @@ public class NGDataProvider {
                     log.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
                     log.debug("file Path {}", file.getPath());
                     testCasePath = file.getPath();
-                    return ;
+                    return testCasePath;
                 }
             }else {
                 searchTestCaseByName(file.getPath(),testCaseName);
             }
         }
+        return "";
     }
 
 

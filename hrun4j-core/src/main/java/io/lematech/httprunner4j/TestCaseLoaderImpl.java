@@ -1,10 +1,14 @@
 package io.lematech.httprunner4j;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
@@ -17,18 +21,22 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
+import static io.lematech.httprunner4j.NGDataProvider.seekModelFileByCasePath;
+
+
 @Slf4j
-public class TestCaseLoaderImpl implements ITestCaseLoader {
-    private Yaml yaml ;
-    public  TestCaseLoaderImpl(){
+public class TestCaseLoaderImpl<T> implements ITestCaseLoader {
+    private Yaml yaml;
+
+    public TestCaseLoaderImpl() {
         yaml = new Yaml(new Constructor(JSONObject.class));
     }
 
     @Override
-    public TestCase load(String testCaseName, String extName) {
+    public T load(String testCaseName, String extName, Class clazz) {
         List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         if (executePaths.size() > 0) {
-            return load(new File(testCaseName));
+            return load(new File(testCaseName), clazz);
         } else {
             StringBuffer classResourceTestCasePath = new StringBuffer();
             classResourceTestCasePath.append(testCaseName).append(".");
@@ -42,10 +50,10 @@ public class TestCaseLoaderImpl implements ITestCaseLoader {
             try {
                 if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
                     ObjectMapper mapper = new ObjectMapper();
-                    return mapper.readValue(inputStream, TestCase.class);
+                    return (T) mapper.readValue(inputStream, clazz);
                 } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
                     JSONObject jsonObject = yaml.load(inputStream);
-                    return jsonObject.toJavaObject(TestCase.class);
+                    return (T) jsonObject.toJavaObject(clazz);
                 }else {
                     String exceptionMsg = String.format("not support %s format,you can implement ITestCaseLoader.java and try override load() method",extName);
                     throw new DefinedException(exceptionMsg);
@@ -58,8 +66,8 @@ public class TestCaseLoaderImpl implements ITestCaseLoader {
     }
 
     @Override
-    public TestCase load(File fileName) {
-        TestCase testCase;
+    public T load(File fileName, Class clazz) {
+        T testCase;
         if (!fileName.exists()) {
             String exceptionMsg = String.format("file %s not found exception", fileName);
             throw new DefinedException(exceptionMsg);
@@ -69,7 +77,7 @@ public class TestCaseLoaderImpl implements ITestCaseLoader {
         if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                testCase = mapper.readValue(fileName, TestCase.class);
+                testCase = (T) mapper.readValue(fileName, clazz);
             } catch (Exception e) {
                 String exceptionMsg = String.format("read file %s occur exception: %s", fileName, e.getMessage());
                 throw new DefinedException(exceptionMsg);
@@ -86,23 +94,11 @@ public class TestCaseLoaderImpl implements ITestCaseLoader {
                 String exceptionMsg = String.format("文件%s内容不能为空", fileName);
                 throw new DefinedException(exceptionMsg);
             }
-            return jsonObject.toJavaObject(TestCase.class);
+            return (T) jsonObject.toJavaObject(clazz);
         } else {
             String exceptionMsg = String.format("not support %s format,you can implement ITestCaseLoader.java and try override load() method", extName);
             throw new DefinedException(exceptionMsg);
         }
-<<<<<<<HEAD:
-        src / main / java / io / lematech / httprunner4j / TestCaseLoaderImpl.java
-    }catch(
-    Exception e)
-
-    {
-        String exceptionMsg = String.format("read file %s occur exception: %s", fileName, e.getMessage());
-        throw new DefinedException(exceptionMsg);
-    }
-=======
-
-        >>>>>>>origin/master:hrun4j-core/src/main/java/io/lematech/httprunner4j/TestCaseLoaderImpl.java
         return testCase;
-}
+    }
 }

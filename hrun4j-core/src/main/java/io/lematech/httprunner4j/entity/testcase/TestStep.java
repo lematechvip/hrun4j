@@ -35,14 +35,8 @@ public class TestStep<T> extends BaseModel{
     private RequestEntity request;
 
     /**
-     * 2、关联其他用例，属性独有
-     */
-    private String testcase;
-
-    /**
      * 3、api reference, value is api file relative path
      */
     private String api;
-
 
 }

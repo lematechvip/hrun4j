@@ -34,17 +34,7 @@
             <pattern>${pattern}</pattern>
         </encoder>
     </appender>
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD:src/main/resources/logback.xml
-    <root level="DEBUG">
-    =======
     <root level="info">
-        >>>>>>> origin/master:hrun4j-core/src/main/resources/logback.xml
         <appender-ref ref="CONSOLE-WITH-COLOR"/>
         <appender-ref ref="FILE"/>
     </root>
