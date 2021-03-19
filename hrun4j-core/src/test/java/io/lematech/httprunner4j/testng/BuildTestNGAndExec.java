@@ -13,7 +13,6 @@ import java.util.List;
 public class BuildTestNGAndExec extends TestBase {
     static {
         List<String> executePaths = new ArrayList<>();
-        executePaths.add("/Users/arkhe/Documents/lema/others/httprunner4j/src/test/resources/testcases");
         RunnerConfig.getInstance().setExecutePaths(executePaths);
         RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME);
     }
