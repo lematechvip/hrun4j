@@ -1,15 +1,19 @@
 config:
-  name: "登录并添加用户"
-  base_url: "http://127.0.0.1:8000"
+  name: "获取token信息"
+  base_url: "http://127.0.0.1:8080"
 teststeps:
   - name: "请求get-token接口获取token信息"
+    api: "apimodel/get_token.yml"
+  - name: "添加用户"
     request:
-      url: "/api/get-token"
-      method: POST
+      url: "http://127.0.0.1:8080/api/user/20001"
+      method: POST1
       headers:
-        "device_sn": "10086"
-        "os_platform": "Mac OS"
-        "app_version": "1.0.0"
+        Content-Type: application/json1
+        device_sn: 100861
+        token: ${token1}
       json:
-        "sign": "mysign"
+        name: user11
+        password: '1234561'
     validate:
+      - equalTo: [statusCode, "300"]

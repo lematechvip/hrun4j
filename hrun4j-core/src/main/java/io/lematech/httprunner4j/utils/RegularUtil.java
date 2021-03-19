@@ -1,7 +1,13 @@
 package io.lematech.httprunner4j.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com
@@ -12,6 +18,12 @@ import io.lematech.httprunner4j.common.Constant;
  * @publicWechat lematech
  */
 public class RegularUtil {
+    /**
+     * 路径转包名
+     *
+     * @param pkgPath
+     * @return
+     */
     public static String dirPath2pkgName(String pkgPath) {
         StringBuffer pkgName = new StringBuffer();
         if (StrUtil.isEmpty(pkgPath)) {
@@ -24,7 +36,50 @@ public class RegularUtil {
         return pkgName.toString();
     }
 
+    /**
+     * 根据正则替换最后一个符合条件的字符
+     *
+     * @param text
+     * @param regex
+     * @param replacement
+     * @return
+     */
     public static String replaceLast(String text, String regex, String replacement) {
         return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
     }
+
+    /**
+     * 兼容多种类型转自定义类型
+     *
+     * @param t
+     * @param clz
+     * @param <T>
+     * @return
+     */
+    public static <T> T multipleDataTypeToDefineType(T t, Class clz) {
+        if (Objects.isNull(t)) {
+            return null;
+        }
+        if (t.getClass() != clz) {
+            throw new DefinedException("class type is not same");
+        }
+        if (clz == Map.class) {
+            Map result = Maps.newHashMap();
+            if (t instanceof Map) {
+                return t;
+            }
+            if (t instanceof List) {
+                List tList = (List) t;
+                for (Object obj : tList) {
+                    if (obj.getClass() == clz) {
+                        if (obj instanceof Map) {
+                            result.putAll((Map) obj);
+                        }
+                    }
+                }
+            }
+        }
+        return t;
+    }
+
 }

@@ -66,7 +66,7 @@ public class TestCaseDefined {
         for(int index = 0;index <testSteps.size();index++) {
             TestStep testStep = extendApiModelPropertiesValue(testSteps.get(index));
             log.info("STEP[{}] : {}", (index + 1), testStep.getName());
-            expressionProcessor.setVariablePriority(testContextVariable, config.getVariables(), testStep.getVariables());
+            expressionProcessor.setVariablePriority(testContextVariable, (Map) config.getVariables(), (Map) testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);

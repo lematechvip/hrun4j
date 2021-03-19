@@ -169,7 +169,7 @@ public class NGDataProvider {
                             String exceptionMsg = String.format("testcase deep copy exception : %s", e.getMessage());
                             throw new DefinedException(exceptionMsg);
                         }
-                        Map<String, Object> configVariables = cpTestCase.getConfig().getVariables();
+                        Map<String, Object> configVariables = (Map) cpTestCase.getConfig().getVariables();
                         Map parameterVariables = Maps.newHashMap();
                         Map resultVariables = Maps.newHashMap();
                         if (params.length == 1) {

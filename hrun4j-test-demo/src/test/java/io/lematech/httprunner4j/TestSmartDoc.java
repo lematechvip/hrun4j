@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lematech@foxmail.com
@@ -34,7 +31,23 @@ public class TestSmartDoc {
         Map subMap = new HashMap();
         subMap.put("k1", "v2");
         subList.add(subMap);
+
     }
 
+    private List incrementUpdate(List list, List subList) {
+
+        for (Object obj : list) {
+            for (Object subObj : subList) {
+                if (obj.getClass() == subObj.getClass()) {
+                    if (obj instanceof Map) {
+
+                    }
+                }
+            }
+
+        }
+
+        return subList;
+    }
 
 }

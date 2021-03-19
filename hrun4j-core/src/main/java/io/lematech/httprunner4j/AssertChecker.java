@@ -98,7 +98,7 @@ public class AssertChecker {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException targetException) {
-            String exceptionMsg = targetException.getCause().toString();
+            String exceptionMsg = String.format("检查点：%s,校验失败,%s", comparator.getCheck(), targetException.getCause().toString());
             throw new AssertionError(exceptionMsg);
         }
         return;

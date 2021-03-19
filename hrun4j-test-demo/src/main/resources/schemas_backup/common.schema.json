@@ -3,21 +3,21 @@
   "description": "common json schema definitions for httprunner4j api/testcase",
   "definitions": {
     "name": {
-      "description": "used as api/teststep/testcase identification",
+      "description": "used as config/api/teststep/testcase/testsuite identification",
       "type": "string",
       "examples": [
         "basic test for httpbin"
       ]
     },
     "base_url": {
-      "description": "The base_url will be used with relative URI",
+      "description": "The base_url will be used with relative URI or absolute url",
       "type": "string",
       "examples": [
         "https://httpbin.org"
       ]
     },
     "variables": {
-      "description": "define variables for api/teststep/testcase/testsuite",
+      "description": "define variables for /config/api/teststep/testcase/testsuite",
       "oneOf": [
         {
           "type": "object",
@@ -36,12 +36,14 @@
             "minProperties": 1
           },
           "examples": [
+            [
               {
                 "var1": "value1"
               },
               {
                 "var2": "value2"
               }
+            ]
           ]
         },
         {
@@ -69,11 +71,25 @@
       "items": {
         "oneOf": [
           {
+            "description": "call setup/teardown hook functions, return nothing",
+            "type": "string",
+            "examples": [
+              [
+                "${sleep(2)}",
+                "${hook_print(setup)}",
+                "${modify_request_json($request, android)}",
+                "${alter_response($response)}"
+              ]
+            ]
+          },
+          {
             "description": "call setup/teardown hook functions, return value and assign to variable",
             "type": "object",
             "examples": [
               {
-                "total": "${sum_two(1, 5)}",
+                "total": "${sum_two(1, 5)}"
+              },
+              {
                 "filed_name": "get_decoded_response_field($response)"
               }
             ]
@@ -82,7 +98,7 @@
       }
     },
     "config": {
-      "description": "used in testcase to configure common fields",
+      "description": "used in testcase/testsuite to configure common fields",
       "type": "object",
       "properties": {
         "name": {
@@ -104,7 +120,9 @@
           "$ref": "#/definitions/verify"
         }
       },
-      "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
     "request": {
       "description": "used to define a api request. properties is the same as python package `requests.request`",
@@ -337,7 +355,10 @@
                 "description": "expected value"
               }
             },
-            "required": ["check", "expect"],
+            "required": [
+              "check",
+              "expect"
+            ],
             "examples": [
               {
                 "check": "body.code",
@@ -362,10 +383,16 @@
             },
             "examples": [
               {
-                "eq": ["status_code", 200]
+                "eq": [
+                  "status_code",
+                  200
+                ]
               },
               {
-                "gt": ["body.code", 0]
+                "gt": [
+                  "body.code",
+                  0
+                ]
               }
             ]
           }

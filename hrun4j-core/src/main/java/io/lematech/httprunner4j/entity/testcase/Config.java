@@ -20,7 +20,10 @@ public class Config<T> extends BaseModel {
     @JsonProperty(value = "base_url")
     private String baseUrl;
     @JsonProperty(value = "verify")
-    private Boolean verify ;
+    private Boolean verify;
+    /**
+     * map<k,values>:
+     * user_id: [1001, 1002, 1003, 1004]
+     */
     private T parameters;
-
 }

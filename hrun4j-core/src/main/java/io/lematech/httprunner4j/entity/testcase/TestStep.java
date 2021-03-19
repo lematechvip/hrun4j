@@ -21,11 +21,29 @@ public class TestStep<T> extends BaseModel{
 
     private String name;
     /**
-     * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）、列表，暂定义为键值对
+     * map<k,v>：
+     * -code__by_jsonpath: $.code
+     * item_id__by_jsonpath: $..items.*.id
+     * var_name__by_regex: '"LB[\d]*(.*)RB[\d]*"'
+     * content_type: headers.content-type
+     * first_name: content.person.name.first_name
+     * array[map<k,v>]：
+     * -code__by_jsonpath: $.code
+     * -item_id__by_jsonpath: $..items.*.id
+     * -var_name__by_regex: '"LB[\d]*(.*)RB[\d]*"'
+     * -content_type: headers.content-type
+     * -first_name: content.person.name.first_name
      */
     private T extract;
     /**
-     * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）或者纯对象
+     *  array[map<k,v>]：extract variables,comparator defautl set equalTo
+     *     - check: body.code
+     *       comparator: gt
+     *       expect: 0
+     *  array[map<k,array>]：extract variables,comparator defautl set equalTo
+     *    eq:
+     *      - status_code
+     *      - 200
      */
     private List<Map<String,Object>> validate;
     
