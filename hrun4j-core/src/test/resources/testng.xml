@@ -8,6 +8,8 @@
         <classes>
             <class name="io.lematech.httprunner4j.demo.DemoTest">
             </class>
+            <class name="io.lematech.httprunner4j.demo.DemoJsonTest">
+            </class>
         </classes>
     </test>
 </suite>

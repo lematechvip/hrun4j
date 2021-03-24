@@ -8,6 +8,9 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -17,6 +20,11 @@ import org.testng.annotations.Test;
  * @publicWechat lematech
  */
 public class DemoJsonTest extends TestBase {
+    static {
+        List<String> executePaths = new ArrayList<>();
+        RunnerConfig.getInstance().setExecutePaths(executePaths);
+        RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME);
+    }
 
     @BeforeSuite
     public void configRunner() {

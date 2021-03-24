@@ -25,16 +25,19 @@ public class AviatorTest{
         //exp.getVariableNames();
         System.out.println(exp.getVariableNames());
         System.out.println(exp.getVariableFullNames());*/
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("a",100);
-        map1.put("b",5);//`多福多寿`
-        map1.put("c",5);
-        //
-        System.out.println(AviatorEvaluatorUtil.execute("Hello",map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + add(a,b)",map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + subtract(a,b)",map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + multiply(a,b)",map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + divide(a,b)",map1));//输出：20
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("a", 100);
+        map1.put("b", 5);//`多福多寿`
+        map1.put("c", 5);
+        map1.put("x", 1);
+        map1.put("y", 2);
+        String str = "${x}&/api/add=${add(x, y)}&subtract=${subtract(add(x, y),add(x, y))}&multiply=${multiply(x,y)}&divide=${divide(x,y)}&${y}";
+        System.out.println(AviatorEvaluatorUtil.execute(str, map1));//输出：20
+        System.out.println(AviatorEvaluatorUtil.execute("Hello", map1));//输出：20
+        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + add(a,b)", map1));//输出：20
+        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + subtract(a,b)", map1));//输出：20
+        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + multiply(a,b)", map1));//输出：20
+        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + divide(a,b)", map1));//输出：20
 
     /*    System.out.println(AviatorEvaluator.execute("'/api/1000?_t= ' + multiplication(a,b)",map1));//输出：20
         System.out.println(AviatorEvaluator.execute("/api/1000?_t= '+multiplication(a,multiplication(a,multiplication(a,b)))+'&test' + multiplication(a,b)",map1));//输出：20

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuite name="httprunner4j"
-           tests="5"
+           tests="8"
            failures="0"
            errors="0"
            skipped="0"
-           time="1.270">
+           time="2.193">
     <properties/>
 
 
-    <testcase name="testVariablePriorityDemo" time="0.065" classname="io.lematech.httprunner4j.demo.DemoTest"/>
-    <testcase name="testSimpleSingleDemo" time="0.026" classname="io.lematech.httprunner4j.demo.DemoTest"/>
-    <testcase name="testVariablePriorityDemo" time="0.110" classname="io.lematech.httprunner4j.demo.DemoTest"/>
-    <testcase name="testComplexSingleDemo" time="0.898" classname="io.lematech.httprunner4j.demo.DemoTest"/>
-    <testcase name="testMoreComplexSingleDemo" time="0.171" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testApiReferenceDemo" time="1.514" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testDefineRequestConfigDemo" time="0.158" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testVariablePriorityDemo" time="0.077" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testMoreComplexSingleDemo" time="0.089" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testComplexSingleDemo" time="0.052" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testTestCaseReferenceDemo" time="0.197" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testVariablePriorityDemo" time="0.079" classname="io.lematech.httprunner4j.demo.DemoTest"/>
+    <testcase name="testSimpleSingleDemo" time="0.027" classname="io.lematech.httprunner4j.demo.DemoTest"/>
 
 </testsuite>
