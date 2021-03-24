@@ -3,6 +3,7 @@ package io.lematech.httprunner4j.entity.testcase;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
  * @created 2021/1/20 2:25 下午
  * @publicWechat lematech
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class Config<T> extends BaseModel {
     @JsonProperty(value = "name")

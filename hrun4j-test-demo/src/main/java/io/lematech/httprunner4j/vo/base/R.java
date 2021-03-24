@@ -2,16 +2,14 @@ package io.lematech.httprunner4j.vo.base;
 
 import io.lematech.httprunner4j.core.enums.BusinessCode;
 import io.lematech.httprunner4j.core.enums.CommonBusinessCode;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
 /**
  * @author lematech
  */
+@EqualsAndHashCode
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

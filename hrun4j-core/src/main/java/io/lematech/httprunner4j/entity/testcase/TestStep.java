@@ -3,6 +3,8 @@ package io.lematech.httprunner4j.entity.testcase;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
  * @created 2021/1/20 2:34 下午
  * @publicWechat lematech
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class TestStep<T> extends BaseModel{
 

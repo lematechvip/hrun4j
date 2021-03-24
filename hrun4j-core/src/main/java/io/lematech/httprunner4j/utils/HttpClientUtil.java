@@ -3,7 +3,7 @@ package io.lematech.httprunner4j.utils;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.i18n.I18NFactory;
+import io.lematech.httprunner4j.junit.i18n.I18NFactory;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.entity.http.HttpConstant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;

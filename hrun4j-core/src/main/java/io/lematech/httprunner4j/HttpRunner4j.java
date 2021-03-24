@@ -22,7 +22,7 @@ public class HttpRunner4j {
     public static class DefinedHookFunction extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
-            log.info("当前方法名：{},环境变量：{},入参信息：{}", this.getName(), env, arg);
+            log.info("当前方法名：{},入参信息：{},环境变量：{}", this.getName(), arg.getAviatorType(), env);
 
             return new AviatorString(String.valueOf(arg));
         }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.junit.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.service.ITestCaseLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
