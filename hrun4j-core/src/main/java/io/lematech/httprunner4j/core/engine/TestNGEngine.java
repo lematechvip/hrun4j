@@ -1,11 +1,15 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.core.engine;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.core.loader.HotLoader;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.loader.service.ITestCaseLoader;
+import io.lematech.httprunner4j.core.loader.TestCaseLoaderFactory;
+import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
 import io.lematech.httprunner4j.utils.RegularUtil;
@@ -123,7 +127,7 @@ public class TestNGEngine {
                     ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
                     TestCase testCase = testCaseLoader.load(file, TestCase.class);
                     try {
-                        SchemaValidator.validateTestCaseValid(testCase);
+                        SchemaValidator.validateJsonObjectFormat(TestCase.class, testCase);
                     } catch (DefinedException e) {
                         String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s", pkgPath, fileMainName, e.getMessage());
                         preValidationExceptionMap.add(exceptionMsg);

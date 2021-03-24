@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
+<head>
+    <title>Test Results Report - httprunner4j</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta name="description" content="TestNG unit test results."/>
+    <link href="reportng.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="reportng.js"></script>
+</head>
+<body>
+<h1>httprunner4j</h1>
+<p>
+    Test duration: 1.314s
+</p>
+
+
+<table class="resultsTable">
+    <tr>
+        <th colspan="3" class="header passed">Passed Tests</th>
+    </tr>
+    <tr>
+        <td colspan="3" class="group">io.lematech.httprunner4j.demo.DemoTest</td>
+    </tr>
+
+    <tr>
+        <td class="method">
+            testComplexSingleDemo
+        </td>
+        <td class="duration">
+            0.898s
+        </td>
+        <td class="result">
+
+            <i>Method arguments: </i><span class="arguments">TestCase(config=Config(name=复杂操作案例之获取Token信息, baseUrl=http://127.0.0.1:8000, verify=null, parameters=null), testSteps=[TestStep(name=步骤名称, extract=null, validate=[{equalTo=[statusCode, 200]}, {comparator=equalTo, expect=200, check=statusCode}, {comparator=equalTo, expect=00, check=content.code}, {comparator=equalTo, expect=ok！, check=content.message}], request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, total1=6, total2=8}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=null)])</span><br/>
+
+
+        </td>
+    </tr>
+    <tr>
+        <td class="method">
+            testMoreComplexSingleDemo
+        </td>
+        <td class="duration">
+            0.171s
+        </td>
+        <td class="result">
+
+            <i>Method arguments: </i><span class="arguments">TestCase(config=Config(name=复杂操作案例之获取Token信息, baseUrl=http://127.0.0.1:8000, verify=null, parameters=null), testSteps=[TestStep(name=步骤名称, extract=null, validate=[{equalTo=[statusCode, 200]}, {comparator=equalTo, expect=200, check=statusCode}, {comparator=equalTo, expect=00, check=content.code}, {comparator=equalTo, expect=ok！, check=content.message}], request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, total1=6, configVariable1=configVariableValue1, total2=8}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=null)])</span><br/>
+
+
+        </td>
+    </tr>
+    <tr>
+        <td class="method">
+            testSimpleSingleDemo
+        </td>
+        <td class="duration">
+            0.026s
+        </td>
+        <td class="result">
+
+            <i>Method arguments: </i><span class="arguments">TestCase(config=Config(name=简易操作案例之获取Token信息, baseUrl=http://127.0.0.1:8000, verify=null, parameters=null), testSteps=[TestStep(name=步骤名称, extract=null, validate=[{equalTo=[statusCode, 200]}, {equalTo=[content.code, 00]}, {equalTo=[content.message, ok！]}], request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=null)])</span><br/>
+
+
+        </td>
+    </tr>
+    <tr>
+        <td class="method">
+            testVariablePriorityDemo
+        </td>
+        <td class="duration">
+            0.110s
+        </td>
+        <td class="result">
+
+            <i>Method arguments: </i><span class="arguments">TestCase(config=Config(name=测试变量优先级, baseUrl=http://127.0.0.1:8000, verify=null, parameters={varB=paramB1}), testSteps=[TestStep(name=step 1, extract={varA=content.code, varB=content.message}, validate=null, request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, variablePriority=/step1A/paramB1/configC}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=[variables, extract]), TestStep(name=step 2, extract={varA=content.code, varB=content.message}, validate=null, request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, variablePriority=/step2A/ok！/configC}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=null)])</span><br/>
+
+
+        </td>
+    </tr>
+    <tr>
+        <td class="method">
+            testVariablePriorityDemo
+        </td>
+        <td class="duration">
+            0.065s
+        </td>
+        <td class="result">
+
+            <i>Method arguments: </i><span class="arguments">TestCase(config=Config(name=测试变量优先级, baseUrl=http://127.0.0.1:8000, verify=null, parameters={varA=paramA1}), testSteps=[TestStep(name=step 1, extract={varA=content.code, varB=content.message}, validate=null, request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, variablePriority=/step1A/configB/configC}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=[variables, extract]), TestStep(name=step 2, extract={varA=content.code, varB=content.message}, validate=null, request=RequestEntity(method=POST, url=http://127.0.0.1:8000/api/get-token, params=null, data=null, json={"sign":"eeb00001855491a62e72e340de54db74eaf2cb43"}, headers={device_sn=2021032311118, app_version=1.0.0, os_platform=MacOS, variablePriority=/step2A/ok！/configC}, timeout=null, allowRedirects=true, cookies=null, files=null, auth=null, proxies=null, upload=null, verify=null, stream=null), api=null, testcase=null, output=null)])</span><br/>
+
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

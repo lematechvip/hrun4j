@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.core.loader;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;

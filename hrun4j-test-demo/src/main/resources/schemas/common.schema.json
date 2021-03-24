@@ -229,9 +229,23 @@
           "description": "Auth tuple to enable Basic/Digest/Custom HTTP Auth.",
           "type": "array"
         },
-        "timeout": {
+        "connectionRequestTimeout": {
           "description": "How many seconds to wait for the server to send data before giving up",
-          "type": "number",
+          "type": "integer",
+          "examples": [
+            120
+          ]
+        },
+        "connectTimeout": {
+          "description": "How many seconds to wait for the server to send data before giving up",
+          "type": "integer",
+          "examples": [
+            120
+          ]
+        },
+        "socketTimeout": {
+          "description": "How many seconds to wait for the server to send data before giving up",
+          "type": "integer",
           "examples": [
             120
           ]
@@ -240,9 +254,29 @@
           "description": "Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True",
           "type": "boolean"
         },
-        "proxies": {
+        "proxy": {
           "description": "Dictionary mapping protocol to the URL of the proxy",
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "hostname": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "hostname"
+          ],
+          "examples": [
+            {
+              "hostname": "lematech.io"
+            },
+            {
+              "hostname": "10.10.10.10",
+              "port": 8080
+            }
+          ]
         },
         "verify": {
           "description": "configure verify for current api/teststep",

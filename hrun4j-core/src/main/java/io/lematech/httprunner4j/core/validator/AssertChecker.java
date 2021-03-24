@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.core.validator;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -66,9 +66,9 @@ public class AssertChecker {
                 comparator.setComparator(entry.getKey());
                 Object objValue = entry.getValue();
                 if (objValue instanceof List) {
-                    List<String> objValues = (List) objValue;
+                    List<Object> objValues = (List) objValue;
                     if (objValues.size() == 2) {
-                        comparator.setCheck(objValues.get(0));
+                        comparator.setCheck(String.valueOf(objValues.get(0)));
                         comparator.setExpect(objValues.get(1));
                     } else {
                         String exceptionMsg = "校验表达式格式有误";
@@ -85,20 +85,21 @@ public class AssertChecker {
             throw new DefinedException(String.format("当前不支持 %s 比较器，已支持方法名称列表：%s", comparatorName, methodAlisaMap));
         }
         String exp = comparator.getCheck();
-        String actual = dataTransfer(exp, responseEntity);
+        Object actual = dataTransfer(exp, responseEntity);
         log.debug("表达式：{},提取结果：{}", exp, actual);
         try {
             Class<?> clz = Class.forName("org.junit.Assert");
             Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
-            method.invoke(null, actual
-                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), comparator.getExpect()));
-            log.debug("断言成功");
+            method.invoke(null, comparator.getExpect()
+                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), actual));
+            log.info("检查点：{},预期值：{},实际值：{},校验结果：通过", exp, comparator.getExpect(), actual);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException targetException) {
-            String exceptionMsg = String.format("检查点：%s,校验失败,%s", comparator.getCheck(), targetException.getCause().toString());
+            log.error("检查点：{}，预期值：{}，实际值：{}，校验结果：失败", exp, comparator.getExpect(), actual);
+            String exceptionMsg = String.format("检查点：%s，校验失败，%s", comparator.getCheck(), targetException.getCause().toString());
             throw new AssertionError(exceptionMsg);
         }
         return;
@@ -111,7 +112,7 @@ public class AssertChecker {
      * @param responseEntity
      * @return
      */
-    public static String dataTransfer(String exp, ResponseEntity responseEntity) {
+    public static Object dataTransfer(String exp, ResponseEntity responseEntity) {
         if (StringUtils.isEmpty(exp)) {
             return "";
         }
@@ -130,15 +131,26 @@ public class AssertChecker {
             JsonNode jsonNode;
             try {
                 jsonNode = JsonUtil.getJmesPathResult(exp, respStr);
-                exp = jsonNode.asText();
+                return typeTransfer(jsonNode);
             } catch (Exception e) {
                 return exp;
             }
         }
-        return exp;
     }
 
-    public static void assertList(List<Map<String,Object>> mapList, ResponseEntity responseEntity) {
+    private static Object typeTransfer(JsonNode jsonNode) {
+        if (jsonNode.isBoolean()) {
+            return jsonNode.asBoolean();
+        } else if (jsonNode.isDouble() || jsonNode.isFloat()) {
+            return jsonNode.asDouble();
+        } else if (jsonNode.isInt()) {
+            return jsonNode.asInt();
+        } else {
+            return jsonNode.asText();
+        }
+    }
+
+    public static void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity) {
         if (Objects.isNull(mapList)) {
             return;
         }
@@ -147,7 +159,7 @@ public class AssertChecker {
         }
     }
 
-    public static Map<String,List> comparatorAlisaMap(){
+    public static Map<String, List> comparatorAlisaMap() {
         Map<String, List> methodMap = new HashMap<>();
         try {
             Class matcherClz = Class.forName("org.hamcrest.Matchers");

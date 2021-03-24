@@ -82,4 +82,23 @@ public class RegularUtil {
         return t;
     }
 
+
+    /**
+     * 毫秒转秒
+     *
+     * @return
+     */
+    public static Integer s2ms(Integer s) {
+        if (Objects.isNull(s)) {
+            return null;
+        }
+        Integer ms;
+        try {
+            ms = s * 1000;
+        } catch (Exception e) {
+            String exceptionMsg = String.format("ms to s occur exception：%s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        }
+        return ms;
+    }
 }

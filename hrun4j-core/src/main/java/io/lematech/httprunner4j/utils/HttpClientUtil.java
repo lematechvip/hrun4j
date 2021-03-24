@@ -3,8 +3,9 @@ package io.lematech.httprunner4j.utils;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.I18NFactory;
+import io.lematech.httprunner4j.i18n.I18NFactory;
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.entity.http.HttpConstant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.common.DefinedException;
@@ -41,8 +42,6 @@ import java.util.*;
  */
 @Slf4j
 public class HttpClientUtil {
-    private static final int connectTimeout = 10000;
-    private static final int socketTimeout = 10000;
 
     public static ResponseEntity doGet(String url) {
         return doGet(url, Collections.EMPTY_MAP);
@@ -54,8 +53,8 @@ public class HttpClientUtil {
 
     public static ResponseEntity doGet(String url, Map<String, String> headers, Map<String, Object> params) {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(connectTimeout)
-                .setSocketTimeout(socketTimeout)
+                .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
+                .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
                 .build();
         return doGet(url, headers, params, requestConfig);
     }
@@ -116,8 +115,8 @@ public class HttpClientUtil {
 
     public static ResponseEntity doPost(String url, Map<String, String> headers, Map<String, Object> params, String json) {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(connectTimeout)
-                .setSocketTimeout(socketTimeout)
+                .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
+                .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
                 .build();
         return doPost(url, headers, params, json, requestConfig);
     }
@@ -260,6 +259,54 @@ public class HttpClientUtil {
         return new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8"));
     }
 
+    /**
+     * @param requestEntity
+     * @return
+     */
+    private static RequestConfig initRequestConfig(RequestEntity requestEntity) {
+        RequestConfig defaultRequestConfig = RequestConfig.custom()
+                .build();
+        RequestConfig.Builder builder = RequestConfig.copy(defaultRequestConfig)
+                .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
+                .setConnectionRequestTimeout(HttpConstant.CONNECTION_REQUEST_TIME_OUT)
+                .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT);
+        Integer connectionRequestTimeout = requestEntity.getConnectionRequestTimeout();
+        if (!Objects.isNull(connectionRequestTimeout)) {
+            builder.setConnectionRequestTimeout(connectionRequestTimeout);
+        }
+        Integer connectTimeout = requestEntity.getConnectTimeout();
+        if (!Objects.isNull(connectTimeout)) {
+            builder.setConnectTimeout(connectTimeout);
+        }
+        Integer socketTimeout = requestEntity.getSocketTimeout();
+        if (!Objects.isNull(socketTimeout)) {
+            builder.setSocketTimeout(socketTimeout);
+        }
+        Boolean allowRedirects = requestEntity.getAllowRedirects();
+        if (!Objects.isNull(allowRedirects)) {
+            builder.setRedirectsEnabled(allowRedirects);
+        }
+        try {
+            Map<String, Object> proxy = requestEntity.getProxy();
+            if (!Objects.isNull(proxy)) {
+                String hostname = (String) proxy.get("hostname");
+                Object port = proxy.get("port");
+                HttpHost httpHost;
+                if (Objects.isNull(port)) {
+                    httpHost = new HttpHost(hostname);
+                } else {
+                    int portNumber = Integer.parseInt(String.valueOf(port));
+                    httpHost = new HttpHost(hostname, portNumber);
+                }
+                builder.setProxy(httpHost);
+            }
+        } catch (Exception e) {
+            String exceptionMsg = String.format("proxy %s info error，please check it", requestEntity.getProxy());
+            throw new DefinedException(exceptionMsg);
+        }
+        return builder.build();
+    }
+
     public static ResponseEntity executeReq(RequestEntity requestEntity) {
         ResponseEntity responseEntity = null;
         String method = requestEntity.getMethod();
@@ -273,18 +320,14 @@ public class HttpClientUtil {
         log.info(String.format(I18NFactory.getLocaleMessage("requestCookie"), requestEntity.getCookies()));
         log.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), requestEntity.getParams()));
         log.info(String.format(I18NFactory.getLocaleMessage("requestJson"), requestEntity.getJson()));
-        if ("GET".equalsIgnoreCase(requestEntity.getMethod())) {
-            responseEntity = doGet(url, headers, params, null);
-        } else if ("POST".equalsIgnoreCase(method)) {
-            responseEntity = doPost(url, headers, params, json, null);
-        } else if ("CONNECT".equalsIgnoreCase(method)) {
-
-        } else if ("TRACE".equalsIgnoreCase(method)) {
-
-        } else if ("PUT".equalsIgnoreCase(method)) {
-
-        } else if ("OPTIONS".equalsIgnoreCase(method)) {
-
+        if (HttpConstant.GET.equalsIgnoreCase(requestEntity.getMethod())) {
+            responseEntity = doGet(url, headers, params, initRequestConfig(requestEntity));
+        } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
+            responseEntity = doPost(url, headers, params, json, initRequestConfig(requestEntity));
+        } else if (HttpConstant.DELETE.equalsIgnoreCase(method)) {
+        } else if (HttpConstant.PUT.equalsIgnoreCase(method)) {
+        } else if (HttpConstant.HEAD.equalsIgnoreCase(method)) {
+        } else if (HttpConstant.OPTIONS.equalsIgnoreCase(method)) {
         }
         if (Objects.isNull(responseEntity)) {
             throw new DefinedException("响应信息为空！");

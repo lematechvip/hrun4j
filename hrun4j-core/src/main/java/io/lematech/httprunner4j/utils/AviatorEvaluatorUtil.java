@@ -20,6 +20,7 @@ public class AviatorEvaluatorUtil {
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionSubtract());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionMultiply());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionDivide());
+        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
     }
     public static Object execute(String expression, Map<String, Object> env){
         Expression compiledExp = AviatorEvaluator.compile(expression, false);

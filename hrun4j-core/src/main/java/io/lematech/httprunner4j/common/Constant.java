@@ -23,6 +23,7 @@ public class Constant {
     public static final String SUPPORT_TEST_CASE_FILE_EXT_YML_NAME = "yml";
     public static final String TEST_CASE_DIRECTORY_NAME = "testcases";
     public static final String TEST_CASE_SCHEMA = "/schemas/testcase.schema.v2.json";
+    public static final String API_MODEL_SCHEMA = "/schemas/api.schema.json";
     public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
@@ -31,4 +32,6 @@ public class Constant {
     public static final String I18N_CN = "US";
     public static final String I18N_US = "CN";
     public static final String URL_REGEX = "http(s)?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
+
+
 }

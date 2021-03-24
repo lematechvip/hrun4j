@@ -17,15 +17,20 @@ import java.util.Map;
  * @publicWechat lematech
  */
 @Data
-public class ApiModel extends BaseModel {
+public class ApiModel<T> extends BaseModel {
     @JsonProperty(value = "name")
     private String name;
     @JsonProperty(value = "base_url")
     private String baseUrl;
     /**
-     * TODO: 2021/1/20 可选值：键值对（值可能是内置对象）或者纯对象
+     * array[map<k,array>]：used to validate response fields,validate_func_name: [check_value, expect_value]
+     * - equalTo: [statusCode, "200"]
+     * array[map<k,array>]：one validator definition(TP)
+     * - "check": "statusCode"
+     * "comparator": "equalTo"
+     * "expect": "200"
      */
     private List<Map<String, Object>> validate;
     private RequestEntity request;
-
+    private T extract;
 }

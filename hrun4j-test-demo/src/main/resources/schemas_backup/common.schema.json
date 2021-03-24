@@ -254,7 +254,7 @@
           "description": "Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True",
           "type": "boolean"
         },
-        "proxies": {
+        "proxy": {
           "description": "Dictionary mapping protocol to the URL of the proxy",
           "type": "object"
         },

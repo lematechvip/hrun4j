@@ -24,10 +24,15 @@ public class BaseModel<T> {
      * - '${hook_print(setup)}'
      * - '${modify_request_json($request, android)}'
      * - '${alter_response($response)}'
-     * map<k,v>：call setup hook functions, return value and assign to variable
-     * - total: '${sum_two(1, 5)}'
-     * - filed_name: get_decoded_response_field($response)
+     * map<k,v>：call setup hook functions, return value and assign to variable(TP)
+     * total: '${sum_two(1, 5)}'
+     * filed_name: get_decoded_response_field($response)
+     * array[map<k,v>]：call setup hook functions, return value and assign to variable
+     * -total: '${sum_two(1, 5)}'
+     * total: value1
+     * -filed_name: get_decoded_response_field($response)
      */
+
     @JsonProperty(value = "setup_hooks")
     private T setupHooks;
 
@@ -37,9 +42,13 @@ public class BaseModel<T> {
      * - '${hook_print(setup)}'
      * - '${modify_request_json($request, android)}'
      * - '${alter_response($response)}'
-     * map<k,v>：call teardown hook functions, return value and assign to variable
-     * - total: '${sum_two(1, 5)}'
-     * - filed_name: get_decoded_response_field($response)
+     * map<k,v>：call setup hook functions, return value and assign to variable(TP)
+     *  total: '${sum_two(1, 5)}'
+     *  filed_name: get_decoded_response_field($response)
+     * array[map<k,v>]：call teardown hook functions, return value and assign to variable
+     *  -total: '${sum_two(1, 5)}'
+     *   total: value1
+     *  -filed_name: get_decoded_response_field($response)
      */
     @JsonProperty(value = "teardown_hooks")
     private T teardownHooks;
@@ -47,7 +56,7 @@ public class BaseModel<T> {
     /**
      * array[string]：if exp and execute exp, return value and assign to variable
      *    $prepared_variables
-     *  map<k,v>：assign to variable
+     *  map<k,v>：assign to variable(TP)
      *    var1: value1
      *    var2: value2
      *  array[map<k,v>]：assign to variable

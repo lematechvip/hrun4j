@@ -14,9 +14,24 @@ import java.util.Map;
  */
 @Data
 public class ResponseEntity {
+    /**
+     * status code
+     */
     private Integer statusCode;
+    /**
+     * response headers
+     */
     private Map<String, String> headers;
+    /**
+     * response time
+     */
     private Double time;
+    /**
+     * response content
+     */
     private Object content;
+    /**
+     * response cookies
+     */
     private Map<String, String> cookies;
 }

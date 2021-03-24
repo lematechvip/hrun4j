@@ -1,5 +1,7 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.core.engine;
 
+
+import io.lematech.httprunner4j.core.runner.TestCaseDefined;
 
 /**
  * @author lematech

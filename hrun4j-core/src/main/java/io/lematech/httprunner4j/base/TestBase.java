@@ -1,8 +1,7 @@
 package io.lematech.httprunner4j.base;
 
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.NGDataProvider;
-import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.common.DefinedException;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.*;
@@ -41,7 +40,7 @@ public class TestBase {
         Object[][] objects;
         this.testCaseName = method.getName();
         try{
-            objects = NGDataProvider.dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()),testCaseName);
+            objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);
         }catch (Exception e){
             e.printStackTrace();
             String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());

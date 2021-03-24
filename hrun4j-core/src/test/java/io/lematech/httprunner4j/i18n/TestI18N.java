@@ -1,6 +1,5 @@
 package io.lematech.httprunner4j.i18n;
 
-import io.lematech.httprunner4j.I18NFactory;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import lombok.extern.slf4j.Slf4j;

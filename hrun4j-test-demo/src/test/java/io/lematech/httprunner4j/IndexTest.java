@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j;
 
 import io.lematech.httprunner4j.base.TestBase;
+import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
 
@@ -13,7 +14,6 @@ import org.testng.annotations.Test;
  * @publicWechat lematech
  */
 public class IndexTest extends TestBase {
-
     @Test(dataProvider = "dataProvider")
     public void index(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);

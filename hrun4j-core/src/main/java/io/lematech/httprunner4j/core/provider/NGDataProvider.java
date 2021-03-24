@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.core.provider;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.loader.TestCaseLoaderFactory;
+import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.RegularUtil;
@@ -23,18 +25,19 @@ import java.util.Map;
 
 @Slf4j
 public class NGDataProvider {
+    private String testCasePath;
 
-    public static Object[][] dataProvider(String pkgName, String testCaseName) {
+    public Object[][] dataProvider(String pkgName, String testCaseName) {
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
         String dataFileResourcePath = seekDataFileByRule(pkgName, testCaseName, extName);
         TestCase testCase = TestCaseLoaderFactory.getLoader(extName)
                 .load(dataFileResourcePath, extName, TestCase.class);
-        SchemaValidator.validateTestCaseValid(testCase);
+        SchemaValidator.validateJsonObjectFormat(TestCase.class, testCase);
         Object[][] testCases = getObjects(testCase);
         return testCases;
     }
 
-    private static Object[][] getObjects(TestCase testCase) {
+    private Object[][] getObjects(TestCase testCase) {
         Object[][] testCases;
         List<TestCase> result = handleMultiGroupData(testCase);
         testCases = new Object[result.size()][];
@@ -44,7 +47,7 @@ public class NGDataProvider {
         return testCases;
     }
 
-    public static String seekModelFileByCasePath(String filePath) {
+    public String seekModelFileByCasePath(String filePath) {
         if (!StrUtil.isEmpty(filePath)) {
             if (filePath.startsWith(Constant.TEST_CASE_FILE_PATH)) {
                 filePath = filePath.replaceFirst(Constant.TEST_CASE_FILE_PATH, "");
@@ -61,13 +64,13 @@ public class NGDataProvider {
                     filePath = RegularUtil.replaceLast(filePath, "/", "");
                 }
             }
-            log.info("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
+            log.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
             return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
         }
         return "";
     }
 
-    private static String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
+    private String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
         List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         if (executePaths.size() > 0) {
             for (String path : executePaths) {
@@ -77,7 +80,7 @@ public class NGDataProvider {
                 }
             }
             if (StrUtil.isEmpty(testCasePath)) {
-                String exceptionMsg = String.format("in %s path,not found  %s.%s",executePaths,testCaseName,extName);
+                String exceptionMsg = String.format("in %s path,not found  %s.%s", executePaths, testCaseName, extName);
                 throw new DefinedException(exceptionMsg);
             }
             return testCasePath;
@@ -98,14 +101,14 @@ public class NGDataProvider {
         dataFileResourcePath.append(testCaseName);
         return dataFileResourcePath.toString();
     }
-    private static String testCasePath ;
+
 
     /**
      * @param path
      * @param testCaseName
      * @return
      */
-    private static String searchTestCaseByName(String path, String testCaseName) {
+    private String searchTestCaseByName(String path, String testCaseName) {
         File filesPath = new File(path);
         if (!filesPath.exists()) {
             String exceptionMsg = String.format("file %s is not exits", filesPath.getAbsolutePath());
@@ -139,18 +142,18 @@ public class NGDataProvider {
      * - ["user2", "222222"]
      * - ["user3", "333333"]
      */
-    private static List<TestCase> handleMultiGroupData(TestCase testCase) {
+    private List<TestCase> handleMultiGroupData(TestCase testCase) {
         ArrayList<TestCase> result = new ArrayList<>();
         Object parameters = testCase.getConfig().getParameters();
         if (parameters == null) {
             result.add(testCase);
             return result;
         }
-        if(parameters instanceof Map){
+        if (parameters instanceof Map) {
             parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
         }
 
-        log.info("class:{}",parameters.getClass());
+        log.debug("class:{}", parameters.getClass());
         if (parameters instanceof JSONObject) {
             JSONObject jsonObject = (JSONObject) parameters;
             for (Map.Entry entry : jsonObject.entrySet()) {

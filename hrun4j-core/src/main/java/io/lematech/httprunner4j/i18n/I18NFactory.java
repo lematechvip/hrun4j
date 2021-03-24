@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.i18n;
 
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;

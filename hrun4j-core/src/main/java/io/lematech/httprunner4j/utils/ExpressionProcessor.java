@@ -89,21 +89,52 @@ public class ExpressionProcessor<T> {
 
     /**
      * handle variables(config variable、teststep variale) expression in test context variable
+     *
      * @param configVars
      * @param testStepVars
      */
-    private void handleVariablesExpression(Map<String,Object> configVars,Map<String,Object> testStepVars) {
+    private void handleVariablesExpression(Map<String, Object> configVars, Map<String, Object> testStepVars) {
         this.configVars = (Map<String, Object>) executeExpression((T) configVars);
         this.testStepVars = (Map<String, Object>) executeExpression((T) testStepVars);
     }
 
     /**
+     * handle setup or teardwon hook expression
+     */
+    public Map handleHookExp(Object hookObj) {
+        Map result = Maps.newHashMap();
+        if (hookObj instanceof Map) {
+            handleMapExp(result, (Map<String, String>) hookObj);
+        } else if (hookObj instanceof List) {
+            List tempList = (List) hookObj;
+            for (Object obj : tempList) {
+                if (obj instanceof String) {
+                    this.executeStringExpression(String.valueOf(obj));
+                } else if (obj instanceof Map) {
+                    handleMapExp(result, (Map<String, String>) obj);
+                }
+            }
+        }
+        return result;
+    }
+
+    private void handleMapExp(Map result, Map<String, String> hookObj) {
+        Map<String, String> tempMap = hookObj;
+        for (Map.Entry<String, String> entry : tempMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            result.put(key, this.executeStringExpression(value));
+        }
+    }
+
+    /**
      * handle variables priority
+     *
      * @param testContextVariable
      * @param configVars
      * @param testStepVars
      */
-    public void setVariablePriority(Map<String,Object> testContextVariable,Map<String,Object> configVars,Map<String,Object> testStepVars) {
+    public void setVariablePriority(Map<String, Object> testContextVariable, Map<String, Object> configVars, Map<String, Object> testStepVars) {
         handleVariablesExpression(configVars, testStepVars);
         Map<String, Object> resultVariables = Maps.newHashMap();
         resultVariables.putAll(Objects.isNull(this.configVars) ? Maps.newHashMap() : this.configVars);
