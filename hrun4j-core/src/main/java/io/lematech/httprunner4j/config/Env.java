@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.junit.config;
+package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.utils.PrintMap;
