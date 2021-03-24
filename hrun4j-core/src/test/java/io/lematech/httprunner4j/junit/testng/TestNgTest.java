@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.testng;
+package io.lematech.httprunner4j.junit.testng;
 
 import com.itranswarp.compiler.JavaStringCompiler;
 import javassist.ClassPool;
@@ -62,7 +62,7 @@ public class TestNgTest {
     @Test
     public void testJavaCompiler(){
         try {
-            String className = "io.lematech.httprunner4j.testng.TestNgSuiteTest";
+            String className = "io.lematech.httprunner4j.junit.testng.TestNgSuiteTest";
             //TestNgSuiteTest testNgSuiteTest = new TestNgSuiteTest();
             //System.out.println("before:" + testNgSuiteTest);
             ClassPool pool = ClassPool.getDefault();
@@ -88,7 +88,7 @@ public class TestNgTest {
         try {
 
             Map<String, byte[]> results = compiler.compile("TestNgSuiteTest.java", JAVA_SOURCE_CODE_TESTNG);
-            clazz = compiler.loadClass("io.lematech.httprunner4j.testng.TestNgSuiteTest", results);
+            clazz = compiler.loadClass("io.lematech.httprunner4j.junit.testng.TestNgSuiteTest", results);
             //clazz.newInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

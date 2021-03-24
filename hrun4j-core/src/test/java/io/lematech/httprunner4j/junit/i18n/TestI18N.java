@@ -1,7 +1,7 @@
-package io.lematech.httprunner4j.i18n;
+package io.lematech.httprunner4j.junit.i18n;
 
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.junit.config.RunnerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 

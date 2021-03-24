@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.regexp;
+package io.lematech.httprunner4j.junit.regexp;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

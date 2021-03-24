@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.testng;
+package io.lematech.httprunner4j.junit.testng;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.handler;
+package io.lematech.httprunner4j.junit.handler;
 
 import com.alibaba.fastjson.JSON;
 import io.lematech.httprunner4j.utils.HttpClientUtil;

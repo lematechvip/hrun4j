@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.aviator;
+package io.lematech.httprunner4j.junit.aviator;
 
 import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
 import io.lematech.httprunner4j.utils.JsonUtil;

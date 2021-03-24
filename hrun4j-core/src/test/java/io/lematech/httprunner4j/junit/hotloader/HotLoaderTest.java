@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.hotloader;
+package io.lematech.httprunner4j.junit.hotloader;
 
 import org.testng.annotations.Test;
 

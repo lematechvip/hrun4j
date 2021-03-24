@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.testng;
+package io.lematech.httprunner4j.junit.testng;
 
 
 import io.lematech.httprunner4j.base.TestBase;

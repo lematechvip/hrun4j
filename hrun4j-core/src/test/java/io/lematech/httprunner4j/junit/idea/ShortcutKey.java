@@ -1,10 +1,9 @@
-package io.lematech.httprunner4j.idea;
+package io.lematech.httprunner4j.junit.idea;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import io.lematech.httprunner4j.utils.HttpClientUtil;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;

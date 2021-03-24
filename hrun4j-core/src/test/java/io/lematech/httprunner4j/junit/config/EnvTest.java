@@ -1,7 +1,6 @@
-package io.lematech.httprunner4j.config;
+package io.lematech.httprunner4j.junit.config;
 
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;

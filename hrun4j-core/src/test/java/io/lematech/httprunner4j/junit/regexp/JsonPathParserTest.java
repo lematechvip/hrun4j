@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.regexp;
+package io.lematech.httprunner4j.junit.regexp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
