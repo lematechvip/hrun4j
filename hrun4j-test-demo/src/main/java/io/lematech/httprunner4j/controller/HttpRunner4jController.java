@@ -43,11 +43,11 @@ public class HttpRunner4jController {
                       @RequestHeader(value = "os_platform", required = false) String osPlatform,
                       @RequestHeader(value = "app_version", required = false) String appVersion,
                       @RequestBody TokenVO tokenVO) {
-        try {
+        /*try {
             Thread.sleep(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         String expectSign = tokenServiceImpl.generateToken(deviceSN, osPlatform, appVersion);
         boolean validateResult = tokenServiceImpl.validateToken(tokenVO.getSign(), expectSign);
         if (!validateResult) {

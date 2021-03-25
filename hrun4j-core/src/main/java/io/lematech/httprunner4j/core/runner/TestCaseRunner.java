@@ -42,12 +42,12 @@ import java.util.*;
  * @publicWechat lematech
  */
 @Slf4j
-public class TestCaseDefined {
+public class TestCaseRunner {
     private ExpressionProcessor expressionProcessor;
     private Map<String, Object> testContextVariable;
     private NGDataProvider ngDataProvider;
 
-    public TestCaseDefined() {
+    public TestCaseRunner() {
         expressionProcessor = new ExpressionProcessor();
         testContextVariable = Maps.newHashMap();
         ngDataProvider = new NGDataProvider();
