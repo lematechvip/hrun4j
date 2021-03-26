@@ -67,7 +67,7 @@ public class TestNGEngine {
         List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         for(String execPath : executePaths){
             File currentPath = new File(execPath);
-            log.debug("execute path : [{}] test cases",execPath);
+            log.info("execute path : [{}] test cases", currentPath.getAbsolutePath());
             traversePkgTestCaseGroup(currentPath);
         }
         if(preValidationExceptionMap.size()>0){
