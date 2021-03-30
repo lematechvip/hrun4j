@@ -1,0 +1,11 @@
+name: 查询用户信息接口定义
+base_url: http://127.0.0.1:8000
+request:
+  url: /api/user/${uid}
+  method: DELETE
+  headers:
+    device_sn: ${device_sn}
+    token: ${token}
+validate:
+  - equalTo: [statusCode,200]
+  - equalTo: [content.code,"00"]

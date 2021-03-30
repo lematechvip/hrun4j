@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.core.provider;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -188,8 +189,8 @@ public class NGDataProvider {
                                 }
                             }
                         }
-                        resultVariables.putAll(configVariables);
-                        resultVariables.putAll(parameterVariables);
+                        resultVariables.putAll(MapUtil.isEmpty(configVariables) ? Maps.newHashMap() : configVariables);
+                        resultVariables.putAll(MapUtil.isEmpty(parameterVariables) ? Maps.newHashMap() : parameterVariables);
                         Config config = cpTestCase.getConfig();
                         config.setVariables(resultVariables);
                         config.setParameters(parameterVariables);

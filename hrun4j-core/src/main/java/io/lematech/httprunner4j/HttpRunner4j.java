@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j;
 
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorBigInt;
@@ -19,6 +21,26 @@ import java.util.Map;
  */
 @Slf4j
 public class HttpRunner4j {
+    public static final String TOKEN_KEY = "httprunner4j";
+
+    public static class SignGenerateFunction extends AbstractFunction {
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
+            String sign;
+            StringBuffer content = new StringBuffer();
+            content.append(arg1.getValue(env)).append(arg2.getValue(env)).append(arg3.getValue(env));
+            String crypContent = content.toString();
+            sign = SecureUtil.hmac(HmacAlgorithm.HmacSHA1, TOKEN_KEY).digestHex(crypContent);
+            log.info("加密秘钥：{},加密内容：{},生成的签名：{}", TOKEN_KEY, crypContent, sign);
+            return new AviatorString(sign);
+        }
+
+        @Override
+        public String getName() {
+            return "signGenerate";
+        }
+    }
+
     public static class DefinedHookFunction extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {

@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
@@ -46,40 +47,6 @@ public class RegularUtil {
      */
     public static String replaceLast(String text, String regex, String replacement) {
         return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
-    }
-
-    /**
-     * 兼容多种类型转自定义类型
-     *
-     * @param t
-     * @param clz
-     * @param <T>
-     * @return
-     */
-    public static <T> T multipleDataTypeToDefineType(T t, Class clz) {
-        if (Objects.isNull(t)) {
-            return null;
-        }
-        if (t.getClass() != clz) {
-            throw new DefinedException("class type is not same");
-        }
-        if (clz == Map.class) {
-            Map result = Maps.newHashMap();
-            if (t instanceof Map) {
-                return t;
-            }
-            if (t instanceof List) {
-                List tList = (List) t;
-                for (Object obj : tList) {
-                    if (obj.getClass() == clz) {
-                        if (obj instanceof Map) {
-                            result.putAll((Map) obj);
-                        }
-                    }
-                }
-            }
-        }
-        return t;
     }
 
 

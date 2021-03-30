@@ -1,6 +1,8 @@
 package io.lematech.httprunner4j.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
@@ -29,12 +31,14 @@ public class ExpressionProcessor<T> {
     private Map<String,Object> currentVariable = new HashMap<>();
     private Map<String,Object> configVars = new HashMap<>();
     private Map<String,Object> testStepVars = new HashMap<>();
+
     /**
      * expression evaluator
+     *
      * @param t
      * @return
      */
-    public T executeExpression(T t) {
+    public <T> T executeExpression(T t) {
         if (Objects.isNull(t)) {
             return null;
         }
@@ -46,14 +50,24 @@ public class ExpressionProcessor<T> {
                 Map.Entry<String, Object> entry = (Map.Entry) it.next();
                 String key = entry.getKey();
                 String value = String.valueOf(entry.getValue());
-                Class valueClass = entry.getValue().getClass();
-                String newValue = executeStringExpression(value);
-                log.debug("before execute expression : key-value : {}-{},after execute expression key-value : {}-{}}",key,value,key,newValue);
-                if(valueClass == Integer.class){
-                    Integer valueObj = Integer.parseInt(newValue);
-                    result.put(key,valueObj);
-                }else if(valueClass == String.class){
-                    result.put(key,newValue);
+                if (RegExpUtil.isExp(value)) {
+                    Class valueClass = entry.getValue().getClass();
+                    String newValue = executeStringExpression(value);
+                    log.debug("before execute expression : key-value : {}-{},after execute expression key-value : {}-{}}", key, value, key, newValue);
+                    if (valueClass == Integer.class) {
+                        Integer valueObj = Integer.parseInt(newValue);
+                        result.put(key, valueObj);
+                    } else if (valueClass == String.class) {
+                        result.put(key, newValue);
+                    } else if (valueClass == Long.class) {
+                        result.put(key, Long.valueOf(newValue));
+                    } else if (valueClass == Double.class) {
+                        result.put(key, Double.valueOf(newValue));
+                    } else if (valueClass == Float.class) {
+                        result.put(key, Float.valueOf(newValue));
+                    }
+                } else {
+                    result.put(key, value);
                 }
             }
             return (T)result;
@@ -173,9 +187,12 @@ public class ExpressionProcessor<T> {
                 }else if(attributeClass==String.class){
                     Method setMethod=object.getClass().getMethod("set"+methodName,String.class);
                     setMethod.invoke(object,executeExpression((T) fieldValue));
-                }else if(attributeClass==Map.class){
-                    Method setMethod=object.getClass().getMethod("set"+methodName,Map.class);
-                    setMethod.invoke(object,executeExpression((T) fieldValue));
+                } else if (attributeClass == Map.class) {
+                    Method setMethod = object.getClass().getMethod("set" + methodName, Map.class);
+                    setMethod.invoke(object, executeExpression((T) fieldValue));
+                } else if (attributeClass == JSONObject.class) {
+                    Method setMethod = object.getClass().getMethod("set" + methodName, JSONObject.class);
+                    setMethod.invoke(object, JSON.parseObject((String) executeExpression((T) JSON.toJSONString(fieldValue)), JSONObject.class));
                 }
             }catch (NoSuchMethodException e) {
                 String exceptionMsg = String.format("no such method exception %s",e.getMessage());

@@ -1,0 +1,20 @@
+config:
+  name: 登入系统并添加用户信息
+  base_url: http://127.0.0.1:8000
+  variables:
+    device_sn: 2021032311113
+    os_platform: MacOS
+    app_version: 1.0.0
+  parameters:
+    uid: [1]
+teststeps:
+  - name: 登录系统
+    api: apimodel/getSimpleToken
+    validate:
+      - equalTo: [statusCode,200]
+  - name: 更新用户信息
+    api: apimodel/updateUser
+    validate:
+      - equalTo: [statusCode,200]
+      - equalTo: [content.code,"00"]
+      - equalTo: [content.message,"用户更新成功！"]

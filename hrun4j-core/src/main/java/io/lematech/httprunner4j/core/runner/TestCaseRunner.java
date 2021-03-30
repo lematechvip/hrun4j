@@ -58,16 +58,17 @@ public class TestCaseRunner {
      */
     public void execute(TestCase testCase) {
         Config config = testCase.getConfig();
+        Map variables = (Map) config.getVariables();
         List<TestStep> testSteps = testCase.getTestSteps();
         setupHook(config);
         for (int index = 0; index < testSteps.size(); index++) {
             log.info("步骤 : {}", testSteps.get(index).getName());
-            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index));
+            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), variables);
             if (Objects.isNull(testStep.getRequest())) {
                 continue;
             }
             setupHook(testStep);
-            expressionProcessor.setVariablePriority(testContextVariable, (Map) config.getVariables(), (Map) testStep.getVariables());
+            expressionProcessor.setVariablePriority(testContextVariable, variables, (Map) testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
@@ -99,8 +100,8 @@ public class TestCaseRunner {
             log.info("执行配置{}方法集：", type);
             result = expressionProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
-            variablesMap.putAll((Map) transConfig.getVariables());
-            variablesMap.putAll(result);
+            variablesMap.putAll(MapUtil.isEmpty((Map) transConfig.getVariables()) ? Maps.newHashMap() : (Map) transConfig.getVariables());
+            variablesMap.putAll(MapUtil.isEmpty(result) ? Maps.newHashMap() : result);
             ((Config) obj).setVariables(variablesMap);
         } else if (obj instanceof TestStep) {
             TestStep transTestStep = (TestStep) obj;
@@ -169,7 +170,7 @@ public class TestCaseRunner {
      * @param testStep
      * @return
      */
-    private TestStep referenceApiModelOrTestCase(TestStep testStep) {
+    private TestStep referenceApiModelOrTestCase(TestStep testStep, Map variables) {
         String testcase = testStep.getTestcase();
         if (!StrUtil.isEmpty(testcase)) {
             String testcasePath = ngDataProvider.seekModelFileByCasePath(testcase);
@@ -177,8 +178,15 @@ public class TestCaseRunner {
                 String exceptionMsg = String.format("引用测试用例%s不存在", testcasePath);
                 throw new DefinedException(exceptionMsg);
             }
+            /**
+             * config variables can express to reference testcases
+             */
             TestCase testCase = TestCaseLoaderFactory.getLoader(FileUtil.extName(testcase)).load(testcasePath
                     , RunnerConfig.getInstance().getTestCaseExtName(), TestCase.class);
+            Config tcConfig = testCase.getConfig();
+            Map tcVariables = (Map) tcConfig.getVariables();
+            tcVariables.putAll(MapUtil.isEmpty(variables) ? Maps.newHashMap() : variables);
+            tcConfig.setVariables(tcVariables);
             this.execute(testCase);
         }
         String api = testStep.getApi();
@@ -378,6 +386,10 @@ public class TestCaseRunner {
             String key = entry.getKey();
             String value = entry.getValue();
             Object transferValue = AssertChecker.dataTransfer(value, responseEntity);
+            if (transferValue == value) {
+                String exceptionMsg = String.format("not found value by given search model : %s", value);
+                throw new DefinedException(exceptionMsg);
+            }
             testContextVariable.put(key, transferValue);
         }
     }

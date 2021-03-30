@@ -1,0 +1,67 @@
+config:
+  name: 复杂操作案例之获取Token信息
+  base_url: http://127.0.0.1:8000
+teststeps:
+  - name: 步骤名称
+    setup_hooks:
+      - "${hook(xteststep_setup_hooks1)}"
+      - "${hook(xteststep_setup_hooks2)}"
+      - "${hook(xteststep_setup_hooks3)}"
+      - "${hook(xteststep_setup_hooks4)}"
+      - total1: '${add(1, 5)}'
+      - total2: '${add(3, 5)}'
+    api: apimodel/getToken
+    request:
+      url: /api/get-token
+      method: POST
+      headers:
+        device_sn: 2021032311113
+        os_platform: MacOS
+        app_version: 1.0.0
+      params:
+        a: A
+        b: B
+      data:
+        data1: dataV1
+        data2: dataV2
+      cookies:
+        k1: K1
+        k2: K2
+      connectionRequestTimeout: 1
+      connectTimeout: 1
+      socketTimeout: 1
+      json:
+        sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
+      files:
+        file1: xxfilek1
+        file2: xxfilek2
+      upload:
+        upload1: xxupload1
+        upload2: xxupload2
+      allowRedirects: true
+      auth:
+        auth1: xxauth1
+        auth2: xxauth2
+      verify: false
+      stream: false
+    variables:
+      - aaa: bbb
+    validate:
+      - equalTo: [statusCode, 200]
+      - "check": "statusCode"
+        "comparator": "equalTo"
+        "expect": 200
+      - "check": "content.code"
+        "comparator": "equalTo"
+        "expect": "00"
+      - "check": "content.message"
+        "comparator": "equalTo"
+        "expect": "ok！"
+    teardown_hooks:
+      - "${hook(xteststep_teardown_hooks1)}"
+      - "${hook(xteststep_teardown_hooks2)}"
+      - "${hook(xteststep_teardown_hooks3)}"
+      - "${hook(xteststep_teardown_hooks4)}"
+      - total1: '${add(1, 5)}'
+      - total2: '${add(3, 5)}'
+    output: [variables]

@@ -1,0 +1,30 @@
+{
+  "config": {
+    "name": "引用测试用例",
+    "base_url": "http://127.0.0.1:8000"
+  },
+  "teststeps": [
+    {
+      "name": "获取Token",
+      "api": "apimodel/getToken",
+      "validate": [
+        {
+          "equalTo": [
+            "statusCode",
+            200
+          ]
+        },
+        {
+          "equalTo": [
+            "content.code",
+            "00"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "引用测试用例",
+      "testcase": "demo/testComplexSingleDemo.json"
+    }
+  ]
+}

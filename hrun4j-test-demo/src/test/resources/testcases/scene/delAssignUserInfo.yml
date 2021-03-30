@@ -1,0 +1,14 @@
+config:
+  name: 登入系统并添加用户信息
+  base_url: http://127.0.0.1:8000
+  variables:
+    device_sn: 2021032311113
+    os_platform: MacOS
+    app_version: 1.0.0
+  parameters:
+    uid: [1,2,3,4,5]
+teststeps:
+  - name: 登录并添加用户信息
+    testcase: scene/loginAndAddUser
+  - name: 删除用户信息
+    api: apimodel/delUser

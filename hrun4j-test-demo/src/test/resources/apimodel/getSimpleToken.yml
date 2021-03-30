@@ -1,0 +1,16 @@
+name: 获取Token信息
+base_url: http://127.0.0.1:8000
+request:
+  url: /api/get-token
+  method: POST
+  headers:
+    device_sn: ${device_sn}
+    os_platform: ${os_platform}
+    app_version: ${app_version}
+  json:
+    sign: ${signGenerate(device_sn,os_platform,app_version)}
+validate:
+  - equalTo: [statusCode,200]
+  - equalTo: [content.code,"00"]
+extract:
+  token: content.data.token

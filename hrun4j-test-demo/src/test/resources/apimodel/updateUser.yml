@@ -1,0 +1,11 @@
+name: 添加用户信息接口定义
+base_url: http://127.0.0.1:8000
+request:
+  url: /api/user/${uid}
+  method: PUT
+  headers:
+    device_sn: ${device_sn}
+    token: ${token}
+  json:
+    name: lematechxxx
+    password: qweqwe123

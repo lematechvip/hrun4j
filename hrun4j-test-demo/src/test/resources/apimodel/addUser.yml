@@ -1,0 +1,15 @@
+name: 添加用户信息接口定义
+base_url: http://127.0.0.1:8000
+request:
+  url: /api/user/${uid}
+  method: POST
+  headers:
+    device_sn: ${device_sn}
+    token: ${token}
+  json:
+    name: lematech
+    password: qweqwe123
+setup_hooks:
+  ${hook(addUser_api_define_setup_hooks)}
+teardown_hooks:
+  ${hook(addUser_api_define_teardown_hooks)}

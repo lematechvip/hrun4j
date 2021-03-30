@@ -21,6 +21,7 @@ public class AviatorEvaluatorUtil {
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionMultiply());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionDivide());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
+        AviatorEvaluator.addFunction(new HttpRunner4j.SignGenerateFunction());
     }
     public static Object execute(String expression, Map<String, Object> env){
         Expression compiledExp = AviatorEvaluator.compile(expression, false);

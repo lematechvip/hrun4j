@@ -15,9 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -184,6 +182,112 @@ public class HttpClientUtil {
         }
     }
 
+    public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestConfig requestConfig) {
+        return doDelete(url, headers, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doDelete(String url, Map<String, String> headers, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpDelete httpDelete = new HttpDelete(url);
+        httpDelete.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpDelete.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpDelete);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.warn("release connection exception");
+                }
+            }
+        }
+    }
+
+
+    public static ResponseEntity doPut(String url, Map<String, String> headers, Map<String, Object> params, String json, RequestConfig requestConfig) {
+        return doPut(url, headers, params, json, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doPut(String url, Map<String, String> headers, Map<String, Object> params, String json, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPut httpPut;
+        if (!StrUtil.isEmpty(json)) {
+            url = getUrlWithParams(url, params);
+            httpPut = new HttpPut(url);
+            StringEntity jsonContent;
+            try {
+                jsonContent = new StringEntity(json);
+                jsonContent.setContentType("application/json");
+                jsonContent.setContentEncoding(Constant.CHARSET_UTF_8);
+                httpPut.setHeader("Content-Type", "application/json;charset=UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                String exceptionMsg = String.format("unsupported encoding exception :%s", e.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
+            httpPut.setEntity(jsonContent);
+        } else {
+            httpPut = new HttpPut(url);
+            if (MapUtil.isEmpty(params)) {
+                HttpEntity entityReq = getUrlEncodedFormEntity(params);
+                httpPut.setEntity(entityReq);
+            }
+        }
+
+        httpPut.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPut.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpPut);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.warn("release connection exception");
+                }
+            }
+        }
+    }
+
+
     private static ResponseEntity wrapperResponseEntity(CloseableHttpResponse response
             , long elapsedTime
             , CookieStore httpCookieStore) throws IOException {
@@ -325,7 +429,9 @@ public class HttpClientUtil {
         } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
             responseEntity = doPost(url, headers, params, json, initRequestConfig(requestEntity));
         } else if (HttpConstant.DELETE.equalsIgnoreCase(method)) {
+            responseEntity = doDelete(url, headers, initRequestConfig(requestEntity));
         } else if (HttpConstant.PUT.equalsIgnoreCase(method)) {
+            responseEntity = doPut(url, headers, params, json, initRequestConfig(requestEntity));
         } else if (HttpConstant.HEAD.equalsIgnoreCase(method)) {
         } else if (HttpConstant.OPTIONS.equalsIgnoreCase(method)) {
         }

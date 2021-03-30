@@ -1,0 +1,86 @@
+{
+  "name": "ApiModel之获取Token信息",
+  "base_url": "http://127.0.0.1:8000",
+  "setup_hooks": [
+    "${hook(config_setup_hooks1)}",
+    "${hook(config_setup_hooks2)}"
+  ],
+  "teardown_hooks": [
+    "${hook(config_teardown_hooks1)}",
+    "${hook(config_teardown_hooks2)}"
+  ],
+  "variables": [
+    {
+      "configVariable1": "configVariableValue1"
+    },
+    {
+      "configVariable2": "configVariableValue2"
+    }
+  ],
+  "request": {
+    "url": "/api/get-token",
+    "method": "POST",
+    "headers": {
+      "device_sn": 2021032311113,
+      "os_platform": "MacOS",
+      "app_version": "1.0.0"
+    },
+    "params": {
+      "a": "apiA",
+      "b": "apiB"
+    },
+    "data": {
+      "data1": "apidataV1",
+      "data2": "apidataV2"
+    },
+    "connectionRequestTimeout": 15,
+    "connectTimeout": 15,
+    "socketTimeout": 15,
+    "allowRedirects": false,
+    "cookies": {
+      "k1": "apiK1",
+      "k2": "apiK2"
+    },
+    "files": {
+      "file1": "filek1",
+      "file2": "filek2"
+    },
+    "upload": {
+      "upload1": "upload1",
+      "upload2": "upload2"
+    },
+    "auth": [
+      {
+        "auth1": "auth1"
+      },
+      {
+        "auth2": "auth2"
+      }
+    ],
+    "verify": true,
+    "stream": true,
+    "json": {
+      "sign": "8d21d6fa4d84fb1b21212913ca76280bf8241f06"
+    }
+  },
+  "validate": [
+    {
+      "equalTo": [
+        "statusCode",
+        200
+      ]
+    },
+    {
+      "equalTo": [
+        "content.code",
+        "00"
+      ]
+    },
+    {
+      "equalTo": [
+        "content.message",
+        "ok！"
+      ]
+    }
+  ]
+}

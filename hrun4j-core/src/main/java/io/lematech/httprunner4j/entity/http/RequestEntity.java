@@ -1,9 +1,7 @@
 package io.lematech.httprunner4j.entity.http;
 
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.utils.RegExpUtil;
 import io.lematech.httprunner4j.utils.RegularUtil;
 import lombok.Data;
 

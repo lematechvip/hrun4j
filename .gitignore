@@ -25,3 +25,4 @@ target
 hs_err_pid*
 .idea
 /hrun4j-core/test-output/
+/test-output/

@@ -43,11 +43,6 @@ public class HttpRunner4jController {
                       @RequestHeader(value = "os_platform", required = false) String osPlatform,
                       @RequestHeader(value = "app_version", required = false) String appVersion,
                       @RequestBody TokenVO tokenVO) {
-        /*try {
-            Thread.sleep(100000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         String expectSign = tokenServiceImpl.generateToken(deviceSN, osPlatform, appVersion);
         boolean validateResult = tokenServiceImpl.validateToken(tokenVO.getSign(), expectSign);
         if (!validateResult) {
@@ -89,7 +84,7 @@ public class HttpRunner4jController {
         addUser.setName(userVO.getName());
         addUser.setPassword(userVO.getPassword());
         userServiceImpl.updateUser(addUser);
-        return R.ok("用户创建成功！");
+        return R.ok("用户更新成功！");
     }
 
 
