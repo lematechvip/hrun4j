@@ -87,7 +87,6 @@ public class HttpRunner4jController {
         return R.ok("用户更新成功！");
     }
 
-
     @DeleteMapping(value = "/user/{uid}")
     @ValidateRequest(headerNames = {"device_sn", "token"})
     public R deleteUser(@PathVariable int uid) {

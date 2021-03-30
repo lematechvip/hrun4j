@@ -1,6 +1,8 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -62,6 +64,14 @@ public class RegExpUtil {
     }
 
     public static String findString(String reg, String str) {
+        if (StrUtil.isEmpty(reg)) {
+            String exceptionMsg = String.format("regex expresssion can not empty or null: %s", reg);
+            throw new DefinedException(exceptionMsg);
+        }
+        if (StrUtil.isEmpty(str)) {
+            String exceptionMsg = String.format("search str can not empty or null: %s", str);
+            throw new DefinedException(exceptionMsg);
+        }
         String returnStr = null;
         List<String> list = find(reg, str);
         if (list.size() != 0) {

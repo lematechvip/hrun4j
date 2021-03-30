@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.core.validator;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -52,11 +53,10 @@ public class AssertChecker {
     }
 
     /**
-     *
      * @param objectMap
      * @param responseEntity
      */
-    public static void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity) {
+    public static void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
         Comparator comparator = new Comparator();
         if (objectMap.containsKey("check") && objectMap.containsKey("expect")) {
@@ -85,7 +85,7 @@ public class AssertChecker {
             throw new DefinedException(String.format("当前不支持 %s 比较器，已支持方法名称列表：%s", comparatorName, methodAlisaMap));
         }
         String exp = comparator.getCheck();
-        Object actual = dataTransfer(exp, responseEntity);
+        Object actual = dataTransfer(exp, responseEntity, env);
         log.debug("表达式：{},提取结果：{}", exp, actual);
         try {
             Class<?> clz = Class.forName("org.junit.Assert");
@@ -112,7 +112,7 @@ public class AssertChecker {
      * @param responseEntity
      * @return
      */
-    public static Object dataTransfer(String exp, ResponseEntity responseEntity) {
+    public static Object dataTransfer(String exp, ResponseEntity responseEntity, Map<String, Object> env) {
         if (StringUtils.isEmpty(exp)) {
             return "";
         }
@@ -121,9 +121,10 @@ public class AssertChecker {
          * expression evaluation: sum(a+b)
          */
         if (RegExpUtil.isExp(exp)) {
-            return RegExpUtil.buildNewString(exp, Maps.newHashMap());
+            return RegExpUtil.buildNewString(exp, MapUtil.isEmpty(env) ? Maps.newHashMap() : env);
         } else if (exp.startsWith("^") && exp.endsWith("$")) {
-            String regSearch = RegExpUtil.findString(exp, respStr);
+            String expression = exp.substring(1, exp.length() - 1);
+            String regSearch = RegExpUtil.findString(expression, respStr);
             return regSearch;
         } else if (exp.startsWith("$.")) {
             return JsonUtil.getJsonPathResult(exp, respStr);
@@ -150,12 +151,12 @@ public class AssertChecker {
         }
     }
 
-    public static void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity) {
+    public static void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity, Map<String, Object> env) {
         if (Objects.isNull(mapList)) {
             return;
         }
         for (Map<String, Object> objectMap : mapList) {
-            assertObject(objectMap, responseEntity);
+            assertObject(objectMap, responseEntity, env);
         }
     }
 

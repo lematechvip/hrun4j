@@ -86,4 +86,14 @@ public class DemoTest extends TestBase {
     }
 
 
+    /**
+     * 测试多种数据提取
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testMultipleGetDataDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 }

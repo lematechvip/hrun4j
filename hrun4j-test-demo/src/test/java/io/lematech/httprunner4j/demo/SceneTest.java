@@ -25,7 +25,6 @@ public class SceneTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
-
     /**
      * 登录并添加用户信息
      *

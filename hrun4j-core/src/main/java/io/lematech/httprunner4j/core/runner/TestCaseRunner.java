@@ -44,12 +44,22 @@ import java.util.*;
 @Slf4j
 public class TestCaseRunner {
     private ExpressionProcessor expressionProcessor;
+    /**
+     * testcase context variables
+     */
     private Map<String, Object> testContextVariable;
+
+    /**
+     * teststep context variables
+     */
+    private Map<String, Object> testStepContextVariable;
+
     private NGDataProvider ngDataProvider;
 
     public TestCaseRunner() {
         expressionProcessor = new ExpressionProcessor();
         testContextVariable = Maps.newHashMap();
+        testStepContextVariable = Maps.newHashMap();
         ngDataProvider = new NGDataProvider();
     }
 
@@ -68,12 +78,14 @@ public class TestCaseRunner {
                 continue;
             }
             setupHook(testStep);
+            testStepContextVariable.putAll(MapUtil.isEmpty(variables) ? Maps.newHashMap() : variables);
+            testStepContextVariable.putAll(MapUtil.isEmpty((Map) testStep.getVariables()) ? Maps.newHashMap() : (Map) testStep.getValidate());
             expressionProcessor.setVariablePriority(testContextVariable, variables, (Map) testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
             List<Map<String, Object>> validateList = testStep.getValidate();
-            AssertChecker.assertList(validateList, responseEntity);
+            AssertChecker.assertList(validateList, responseEntity, this.testStepContextVariable);
             extractVariables(testStep.getExtract(), responseEntity);
             teardownHook(testStep);
 
@@ -128,7 +140,7 @@ public class TestCaseRunner {
                 log.info("输出变量[variables]：{}", transTestStep.getVariables());
             }
             if (outputs.contains("extract")) {
-                log.info("输出变量[extract]：{}", testContextVariable);
+                log.info("输出变量[extract]：{}", this.testStepContextVariable);
             }
         }
     }
@@ -148,7 +160,7 @@ public class TestCaseRunner {
             List tempList = (List) obj;
             for (Object elementObj : tempList) {
                 if (elementObj instanceof String) {
-                    Object executeResult = AviatorEvaluatorUtil.execute(String.valueOf(obj), this.testContextVariable);
+                    Object executeResult = AviatorEvaluatorUtil.execute(String.valueOf(obj), this.testStepContextVariable);
                     if (executeResult instanceof Map) {
                         result.putAll((Map) executeResult);
                     }
@@ -385,7 +397,7 @@ public class TestCaseRunner {
             Map.Entry<String, String> entry = entries.next();
             String key = entry.getKey();
             String value = entry.getValue();
-            Object transferValue = AssertChecker.dataTransfer(value, responseEntity);
+            Object transferValue = AssertChecker.dataTransfer(value, responseEntity, this.testContextVariable);
             if (transferValue == value) {
                 String exceptionMsg = String.format("not found value by given search model : %s", value);
                 throw new DefinedException(exceptionMsg);
