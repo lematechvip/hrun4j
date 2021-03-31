@@ -1,12 +1,15 @@
 package io.lematech.httprunner4j.utils;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.Env;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
+import io.lematech.httprunner4j.entity.testcase.Config;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,6 +54,7 @@ public class ExpressionProcessor<T> {
                 String key = entry.getKey();
                 String value = String.valueOf(entry.getValue());
                 if (RegExpUtil.isExp(value)) {
+
                     Class valueClass = entry.getValue().getClass();
                     String newValue = executeStringExpression(value);
                     log.debug("before execute expression : key-value : {}-{},after execute expression key-value : {}-{}}", key, value, key, newValue);
@@ -71,11 +75,11 @@ public class ExpressionProcessor<T> {
                 }
             }
             return (T)result;
-        }else if(t instanceof String){
-            String str =(String) t;
-            return (T)executeStringExpression(str);
-        }else if (t instanceof RequestEntity){
-            return (T)buildNewObj(t);
+        }else if (t instanceof String) {
+            String str = (String) t;
+            return (T) executeStringExpression(str);
+        } else if (t instanceof RequestEntity || t instanceof Config) {
+            return (T) buildNewObj(t);
         }
         return t;
     }
@@ -90,8 +94,15 @@ public class ExpressionProcessor<T> {
         if(RegExpUtil.isExp(str)){
             List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION,str);
             List<String> matcherList = new ArrayList<>();
-            for(String exp : matchList){
-                String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp,currentVariable));
+            for(String exp : matchList) {
+                Object result;
+                try {
+                    result = AviatorEvaluatorUtil.execute(exp, currentVariable);
+                } catch (Exception e) {
+                    String exceptionMsg = String.format("exp: %s occur error", exp);
+                    throw new DefinedException(exceptionMsg);
+                }
+                String handleResult = String.valueOf(result);
                 matcherList.add(handleResult);
             }
             for(String match : matcherList){
@@ -148,13 +159,13 @@ public class ExpressionProcessor<T> {
      * @param configVars
      * @param testStepVars
      */
-    public void setVariablePriority(Map<String, Object> testContextVariable, Map<String, Object> configVars, Map<String, Object> testStepVars) {
+    public void setVariablePriority(Map<String, Object> currentVariable, Map<String, Object> testContextVariable, Map<String, Object> configVars, Map<String, Object> testStepVars) {
         handleVariablesExpression(configVars, testStepVars);
-        Map<String, Object> resultVariables = Maps.newHashMap();
-        resultVariables.putAll(Objects.isNull(this.configVars) ? Maps.newHashMap() : this.configVars);
-        resultVariables.putAll(testContextVariable);
-        resultVariables.putAll(Objects.isNull(this.testStepVars) ? Maps.newHashMap() : this.testStepVars);
-        currentVariable = resultVariables;
+        currentVariable.putAll(MapUtil.isEmpty(configVars) ? org.testng.collections.Maps.newHashMap() : configVars);
+        currentVariable.putAll(testContextVariable);
+        currentVariable.putAll(MapUtil.isEmpty(testStepVars) ? org.testng.collections.Maps.newHashMap() : testStepVars);
+        this.currentVariable = currentVariable;
+
     }
 
     /**

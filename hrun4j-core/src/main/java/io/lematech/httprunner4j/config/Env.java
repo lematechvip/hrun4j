@@ -20,13 +20,21 @@ import java.util.Properties;
  */
 @Slf4j
 public class Env {
-    private static Map<String, String> envMap;
+    public static Map<String, Object> getEnvMap() {
+        if (envMap == null) {
+            initializeEnv();
+        }
+        return envMap;
+    }
+
+    private static Map<String, Object> envMap;
+
     private static synchronized void initializeEnv() {
         if (envMap == null) {
             envMap = new HashMap<>();
             envMap.putAll(System.getenv());
             Properties properties = new Properties();
-            InputStream inputStream  = Env.class
+            InputStream inputStream = Env.class
                     .getClassLoader()
                     .getResourceAsStream(Constant.ENV_FILE_NAME);
             try {
@@ -35,19 +43,21 @@ public class Env {
                 envMap.putAll((Map)properties);
                 PrintMap.printMap(envMap);
             } catch (Exception e) {
-                log.warn(Constant.ENV_FILE_NAME+" is not exist");
+                log.warn(Constant.ENV_FILE_NAME + " is not exist");
             }
         }
     }
-    public static void setEnv(String key,String value) {
-        if (envMap == null){
+
+    public static void setEnv(String key, String value) {
+        if (envMap == null) {
             initializeEnv();
         }
-        envMap.put(key,value);
+        envMap.put(key, value);
     }
-    public static String getEnv(String key) {
-        String value = null;
-        if (envMap == null){
+
+    public static Object getEnv(String key) {
+        Object value = null;
+        if (envMap == null) {
             initializeEnv();
         }
         if (envMap.containsKey(key)) {

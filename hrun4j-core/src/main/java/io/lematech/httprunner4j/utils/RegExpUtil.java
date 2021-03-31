@@ -3,6 +3,7 @@ package io.lematech.httprunner4j.utils;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.Env;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -24,20 +25,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class RegExpUtil {
-    public static String buildNewString(String str, Map env) {
-        if (isExp(str)) {
-            List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION, str);
-            List<String> matcherList = new ArrayList<>();
-            for (String exp : matchList) {
-                String handleResult = String.valueOf(AviatorEvaluatorUtil.execute(exp, env));
-                matcherList.add(handleResult);
-            }
-            for (String match : matcherList) {
-                str = str.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, match);
-            }
-        }
-        return str;
-    }
+
 
     public static Boolean isExp(String exp) {
         Boolean flag = false;
@@ -45,6 +33,17 @@ public class RegExpUtil {
             return false;
         }
         if (match(Constant.REGEX_EXPRESSION_FLAG, exp)) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    public static Boolean isEnvExp(String exp) {
+        Boolean flag = false;
+        if (StringUtils.isEmpty(exp)) {
+            return false;
+        }
+        if (match(Constant.REGEX_ENV_EXPRESSION_FLAG, exp)) {
             flag = true;
         }
         return flag;

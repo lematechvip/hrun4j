@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 @Slf4j
 public class PrintMap {
-    public static void printMap(Map<String, String> map) {
+    public static void printMap(Map<String, Object> map) {
         if (map != null) {
             for (Map.Entry entry : map.entrySet()) {
                 log.debug(entry.getKey() + "=" + entry.getValue());

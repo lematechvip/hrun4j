@@ -52,43 +52,48 @@ public class TestCaseRunner {
     /**
      * teststep context variables
      */
-    private Map<String, Object> testStepContextVariable;
+    private Map<String, Object> testStepConfigVariable;
 
     private NGDataProvider ngDataProvider;
+
+    /**
+     * assert checker
+     */
+    private AssertChecker assertChecker;
 
     public TestCaseRunner() {
         expressionProcessor = new ExpressionProcessor();
         testContextVariable = Maps.newHashMap();
-        testStepContextVariable = Maps.newHashMap();
         ngDataProvider = new NGDataProvider();
+        assertChecker = new AssertChecker(expressionProcessor);
     }
 
     /**
      * real execute testcase logic
      */
     public void execute(TestCase testCase) {
-        Config config = testCase.getConfig();
-        Map variables = (Map) config.getVariables();
         List<TestStep> testSteps = testCase.getTestSteps();
+        Config config = (Config) expressionProcessor.executeExpression(testCase.getConfig());
         setupHook(config);
         for (int index = 0; index < testSteps.size(); index++) {
+            testStepConfigVariable = Maps.newHashMap();
             log.info("步骤 : {}", testSteps.get(index).getName());
-            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), variables);
-            if (Objects.isNull(testStep.getRequest())) {
+            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), (Map) config.getVariables());
+            RequestEntity initializeRequestEntity = testStep.getRequest();
+            if (Objects.isNull(initializeRequestEntity)) {
                 continue;
             }
+            testStepConfigVariable.put("request", initializeRequestEntity);
             setupHook(testStep);
-            testStepContextVariable.putAll(MapUtil.isEmpty(variables) ? Maps.newHashMap() : variables);
-            testStepContextVariable.putAll(MapUtil.isEmpty((Map) testStep.getVariables()) ? Maps.newHashMap() : (Map) testStep.getValidate());
-            expressionProcessor.setVariablePriority(testContextVariable, variables, (Map) testStep.getVariables());
-            RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(testStep.getRequest());
+            expressionProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, (Map) config.getVariables(), (Map) testStep.getVariables());
+            RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(initializeRequestEntity);
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
             List<Map<String, Object>> validateList = testStep.getValidate();
-            AssertChecker.assertList(validateList, responseEntity, this.testStepContextVariable);
-            extractVariables(testStep.getExtract(), responseEntity);
+            testStepConfigVariable.put("response", responseEntity);
             teardownHook(testStep);
-
+            assertChecker.assertList(validateList, responseEntity, this.testStepConfigVariable);
+            extractVariables(testStep.getExtract(), responseEntity);
         }
         teardownHook(config);
     }
@@ -109,6 +114,9 @@ public class TestCaseRunner {
             if (Objects.isNull(hookObj)) {
                 return;
             }
+            if ("teardown".equals(type)) {
+                hookObj = transConfig.getTeardownHooks();
+            }
             log.info("执行配置{}方法集：", type);
             result = expressionProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
@@ -119,6 +127,7 @@ public class TestCaseRunner {
             TestStep transTestStep = (TestStep) obj;
             Object hookObj = transTestStep.getSetupHooks();
             if ("teardown".equals(type)) {
+                hookObj = transTestStep.getTeardownHooks();
                 outputVariables(transTestStep);
             }
             if (Objects.isNull(hookObj)) {
@@ -140,7 +149,7 @@ public class TestCaseRunner {
                 log.info("输出变量[variables]：{}", transTestStep.getVariables());
             }
             if (outputs.contains("extract")) {
-                log.info("输出变量[extract]：{}", this.testStepContextVariable);
+                log.info("输出变量[extract]：{}", this.testStepConfigVariable);
             }
         }
     }
@@ -160,7 +169,7 @@ public class TestCaseRunner {
             List tempList = (List) obj;
             for (Object elementObj : tempList) {
                 if (elementObj instanceof String) {
-                    Object executeResult = AviatorEvaluatorUtil.execute(String.valueOf(obj), this.testStepContextVariable);
+                    Object executeResult = AviatorEvaluatorUtil.execute(String.valueOf(obj), this.testStepConfigVariable);
                     if (executeResult instanceof Map) {
                         result.putAll((Map) executeResult);
                     }
@@ -197,6 +206,9 @@ public class TestCaseRunner {
                     , RunnerConfig.getInstance().getTestCaseExtName(), TestCase.class);
             Config tcConfig = testCase.getConfig();
             Map tcVariables = (Map) tcConfig.getVariables();
+            if (MapUtil.isEmpty(tcVariables)) {
+                tcVariables = Maps.newHashMap();
+            }
             tcVariables.putAll(MapUtil.isEmpty(variables) ? Maps.newHashMap() : variables);
             tcConfig.setVariables(tcVariables);
             this.execute(testCase);
@@ -397,7 +409,7 @@ public class TestCaseRunner {
             Map.Entry<String, String> entry = entries.next();
             String key = entry.getKey();
             String value = entry.getValue();
-            Object transferValue = AssertChecker.dataTransfer(value, responseEntity, this.testContextVariable);
+            Object transferValue = assertChecker.dataTransfer(value, responseEntity, this.testStepConfigVariable);
             if (transferValue == value) {
                 String exceptionMsg = String.format("not found value by given search model : %s", value);
                 throw new DefinedException(exceptionMsg);

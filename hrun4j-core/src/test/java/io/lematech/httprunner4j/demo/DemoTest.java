@@ -96,4 +96,38 @@ public class DemoTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+
+    /**
+     * 测试指定步骤下的request和response信息输出
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testCurrentStepRequestAndResponseDataDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
+    /**
+     * 测试应用环境变量案例
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testReferenceEnvDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
+    /**
+     * 支持自定义aviator表达式及运算比较
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testAviatorExpDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
 }

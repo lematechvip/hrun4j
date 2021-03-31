@@ -55,6 +55,21 @@ public class HttpRunner4j {
         }
     }
 
+    public static class ReuqestAndResponseHook extends AbstractFunction {
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
+            log.info("当前请求详细信息：{}", env.get("request"));
+            log.info("当前响应详细信息：{}", env.get("response"));
+            return new AviatorString(String.valueOf(arg));
+        }
+
+        @Override
+        public String getName() {
+            return "RHook";
+        }
+    }
+
+
     public static class DefinedFunctionAdd extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {

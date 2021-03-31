@@ -25,7 +25,9 @@ public class Constant {
     public static final String TEST_CASE_SCHEMA = "/schemas/testcase.schema.v2.json";
     public static final String API_MODEL_SCHEMA = "/schemas/api.schema.json";
     public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
+    public static final String REGEX_ENV_EXPRESSION = "(?=ENV\\().*?(?=))";
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
+    public static final String REGEX_ENV_EXPRESSION_FLAG = "(.*)\\$\\{ENV(.*?)\\}(.*)";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
     public static final String DOT_PATH = ".";
     public static final String CHARSET_UTF_8 = "UTF-8";

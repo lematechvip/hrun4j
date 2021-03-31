@@ -10,6 +10,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
+import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import io.lematech.httprunner4j.utils.JsonUtil;
 import io.lematech.httprunner4j.utils.RegExpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +35,21 @@ import java.util.*;
 
 @Slf4j
 public class AssertChecker {
-    private static Map<String,String> alisaMap = new HashMap<>();
-    private static Matcher buildMatcherObj(String comparatorName,List<String> params,Object expect){
+    private ExpressionProcessor expressionProcessor;
+
+    public AssertChecker(ExpressionProcessor expressionProcessor) {
+        this.expressionProcessor = expressionProcessor;
+    }
+
+    private static Map<String, String> alisaMap = new HashMap<>();
+
+    private static Matcher buildMatcherObj(String comparatorName, List<String> params, Object expect) {
         Object obj = null;
         try {
             Class<?> clzValue = Class.forName("org.hamcrest.Matchers");
             String methodName = alisaMap.containsKey(comparatorName) ? alisaMap.get(comparatorName) : comparatorName;
-            Method method = clzValue.getMethod(methodName,Class.forName(params.get(0)));
-            obj = method.invoke(null,expect);
+            Method method = clzValue.getMethod(methodName, Class.forName(params.get(0)));
+            obj = method.invoke(null, expect);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -56,7 +64,7 @@ public class AssertChecker {
      * @param objectMap
      * @param responseEntity
      */
-    public static void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
+    public void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
         Comparator comparator = new Comparator();
         if (objectMap.containsKey("check") && objectMap.containsKey("expect")) {
@@ -112,7 +120,7 @@ public class AssertChecker {
      * @param responseEntity
      * @return
      */
-    public static Object dataTransfer(String exp, ResponseEntity responseEntity, Map<String, Object> env) {
+    public Object dataTransfer(String exp, ResponseEntity responseEntity, Map<String, Object> env) {
         if (StringUtils.isEmpty(exp)) {
             return "";
         }
@@ -121,7 +129,7 @@ public class AssertChecker {
          * expression evaluation: sum(a+b)
          */
         if (RegExpUtil.isExp(exp)) {
-            return RegExpUtil.buildNewString(exp, MapUtil.isEmpty(env) ? Maps.newHashMap() : env);
+            return expressionProcessor.executeStringExpression(exp);
         } else if (exp.startsWith("^") && exp.endsWith("$")) {
             String expression = exp.substring(1, exp.length() - 1);
             String regSearch = RegExpUtil.findString(expression, respStr);
@@ -151,7 +159,7 @@ public class AssertChecker {
         }
     }
 
-    public static void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity, Map<String, Object> env) {
+    public void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity, Map<String, Object> env) {
         if (Objects.isNull(mapList)) {
             return;
         }

@@ -22,3 +22,4 @@ teststeps:
       - equalTo: [$.content.code, "00"]
       - equalTo: [$.content.code, "00"]
       - equalTo: ["^message\":\"(.*?)\"$", "message\":\"ok！\""]
+      - equalTo: [$.headers.Content-Type, "application/json;charset=UTF-8"]
