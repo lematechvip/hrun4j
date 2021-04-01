@@ -77,7 +77,7 @@ public class TestCaseLoaderImpl<T> implements ITestCaseLoader {
                 throw new DefinedException(exceptionMsg);
             }
         } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             try {
                 jsonObject = yaml.load(new FileInputStream(fileName));
             } catch (FileNotFoundException e) {

@@ -34,4 +34,6 @@ public class ResponseEntity {
      * response cookies
      */
     private Map<String, String> cookies;
+
+    private Long contentLength;
 }

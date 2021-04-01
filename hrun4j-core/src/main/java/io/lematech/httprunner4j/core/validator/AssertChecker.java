@@ -1,12 +1,9 @@
 package io.lematech.httprunner4j.core.validator;
 
-import cn.hutool.core.map.MapUtil;
+
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
@@ -16,8 +13,6 @@ import io.lematech.httprunner4j.utils.RegExpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
-import org.testng.collections.Maps;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

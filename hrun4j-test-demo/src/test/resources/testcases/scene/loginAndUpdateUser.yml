@@ -16,5 +16,5 @@ teststeps:
     api: apimodel/updateUser
     validate:
       - equalTo: [statusCode,200]
-      - equalTo: [content.code,"00"]
-      - equalTo: [content.message,"用户更新成功！"]
+      - equalTo: [content.code,"09"]
+      - equalTo: [content.message,"用户：1 不存在"]

@@ -296,7 +296,9 @@ public class HttpClientUtil {
             return responseEntity;
         }
         int statusCode = response.getStatusLine().getStatusCode();
+
         responseEntity.setStatusCode(statusCode);
+        responseEntity.setContentLength(response.getEntity().getContentLength());
         responseEntity.setTime((elapsedTime * 1.0) / 1000);
         HashMap<String, String> headersMap = new HashMap<>();
         Header[] headerArr = response.getAllHeaders();
@@ -311,6 +313,7 @@ public class HttpClientUtil {
             }
             responseEntity.setCookies(cookiesMap);
         }
+
         responseEntity.setHeaders(headersMap);
         if (statusCode == HttpStatus.SC_OK) {
             HttpEntity entityRes = response.getEntity();

@@ -5,3 +5,6 @@
 2. 国际化
 3. json和param同时发
 4. 如何提取content-type内容
+
+# todo
+1. api单独运行

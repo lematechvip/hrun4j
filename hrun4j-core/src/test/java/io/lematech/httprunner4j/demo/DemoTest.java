@@ -129,5 +129,15 @@ public class DemoTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+    /**
+     * 简单案例
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void getToken(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 
 }
