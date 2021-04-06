@@ -78,14 +78,15 @@ public class TestCaseRunner {
         for (int index = 0; index < testSteps.size(); index++) {
             testStepConfigVariable = Maps.newHashMap();
             log.info("步骤 : {}", testSteps.get(index).getName());
-            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), (Map) config.getVariables());
+            Map configVariables = Objects.isNull(config) ? Maps.newHashMap() : (Map) config.getVariables();
+            TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), configVariables);
             RequestEntity initializeRequestEntity = testStep.getRequest();
             if (Objects.isNull(initializeRequestEntity)) {
                 continue;
             }
             testStepConfigVariable.put("request", initializeRequestEntity);
             setupHook(testStep);
-            expressionProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, (Map) config.getVariables(), (Map) testStep.getVariables());
+            expressionProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
             RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(initializeRequestEntity);
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);

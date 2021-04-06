@@ -123,7 +123,6 @@ public class TestNGEngine {
                         preValidationExceptionMap.add(exceptionMsg);
                         continue;
                     }
-
                     ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
                     TestCase testCase = testCaseLoader.load(file, TestCase.class);
                     try {
