@@ -3,13 +3,13 @@ package io.lematech.httprunner4j.core.loader.service;
 
 import java.io.File;
 
-public interface ITestCaseLoader {
+public interface ITestDataLoader {
 
     /**
      * @param testCaseName
      * @return
      */
-    <T> T load(String testCaseName, String extName, Class<T> clazz);
+    <T> T load(String testCaseName, Class<T> clazz);
 
     /**
      * @param fileName

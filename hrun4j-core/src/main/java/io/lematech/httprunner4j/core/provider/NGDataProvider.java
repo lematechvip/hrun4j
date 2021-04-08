@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.core.loader.TestCaseLoaderFactory;
+import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
@@ -31,9 +31,8 @@ public class NGDataProvider {
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
         String dataFileResourcePath = seekDataFileByRule(pkgName, testCaseName, extName);
-        TestCase testCase = TestCaseLoaderFactory.getLoader(extName)
-                .load(dataFileResourcePath, extName, TestCase.class);
-        SchemaValidator.validateJsonObjectFormat(TestCase.class, testCase);
+        TestCase testCase = TestDataLoaderFactory.getLoader(extName)
+                .load(dataFileResourcePath, TestCase.class);
         Object[][] testCases = getObjects(testCase);
         return testCases;
     }

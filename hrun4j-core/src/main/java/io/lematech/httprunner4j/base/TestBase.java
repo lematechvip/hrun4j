@@ -42,7 +42,7 @@ public class TestBase {
         try{
             objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);
         }catch (Exception e){
-            e.printStackTrace();
+
             String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

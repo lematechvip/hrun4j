@@ -7,8 +7,8 @@ import io.lematech.httprunner4j.core.loader.HotLoader;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.core.loader.service.ITestCaseLoader;
-import io.lematech.httprunner4j.core.loader.TestCaseLoaderFactory;
+import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
+import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
@@ -123,7 +123,7 @@ public class TestNGEngine {
                         preValidationExceptionMap.add(exceptionMsg);
                         continue;
                     }
-                    ITestCaseLoader testCaseLoader = TestCaseLoaderFactory.getLoader(extName);
+                    ITestDataLoader testCaseLoader = TestDataLoaderFactory.getLoader(extName);
                     TestCase testCase = testCaseLoader.load(file, TestCase.class);
                     try {
                         SchemaValidator.validateJsonObjectFormat(TestCase.class, testCase);

@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.core.loader.TestCaseLoaderFactory;
+import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.core.validator.AssertChecker;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
@@ -203,8 +203,7 @@ public class TestCaseRunner {
             /**
              * config variables can express to reference testcases
              */
-            TestCase testCase = TestCaseLoaderFactory.getLoader(FileUtil.extName(testcase)).load(testcasePath
-                    , RunnerConfig.getInstance().getTestCaseExtName(), TestCase.class);
+            TestCase testCase = TestDataLoaderFactory.getLoader(FileUtil.extName(testcase)).load(testcasePath, TestCase.class);
             Config tcConfig = testCase.getConfig();
             Map tcVariables = (Map) tcConfig.getVariables();
             if (MapUtil.isEmpty(tcVariables)) {
@@ -217,7 +216,7 @@ public class TestCaseRunner {
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
             String dataFileResourcePath = ngDataProvider.seekModelFileByCasePath(api);
-            ApiModel apiModel = TestCaseLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, RunnerConfig.getInstance().getTestCaseExtName(), ApiModel.class);
+            ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
             SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
             log.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));

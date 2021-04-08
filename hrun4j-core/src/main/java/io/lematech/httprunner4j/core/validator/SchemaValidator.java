@@ -29,7 +29,7 @@ public class SchemaValidator {
      * @param clz
      * @param obj
      */
-    public static void validateJsonObjectFormat(Class clz, Object obj) {
+    public static String validateJsonObjectFormat(Class clz, Object obj) {
         JsonNode schemaNode;
         String jsonFormatSchema = "";
         try {
@@ -64,12 +64,13 @@ public class SchemaValidator {
                     }
                 }
                 String exceptionMsg = String.format("schema validate failure: %s,clz: %s,object: %s", errorInfo.toString(), clz.getSimpleName(), JSON.toJSON(obj));
-                throw new DefinedException(exceptionMsg);
+                return exceptionMsg;
             }
         } catch (IOException | ProcessingException ioException) {
-            ioException.printStackTrace();
+            String exceptionMsg = String.format("schema validate data error:%s", ioException);
+            return exceptionMsg;
         }
+        return null;
     }
-
 
 }
