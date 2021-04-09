@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.*;
 
 
-@Slf4j
 public class HotLoader {
     public static Set<Class> hotLoaderClasses = new HashSet<>();
     private static JavaStringCompiler compiler;
@@ -42,10 +42,10 @@ public class HotLoader {
         String pkgClassName = String.format("%s.%s",pkgName,className);
         Class<?> clazz ;
         try {
-            log.debug("initializing class[{}] ",pkgClassName);
+            MyLog.debug("initializing class[{}] ", pkgClassName);
             Map<String, byte[]> results = getInstance().compile(javaFileName, replaceSource);
             clazz = compiler.loadClass(pkgClassName, results);
-            log.debug("hot load class[{}] finished",pkgClassName);
+            MyLog.debug("hot load class[{}] finished", pkgClassName);
             //todo：考虑常驻内存及out of Memory 可能
             hotLoaderClasses.add(clazz);
         } catch (IOException e) {
@@ -68,7 +68,7 @@ public class HotLoader {
         File file;
         if(StrUtil.isEmpty(srcPath)){
             file = new File(Constant.DOT_PATH);
-            log.warn("src path is empty ,file path is set current path.");
+            MyLog.warn("src path is empty ,file path is set current path.");
         }else{
             file = new File(srcPath);
         }
@@ -117,7 +117,7 @@ public class HotLoader {
                 javaMetaInfo.put("className",className);
                 javaMetaInfo.put("source",getJavaFileContent(javaFile));
                 javaMetaInfos.add(javaMetaInfo);
-                log.debug("package name is {}, class name is {}",pkgName,className);
+                MyLog.debug("package name is {}, class name is {}", pkgName, className);
             }else{
                 traverseSrcJava(rootPath,javaFile,javaMetaInfos);
             }
@@ -173,14 +173,14 @@ public class HotLoader {
      */
     private static String replaceSourceParameters(String pkgName,String className,String source){
         String replaceSource = source;
-        log.debug("init source info : {}",source);
+        MyLog.debug("init source info : {}", source);
         if(source.contains("$pkgName")){
             replaceSource = source.replace("$pkgName",pkgName);
         }
         if(source.contains("$className")){
             replaceSource = replaceSource.replace("className",className);
         }
-        log.debug("replace source parameters info : {}",replaceSource);
+        MyLog.debug("replace source parameters info : {}", replaceSource);
         return replaceSource;
     }
 }

@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -15,12 +16,11 @@ import java.util.Objects;
  * @created 2021/1/22 4:07 下午
  * @publicWechat lematech
  */
-@Slf4j
 public class PrintMap {
     public static void printMap(Map<String, Object> map) {
         if (map != null) {
             for (Map.Entry entry : map.entrySet()) {
-                log.debug(entry.getKey() + "=" + entry.getValue());
+                MyLog.debug(entry.getKey() + "=" + entry.getValue());
             }
         }
     }

@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
  * @created 2021/3/15 3:40 下午
  * @publicWechat lematech
  */
-@Slf4j
 public class I18NFactory {
     private synchronized static ResourceBundle getBundle(String locale) {
         if (StrUtil.isEmpty(locale) || locale.equalsIgnoreCase(Constant.I18N_CN)) {

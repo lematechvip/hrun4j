@@ -16,6 +16,7 @@ import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.RegularUtil;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 public class NGDataProvider {
     private String testCasePath;
 
@@ -64,7 +64,7 @@ public class NGDataProvider {
                     filePath = RegularUtil.replaceLast(filePath, "/", "");
                 }
             }
-            log.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
+            MyLog.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
             return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
         }
         return "";
@@ -92,7 +92,7 @@ public class NGDataProvider {
             String[] pkgNameMetas = pkgName.split("\\.");
             int pkgNameMetaLength = pkgNameMetas.length;
             if (pkgNameMetaLength >= 2) {
-                log.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
+                MyLog.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
             }
             for(int index = 3;index< pkgNameMetaLength; index++) {
                 dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
@@ -121,9 +121,9 @@ public class NGDataProvider {
                 testCaseFullName.append(testCaseName).append(Constant.DOT_PATH)
                         .append(RunnerConfig.getInstance().getTestCaseExtName());
                 if (file.exists() && file.getName().equalsIgnoreCase(testCaseFullName.toString())) {
-                    log.debug("filename {}", file.getName());
-                    log.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
-                    log.debug("file Path {}", file.getPath());
+                    MyLog.debug("filename {}", file.getName());
+                    MyLog.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
+                    MyLog.debug("file Path {}", file.getPath());
                     testCasePath = file.getPath();
                     return testCasePath;
                 }
@@ -153,7 +153,7 @@ public class NGDataProvider {
             parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
         }
 
-        log.debug("class:{}", parameters.getClass());
+        MyLog.debug("class:{}", parameters.getClass());
         if (parameters instanceof JSONObject) {
             JSONObject jsonObject = (JSONObject) parameters;
             for (Map.Entry entry : jsonObject.entrySet()) {

@@ -2,6 +2,9 @@ package io.lematech.httprunner4j.utils;
 
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
+
+import java.util.Optional;
 
 /**
  * @author lematech@foxmail.com
@@ -15,12 +18,46 @@ import io.lematech.httprunner4j.common.Constant;
 public class JavaIdentifierUtil {
 
     /**
+     * identifierName transfer to valid java  identifier
+     * char value replace '_' if it not validate
+     *
+     * @param identifierName
+     * @return
+     */
+    public static String toValidJavaIdentifier(String identifierName) {
+        if (StrUtil.isEmpty(identifierName)) {
+            String exceptionMsg = String.format(" name {} is invalid,not apply java identifier,please modify it", identifierName);
+            throw new DefinedException(exceptionMsg);
+        }
+        StringBuffer validName = new StringBuffer();
+        char[] nameChars = identifierName.toCharArray();
+        for (int index = 0; index < nameChars.length; index++) {
+            char tmpChar = nameChars[index];
+            if (index == 0) {
+                if (Character.isJavaIdentifierStart(tmpChar)) {
+                    validName.append(tmpChar);
+                } else {
+                    validName.append("_");
+                }
+            } else {
+                if (Character.isJavaIdentifierPart(tmpChar)) {
+                    validName.append(tmpChar);
+                } else {
+                    validName.append("_");
+                }
+            }
+        }
+        return validName.toString();
+    }
+
+    /**
      * validate java variable name valid
+     *
      * @param name
      * @return
      */
-    public static boolean isValidJavaIdentifier(String name){
-        if(StrUtil.isEmpty(name)){
+    public static boolean isValidJavaIdentifier(String name) {
+        if (StrUtil.isEmpty(name)) {
             return false;
         }
         char []nameChars = name.toCharArray();
@@ -66,11 +103,9 @@ public class JavaIdentifierUtil {
                 }else if(!isValidJavaIdentifier(fullName)){
                     flag = false;
                 }
-
             }else {
                 flag = false;
             }
-
         }catch(Exception ex){
             flag = false;
             ex.printStackTrace();

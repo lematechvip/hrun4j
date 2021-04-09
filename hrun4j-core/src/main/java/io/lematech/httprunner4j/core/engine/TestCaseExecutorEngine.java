@@ -8,7 +8,6 @@ import io.lematech.httprunner4j.core.runner.TestCaseRunner;
  */
 public class TestCaseExecutorEngine {
     private static TestCaseRunner tdy = null;
-
     public static synchronized TestCaseRunner getInstance() {
         tdy = new TestCaseRunner();
         return tdy;

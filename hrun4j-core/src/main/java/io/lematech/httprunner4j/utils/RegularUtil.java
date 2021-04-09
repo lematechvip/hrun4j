@@ -1,13 +1,12 @@
 package io.lematech.httprunner4j.utils;
 
-import cn.hutool.core.map.MapUtil;
+
 import cn.hutool.core.util.StrUtil;
-import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -67,5 +66,10 @@ public class RegularUtil {
             throw new DefinedException(exceptionMsg);
         }
         return ms;
+    }
+
+    public static String getSimpleDateFormat() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(new Date());
     }
 }

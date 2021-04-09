@@ -9,6 +9,7 @@ import io.lematech.httprunner4j.entity.http.HttpConstant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
@@ -23,6 +24,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Reporter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -38,9 +42,7 @@ import java.util.*;
  * @created 2021/1/28 4:59 下午
  * @publicWechat lematech
  */
-@Slf4j
 public class HttpClientUtil {
-
     public static ResponseEntity doGet(String url) {
         return doGet(url, Collections.EMPTY_MAP);
     }
@@ -93,7 +95,7 @@ public class HttpClientUtil {
                     response.close();
                     httpClient.close();
                 } catch (IOException e) {
-                    log.warn("release connection exception");
+                    MyLog.warn("release connection exception");
                 }
             }
         }
@@ -176,7 +178,7 @@ public class HttpClientUtil {
                     response.close();
                     httpClient.close();
                 } catch (IOException e) {
-                    log.warn("release connection exception");
+                    MyLog.warn("release connection exception");
                 }
             }
         }
@@ -217,7 +219,7 @@ public class HttpClientUtil {
                     response.close();
                     httpClient.close();
                 } catch (IOException e) {
-                    log.warn("release connection exception");
+                    MyLog.warn("release connection exception");
                 }
             }
         }
@@ -281,7 +283,7 @@ public class HttpClientUtil {
                     response.close();
                     httpClient.close();
                 } catch (IOException e) {
-                    log.warn("release connection exception");
+                    MyLog.warn("release connection exception");
                 }
             }
         }
@@ -421,12 +423,12 @@ public class HttpClientUtil {
         Map<String, String> headers = requestEntity.getHeaders();
         Map<String, Object> params = requestEntity.getParams();
         String json = JSON.toJSONString(requestEntity.getJson());
-        log.info(String.format(I18NFactory.getLocaleMessage("requestUrl"), requestEntity.getUrl()));
-        log.info(String.format(I18NFactory.getLocaleMessage("requestMethod"), requestEntity.getMethod()));
-        log.info(String.format(I18NFactory.getLocaleMessage("requestHeader"), requestEntity.getHeaders()));
-        log.info(String.format(I18NFactory.getLocaleMessage("requestCookie"), requestEntity.getCookies()));
-        log.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), requestEntity.getParams()));
-        log.info(String.format(I18NFactory.getLocaleMessage("requestJson"), requestEntity.getJson()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestUrl"), requestEntity.getUrl()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestMethod"), requestEntity.getMethod()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestHeader"), requestEntity.getHeaders()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestCookie"), requestEntity.getCookies()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), requestEntity.getParams()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestJson"), requestEntity.getJson()));
         if (HttpConstant.GET.equalsIgnoreCase(requestEntity.getMethod())) {
             responseEntity = doGet(url, headers, params, initRequestConfig(requestEntity));
         } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
@@ -441,11 +443,12 @@ public class HttpClientUtil {
         if (Objects.isNull(responseEntity)) {
             throw new DefinedException("响应信息为空！");
         }
-        log.info(String.format(I18NFactory.getLocaleMessage("responseStatusCode"), responseEntity.getStatusCode()));
-        log.info(String.format(I18NFactory.getLocaleMessage("responseBody"), responseEntity.getContent()));
-        log.info(String.format(I18NFactory.getLocaleMessage("responseTime"), responseEntity.getTime()));
-        log.info(String.format(I18NFactory.getLocaleMessage("responseHeader"), responseEntity.getHeaders()));
-        log.info(String.format(I18NFactory.getLocaleMessage("responseCookie"), responseEntity.getCookies()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseStatusCode"), responseEntity.getStatusCode()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseBody"), responseEntity.getContent()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseTime"), responseEntity.getTime()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseHeader"), responseEntity.getHeaders()));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseCookie"), responseEntity.getCookies()));
+
         return responseEntity;
     }
 }

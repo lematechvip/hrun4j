@@ -5,7 +5,6 @@ import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-
 import java.util.ArrayList;
 import java.util.List;
 

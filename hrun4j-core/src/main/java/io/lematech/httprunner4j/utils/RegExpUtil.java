@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
  * @publicWechat lematech
  */
 
-@Slf4j
 public class RegExpUtil {
 
 

@@ -3,6 +3,7 @@ package io.lematech.httprunner4j.base;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.*;
 import java.lang.reflect.Method;
@@ -16,24 +17,23 @@ import java.lang.reflect.Method;
  * @publicWechat lematech
  */
 
-@Slf4j
 public class TestBase {
     private String testCaseName;
     @BeforeSuite
     public void beforeSuite(){
-        log.info("[========================================]@beforeSuite()");
+        MyLog.info("[========================================]@beforeSuite()");
     }
     @BeforeMethod
     public void setUp() {
-        log.info("[===================="+this.testCaseName+"====================]@START");
+        MyLog.info("[====================" + this.testCaseName + "====================]@START");
     }
     @AfterMethod
     public void tearDown() {
-        log.info("[===================="+this.testCaseName+"====================]@END");
+        MyLog.info("[====================" + this.testCaseName + "====================]@END");
     }
     @AfterSuite
     public void afterSuite(){
-        log.info("[========================================]@afterSuite()");
+        MyLog.info("[========================================]@afterSuite()");
     }
     @DataProvider
     public Object[][] dataProvider(Method method) {
@@ -42,7 +42,6 @@ public class TestBase {
         try{
             objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);
         }catch (Exception e){
-
             String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

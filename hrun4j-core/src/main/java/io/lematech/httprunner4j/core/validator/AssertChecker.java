@@ -10,6 +10,7 @@ import io.lematech.httprunner4j.entity.testcase.Comparator;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import io.lematech.httprunner4j.utils.JsonUtil;
 import io.lematech.httprunner4j.utils.RegExpUtil;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
@@ -28,7 +29,6 @@ import java.util.*;
  */
 
 
-@Slf4j
 public class AssertChecker {
     private ExpressionProcessor expressionProcessor;
 
@@ -89,19 +89,19 @@ public class AssertChecker {
         }
         String exp = comparator.getCheck();
         Object actual = dataTransfer(exp, responseEntity, env);
-        log.debug("表达式：{},提取结果：{}", exp, actual);
+        MyLog.debug("表达式：{},提取结果：{}", exp, actual);
         try {
             Class<?> clz = Class.forName("org.junit.Assert");
             Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
             method.invoke(null, comparator.getExpect()
                     , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), actual));
-            log.info("检查点：{},预期值：{},实际值：{},校验结果：通过", exp, comparator.getExpect(), actual);
+            MyLog.info("检查点：{},预期值：{},实际值：{},校验结果：通过", exp, comparator.getExpect(), actual);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException targetException) {
-            log.error("检查点：{}，预期值：{}，实际值：{}，校验结果：失败", exp, comparator.getExpect(), actual);
+            MyLog.error("检查点：{}，预期值：{}，实际值：{}，校验结果：失败", exp, comparator.getExpect(), actual);
             String exceptionMsg = String.format("检查点：%s，校验失败，%s", comparator.getCheck(), targetException.getCause().toString());
             throw new AssertionError(exceptionMsg);
         }

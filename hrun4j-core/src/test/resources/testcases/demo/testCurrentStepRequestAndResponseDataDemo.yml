@@ -3,7 +3,7 @@ config:
   base_url: http://127.0.0.1:8000
 teststeps:
   - name: 步骤名称
-    api: apimodel/getToken
+    api: apis/getToken
     request:
       url: /api/get-token
       method: POST

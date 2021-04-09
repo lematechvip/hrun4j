@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.common;
 
 
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.utils.log.MyLog;
 
 /**
  * @author lematech@foxmail.com
@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  * @publicWechat lematech
  */
 
-@Slf4j
+
 public class DefinedException extends RuntimeException{
     public DefinedException(String msg){
-        log.error(msg);
+        MyLog.error(msg);
     }
 }

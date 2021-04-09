@@ -1,9 +1,15 @@
 package io.lematech.httprunner4j.demo;
 
+import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lematech@foxmail.com
@@ -14,6 +20,22 @@ import org.testng.annotations.Test;
  * @publicWechat lematech
  */
 public class DemoTest extends TestBase {
+    @BeforeSuite
+    public void configRunner() {
+        RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
+    }
+
+
+    /**
+     * 测试接口定义引用
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void 测试接口定义应用中文(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 
     /**
      * 简单案例
@@ -56,7 +78,7 @@ public class DemoTest extends TestBase {
     }
 
     /**
-     * 测试变量优先级
+     * 测试接口定义引用
      *
      * @param testCase
      */
@@ -84,7 +106,6 @@ public class DemoTest extends TestBase {
     public void testTestCaseReferenceDemo(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
-
 
     /**
      * 测试多种数据提取

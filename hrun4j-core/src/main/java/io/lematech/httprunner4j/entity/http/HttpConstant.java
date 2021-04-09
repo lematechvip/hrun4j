@@ -17,7 +17,6 @@ public @interface HttpConstant {
     String OPTIONS = "OPTIONS";
 
     String value();
-
     int CONNECT_TIME_OUT = 10000;
     int SOCKET_TIME_OUT = 10000;
     int CONNECTION_REQUEST_TIME_OUT = 10000;

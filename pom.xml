@@ -17,6 +17,7 @@
         <module>hrun4j-plugins</module>
         <module>hrun4j-api</module>
         <module>hrun4j-ext</module>
+        <module>hrun4j-test-server</module>
         <module>hrun4j-test-demo</module>
     </modules>
     <build>

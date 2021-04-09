@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.utils.PrintMap;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -18,7 +19,6 @@ import java.util.Properties;
  * @created 2021/1/22 3:36 下午
  * @publicWechat lematech
  */
-@Slf4j
 public class Env {
     public static Map<String, Object> getEnvMap() {
         if (envMap == null) {
@@ -43,7 +43,7 @@ public class Env {
                 envMap.putAll((Map)properties);
                 PrintMap.printMap(envMap);
             } catch (Exception e) {
-                log.warn(Constant.ENV_FILE_NAME + " is not exist");
+                MyLog.warn(Constant.ENV_FILE_NAME + " is not exist");
             }
         }
     }

@@ -20,11 +20,7 @@ import java.util.List;
  * @publicWechat lematech
  */
 public class DemoJsonTest extends TestBase {
-    static {
-        List<String> executePaths = new ArrayList<>();
-        RunnerConfig.getInstance().setExecutePaths(executePaths);
-        RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME);
-    }
+
 
     @BeforeSuite
     public void configRunner() {

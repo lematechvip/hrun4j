@@ -10,6 +10,7 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,6 @@ import java.util.*;
  * @publicWechat lematech
  */
 @Data
-@Slf4j
 public class ExpressionProcessor<T> {
 
     private Map<String,Object> currentVariable = new HashMap<>();
@@ -57,7 +57,7 @@ public class ExpressionProcessor<T> {
 
                     Class valueClass = entry.getValue().getClass();
                     String newValue = executeStringExpression(value);
-                    log.debug("before execute expression : key-value : {}-{},after execute expression key-value : {}-{}}", key, value, key, newValue);
+                    MyLog.debug("before execute expression : key-value : {}-{},after execute expression key-value : {}-{}}", key, value, key, newValue);
                     if (valueClass == Integer.class) {
                         Integer valueObj = Integer.parseInt(newValue);
                         result.put(key, valueObj);

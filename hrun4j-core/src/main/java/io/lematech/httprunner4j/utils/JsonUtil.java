@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
  * @created 2021/2/3 5:57 下午
  * @publicWechat lematech
  */
-@Slf4j
 public class JsonUtil {
     private static JmesPath<JsonNode> jmespath = new JacksonRuntime();
 

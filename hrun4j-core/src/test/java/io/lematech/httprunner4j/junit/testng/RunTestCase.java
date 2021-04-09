@@ -9,7 +9,7 @@ import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import org.apache.velocity.VelocityContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
@@ -18,14 +18,13 @@ import org.testng.annotations.Test;
 import org.testng.collections.Maps;
 import org.testng.reporters.JUnitXMLReporter;
 import org.uncommons.reportng.HTMLReporter;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 public class RunTestCase extends TestBase {
     @Test(dataProvider = "dataProvider")
     public void hrun4j_demo_testcase(TestCase testCase){
@@ -49,7 +48,7 @@ public class RunTestCase extends TestBase {
         try {
             // 设置变量
 
-            log.info("map：{}", JSON.toJSONString(pkgGroup));
+            MyLog.info("map：{}", JSON.toJSONString(pkgGroup));
             TestNG testNG = new TestNG();
             TestListenerAdapter listener = new TestListenerAdapter();
             HTMLReporter htmlReporter = new HTMLReporter();
@@ -66,7 +65,7 @@ public class RunTestCase extends TestBase {
                 List methodNameList = entry.getValue();
                 String pkgName = StrUtil.subBefore(fullTestClassName,".",true);
                 String className = StrUtil.upperFirst(StrUtil.subAfter(fullTestClassName,".",true));
-                log.info("完整包名：{},包名：{},类名：{}",fullTestClassName,pkgName,className);
+                MyLog.info("完整包名：{},包名：{},类名：{}", fullTestClassName, pkgName, className);
                 VelocityContext ctx = new VelocityContext();
                 ctx.put("pkgName", pkgName);
                 ctx.put("className", className);
@@ -107,7 +106,7 @@ public class RunTestCase extends TestBase {
 
     private static void generatePkgGroup(File listFile,Map<String, List<String>> pkgGroup){
         if(!listFile.exists()){
-            log.error("file: {} is not exist",listFile.getName());
+            MyLog.error("file: {} is not exist", listFile.getName());
         }
         File [] files = listFile.listFiles();
         for(File file : files){
@@ -120,7 +119,7 @@ public class RunTestCase extends TestBase {
                 String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest",folderName)));
                 pkgName.append(".").append(testClassName);
                 String fullTestClassName = pkgName.toString();
-                log.debug("完整包路径地址：{},类文件名：{},方法名：{}",fullTestClassName,testClassName,fileMainName);
+                MyLog.debug("完整包路径地址：{},类文件名：{},方法名：{}", fullTestClassName, testClassName, fileMainName);
                 if(pkgGroup.containsKey(fullTestClassName)){
                     List testClassList = pkgGroup.get(fullTestClassName);
                     //todo:文件名称不能以数值开头

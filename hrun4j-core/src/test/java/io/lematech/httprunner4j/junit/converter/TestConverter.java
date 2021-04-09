@@ -24,7 +24,7 @@ public class TestConverter {
     public void testApi2TestCase() {
         NGDataProvider ngDataProvider = new NGDataProvider();
         TestCaseRunner testCaseRunner = new TestCaseRunner();
-        String api = "apimodel/getToken";
+        String api = "apis/getToken";
         String dataFileResourcePath = ngDataProvider.seekModelFileByCasePath(api);
         ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
         SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);

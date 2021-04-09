@@ -11,6 +11,7 @@ import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Slf4j
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
     private Yaml yaml;
     private String extName;
@@ -40,7 +40,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
             StringBuffer classResourcetestDataPath = new StringBuffer();
             classResourcetestDataPath.append(testDataName).append(".");
             classResourcetestDataPath.append(extName);
-            log.debug("test case resources path: {}", classResourcetestDataPath.toString());
+            MyLog.debug("test case resources path: {}", classResourcetestDataPath.toString());
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(classResourcetestDataPath.toString());
             if (inputStream == null) {
                 String exceptionMsg = String.format("in resources the testData %s is not exists.", classResourcetestDataPath);

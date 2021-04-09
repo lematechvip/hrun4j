@@ -9,11 +9,9 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.core.validator.AssertChecker;
-import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
@@ -25,7 +23,7 @@ import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
 import io.lematech.httprunner4j.utils.ExpressionProcessor;
 import io.lematech.httprunner4j.utils.HttpClientUtil;
 import io.lematech.httprunner4j.utils.RegExpUtil;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.utils.log.MyLog;
 import org.testng.collections.Maps;
 
 import java.lang.reflect.Field;
@@ -41,7 +39,6 @@ import java.util.*;
  * @created 2021/1/20 11:07 上午
  * @publicWechat lematech
  */
-@Slf4j
 public class TestCaseRunner {
     private ExpressionProcessor expressionProcessor;
     /**
@@ -77,7 +74,7 @@ public class TestCaseRunner {
         setupHook(config);
         for (int index = 0; index < testSteps.size(); index++) {
             testStepConfigVariable = Maps.newHashMap();
-            log.info("步骤 : {}", testSteps.get(index).getName());
+            MyLog.info("步骤 : {}", testSteps.get(index).getName());
             Map configVariables = Objects.isNull(config) ? Maps.newHashMap() : (Map) config.getVariables();
             TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), configVariables);
             RequestEntity initializeRequestEntity = testStep.getRequest();
@@ -118,7 +115,7 @@ public class TestCaseRunner {
             if ("teardown".equals(type)) {
                 hookObj = transConfig.getTeardownHooks();
             }
-            log.info("执行配置{}方法集：", type);
+            MyLog.info("执行配置{}方法集：", type);
             result = expressionProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll(MapUtil.isEmpty((Map) transConfig.getVariables()) ? Maps.newHashMap() : (Map) transConfig.getVariables());
@@ -134,7 +131,7 @@ public class TestCaseRunner {
             if (Objects.isNull(hookObj)) {
                 return;
             }
-            log.info("执行步骤{}方法集：", type);
+            MyLog.info("执行步骤{}方法集：", type);
             result = expressionProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll((Map) transTestStep.getVariables());
@@ -147,10 +144,10 @@ public class TestCaseRunner {
         List outputs = transTestStep.getOutput();
         if (!Objects.isNull(outputs)) {
             if (outputs.contains("variables")) {
-                log.info("输出变量[variables]：{}", transTestStep.getVariables());
+                MyLog.info("输出变量[variables]：{}", transTestStep.getVariables());
             }
             if (outputs.contains("extract")) {
-                log.info("输出变量[extract]：{}", this.testStepConfigVariable);
+                MyLog.info("输出变量[extract]：{}", this.testStepConfigVariable);
             }
         }
     }
@@ -217,9 +214,8 @@ public class TestCaseRunner {
         if (!StrUtil.isEmpty(api)) {
             String dataFileResourcePath = ngDataProvider.seekModelFileByCasePath(api);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
-            SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
-            log.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));
+            MyLog.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));
             return testStep;
         }
         return testStep;
@@ -271,7 +267,7 @@ public class TestCaseRunner {
                     if (methodName.equals(subMethodName) && subAttributeClass == attributeClass) {
                         subFields[subIndex].setAccessible(true);
                         Object subFieldValue = validateDataValid(getFieldValueByName(subFields[subIndex].getName(), targetObj));
-                        log.debug("父类型：{},父值：{},父方法名：{},子类型：{},子值：{},子方法名：{}", attributeClass, fieldValue, methodName, subAttributeClass, subFieldValue, subMethodName);
+                        MyLog.debug("父类型：{},父值：{},父方法名：{},子类型：{},子值：{},子方法名：{}", attributeClass, fieldValue, methodName, subAttributeClass, subFieldValue, subMethodName);
                         if (Objects.isNull(subFieldValue)) {
                             if (subAttributeClass == String.class) {
                                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, String.class);
@@ -388,7 +384,7 @@ public class TestCaseRunner {
         if (Objects.isNull(extracts)) {
             return;
         }
-        log.debug("extracts 类型：{}", extracts.getClass());
+        MyLog.debug("extracts 类型：{}", extracts.getClass());
         Class clz = extracts.getClass();
         if (clz == ArrayList.class) {
             List<Map<String, String>> extractList = (List<Map<String, String>>) extracts;
@@ -399,7 +395,7 @@ public class TestCaseRunner {
             Map extractMap = (Map) extracts;
             extractMap(responseEntity, extractMap);
         } else {
-            log.error("暂不支持此种类型{}提取数据", extracts);
+            MyLog.error("暂不支持此种类型{}提取数据", extracts);
         }
     }
 

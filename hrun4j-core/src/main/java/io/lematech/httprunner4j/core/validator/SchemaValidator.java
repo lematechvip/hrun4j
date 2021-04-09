@@ -11,16 +11,12 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-@Slf4j
 public class SchemaValidator {
 
     private final static JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
