@@ -3,7 +3,6 @@ package io.lematech.httprunner4j.i18n;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -26,7 +25,6 @@ public class I18NFactory {
             return ResourceBundle.getBundle("locales.message", localeEn);
         }
     }
-
     public synchronized static String getLocaleMessage(String key) {
         return getBundle(RunnerConfig.getInstance().getI18n()).getString(key);
     }

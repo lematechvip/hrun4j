@@ -12,18 +12,17 @@ import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
-import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.RegularUtil;
 import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class NGDataProvider {
     private String testCasePath;
@@ -71,7 +70,7 @@ public class NGDataProvider {
     }
 
     private String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
-        List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         if (executePaths.size() > 0) {
             for (String path : executePaths) {
                 searchTestCaseByName(path, testCaseName);

@@ -15,7 +15,6 @@ public @interface HttpConstant {
     String DELETE = "DELETE";
     String HEAD = "HEAD";
     String OPTIONS = "OPTIONS";
-
     String value();
     int CONNECT_TIME_OUT = 10000;
     int SOCKET_TIME_OUT = 10000;

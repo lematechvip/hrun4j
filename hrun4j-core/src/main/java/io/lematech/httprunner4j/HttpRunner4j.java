@@ -22,7 +22,6 @@ import java.util.Map;
 @Slf4j
 public class HttpRunner4j {
     public static final String TOKEN_KEY = "httprunner4j";
-
     public static class SignGenerateFunction extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {

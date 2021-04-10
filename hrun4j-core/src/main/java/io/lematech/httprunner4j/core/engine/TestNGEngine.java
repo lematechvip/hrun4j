@@ -2,12 +2,12 @@ package io.lematech.httprunner4j.core.engine;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import io.lematech.httprunner4j.core.loader.HotLoader;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
+import io.lematech.httprunner4j.core.loader.HotLoader;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
@@ -22,10 +22,7 @@ import org.testng.reporters.JUnitXMLReporter;
 import org.uncommons.reportng.HTMLReporter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class TestNGEngine {
@@ -63,16 +60,13 @@ public class TestNGEngine {
         return testNG;
     }
     public static void run(){
-        List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         for(String execPath : executePaths){
             File currentPath = new File(execPath);
             MyLog.info("execute path : [{}] test cases", currentPath.getAbsolutePath());
             traversePkgTestCaseGroup(currentPath);
         }
-        if(preValidationExceptionMap.size()>0){
-            throw new DefinedException(preValidationExceptionMap.toString());
-        }
-        if(testCasePkgGroup == null || testCasePkgGroup.size() ==0){
+        if (MapUtil.isEmpty(testCasePkgGroup)) {
             MyLog.warn("in path [{}] not found valid testcases", executePaths);
         }
         addTestClasses();
@@ -103,7 +97,6 @@ public class TestNGEngine {
         getInstance().setTestClasses(execClass);
     }
 
-    private static List<String> preValidationExceptionMap =  new ArrayList<>();
     private static void traversePkgTestCaseGroup(File listFile){
         if(!listFile.exists()){
             String exceptionMsg = String.format("file: %s is not exist",listFile.getName());
@@ -117,20 +110,12 @@ public class TestNGEngine {
                 if(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                         ||Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)){
                     String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
+
                     if(!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)){
                         String exceptionMsg = String.format("%s.%s,file name is invalid,not apply java identifier,please modify it",pkgPath,fileMainName);
-                        preValidationExceptionMap.add(exceptionMsg);
-                        continue;
+                        throw new DefinedException(exceptionMsg);
                     }
-                    ITestDataLoader testCaseLoader = TestDataLoaderFactory.getLoader(extName);
-                    TestCase testCase = testCaseLoader.load(file, TestCase.class);
-                    try {
-                        SchemaValidator.validateJsonObjectFormat(TestCase.class, testCase);
-                    } catch (DefinedException e) {
-                        String exceptionMsg = String.format("%s.%s,file schema validate failure,exception:%s", pkgPath, fileMainName, e.getMessage());
-                        preValidationExceptionMap.add(exceptionMsg);
-                        continue;
-                    }
+                    TestDataLoaderFactory.getLoader(extName).load(file, TestCase.class);
                     StringBuffer pkgName = new StringBuffer();
                     String selfPkgName = RunnerConfig.getInstance().getPkgName();
                     pkgName.append(StrUtil.isEmpty(selfPkgName) ? Constant.SELF_ROOT_PKG_NAME : selfPkgName);
@@ -149,7 +134,7 @@ public class TestNGEngine {
                         testCasePkgGroup.put(fullTestClassName,testClassList);
                     }
                 }else {
-                    MyLog.debug("in pkgPath {} file {} not support,only support .json or .yml suffix", file.getPath(), fileMainName);
+                    MyLog.debug("in pkgPath {} file {} not support,only support .json or.yml suffix", file.getPath(), fileMainName);
                 }
             }else{
                 traversePkgTestCaseGroup(file);

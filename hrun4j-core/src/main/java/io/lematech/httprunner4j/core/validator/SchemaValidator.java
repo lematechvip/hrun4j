@@ -34,7 +34,7 @@ public class SchemaValidator {
             } else if (clz == ApiModel.class) {
                 jsonFormatSchema = Constant.API_MODEL_SCHEMA;
             } else {
-                String exceptionMsg = String.format("not support %s class validate: %s", clz);
+                String exceptionMsg = String.format("not support %s class validate: %s", clz, obj);
                 throw new DefinedException(exceptionMsg);
             }
             schemaNode = JsonLoader.fromResource(jsonFormatSchema);

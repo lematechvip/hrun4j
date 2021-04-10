@@ -5,8 +5,8 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author lematech@foxmail.com
@@ -29,10 +29,11 @@ public class RunnerConfig {
      * run model
      * default 0： Standard Java project
      * 1： non Standard Java project
+     * 2: platform model
      */
     private Integer runMode;
 
-    public List<String> getExecutePaths() {
+    public Set<String> getExecutePaths() {
         if (executePaths.isEmpty()) {
             executePaths.add(Constant.DOT_PATH);
         }
@@ -40,7 +41,7 @@ public class RunnerConfig {
     }
 
     private String pkgName;
-    private List<String> executePaths;
+    private Set<String> executePaths;
     private String testCaseExtName;
     private static RunnerConfig instance = new RunnerConfig();
 
@@ -51,10 +52,9 @@ public class RunnerConfig {
             String exceptionMsg = String.format("pkc name {} is invalid,not apply java identifier,please modify it",pkgName);
             throw new DefinedException(exceptionMsg);
         }
-
     }
     private RunnerConfig() {
-        executePaths = new ArrayList<>();
+        executePaths = new HashSet<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
     }
     public static RunnerConfig getInstance(){

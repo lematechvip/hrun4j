@@ -12,13 +12,15 @@ import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-import java.io.*;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
+import java.util.Set;
 
 
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
@@ -33,7 +35,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     @Override
     public T load(String testDataName, Class clazz) {
         T result;
-        List<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
         if (executePaths.size() > 0) {
             return load(new File(testDataName), clazz);
         } else {
@@ -84,7 +86,6 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
                 throw new DefinedException(exceptionMsg);
             }
         } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
-
             JSONObject jsonObject = yaml.load(inputStream);
             result = (T) jsonObject.toJavaObject(clazz);
         } else {
