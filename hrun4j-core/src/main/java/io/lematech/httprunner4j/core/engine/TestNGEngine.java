@@ -99,20 +99,20 @@ public class TestNGEngine {
 
     private static void traversePkgTestCaseGroup(File listFile){
         if(!listFile.exists()){
-            String exceptionMsg = String.format("file: %s is not exist",listFile.getName());
+            String exceptionMsg = String.format("file: %s is not exist", listFile.getAbsolutePath());
             throw new DefinedException(exceptionMsg);
         }
         File [] files = listFile.listFiles();
         for(File file : files){
             if(file.isFile()){
                 String extName = FileUtil.extName(file);
-                String fileMainName = FileNameUtil.mainName(file.getName());
+                String fileMainName = JavaIdentifierUtil.toValidJavaIdentifier(FileNameUtil.mainName(file.getName()), 0);
                 if(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                         ||Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)){
                     String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
 
                     if(!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)){
-                        String exceptionMsg = String.format("%s.%s,file name is invalid,not apply java identifier,please modify it",pkgPath,fileMainName);
+                        String exceptionMsg = String.format("%s.%s,file name is invalid,not apply java identifier,please modify it", pkgPath, fileMainName);
                         throw new DefinedException(exceptionMsg);
                     }
                     TestDataLoaderFactory.getLoader(extName).load(file, TestCase.class);
@@ -120,10 +120,11 @@ public class TestNGEngine {
                     String selfPkgName = RunnerConfig.getInstance().getPkgName();
                     pkgName.append(StrUtil.isEmpty(selfPkgName) ? Constant.SELF_ROOT_PKG_NAME : selfPkgName);
                     pkgName.append(RegularUtil.dirPath2pkgName(pkgPath));
+                    StringBuffer classPkgPath = new StringBuffer(JavaIdentifierUtil.toValidJavaIdentifier(pkgName.toString(), 1));
                     String folderName = file.getParentFile().getName();
-                    String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
-                    pkgName.append(Constant.DOT_PATH).append(testClassName);
-                    String fullTestClassName = pkgName.toString();
+                    String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", JavaIdentifierUtil.toValidJavaIdentifier(folderName, 0))));
+                    classPkgPath.append(Constant.DOT_PATH).append(testClassName);
+                    String fullTestClassName = classPkgPath.toString();
                     MyLog.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
                     if (testCasePkgGroup.containsKey(fullTestClassName)) {
                         List<String> testClassList = testCasePkgGroup.get(fullTestClassName);
@@ -131,7 +132,7 @@ public class TestNGEngine {
                     } else {
                         List<String> testClassList = new ArrayList<>();
                         testClassList.add(fileMainName);
-                        testCasePkgGroup.put(fullTestClassName,testClassList);
+                        testCasePkgGroup.put(fullTestClassName, testClassList);
                     }
                 }else {
                     MyLog.debug("in pkgPath {} file {} not support,only support .json or.yml suffix", file.getPath(), fileMainName);

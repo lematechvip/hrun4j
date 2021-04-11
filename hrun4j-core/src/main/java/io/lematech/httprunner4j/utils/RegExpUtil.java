@@ -3,13 +3,10 @@ package io.lematech.httprunner4j.utils;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.Env;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,17 +29,6 @@ public class RegExpUtil {
             return false;
         }
         if (match(Constant.REGEX_EXPRESSION_FLAG, exp)) {
-            flag = true;
-        }
-        return flag;
-    }
-
-    public static Boolean isEnvExp(String exp) {
-        Boolean flag = false;
-        if (StringUtils.isEmpty(exp)) {
-            return false;
-        }
-        if (match(Constant.REGEX_ENV_EXPRESSION_FLAG, exp)) {
             flag = true;
         }
         return flag;

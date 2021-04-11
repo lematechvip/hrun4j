@@ -4,8 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 
-import java.util.Optional;
-
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -22,9 +20,10 @@ public class JavaIdentifierUtil {
      * char value replace '_' if it not validate
      *
      * @param identifierName
+     * @param type           0 : 非包名，1：包名
      * @return
      */
-    public static String toValidJavaIdentifier(String identifierName) {
+    public static String toValidJavaIdentifier(String identifierName, Integer type) {
         if (StrUtil.isEmpty(identifierName)) {
             String exceptionMsg = String.format(" name {} is invalid,not apply java identifier,please modify it", identifierName);
             throw new DefinedException(exceptionMsg);
@@ -33,6 +32,13 @@ public class JavaIdentifierUtil {
         char[] nameChars = identifierName.toCharArray();
         for (int index = 0; index < nameChars.length; index++) {
             char tmpChar = nameChars[index];
+            if (tmpChar == '.' && type == 1) {
+                validName.append(".");
+                continue;
+            }
+            if (tmpChar == ' ') {
+                continue;
+            }
             if (index == 0) {
                 if (Character.isJavaIdentifierStart(tmpChar)) {
                     validName.append(tmpChar);

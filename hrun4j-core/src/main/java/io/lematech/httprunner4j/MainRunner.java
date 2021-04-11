@@ -10,9 +10,9 @@ import java.util.Set;
 public class MainRunner {
     public static void main(String args[]){
         Set<String> executePaths = new HashSet<>();
-        executePaths.add("./src/test/resources/testcases");
+        executePaths.add("./hrun4j-core/src/test/resources/testcases");
         RunnerConfig.getInstance().setExecutePaths(executePaths);
         RunnerConfig.getInstance().setRunMode(1);
-        TestNGEngine.getInstance().run();
+        TestNGEngine.run();
     }
 }

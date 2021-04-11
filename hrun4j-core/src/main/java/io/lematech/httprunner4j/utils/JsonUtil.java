@@ -9,7 +9,6 @@ import com.jayway.jsonpath.JsonPath;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author lematech@foxmail.com
@@ -65,7 +64,6 @@ public class JsonUtil {
         boolean flag = true;
         try {
             JSON.parseObject(jsonStr);
-
         } catch (Exception e) {
             flag = false;
         }
