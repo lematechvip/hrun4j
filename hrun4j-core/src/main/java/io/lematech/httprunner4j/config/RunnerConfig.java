@@ -49,7 +49,7 @@ public class RunnerConfig {
         if(JavaIdentifierUtil.isValidJavaFullClassName(pkgName)){
             this.pkgName = pkgName;
         }else{
-            String exceptionMsg = String.format("pkc name {} is invalid,not apply java identifier,please modify it",pkgName);
+            String exceptionMsg = String.format("pkg name {} is invalid,not apply java identifier,please modify it",pkgName);
             throw new DefinedException(exceptionMsg);
         }
     }
