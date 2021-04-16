@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j.widget.exp;
 
 
 import com.googlecode.aviator.AviatorEvaluator;
@@ -17,13 +17,13 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className AviatorEvaluatorUtil
- * @description TODO
+ * @className BuiltInAviatorEvaluator
+ * @description build in aviator evaluator
  * @created 2021/1/25 2:06 下午
  * @publicWechat lematech
  */
 @Slf4j
-public class AviatorEvaluatorUtil {
+public class BuiltInAviatorEvaluator {
     static {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionAdd());

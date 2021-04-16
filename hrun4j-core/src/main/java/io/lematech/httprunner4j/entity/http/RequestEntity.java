@@ -2,7 +2,7 @@ package io.lematech.httprunner4j.entity.http;
 
 
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.utils.RegularUtil;
+import io.lematech.httprunner4j.widget.utils.RegularUtil;
 import lombok.Data;
 
 import java.util.Map;

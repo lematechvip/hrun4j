@@ -6,8 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
 
 import java.io.BufferedReader;

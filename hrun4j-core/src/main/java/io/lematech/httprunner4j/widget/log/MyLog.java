@@ -1,8 +1,8 @@
-package io.lematech.httprunner4j.utils.log;
+package io.lematech.httprunner4j.widget.log;
 
 
 import cn.hutool.core.text.StrFormatter;
-import io.lematech.httprunner4j.utils.RegularUtil;
+import io.lematech.httprunner4j.widget.utils.RegularUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.Reporter;
 

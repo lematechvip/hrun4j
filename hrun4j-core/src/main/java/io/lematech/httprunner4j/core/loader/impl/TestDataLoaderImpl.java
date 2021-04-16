@@ -11,7 +11,7 @@ import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 

@@ -5,8 +5,7 @@ import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.loader.impl.TestDataLoaderImpl;
 import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
-import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.widget.log.MyLog;
 
 public class TestDataLoaderFactory {
     public synchronized static ITestDataLoader getLoader(String extName) {

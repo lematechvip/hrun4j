@@ -3,8 +3,7 @@ package io.lematech.httprunner4j.base;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.annotations.*;
 import java.lang.reflect.Method;
 

@@ -14,8 +14,8 @@ import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.utils.RegularUtil;
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.RegularUtil;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
 
 import java.io.File;

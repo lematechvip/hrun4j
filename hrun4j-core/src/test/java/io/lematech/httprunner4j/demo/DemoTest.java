@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
  * @publicWechat lematech
  */
 public class DemoTest extends TestBase {
+
     @BeforeClass
     public void configRunner() {
         RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);

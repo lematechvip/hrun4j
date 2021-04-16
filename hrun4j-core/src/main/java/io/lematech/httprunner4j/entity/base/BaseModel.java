@@ -1,11 +1,7 @@
 package io.lematech.httprunner4j.entity.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.lematech.httprunner4j.utils.RegularUtil;
 import lombok.Data;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com

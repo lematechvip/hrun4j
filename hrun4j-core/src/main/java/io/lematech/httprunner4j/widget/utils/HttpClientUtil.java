@@ -1,16 +1,15 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j.widget.utils;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.i18n.I18NFactory;
+import io.lematech.httprunner4j.widget.i18n.I18NFactory;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.entity.http.HttpConstant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -24,9 +23,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.Reporter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

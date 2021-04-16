@@ -19,11 +19,11 @@ import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
-import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
-import io.lematech.httprunner4j.utils.ExpressionProcessor;
-import io.lematech.httprunner4j.utils.HttpClientUtil;
-import io.lematech.httprunner4j.utils.RegExpUtil;
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
+import io.lematech.httprunner4j.widget.exp.ExpHandler;
+import io.lematech.httprunner4j.widget.utils.HttpClientUtil;
+import io.lematech.httprunner4j.widget.utils.RegExpUtil;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
 
 import java.lang.reflect.Field;
@@ -40,7 +40,7 @@ import java.util.*;
  * @publicWechat lematech
  */
 public class TestCaseRunner {
-    private ExpressionProcessor expressionProcessor;
+    private ExpHandler expHandler;
     /**
      * testcase context variables
      */
@@ -59,10 +59,10 @@ public class TestCaseRunner {
     private AssertChecker assertChecker;
 
     public TestCaseRunner() {
-        expressionProcessor = new ExpressionProcessor();
+        expHandler = new ExpHandler();
         testContextVariable = Maps.newHashMap();
         ngDataProvider = new NGDataProvider();
-        assertChecker = new AssertChecker(expressionProcessor);
+        assertChecker = new AssertChecker(expHandler);
     }
 
     /**
@@ -70,7 +70,7 @@ public class TestCaseRunner {
      */
     public void execute(TestCase testCase) {
         List<TestStep> testSteps = testCase.getTestSteps();
-        Config config = (Config) expressionProcessor.executeExpression(testCase.getConfig());
+        Config config = (Config) expHandler.executeExpression(testCase.getConfig());
         setupHook(config);
         for (int index = 0; index < testSteps.size(); index++) {
             testStepConfigVariable = Maps.newHashMap();
@@ -83,8 +83,8 @@ public class TestCaseRunner {
             }
             testStepConfigVariable.put("request", initializeRequestEntity);
             setupHook(testStep);
-            expressionProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
-            RequestEntity requestEntity = (RequestEntity) expressionProcessor.executeExpression(initializeRequestEntity);
+            expHandler.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
+            RequestEntity requestEntity = (RequestEntity) expHandler.executeExpression(initializeRequestEntity);
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
             List<Map<String, Object>> validateList = testStep.getValidate();
@@ -116,7 +116,7 @@ public class TestCaseRunner {
                 hookObj = transConfig.getTeardownHooks();
             }
             MyLog.info("执行配置{}方法集：", type);
-            result = expressionProcessor.handleHookExp(hookObj);
+            result = expHandler.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll(MapUtil.isEmpty((Map) transConfig.getVariables()) ? Maps.newHashMap() : (Map) transConfig.getVariables());
             variablesMap.putAll(MapUtil.isEmpty(result) ? Maps.newHashMap() : result);
@@ -132,7 +132,7 @@ public class TestCaseRunner {
                 return;
             }
             MyLog.info("执行步骤{}方法集：", type);
-            result = expressionProcessor.handleHookExp(hookObj);
+            result = expHandler.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll((Map) transTestStep.getVariables());
             variablesMap.putAll(result);
@@ -167,7 +167,7 @@ public class TestCaseRunner {
             List tempList = (List) obj;
             for (Object elementObj : tempList) {
                 if (elementObj instanceof String) {
-                    Object executeResult = AviatorEvaluatorUtil.execute(String.valueOf(obj), this.testStepConfigVariable);
+                    Object executeResult = BuiltInAviatorEvaluator.execute(String.valueOf(obj), this.testStepConfigVariable);
                     if (executeResult instanceof Map) {
                         result.putAll((Map) executeResult);
                     }

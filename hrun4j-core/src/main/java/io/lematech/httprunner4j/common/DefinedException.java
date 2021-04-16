@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.common;
 
 
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.log.MyLog;
 
 /**
  * @author lematech@foxmail.com

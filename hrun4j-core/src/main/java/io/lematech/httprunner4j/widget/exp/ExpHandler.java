@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j.widget.exp;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,12 +7,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.Env;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.RegExpUtil;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +28,11 @@ import java.util.*;
  * @publicWechat lematech
  */
 @Data
-public class ExpressionProcessor<T> {
+public class ExpHandler<T> {
 
-    private Map<String,Object> currentVariable = new HashMap<>();
-    private Map<String,Object> configVars = new HashMap<>();
-    private Map<String,Object> testStepVars = new HashMap<>();
+    private Map<String, Object> currentVariable = new HashMap<>();
+    private Map<String, Object> configVars = new HashMap<>();
+    private Map<String, Object> testStepVars = new HashMap<>();
 
     /**
      * expression evaluator
@@ -97,7 +96,7 @@ public class ExpressionProcessor<T> {
             for(String exp : matchList) {
                 Object result;
                 try {
-                    result = AviatorEvaluatorUtil.execute(exp, currentVariable);
+                    result = BuiltInAviatorEvaluator.execute(exp, currentVariable);
                 } catch (Exception e) {
                     String exceptionMsg = String.format("exp: %s occur error", exp);
                     throw new DefinedException(exceptionMsg);

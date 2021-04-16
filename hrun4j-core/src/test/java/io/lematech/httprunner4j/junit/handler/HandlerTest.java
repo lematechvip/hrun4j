@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.junit.handler;
 
 import com.alibaba.fastjson.JSON;
-import io.lematech.httprunner4j.utils.HttpClientUtil;
+import io.lematech.httprunner4j.widget.utils.HttpClientUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;

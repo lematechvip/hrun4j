@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.junit.aviator;
 
-import io.lematech.httprunner4j.utils.AviatorEvaluatorUtil;
-import io.lematech.httprunner4j.utils.JsonUtil;
+import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
+import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
@@ -32,12 +32,12 @@ public class AviatorTest{
         map1.put("x", 1);
         map1.put("y", 2);
         String str = "${x}&/api/add=${add(x, y)}&subtract=${subtract(add(x, y),add(x, y))}&multiply=${multiply(x,y)}&divide=${divide(x,y)}&${y}";
-        System.out.println(AviatorEvaluatorUtil.execute(str, map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("Hello", map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + add(a,b)", map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + subtract(a,b)", map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + multiply(a,b)", map1));//输出：20
-        System.out.println(AviatorEvaluatorUtil.execute("'Hello ' + divide(a,b)", map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute(str, map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute("Hello", map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute("'Hello ' + add(a,b)", map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute("'Hello ' + subtract(a,b)", map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute("'Hello ' + multiply(a,b)", map1));//输出：20
+        System.out.println(BuiltInAviatorEvaluator.execute("'Hello ' + divide(a,b)", map1));//输出：20
 
     /*    System.out.println(AviatorEvaluator.execute("'/api/1000?_t= ' + multiplication(a,b)",map1));//输出：20
         System.out.println(AviatorEvaluator.execute("/api/1000?_t= '+multiplication(a,multiplication(a,multiplication(a,b)))+'&test' + multiplication(a,b)",map1));//输出：20

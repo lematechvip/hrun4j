@@ -2,7 +2,7 @@ package io.lematech.httprunner4j.junit.regexp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.utils.RegExpUtil;
+import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 

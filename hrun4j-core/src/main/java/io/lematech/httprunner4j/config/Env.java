@@ -1,9 +1,7 @@
 package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.utils.PrintMap;
-import io.lematech.httprunner4j.utils.log.MyLog;
-import lombok.extern.slf4j.Slf4j;
+import io.lematech.httprunner4j.widget.log.MyLog;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -39,9 +37,7 @@ public class Env {
                     .getResourceAsStream(Constant.ENV_FILE_NAME);
             try {
                 properties.load(inputStream);
-                PrintMap.printMap(envMap);
                 envMap.putAll((Map)properties);
-                PrintMap.printMap(envMap);
             } catch (Exception e) {
                 MyLog.warn(Constant.ENV_FILE_NAME + " is not exist");
             }

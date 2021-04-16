@@ -9,7 +9,7 @@ import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.utils.log.MyLog;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.apache.velocity.VelocityContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;

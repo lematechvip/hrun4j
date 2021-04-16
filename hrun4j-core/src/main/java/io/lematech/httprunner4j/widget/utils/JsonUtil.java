@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j.widget.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;

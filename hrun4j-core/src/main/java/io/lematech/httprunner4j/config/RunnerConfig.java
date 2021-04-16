@@ -2,7 +2,7 @@ package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.utils.JavaIdentifierUtil;
+import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import lombok.Data;
 
 import java.util.HashSet;

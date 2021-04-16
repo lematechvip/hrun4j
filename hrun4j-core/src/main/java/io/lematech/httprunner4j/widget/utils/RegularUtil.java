@@ -1,7 +1,9 @@
-package io.lematech.httprunner4j.utils;
+package io.lematech.httprunner4j.widget.utils;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 
@@ -71,5 +73,17 @@ public class RegularUtil {
     public static String getSimpleDateFormat() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(new Date());
+    }
+
+    public static String formatJsonOutput(Object output) {
+        if (Objects.isNull(output)) {
+            return "";
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            return String.valueOf(output);
+        }
     }
 }
