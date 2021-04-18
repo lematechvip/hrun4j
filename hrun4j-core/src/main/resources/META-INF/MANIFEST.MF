@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: io.lematech.httprunner4j.MainRunner
+Main-Class: io.lematech.httprunner4j.HttpRunner4J
 Class-Path: guava-16.0.1.jar joda-time-2.9.7.jar logback-core-1.1.7.jar 
  javassist-3.12.1.GA.jar uri-template-0.9.jar commons-logging-1.2.jar as
  m-5.0.3.jar assertj-core-3.18.1.jar jackson-core-2.11.3.jar reportng-1.

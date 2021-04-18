@@ -21,6 +21,7 @@ import java.util.Map;
  */
 @Slf4j
 public class HttpRunner4j {
+    public static final String VERSION = "1.0.0";
     public static final String TOKEN_KEY = "httprunner4j";
     public static class SignGenerateFunction extends AbstractFunction {
         @Override

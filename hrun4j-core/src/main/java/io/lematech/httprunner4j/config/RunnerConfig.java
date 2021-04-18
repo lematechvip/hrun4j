@@ -5,7 +5,10 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import lombok.Data;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,15 +36,15 @@ public class RunnerConfig {
      */
     private Integer runMode;
 
-    public Set<String> getExecutePaths() {
+    public List<File> getExecutePaths() {
         if (executePaths.isEmpty()) {
-            executePaths.add(Constant.DOT_PATH);
+            executePaths.add(new File(Constant.DOT_PATH));
         }
         return executePaths;
     }
 
     private String pkgName;
-    private Set<String> executePaths;
+    private List<File> executePaths;
     private String testCaseExtName;
     private static RunnerConfig instance = new RunnerConfig();
 
@@ -54,7 +57,7 @@ public class RunnerConfig {
         }
     }
     private RunnerConfig() {
-        executePaths = new HashSet<>();
+        executePaths = new ArrayList<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
     }
     public static RunnerConfig getInstance(){

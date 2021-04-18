@@ -5,6 +5,8 @@ import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.annotations.*;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -36,12 +38,13 @@ public class TestBase {
     }
     @DataProvider
     public Object[][] dataProvider(Method method) {
-        Object[][] objects;
+        Object[][] objects = null;
         this.testCaseName = method.getName();
-        try{
+        try {
             objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);
-        }catch (Exception e){
-            String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s",testCaseName,e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s", testCaseName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return objects;
