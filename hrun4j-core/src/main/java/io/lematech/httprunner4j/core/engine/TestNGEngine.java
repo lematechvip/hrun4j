@@ -60,11 +60,10 @@ public class TestNGEngine {
         return testNG;
     }
     public static void run(){
-        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
-        for(String execPath : executePaths){
-            File currentPath = new File(execPath);
-            MyLog.info("execute path : [{}] test cases", currentPath.getAbsolutePath());
-            traversePkgTestCaseGroup(currentPath);
+        List<File> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        for (File execPath : executePaths) {
+            MyLog.info("execute path : [{}] test cases", execPath);
+            traversePkgTestCaseGroup(execPath);
         }
         if (MapUtil.isEmpty(testCasePkgGroup)) {
             MyLog.warn("in path [{}] not found valid testcases", executePaths);

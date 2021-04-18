@@ -167,7 +167,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.lematech.httprunner4j.MainRunner</mainClass>
+                            <mainClass>io.lematech.httprunner4j.HttpRunner4J</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

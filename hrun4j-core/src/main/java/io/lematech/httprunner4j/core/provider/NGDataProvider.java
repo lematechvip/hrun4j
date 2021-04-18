@@ -70,10 +70,10 @@ public class NGDataProvider {
     }
 
     private String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
-        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        List<File> executePaths = RunnerConfig.getInstance().getExecutePaths();
         if (executePaths.size() > 0) {
-            for (String path : executePaths) {
-                searchTestCaseByName(path, testCaseName);
+            for (File path : executePaths) {
+                searchTestCaseByName(path.getAbsolutePath(), testCaseName);
                 if (!StrUtil.isEmpty(testCasePath)) {
                     break;
                 }
