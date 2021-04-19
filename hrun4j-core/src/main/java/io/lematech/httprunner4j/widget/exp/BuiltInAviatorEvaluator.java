@@ -53,7 +53,6 @@ public class BuiltInAviatorEvaluator {
             }
             return new AviatorString(String.valueOf(envValue));
         }
-
         @Override
         public String getName() {
             return "ENV";

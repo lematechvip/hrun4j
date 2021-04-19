@@ -1,17 +1,16 @@
 package io.lematech.httprunner4j.cli.commands;
 
 import io.lematech.httprunner4j.cli.Command;
+import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestNGEngine;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author lematech@foxmail.com
@@ -34,11 +33,28 @@ public class Run extends Command {
     @Option(name = "--verbose", usage = "show method and line number details")
     private boolean verbose = false;
 
+    @Option(name = "--testjar", usage = "Specifies a jar file that contains aviator exp implemenets.")
+    File testJar;
+
+
     @Override
-    public int execute(PrintWriter out, PrintWriter err) throws Exception {
-        RunnerConfig.getInstance().setExecutePaths(testcasePaths);
-        RunnerConfig.getInstance().setRunMode(1);
+    public int execute(PrintWriter out, PrintWriter err) {
+        initRunnerConfig();
         TestNGEngine.run();
         return 0;
+    }
+
+    private void initRunnerConfig() {
+        if (Objects.isNull(testJar)) {
+            RunnerConfig.getInstance().setWorkDirectory(new File("."));
+        } else {
+            if (!testJar.exists()) {
+                String exceptionMsg = String.format("file: %s is not exist", testJar.getAbsolutePath());
+                throw new DefinedException(exceptionMsg);
+            }
+            RunnerConfig.getInstance().setWorkDirectory(testJar);
+        }
+        RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
+        RunnerConfig.getInstance().setRunMode(1);
     }
 }

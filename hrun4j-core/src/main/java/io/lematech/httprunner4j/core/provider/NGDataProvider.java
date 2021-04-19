@@ -1,20 +1,18 @@
 package io.lematech.httprunner4j.core.provider;
 
-import cn.hutool.core.io.FileUtil;
+
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.widget.utils.RegularUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
 
@@ -22,16 +20,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class NGDataProvider {
-    private String testCasePath;
+    private Searcher searcher;
+
+    public NGDataProvider() {
+        searcher = new Searcher();
+    }
 
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        String dataFileResourcePath = seekDataFileByRule(pkgName, testCaseName, extName);
+        File dataFilePath = searcher.seekDataFileByRule(pkgName, testCaseName);
         TestCase testCase = TestDataLoaderFactory.getLoader(extName)
-                .load(dataFileResourcePath, TestCase.class);
+                .load(dataFilePath, TestCase.class);
         Object[][] testCases = getObjects(testCase);
         return testCases;
     }
@@ -44,93 +45,6 @@ public class NGDataProvider {
             testCases[i] = new Object[]{result.get(i)};
         }
         return testCases;
-    }
-
-    public String seekModelFileByCasePath(String filePath) {
-        if (!StrUtil.isEmpty(filePath)) {
-            if (filePath.startsWith(Constant.TEST_CASE_FILE_PATH)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_FILE_PATH, "");
-            } else if (filePath.startsWith(Constant.TEST_CASE_DIRECTORY_NAME)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_DIRECTORY_NAME, "");
-            }
-            String extName = FileUtil.extName(filePath);
-            String mainName = FileUtil.mainName(filePath);
-            if (StrUtil.isEmpty(extName)) {
-                extName = RunnerConfig.getInstance().getTestCaseExtName();
-            } else {
-                filePath = RegularUtil.replaceLast(filePath, mainName + Constant.DOT_PATH + extName, "");
-                if (filePath.endsWith("/")) {
-                    filePath = RegularUtil.replaceLast(filePath, "/", "");
-                }
-            }
-            MyLog.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-            return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-        }
-        return "";
-    }
-
-    private String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
-        List<File> executePaths = RunnerConfig.getInstance().getExecutePaths();
-        if (executePaths.size() > 0) {
-            for (File path : executePaths) {
-                searchTestCaseByName(path.getAbsolutePath(), testCaseName);
-                if (!StrUtil.isEmpty(testCasePath)) {
-                    break;
-                }
-            }
-            if (StrUtil.isEmpty(testCasePath)) {
-                String exceptionMsg = String.format("in %s path,not found  %s.%s", executePaths, testCaseName, extName);
-                throw new DefinedException(exceptionMsg);
-            }
-            return testCasePath;
-        }
-
-        StringBuffer dataFileResourcePath = new StringBuffer();
-        dataFileResourcePath.append(Constant.TEST_CASE_DIRECTORY_NAME).append(File.separator);
-        if(!StrUtil.isEmpty(pkgName)){
-            String[] pkgNameMetas = pkgName.split("\\.");
-            int pkgNameMetaLength = pkgNameMetas.length;
-            if (pkgNameMetaLength >= 2) {
-                MyLog.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
-            }
-            for(int index = 3;index< pkgNameMetaLength; index++) {
-                dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
-            }
-        }
-        dataFileResourcePath.append(testCaseName);
-        return dataFileResourcePath.toString();
-    }
-
-
-    /**
-     * @param path
-     * @param testCaseName
-     * @return
-     */
-    private String searchTestCaseByName(String path, String testCaseName) {
-        File filesPath = new File(path);
-        if (!filesPath.exists()) {
-            String exceptionMsg = String.format("file %s is not exits", filesPath.getAbsolutePath());
-            throw new DefinedException(exceptionMsg);
-        }
-        File[] files = filesPath.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                StringBuffer testCaseFullName = new StringBuffer();
-                testCaseFullName.append(testCaseName).append(Constant.DOT_PATH)
-                        .append(RunnerConfig.getInstance().getTestCaseExtName());
-                if (file.exists() && file.getName().equalsIgnoreCase(testCaseFullName.toString())) {
-                    MyLog.debug("filename {}", file.getName());
-                    MyLog.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
-                    MyLog.debug("file Path {}", file.getPath());
-                    testCasePath = file.getPath();
-                    return testCasePath;
-                }
-            }else {
-                searchTestCaseByName(file.getPath(),testCaseName);
-            }
-        }
-        return "";
     }
 
 
