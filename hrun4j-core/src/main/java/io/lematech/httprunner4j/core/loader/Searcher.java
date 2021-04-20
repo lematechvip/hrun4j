@@ -123,7 +123,11 @@ public class Searcher {
         return null;
     }
 
-
+    /**
+     * @param pkgClassName
+     * @param methodName
+     * @return
+     */
     private String pkgClassNameToFilePath(String pkgClassName, String methodName) {
         StringBuffer filePath = new StringBuffer();
         String removePrefixPkgClassName = pkgClassName.replaceFirst(pkgName, "");
@@ -139,69 +143,4 @@ public class Searcher {
                 .append(testCaseExtName);
         return filePath.toString();
     }
-
- /*   public String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
-        List<File> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
-        if (testCasePaths.size() > 0) {
-            for (File path : testCasePaths) {
-                searchTestCaseByName(path.getAbsolutePath(), testCaseName);
-                if (!StrUtil.isEmpty(testCasePath)) {
-                    break;
-                }
-            }
-            if (StrUtil.isEmpty(testCasePath)) {
-                String exceptionMsg = String.format("in %s path,not found  %s.%s", testCasePaths, testCaseName, extName);
-                throw new DefinedException(exceptionMsg);
-            }
-            return testCasePath;
-        }
-
-        StringBuffer dataFileResourcePath = new StringBuffer();
-        dataFileResourcePath.append(Constant.TEST_CASE_DIRECTORY_NAME).append(File.separator);
-        if(!StrUtil.isEmpty(pkgName)){
-            String[] pkgNameMetas = pkgName.split("\\.");
-            int pkgNameMetaLength = pkgNameMetas.length;
-            if (pkgNameMetaLength >= 2) {
-                MyLog.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
-            }
-            for(int index = 3;index< pkgNameMetaLength; index++) {
-                dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
-            }
-        }
-        dataFileResourcePath.append(testCaseName);
-        return dataFileResourcePath.toString();
-    }
-
-
-    *//**
-     * @param path
-     * @param testCaseName
-     * @return
-     *//*
-    private String searchTestCaseByName(String path, String testCaseName) {
-        File filesPath = new File(path);
-        if (!filesPath.exists()) {
-            String exceptionMsg = String.format("file %s is not exits", filesPath.getAbsolutePath());
-            throw new DefinedException(exceptionMsg);
-        }
-        File[] files = filesPath.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                StringBuffer testCaseFullName = new StringBuffer();
-                testCaseFullName.append(testCaseName).append(Constant.DOT_PATH)
-                        .append(RunnerConfig.getInstance().getTestCaseExtName());
-                if (file.exists() && file.getName().equalsIgnoreCase(testCaseFullName.toString())) {
-                    MyLog.debug("filename {}", file.getName());
-                    MyLog.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
-                    MyLog.debug("file Path {}", file.getPath());
-                    testCasePath = file.getPath();
-                    return testCasePath;
-                }
-            }else {
-                searchTestCaseByName(file.getPath(),testCaseName);
-            }
-        }
-        return "";
-    }
-*/
 }
