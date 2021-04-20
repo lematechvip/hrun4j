@@ -53,6 +53,8 @@ public class Run extends Command {
                 throw new DefinedException(exceptionMsg);
             }
             RunnerConfig.getInstance().setWorkDirectory(testJar);
+            Properties property = System.getProperties();
+            property.setProperty("user.dir", testJar.getAbsolutePath());
         }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(1);

@@ -211,7 +211,7 @@ public class TestCaseRunner {
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
             File apiFilePath = searcher.searchDataFileByRelativePath(api);
-            ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(apiFilePath, ApiModel.class);
+            ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
             MyLog.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));
             return testStep;

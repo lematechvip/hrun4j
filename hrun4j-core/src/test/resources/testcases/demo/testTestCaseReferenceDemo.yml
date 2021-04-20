@@ -3,7 +3,7 @@ config:
   base_url: http://127.0.0.1:8000
 teststeps:
   - name: 获取Token
-    api: apimodel/getToken
+    api: apis/getToken
     validate:
       - equalTo: [statusCode, 200]
       - equalTo: [content.code, "00"]

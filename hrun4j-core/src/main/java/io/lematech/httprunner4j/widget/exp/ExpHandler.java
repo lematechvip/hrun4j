@@ -98,6 +98,7 @@ public class ExpHandler<T> {
                 try {
                     result = BuiltInAviatorEvaluator.execute(exp, currentVariable);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     String exceptionMsg = String.format("exp: %s occur error", exp);
                     throw new DefinedException(exceptionMsg);
                 }

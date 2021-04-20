@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [httprunner4j]">
+    <test name="Command line test(failed)">
+        <classes>
+            <class name="io.lematech.httprunner4j_.testcases.demo.DemoTest">
+                <methods>
+                    <include name="beforeSuite"/>
+                    <include name="setUp"/>
+                    <include name="testApiReferenceDemo" invocation-numbers="0"/>
+                    <include name="afterSuite"/>
+                    <include name="tearDown"/>
+                </methods>
+            </class> <!-- io.lematech.httprunner4j_.testcases.demo.DemoTest -->
+        </classes>
+    </test> <!-- Command line test(failed) -->
+</suite> <!-- Failed suite [httprunner4j] -->

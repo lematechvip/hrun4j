@@ -1,15 +1,13 @@
 package io.lematech.httprunner4j.config;
 
+import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import lombok.Data;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author lematech@foxmail.com
@@ -39,10 +37,20 @@ public class RunnerConfig {
      * 2: platform model
      */
     private int runMode = 1;
+
+    public File getWorkDirectory() {
+        return Objects.isNull(this.workDirectory) ? new File(".") : this.workDirectory;
+    }
+
     /**
      * work directory
      */
     private File workDirectory;
+
+    public String getPkgName() {
+        return StrUtil.isEmpty(this.pkgName) ? Constant.SELF_ROOT_PKG_NAME : this.pkgName;
+    }
+
     /**
      * package name
      */

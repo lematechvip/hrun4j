@@ -20,35 +20,7 @@ import java.util.Objects;
  * @publicWechat lematech
  */
 public class RegularUtil {
-    /**
-     * 路径转包名
-     *
-     * @param dirPath
-     * @return
-     */
-    public static String dirPath2pkgName(String dirPath) {
-        StringBuffer pkgName = new StringBuffer();
-        if (StrUtil.isEmpty(dirPath)) {
-            return null;
-        }
-        if (dirPath.startsWith(Constant.DOT_PATH)) {
-            dirPath = dirPath.replaceFirst("\\.", "");
-        }
-        pkgName.append(dirPath.replaceAll("/", Constant.DOT_PATH));
-        return pkgName.toString();
-    }
 
-
-    /**
-     * @param pkgPath
-     * @return
-     */
-    public static String pkgPath2DirPath(String pkgPath) {
-        if (StrUtil.isEmpty(pkgPath)) {
-            return null;
-        }
-        return pkgPath.replaceAll("\\.", "/");
-    }
 
     /**
      * 根据正则替换最后一个符合条件的字符

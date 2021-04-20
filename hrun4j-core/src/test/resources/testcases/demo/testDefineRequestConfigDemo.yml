@@ -10,7 +10,7 @@ teststeps:
       - "${hook(xteststep_setup_hooks4)}"
       - total1: '${add(1, 5)}'
       - total2: '${add(3, 5)}'
-    api: apimodel/getToken
+    api: apis/getToken
     request:
       url: /api/get-token
       method: POST

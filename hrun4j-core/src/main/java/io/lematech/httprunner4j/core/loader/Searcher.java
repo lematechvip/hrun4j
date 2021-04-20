@@ -6,6 +6,7 @@ import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.RegularUtil;
 
 import java.io.File;
@@ -116,17 +117,26 @@ public class Searcher {
                 String exceptionMsg = String.format("in %s path,not found  %s.%s", dataFilePath.getAbsolutePath(), testCaseName, testCaseExtName);
                 throw new DefinedException(exceptionMsg);
             }
+        } else if (runMode == 2) {
+
         }
         return null;
     }
 
 
-    private String pkgClassNameToFilePath(String pkgClassName, String testCaseName) {
+    private String pkgClassNameToFilePath(String pkgClassName, String methodName) {
         StringBuffer filePath = new StringBuffer();
-        String removePrefixPkgClassName = pkgClassName.replaceFirst(pkgName + Constant.DOT_PATH, "");
+        String removePrefixPkgClassName = pkgClassName.replaceFirst(pkgName, "");
+        if (removePrefixPkgClassName.startsWith("_")) {
+            removePrefixPkgClassName = removePrefixPkgClassName.replaceFirst("_", workDirectory);
+        }
         String removeSuffixTestName = RegularUtil.replaceLast(removePrefixPkgClassName, "Test", "");
-        String CaseDirPath = RegularUtil.pkgPath2DirPath(removeSuffixTestName);
-        filePath.append(workDirectory).append(CaseDirPath).append(testCaseName).append(testCaseExtName);
+        String caseDirPath = FilesUtil.pkgPath2DirPath(removeSuffixTestName);
+        filePath.append(caseDirPath)
+                .append(File.separator)
+                .append(methodName)
+                .append(Constant.DOT_PATH)
+                .append(testCaseExtName);
         return filePath.toString();
     }
 
