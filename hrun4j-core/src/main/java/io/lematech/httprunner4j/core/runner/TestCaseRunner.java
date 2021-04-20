@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.core.validator.AssertChecker;
@@ -26,6 +27,7 @@ import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -51,7 +53,7 @@ public class TestCaseRunner {
      */
     private Map<String, Object> testStepConfigVariable;
 
-    private NGDataProvider ngDataProvider;
+    private Searcher searcher;
 
     /**
      * assert checker
@@ -61,7 +63,7 @@ public class TestCaseRunner {
     public TestCaseRunner() {
         expHandler = new ExpHandler();
         testContextVariable = Maps.newHashMap();
-        ngDataProvider = new NGDataProvider();
+        searcher = new Searcher();
         assertChecker = new AssertChecker(expHandler);
     }
 
@@ -192,15 +194,11 @@ public class TestCaseRunner {
     private TestStep referenceApiModelOrTestCase(TestStep testStep, Map variables) {
         String testcase = testStep.getTestcase();
         if (!StrUtil.isEmpty(testcase)) {
-            String testcasePath = ngDataProvider.seekModelFileByCasePath(testcase);
-            if (StrUtil.isEmpty(testcasePath)) {
-                String exceptionMsg = String.format("引用测试用例%s不存在", testcasePath);
-                throw new DefinedException(exceptionMsg);
-            }
+            File testCasePath = searcher.searchDataFileByRelativePath(testcase);
             /**
              * config variables can express to reference testcases
              */
-            TestCase testCase = TestDataLoaderFactory.getLoader(FileUtil.extName(testcase)).load(testcasePath, TestCase.class);
+            TestCase testCase = TestDataLoaderFactory.getLoader(FileUtil.extName(testcase)).load(testCasePath, TestCase.class);
             Config tcConfig = testCase.getConfig();
             Map tcVariables = (Map) tcConfig.getVariables();
             if (MapUtil.isEmpty(tcVariables)) {
@@ -212,8 +210,8 @@ public class TestCaseRunner {
         }
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
-            String dataFileResourcePath = ngDataProvider.seekModelFileByCasePath(api);
-            ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
+            File apiFilePath = searcher.searchDataFileByRelativePath(api);
+            ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(apiFilePath, ApiModel.class);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
             MyLog.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));
             return testStep;

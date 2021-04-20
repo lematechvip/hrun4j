@@ -29,7 +29,7 @@ public class TestNGEngine {
     private static TestNG testNG;
     private static String suiteName;
     private static SchemaValidator schemaValidator = new SchemaValidator();
-    private static Map<String, List<String>> testCasePkgGroup = new HashMap<>();
+    public static Map<String, Set<String>> testCasePkgGroup = new HashMap<>();
     public static TestNG getInstance(){
         if(testNG == null){
             testNG = new TestNG();
@@ -59,14 +59,14 @@ public class TestNGEngine {
         }
         return testNG;
     }
-    public static void run(){
-        List<File> executePaths = RunnerConfig.getInstance().getExecutePaths();
-        for (File execPath : executePaths) {
-            MyLog.info("execute path : [{}] test cases", execPath);
-            traversePkgTestCaseGroup(execPath);
+    public static void run() {
+        List<File> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
+        for (File testCasePath : testCasePaths) {
+            MyLog.info("test case path : [{}] test cases", testCasePath);
+            traversePkgTestCaseGroup(testCasePath);
         }
         if (MapUtil.isEmpty(testCasePkgGroup)) {
-            MyLog.warn("in path [{}] not found valid testcases", executePaths);
+            MyLog.warn("in path [{}] not found valid testcases", testCasePaths);
         }
         addTestClasses();
         runNG();
@@ -77,16 +77,16 @@ public class TestNGEngine {
 
     private static void addTestClasses(){
         List<Class> classes = new ArrayList<>();
-        for(Map.Entry<String,List<String>> entry:testCasePkgGroup.entrySet()){
+        for (Map.Entry<String, Set<String>> entry : testCasePkgGroup.entrySet()) {
             String fullTestClassName = entry.getKey();
-            List methodNameList = entry.getValue();
-            String pkgName = StrUtil.subBefore(fullTestClassName,".",true);
-            String className = StrUtil.upperFirst(StrUtil.subAfter(fullTestClassName,".",true));
+            Set methodNameList = entry.getValue();
+            String pkgName = StrUtil.subBefore(fullTestClassName, ".", true);
+            String className = StrUtil.upperFirst(StrUtil.subAfter(fullTestClassName, ".", true));
             VelocityContext ctx = new VelocityContext();
             ctx.put("pkgName", pkgName);
             ctx.put("className", className);
             ctx.put("methodList", methodNameList);
-            String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH,ctx);
+            String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH, ctx);
             MyLog.debug("test case content:{}", templateRenderContent);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
             classes.add(clazz);
@@ -108,8 +108,8 @@ public class TestNGEngine {
                 String fileMainName = JavaIdentifierUtil.toValidJavaIdentifier(FileNameUtil.mainName(file.getName()), 0);
                 if(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                         ||Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)){
-                    String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
 
+                    String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
                     if(!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)){
                         String exceptionMsg = String.format("%s.%s,file name is invalid,not apply java identifier,please modify it", pkgPath, fileMainName);
                         throw new DefinedException(exceptionMsg);
@@ -126,10 +126,10 @@ public class TestNGEngine {
                     String fullTestClassName = classPkgPath.toString();
                     MyLog.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
                     if (testCasePkgGroup.containsKey(fullTestClassName)) {
-                        List<String> testClassList = testCasePkgGroup.get(fullTestClassName);
+                        Set<String> testClassList = testCasePkgGroup.get(fullTestClassName);
                         testClassList.add(fileMainName);
                     } else {
-                        List<String> testClassList = new ArrayList<>();
+                        Set<String> testClassList = new HashSet<>();
                         testClassList.add(fileMainName);
                         testCasePkgGroup.put(fullTestClassName, testClassList);
                     }

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
@@ -36,7 +35,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     @Override
     public T load(String testDataName, Class clazz) {
         T result;
-        List<File> executePaths = RunnerConfig.getInstance().getExecutePaths();
+        List<File> executePaths = RunnerConfig.getInstance().getTestCasePaths();
         if (executePaths.size() > 0) {
             return load(new File(testDataName), clazz);
         } else {

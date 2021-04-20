@@ -25,7 +25,7 @@ public class HttpRunner4J extends Command {
     private static final PrintWriter NUL = new PrintWriter(new Writer() {
         @Override
         public void write(final char[] arg0, final int arg1, final int arg2)
-                throws IOException {
+                 {
         }
 
         @Override

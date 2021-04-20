@@ -38,7 +38,7 @@ public class TestBase {
     }
     @DataProvider
     public Object[][] dataProvider(Method method) {
-        Object[][] objects = null;
+        Object[][] objects;
         this.testCaseName = method.getName();
         try {
             objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);

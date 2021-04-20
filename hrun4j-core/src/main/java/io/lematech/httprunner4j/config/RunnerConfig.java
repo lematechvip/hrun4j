@@ -28,36 +28,46 @@ public class RunnerConfig {
      */
     private String i18n;
 
+    public List<File> getTestCasePaths() {
+        return testCasePaths;
+    }
+
     /**
      * run model
      * default 0： Standard Java project
      * 1： non Standard Java project
      * 2: platform model
      */
-    private Integer runMode;
-
-    public List<File> getExecutePaths() {
-        if (executePaths.isEmpty()) {
-            executePaths.add(new File(Constant.DOT_PATH));
-        }
-        return executePaths;
-    }
-
+    private int runMode = 1;
+    /**
+     * work directory
+     */
+    private File workDirectory;
+    /**
+     * package name
+     */
     private String pkgName;
-    private List<File> executePaths;
+    /**
+     * testcase extension name
+     */
     private String testCaseExtName;
+    /**
+     * test case paths
+     */
+    private List<File> testCasePaths;
+
     private static RunnerConfig instance = new RunnerConfig();
 
     public void setPkgName(String pkgName) {
-        if(JavaIdentifierUtil.isValidJavaFullClassName(pkgName)){
+        if (JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
             this.pkgName = pkgName;
-        }else{
+        } else {
             String exceptionMsg = String.format("pkg name {} is invalid,not apply java identifier,please modify it", pkgName);
             throw new DefinedException(exceptionMsg);
         }
     }
     private RunnerConfig() {
-        executePaths = new ArrayList<>();
+        testCasePaths = new ArrayList<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
     }
     public static RunnerConfig getInstance(){

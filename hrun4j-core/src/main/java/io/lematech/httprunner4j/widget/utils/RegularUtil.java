@@ -23,19 +23,31 @@ public class RegularUtil {
     /**
      * 路径转包名
      *
+     * @param dirPath
+     * @return
+     */
+    public static String dirPath2pkgName(String dirPath) {
+        StringBuffer pkgName = new StringBuffer();
+        if (StrUtil.isEmpty(dirPath)) {
+            return null;
+        }
+        if (dirPath.startsWith(Constant.DOT_PATH)) {
+            dirPath = dirPath.replaceFirst("\\.", "");
+        }
+        pkgName.append(dirPath.replaceAll("/", Constant.DOT_PATH));
+        return pkgName.toString();
+    }
+
+
+    /**
      * @param pkgPath
      * @return
      */
-    public static String dirPath2pkgName(String pkgPath) {
-        StringBuffer pkgName = new StringBuffer();
+    public static String pkgPath2DirPath(String pkgPath) {
         if (StrUtil.isEmpty(pkgPath)) {
-            return pkgName.toString();
+            return null;
         }
-        if (pkgPath.startsWith(Constant.DOT_PATH)) {
-            pkgPath = pkgPath.replaceFirst("\\.", "");
-        }
-        pkgName.append(pkgPath.replaceAll("/", Constant.DOT_PATH));
-        return pkgName.toString();
+        return pkgPath.replaceAll("\\.", "/");
     }
 
     /**

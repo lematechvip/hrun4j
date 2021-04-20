@@ -2,7 +2,9 @@ package io.lematech.httprunner4j.junit.converter;
 
 
 import cn.hutool.core.io.FileUtil;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.converter.ObjectConverter;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.core.runner.TestCaseRunner;
@@ -10,6 +12,8 @@ import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
+
+import java.io.File;
 
 /**
  * @author lematech@foxmail.com
@@ -22,10 +26,11 @@ import org.testng.annotations.Test;
 public class TestConverter {
     @Test
     public void testApi2TestCase() {
-        NGDataProvider ngDataProvider = new NGDataProvider();
+        RunnerConfig.getInstance().setWorkDirectory(new File("/Users/arkhe/Documents/lema/others/httprunner4j/hrun4j-core/src/test/resources"));
+        Searcher searcher = new Searcher();
         TestCaseRunner testCaseRunner = new TestCaseRunner();
         String api = "apis/getToken";
-        String dataFileResourcePath = ngDataProvider.seekModelFileByCasePath(api);
+        File dataFileResourcePath = searcher.searchDataFileByRelativePath(api);
         ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
         SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
         TestCase testCase = ObjectConverter.api2TestCase(apiModel);

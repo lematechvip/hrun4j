@@ -10,7 +10,6 @@ import io.lematech.httprunner4j.entity.http.RequestParameterEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.widget.i18n.I18NFactory;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -45,55 +44,197 @@ import java.util.*;
  * @publicWechat lematech
  */
 public class HttpClientUtil {
-    public static ResponseEntity sendHttpRequest(String method, String url) {
-        return sendHttpRequest(method, url, Collections.EMPTY_MAP, new RequestParameterEntity());
+    public static ResponseEntity doGet(String url) {
+        return doGet(url, Collections.EMPTY_MAP);
     }
 
-    public static ResponseEntity sendHttpRequest(String method, String url, Map<String, String> headers) {
-        return sendHttpRequest(method, url, headers, new RequestParameterEntity());
+    public static ResponseEntity doGet(String url, Map<String, String> headers) {
+        return doGet(url, headers, new RequestParameterEntity());
     }
 
-    public static ResponseEntity sendHttpRequest(String method, String url, Map<String, String> headers, RequestParameterEntity requestParams) {
+    public static ResponseEntity doGet(String url, Map<String, String> headers, RequestParameterEntity requestParams) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
                 .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
                 .build();
-        return sendHttpRequest(method, url, headers, requestParams, requestConfig);
+        return doGet(url, headers, requestParams, requestConfig);
     }
 
-    public static ResponseEntity sendHttpRequest(String method, String url, Map<String, String> headers, RequestParameterEntity requestParams, RequestConfig requestConfig) {
-        return sendHttpRequest(method, url, headers, requestParams, new BasicCookieStore(), requestConfig);
+    public static ResponseEntity doGet(String url, Map<String, String> headers, RequestParameterEntity requestParams, RequestConfig requestConfig) {
+        return doGet(url, headers, requestParams, new BasicCookieStore(), requestConfig);
     }
 
-    public static ResponseEntity sendHttpRequest(String method, String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
+    public static ResponseEntity doGet(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
         CloseableHttpClient httpClient = HttpClients
                 .custom()
                 .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
                 .build();
         String apiUrl = getUrlWithParams(url, requestParams.getParams());
-        HttpEntityEnclosingRequestBase httpRequest = null;
-        if (StringUtils.equalsIgnoreCase(method, HttpConstant.GET)) {
-            httpRequest = new HttpGetWithEntity(apiUrl);
-        } else if (StringUtils.equalsIgnoreCase(method, HttpConstant.POST)) {
-            httpRequest = new HttpPost(apiUrl);
-        } else if (StringUtils.equalsIgnoreCase(method, HttpConstant.PUT)) {
-            httpRequest = new HttpPut(apiUrl);
-        } else if (StringUtils.equalsIgnoreCase(method, HttpConstant.DELETE)) {
-            httpRequest = new HttpDeleteWithEntity(apiUrl);
+        HttpGetWithEntity httpGet = new HttpGetWithEntity(apiUrl);
+        httpGet.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpGet.addHeader(entry.getKey(), entry.getValue());
+            }
         }
-        if (null != httpRequest) {
-            setRequestBody(httpRequest, requestParams);
-            httpRequest.setConfig(requestConfig);
-            if (headers != null && headers.size() > 0) {
-                for (Map.Entry<String, String> entry : headers.entrySet()) {
-                    httpRequest.addHeader(entry.getKey(), entry.getValue());
+        setRequestBody(httpGet, requestParams);
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpGet);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    MyLog.warn("release connection exception");
                 }
+            }
+        }
+    }
+
+
+    public static ResponseEntity doPost(String url) {
+        return doPost(url, new RequestParameterEntity());
+    }
+
+    public static ResponseEntity doPost(String url, RequestParameterEntity requestParams) {
+        return doPost(url, Collections.EMPTY_MAP, requestParams);
+    }
+
+    public static ResponseEntity doPost(String url, Map<String, String> headers, RequestParameterEntity requestParams) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
+                .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
+                .build();
+        return doPost(url, headers, requestParams, requestConfig);
+    }
+
+    public static ResponseEntity doPost(String url, Map<String, String> headers, RequestParameterEntity requestParams, RequestConfig requestConfig) {
+        return doPost(url, headers, requestParams, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doPost(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPost httpPost;
+        url = getUrlWithParams(url, requestParams.getParams());
+        httpPost = new HttpPost(url);
+        setRequestBody(httpPost, requestParams);
+        httpPost.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPost.addHeader(entry.getKey(), entry.getValue());
             }
         }
         CloseableHttpResponse response = null;
         try {
             long startTime = System.currentTimeMillis();
-            response = httpClient.execute(httpRequest);
+            response = httpClient.execute(httpPost);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    MyLog.warn("release connection exception");
+                }
+            }
+        }
+    }
+
+    public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestConfig requestConfig) {
+        return doDelete(url, headers, new RequestParameterEntity(), new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestParameterEntity requestParams, RequestConfig requestConfig) {
+        return doDelete(url, headers, requestParams, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        url = getUrlWithParams(url, requestParams.getParams());
+        HttpDeleteWithEntity httpDelete = new HttpDeleteWithEntity(url);
+        httpDelete.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpDelete.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        CloseableHttpResponse response = null;
+        setRequestBody(httpDelete, requestParams);
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpDelete);
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
+        } catch (ClientProtocolException e) {
+            throw new DefinedException("client protocol exception: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new DefinedException("parse exception: " + e.getMessage());
+        } catch (IOException e) {
+            throw new DefinedException("io exception: " + e.getMessage());
+        } finally {
+            if (null != response) {
+                try {
+                    response.close();
+                    httpClient.close();
+                } catch (IOException e) {
+                    MyLog.warn("release connection exception");
+                }
+            }
+        }
+    }
+
+
+    public static ResponseEntity doPut(String url, Map<String, String> headers, RequestParameterEntity requestParams, RequestConfig requestConfig) {
+        return doPut(url, headers, requestParams, new BasicCookieStore(), requestConfig);
+    }
+
+    public static ResponseEntity doPut(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
+        CloseableHttpClient httpClient = HttpClients
+                .custom()
+                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
+                .build();
+        HttpPut httpPut;
+        url = getUrlWithParams(url, requestParams.getParams());
+        httpPut = new HttpPut(url);
+        setRequestBody(httpPut, requestParams);
+        httpPut.setConfig(requestConfig);
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPut.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        CloseableHttpResponse response = null;
+        try {
+            long startTime = System.currentTimeMillis();
+            response = httpClient.execute(httpPut);
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
             return wrapperResponseEntity(response, elapsedTime, httpCookieStore);
@@ -270,13 +411,13 @@ public class HttpClientUtil {
         MyLog.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), requestEntity.getParams()));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("requestJson"), requestEntity.getJson()));
         if (HttpConstant.GET.equalsIgnoreCase(requestEntity.getMethod())) {
-            responseEntity = sendHttpRequest(HttpConstant.GET, url, headers, requestParameterEntity, initRequestConfig(requestEntity));
+            responseEntity = doGet(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
-            responseEntity = sendHttpRequest(HttpConstant.POST, url, headers, requestParameterEntity, initRequestConfig(requestEntity));
+            responseEntity = doPost(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.DELETE.equalsIgnoreCase(method)) {
-            responseEntity = sendHttpRequest(HttpConstant.DELETE, url, headers, requestParameterEntity, initRequestConfig(requestEntity));
+            responseEntity = doDelete(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.PUT.equalsIgnoreCase(method)) {
-            responseEntity = sendHttpRequest(HttpConstant.PUT, url, headers, requestParameterEntity, initRequestConfig(requestEntity));
+            responseEntity = doPut(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.HEAD.equalsIgnoreCase(method)) {
         } else if (HttpConstant.OPTIONS.equalsIgnoreCase(method)) {
         }
