@@ -1,20 +1,18 @@
 package io.lematech.httprunner4j.core.loader;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.RegularUtil;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.List;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -54,29 +52,6 @@ public class Searcher {
         testCaseExtName = RunnerConfig.getInstance().getTestCaseExtName();
     }
 
-   /* public String seekModelFileByCasePath(String filePath) {
-        if (!StrUtil.isEmpty(filePath)) {
-            if (filePath.startsWith(Constant.TEST_CASE_FILE_PATH)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_FILE_PATH, "");
-            } else if (filePath.startsWith(Constant.TEST_CASE_DIRECTORY_NAME)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_DIRECTORY_NAME, "");
-            }
-            String extName = FileUtil.extName(filePath);
-            String mainName = FileUtil.mainName(filePath);
-            if (StrUtil.isEmpty(extName)) {
-                extName = RunnerConfig.getInstance().getTestCaseExtName();
-            } else {
-                filePath = RegularUtil.replaceLast(filePath, mainName + Constant.DOT_PATH + extName, "");
-                if (filePath.endsWith("/")) {
-                    filePath = RegularUtil.replaceLast(filePath, "/", "");
-                }
-            }
-            MyLog.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-            return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-        }
-        return "";
-    }
-*/
 
     /**
      * search data file by relative path
@@ -89,29 +64,6 @@ public class Searcher {
         String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
         String pkgClassName = FilesUtil.dirPath2pkgName(filePathName);
         return searchDataFileByRule(pkgClassName, fileName);
-       /* StringBuffer filePath = new StringBuffer();
-        if (StrUtil.isEmpty(fileRelativePath)) {
-            String exceptionMsg = String.format("fileRelativePath can not null or empty");
-            throw new DefinedException(exceptionMsg);
-        }
-        if (runMode == 1) {
-            filePath.append(workDirectory.endsWith("/") ? workDirectory : workDirectory + "/");
-            filePath.append(fileRelativePath.endsWith(testCaseExtName) ? fileRelativePath : fileRelativePath + Constant.DOT_PATH + testCaseExtName);
-            File dataFilePath = new File(filePath.toString());
-            if (dataFilePath.exists() && dataFilePath.isFile()) {
-                return dataFilePath;
-            } else {
-                String exceptionMsg = String.format("in %s path,not found  %s", dataFilePath.getAbsolutePath(), fileRelativePath);
-                throw new DefinedException(exceptionMsg);
-            }
-        }else if(runMode == 2){
-           String resourceFilePath =  File.separator+fileRelativePath;
-           File file = new File(this.getClass().getResource(resourceFilePath).getPath());
-           MyLog.info("资源路径：{}",file.getAbsolutePath());
-            return file;
-        }
-        return null;*/
-
     }
 
     /**
@@ -124,6 +76,7 @@ public class Searcher {
             String exceptionMsg = String.format("pkgClassName or testCaseName can not null or empty");
             throw new DefinedException(exceptionMsg);
         }
+
         File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName, testCaseName));
         if (runMode == 1) {
             if (dataFilePath.exists() && dataFilePath.isFile()) {
@@ -142,7 +95,15 @@ public class Searcher {
                 String exceptionMsg = String.format("in %s path,not found  %s", dataFilePath.getAbsolutePath(), testCaseName);
                 throw new DefinedException(exceptionMsg);
             }
-            return new File(url.getPath());
+            // 处理中文乱码
+            String decodePath = null;
+            try {
+                decodePath = URLDecoder.decode(url.getPath(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                String exceptionMsg = String.format("url %s decode occur error", url.getPath());
+                throw new DefinedException(exceptionMsg);
+            }
+            return new File(decodePath);
 
         }
         return null;

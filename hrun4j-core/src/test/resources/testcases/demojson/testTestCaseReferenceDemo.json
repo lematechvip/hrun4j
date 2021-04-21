@@ -6,7 +6,7 @@
   "teststeps": [
     {
       "name": "获取Token",
-      "api": "apimodel/getToken",
+      "api": "apis/getToken",
       "validate": [
         {
           "equalTo": [
@@ -24,7 +24,7 @@
     },
     {
       "name": "引用测试用例",
-      "testcase": "demo/testComplexSingleDemo.json"
+      "testcase": "demojson/testComplexSingleDemo.json"
     }
   ]
 }

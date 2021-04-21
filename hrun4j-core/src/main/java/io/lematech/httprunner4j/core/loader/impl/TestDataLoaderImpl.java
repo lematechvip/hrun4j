@@ -11,7 +11,6 @@ import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.widget.log.MyLog;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -30,49 +28,6 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     public TestDataLoaderImpl() {
         extName = RunnerConfig.getInstance().getTestCaseExtName();
         yaml = new Yaml(new Constructor(JSONObject.class));
-    }
-
-    @Override
-    public T load(String testDataName, Class clazz) {
-        T result;
-        List<File> executePaths = RunnerConfig.getInstance().getTestCasePaths();
-        if (executePaths.size() > 0) {
-            return load(new File(testDataName), clazz);
-        } else {
-            StringBuffer classResourcetestDataPath = new StringBuffer();
-            classResourcetestDataPath.append(testDataName).append(".");
-            classResourcetestDataPath.append(extName);
-            MyLog.debug("test case resources path: {}", classResourcetestDataPath.toString());
-            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(classResourcetestDataPath.toString());
-            if (inputStream == null) {
-                String exceptionMsg = String.format("in resources the testData %s is not exists.", classResourcetestDataPath);
-                throw new DefinedException(exceptionMsg);
-            }
-            try {
-                result = getObject(testDataName, clazz, inputStream);
-                String validateResult = SchemaValidator.validateJsonObjectFormat(clazz, result);
-                if (StrUtil.isEmpty(validateResult)) {
-                    return result;
-                } else {
-                    if (clazz == TestCase.class) {
-                        ApiModel apiModel = (ApiModel) getObject(testDataName, ApiModel.class, inputStream);
-                        String validateInfo = SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
-                        if (StrUtil.isEmpty(validateInfo)) {
-                            return (T) ObjectConverter.api2TestCase(apiModel);
-                        } else {
-                            throw new DefinedException(validateResult);
-                        }
-                    } else {
-                        throw new DefinedException(validateResult);
-                    }
-                }
-            } catch (DefinedException definedException) {
-                throw definedException;
-            } catch (Exception e) {
-                String exceptionMsg = String.format("read file %s.%s occur exception: %s", testDataName, extName, e.getMessage());
-                throw new DefinedException(exceptionMsg);
-            }
-        }
     }
 
     private T getObject(String testDataName, Class clazz, InputStream inputStream) {

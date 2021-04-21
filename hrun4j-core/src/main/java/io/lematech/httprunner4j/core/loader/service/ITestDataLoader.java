@@ -5,11 +5,6 @@ import java.io.File;
 
 public interface ITestDataLoader {
 
-    /**
-     * @param testCaseName
-     * @return
-     */
-    <T> T load(String testCaseName, Class<T> clazz);
 
     /**
      * @param fileName

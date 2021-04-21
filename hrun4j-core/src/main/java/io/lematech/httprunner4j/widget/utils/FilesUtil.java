@@ -9,8 +9,7 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -147,4 +146,5 @@ public class FilesUtil {
             MyLog.debug("in pkgPath {} file {} not support,only support .json or.yml suffix", file.getPath(), file.getName());
         }
     }
+
 }

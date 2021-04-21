@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.testcases.demo;
+package io.lematech.httprunner4j.testcases;
 
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;

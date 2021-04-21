@@ -8,10 +8,10 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
-import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.core.validator.AssertChecker;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
@@ -194,6 +194,10 @@ public class TestCaseRunner {
     private TestStep referenceApiModelOrTestCase(TestStep testStep, Map variables) {
         String testcase = testStep.getTestcase();
         if (!StrUtil.isEmpty(testcase)) {
+            if (!testcase.startsWith(Constant.TEST_CASE_DIRECTORY_NAME) &&
+                    !testcase.startsWith(File.separator + Constant.TEST_CASE_DIRECTORY_NAME)) {
+                testcase = Constant.TEST_CASE_DIRECTORY_NAME + File.separator + testcase;
+            }
             File testCasePath = searcher.searchDataFileByRelativePath(testcase);
             /**
              * config variables can express to reference testcases
@@ -210,6 +214,10 @@ public class TestCaseRunner {
         }
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
+            if (!api.startsWith(Constant.API_DEFINE_DIRECTORY_NAME) &&
+                    !api.startsWith(File.separator + Constant.API_DEFINE_DIRECTORY_NAME)) {
+                api = Constant.API_DEFINE_DIRECTORY_NAME + File.separator + api;
+            }
             File apiFilePath = searcher.searchDataFileByRelativePath(api);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
