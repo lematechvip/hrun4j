@@ -11,4 +11,4 @@ teststeps:
   - name: 登录并添加用户信息
     testcase: scene/loginAndAddUser
   - name: 删除用户信息
-    api: apimodel/delUser
+    api: apis/delUser

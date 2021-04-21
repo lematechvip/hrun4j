@@ -13,7 +13,7 @@ teststeps:
     validate:
       - equalTo: [statusCode,200]
   - name: 添加用户
-    api: apimodel/addUser
+    api: apis/addUser
     validate:
       - equalTo: [statusCode,200]
       - equalTo: [content.code,"00"]

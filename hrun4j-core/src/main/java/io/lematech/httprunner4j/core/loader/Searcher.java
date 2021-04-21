@@ -99,9 +99,9 @@ public class Searcher {
                 throw new DefinedException(exceptionMsg);
             }
             // 处理中文乱码
-            String decodePath = null;
+            String decodePath;
             try {
-                decodePath = URLDecoder.decode(url.getPath(), "utf-8");
+                decodePath = URLDecoder.decode(url.getPath(), Constant.CHARSET_UTF_8);
             } catch (UnsupportedEncodingException e) {
                 String exceptionMsg = String.format("url %s decode occur error", url.getPath());
                 throw new DefinedException(exceptionMsg);
