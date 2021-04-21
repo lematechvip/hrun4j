@@ -1,11 +1,11 @@
-package io.lematech.httprunner4j.demo;
+package io.lematech.httprunner4j.testcases.demo;
 
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 public class DemoJsonTest extends TestBase {
 
 
-    @BeforeClass
+    @BeforeSuite
     public void configRunner() {
         RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME);
     }

@@ -8,4 +8,4 @@ teststeps:
       - equalTo: [statusCode, 200]
       - equalTo: [content.code, "00"]
   - name: 引用测试用例
-    testcase: demo/testComplexSingleDemo.json
+    testcase: testcases/demojson/testComplexSingleDemo.json

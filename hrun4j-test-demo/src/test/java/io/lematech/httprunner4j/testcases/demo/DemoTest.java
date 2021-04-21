@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.demo;
+package io.lematech.httprunner4j.testcases.demo;
 
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;

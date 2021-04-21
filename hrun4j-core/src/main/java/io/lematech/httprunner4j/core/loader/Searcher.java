@@ -1,7 +1,9 @@
 package io.lematech.httprunner4j.core.loader;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
@@ -10,7 +12,10 @@ import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.RegularUtil;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com
@@ -80,7 +85,11 @@ public class Searcher {
      * @return
      */
     public File searchDataFileByRelativePath(String fileRelativePath) {
-        StringBuffer filePath = new StringBuffer();
+        String fileName = FileUtil.getName(fileRelativePath);
+        String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
+        String pkgClassName = FilesUtil.dirPath2pkgName(filePathName);
+        return searchDataFileByRule(pkgClassName, fileName);
+       /* StringBuffer filePath = new StringBuffer();
         if (StrUtil.isEmpty(fileRelativePath)) {
             String exceptionMsg = String.format("fileRelativePath can not null or empty");
             throw new DefinedException(exceptionMsg);
@@ -95,8 +104,14 @@ public class Searcher {
                 String exceptionMsg = String.format("in %s path,not found  %s", dataFilePath.getAbsolutePath(), fileRelativePath);
                 throw new DefinedException(exceptionMsg);
             }
+        }else if(runMode == 2){
+           String resourceFilePath =  File.separator+fileRelativePath;
+           File file = new File(this.getClass().getResource(resourceFilePath).getPath());
+           MyLog.info("资源路径：{}",file.getAbsolutePath());
+            return file;
         }
-        return null;
+        return null;*/
+
     }
 
     /**
@@ -104,13 +119,13 @@ public class Searcher {
      * @param testCaseName
      * @return
      */
-    public File seekDataFileByRule(String pkgClassName, String testCaseName) {
+    public File searchDataFileByRule(String pkgClassName, String testCaseName) {
         if (StrUtil.isEmpty(pkgClassName) || StrUtil.isEmpty(testCaseName)) {
             String exceptionMsg = String.format("pkgClassName or testCaseName can not null or empty");
             throw new DefinedException(exceptionMsg);
         }
+        File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName, testCaseName));
         if (runMode == 1) {
-            File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName, testCaseName));
             if (dataFilePath.exists() && dataFilePath.isFile()) {
                 return dataFilePath;
             } else {
@@ -118,6 +133,16 @@ public class Searcher {
                 throw new DefinedException(exceptionMsg);
             }
         } else if (runMode == 2) {
+            String filePath = dataFilePath.getPath();
+            if (!filePath.startsWith("/")) {
+                filePath = File.separator + filePath;
+            }
+            URL url = this.getClass().getResource(filePath);
+            if (Objects.isNull(url)) {
+                String exceptionMsg = String.format("in %s path,not found  %s", dataFilePath.getAbsolutePath(), testCaseName);
+                throw new DefinedException(exceptionMsg);
+            }
+            return new File(url.getPath());
 
         }
         return null;
@@ -138,9 +163,10 @@ public class Searcher {
         String caseDirPath = FilesUtil.pkgPath2DirPath(removeSuffixTestName);
         filePath.append(caseDirPath)
                 .append(File.separator)
-                .append(methodName)
-                .append(Constant.DOT_PATH)
-                .append(testCaseExtName);
+                .append(methodName);
+        if (StrUtil.isEmpty(FileUtil.extName(methodName))) {
+            filePath.append(Constant.DOT_PATH).append(testCaseExtName);
+        }
         return filePath.toString();
     }
 }

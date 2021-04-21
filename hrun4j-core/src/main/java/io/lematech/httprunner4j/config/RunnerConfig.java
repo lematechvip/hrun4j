@@ -36,7 +36,7 @@ public class RunnerConfig {
      * 1： non Standard Java project
      * 2: platform model
      */
-    private int runMode = 1;
+    private int runMode = 2;
 
     public File getWorkDirectory() {
         return Objects.isNull(this.workDirectory) ? new File(".") : this.workDirectory;

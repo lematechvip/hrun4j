@@ -4,7 +4,7 @@ config:
 teststeps:
   - name: 步骤名称
     setup_hooks:
-      - "${hook(xteststep_setup_hooks1)}"
+      - "${1+2}"
       - "${hook(xteststep_setup_hooks2)}"
       - "${hook(xteststep_setup_hooks3)}"
       - "${hook(xteststep_setup_hooks4)}"

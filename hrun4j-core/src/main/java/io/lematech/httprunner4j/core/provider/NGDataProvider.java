@@ -30,7 +30,7 @@ public class NGDataProvider {
 
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        File dataFilePath = searcher.seekDataFileByRule(pkgName, testCaseName);
+        File dataFilePath = searcher.searchDataFileByRule(pkgName, testCaseName);
         TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                 .load(dataFilePath, TestCase.class);
         Object[][] testCases = getObjects(testCase);
