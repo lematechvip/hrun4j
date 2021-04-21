@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.cli.commands;
 
+import cn.hutool.core.io.FileUtil;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
@@ -48,13 +49,22 @@ public class Run extends Command {
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File("."));
         } else {
-            if (!testJar.exists()) {
-                String exceptionMsg = String.format("file: %s is not exist", testJar.getAbsolutePath());
-                throw new DefinedException(exceptionMsg);
+            if (!Objects.isNull(testJar)) {
+                if (!testJar.exists() || !testJar.isFile()) {
+                    String exceptionMsg = String.format("file: %s is not exist or testjar must set .jar file path", testJar.getAbsolutePath());
+                    throw new DefinedException(exceptionMsg);
+                }
+                if (!FileUtil.isAbsolutePath(testJar.getPath())) {
+                    String exceptionMsg = String.format("testjar path must set absolute path", testJar.getAbsolutePath());
+                    throw new DefinedException(exceptionMsg);
+                }
+                File workFile = testJar.getParentFile();
+                MyLog.info("工作区路径：{}", workFile.getAbsolutePath());
+                RunnerConfig.getInstance().setWorkDirectory(workFile);
+                Properties property = System.getProperties();
+                property.setProperty("user.dir", workFile.getAbsolutePath());
             }
-            RunnerConfig.getInstance().setWorkDirectory(testJar);
-            Properties property = System.getProperties();
-            property.setProperty("user.dir", testJar.getAbsolutePath());
+
         }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(1);
