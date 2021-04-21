@@ -60,6 +60,9 @@ public class Searcher {
      * @return
      */
     public File searchDataFileByRelativePath(String fileRelativePath) {
+        if (runMode == 1) {
+            fileRelativePath = (workDirectory.endsWith("/") ? workDirectory : workDirectory + File.separator) + fileRelativePath;
+        }
         String fileName = FileUtil.getName(fileRelativePath);
         String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
         String pkgClassName = FilesUtil.dirPath2pkgName(filePathName);
@@ -77,12 +80,12 @@ public class Searcher {
             throw new DefinedException(exceptionMsg);
         }
 
-        File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName, testCaseName));
+        File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName.replaceAll("_", "-"), testCaseName));
         if (runMode == 1) {
             if (dataFilePath.exists() && dataFilePath.isFile()) {
                 return dataFilePath;
             } else {
-                String exceptionMsg = String.format("in %s path,not found  %s.%s", dataFilePath.getAbsolutePath(), testCaseName, testCaseExtName);
+                String exceptionMsg = String.format("in %s path,not found  %s.%s", dataFilePath.getParentFile().getAbsolutePath(), testCaseName, testCaseExtName);
                 throw new DefinedException(exceptionMsg);
             }
         } else if (runMode == 2) {

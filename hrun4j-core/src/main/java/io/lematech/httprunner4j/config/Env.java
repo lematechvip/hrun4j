@@ -1,8 +1,11 @@
 package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,18 +29,23 @@ public class Env {
     }
 
     private static Map<String, Object> envMap;
+    private static int runMode = 1;
 
     private static synchronized void initializeEnv() {
         if (envMap == null) {
             envMap = new HashMap<>();
             envMap.putAll(System.getenv());
             Properties properties = new Properties();
-            InputStream inputStream = Env.class
-                    .getClassLoader()
-                    .getResourceAsStream(Constant.ENV_FILE_NAME);
+            InputStream inputStream = null;
             try {
+                if (runMode == 1) {
+                    String workDir = RunnerConfig.getInstance().getWorkDirectory().getCanonicalPath();
+                    inputStream = new FileInputStream(new File(workDir, Constant.ENV_FILE_NAME));
+                } else if (runMode == 2) {
+                    inputStream = TestCase.class.getClassLoader().getResourceAsStream(Constant.ENV_FILE_NAME);
+                }
                 properties.load(inputStream);
-                envMap.putAll((Map)properties);
+                envMap.putAll((Map) properties);
             } catch (Exception e) {
                 MyLog.warn(Constant.ENV_FILE_NAME + " is not exist");
             }

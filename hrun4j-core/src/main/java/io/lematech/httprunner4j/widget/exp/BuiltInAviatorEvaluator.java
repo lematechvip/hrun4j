@@ -6,12 +6,9 @@ import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
-import io.lematech.httprunner4j.HttpRunner4j;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
 import lombok.extern.slf4j.Slf4j;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,11 +24,11 @@ import java.util.Objects;
 public class BuiltInAviatorEvaluator {
     static {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
+        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionAdd());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionSubtract());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionMultiply());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionDivide());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
         AviatorEvaluator.addFunction(new HttpRunner4j.SignGenerateFunction());
         AviatorEvaluator.addFunction(new HttpRunner4j.ReuqestAndResponseHook());
     }
@@ -40,14 +37,10 @@ public class BuiltInAviatorEvaluator {
         Expression compiledExp = AviatorEvaluator.compile(expression, false);
         try {
             return compiledExp.execute(env);
-        } catch (AssertionError e) {
-            System.out.println("此处接收被调用方法内部未被捕获的异常");
-
         } catch (Exception e) {
-            String exceptionMsg = String.format("execute exp %s occur error: ", expression);
+            String exceptionMsg = String.format("execute exp %s occur error: %s", expression, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
-        return null;
     }
 
     /**
@@ -68,5 +61,6 @@ public class BuiltInAviatorEvaluator {
             return "ENV";
         }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j;
+package io.lematech.httprunner4j.widget.exp;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.HmacAlgorithm;
@@ -41,19 +41,7 @@ public class HttpRunner4j {
         }
     }
 
-    public static class DefinedHookFunction extends AbstractFunction {
-        @Override
-        public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
-            log.info("当前方法名：{},入参信息：{},环境变量：{}", this.getName(), arg.getAviatorType(), env);
 
-            return new AviatorString(String.valueOf(arg));
-        }
-
-        @Override
-        public String getName() {
-            return "hook";
-        }
-    }
 
     public static class ReuqestAndResponseHook extends AbstractFunction {
         @Override
@@ -69,6 +57,19 @@ public class HttpRunner4j {
         }
     }
 
+    public static class DefinedHookFunction extends AbstractFunction {
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
+            log.info("当前方法名：{},入参信息：{},环境变量：{}", this.getName(), arg.getAviatorType(), env);
+
+            return new AviatorString(String.valueOf(arg));
+        }
+
+        @Override
+        public String getName() {
+            return "hook";
+        }
+    }
 
     public static class DefinedFunctionAdd extends AbstractFunction {
         @Override

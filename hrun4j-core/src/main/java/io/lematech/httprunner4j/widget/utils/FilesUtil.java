@@ -123,7 +123,7 @@ public class FilesUtil {
                     String relativePath = file.getParentFile().getCanonicalPath().replace(workDirPath, "");
                     pkgName.append(FilesUtil.dirPath2pkgName(relativePath));
                 } else {
-                    pkgName.append(FilesUtil.dirPath2pkgName(file.getCanonicalPath()));
+                    pkgName.append(FilesUtil.dirPath2pkgName(file.getParent()));
                 }
             } catch (IOException e) {
                 e.printStackTrace();

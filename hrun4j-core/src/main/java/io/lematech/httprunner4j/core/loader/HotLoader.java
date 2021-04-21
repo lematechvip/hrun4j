@@ -51,7 +51,7 @@ public class HotLoader {
             String exceptionMsg = String.format("compile %s occur exception: ",javaFileName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         } catch (ClassNotFoundException e) {
-            String exceptionMsg = String.format("class %s not found exception",pkgClassName);
+            String exceptionMsg = String.format("class %s not found exception: ", pkgClassName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return clazz;
