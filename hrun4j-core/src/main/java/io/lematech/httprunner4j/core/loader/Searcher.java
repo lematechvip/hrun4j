@@ -80,7 +80,7 @@ public class Searcher {
             throw new DefinedException(exceptionMsg);
         }
 
-        File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName.replaceAll("_", "-"), testCaseName));
+        File dataFilePath = new File(pkgClassNameToFilePath(pkgClassName, testCaseName));
         if (runMode == 1) {
             if (dataFilePath.exists() && dataFilePath.isFile()) {
                 return dataFilePath;

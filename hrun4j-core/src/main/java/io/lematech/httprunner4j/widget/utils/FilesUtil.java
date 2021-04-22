@@ -30,14 +30,26 @@ public class FilesUtil {
     public static String dirPath2pkgName(String dirPath) {
         StringBuffer pkgName = new StringBuffer();
         if (StrUtil.isEmpty(dirPath)) {
-            return null;
+            return "";
         }
-
         if (dirPath.startsWith(Constant.DOT_PATH)) {
             dirPath = dirPath.replaceFirst("\\.", "");
         }
-        pkgName.append(dirPath.replaceAll("/", Constant.DOT_PATH));
-        return pkgName.toString();
+        if (dirPath.startsWith("/")) {
+            dirPath = dirPath.replaceFirst("/", "");
+        }
+        if (dirPath.endsWith("/")) {
+            dirPath = RegularUtil.replaceLast(dirPath, "/", "");
+        }
+        if (dirPath.contains("/")) {
+            dirPath = dirPath.replaceAll("/", Constant.DOT_PATH);
+        }
+        pkgName.append(dirPath);
+        String packageName = pkgName.toString();
+        if (!JavaIdentifierUtil.isValidJavaFullClassName(packageName)) {
+            throw new DefinedException(JavaIdentifierUtil.validateIdentifierName(packageName));
+        }
+        return packageName;
     }
 
 
@@ -59,23 +71,13 @@ public class FilesUtil {
     public static Map<String, Set<String>> fileList2TestClass(List<File> listFile) {
         Map<String, Set<String>> fileTestClassMap = Maps.newHashMap();
         for (File file : listFile) {
+            fileValidateAndGetCanonicalPath(file);
             if (FileUtil.isAbsolutePath(file.getPath())) {
                 filePathFlag = false;
             }
-
             if (filePathFlag) {
                 file = new File(RunnerConfig.getInstance().getWorkDirectory().getPath(), file.getPath());
             }
-            if (!file.exists()) {
-                String exceptionMsg = null;
-                try {
-                    exceptionMsg = String.format("file: %s is not exist", file.getCanonicalPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                throw new DefinedException(exceptionMsg);
-            }
-
             fileTraverse(file, fileTestClassMap);
         }
 
@@ -109,31 +111,60 @@ public class FilesUtil {
         }
     }
 
+    /**
+     * get canonical path
+     *
+     * @param file
+     * @return
+     */
+    public static String fileValidateAndGetCanonicalPath(File file) {
+        if (Objects.isNull(file) || !file.exists()) {
+            String exceptionMsg = String.format("file %s does not exist", file.getAbsolutePath());
+            throw new DefinedException(exceptionMsg);
+        }
+        String fileFullPath = null;
+        try {
+            fileFullPath = file.getCanonicalPath();
+        } catch (IOException e) {
+            String exceptionMsg = String.format("file %s get canonical path occur exception: %s", file.getAbsolutePath(), e.getMessage());
+            new DefinedException(exceptionMsg);
+        }
+        return fileFullPath;
+    }
+
     private static void fileToTestClassMap(Map<String, Set<String>> fileTestClassMap, File file) {
         String extName = FileUtil.extName(file);
         if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                 || Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
-            String fileMainName = JavaIdentifierUtil.toValidJavaIdentifier(FileNameUtil.mainName(file.getName()), 0);
+            String fileMainName = FileNameUtil.mainName(file.getName());
+            String fileCanonicalPath = fileValidateAndGetCanonicalPath(file);
+            if (!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)) {
+                String exceptionMsg = String.format("file name:%s  does not match Java identifier(No special characters are allowed. The first character must be '$',' _ ', 'letter'. No special characters such as' - ', 'space', '/' are allowed), in the path: ", fileCanonicalPath);
+                throw new DefinedException(exceptionMsg);
+            }
+            String fileParentCanonicalPath = fileValidateAndGetCanonicalPath(file.getParentFile());
             StringBuffer pkgName = new StringBuffer();
             pkgName.append(RunnerConfig.getInstance().getPkgName());
-            try {
-                if (filePathFlag) {
-                    pkgName.append("_");
-                    String workDirPath = RunnerConfig.getInstance().getWorkDirectory().getCanonicalPath();
-                    String relativePath = file.getParentFile().getCanonicalPath().replace(workDirPath, "");
-                    pkgName.append(FilesUtil.dirPath2pkgName(relativePath));
-                } else {
-                    pkgName.append(FilesUtil.dirPath2pkgName(file.getParent()));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            String filePath;
+            if (filePathFlag) {
+                pkgName.append("_");
+                String workDirPath = fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+                filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
+            } else {
+                filePath = fileParentCanonicalPath;
             }
-            StringBuffer pkgTestClassMetaInfo = new StringBuffer(JavaIdentifierUtil.toValidJavaIdentifier(pkgName.toString(), 1));
+            String transferPackageName = FilesUtil.dirPath2pkgName(filePath);
+            String validatePackageInfo = JavaIdentifierUtil.validateIdentifierName(transferPackageName);
+            if (!StrUtil.isEmpty(validatePackageInfo)) {
+                throw new DefinedException(validatePackageInfo);
+            }
+            pkgName.append(transferPackageName);
+            StringBuffer pkgTestClassMetaInfo = new StringBuffer(pkgName.toString());
             String folderName = file.getParentFile().getName();
-            String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", JavaIdentifierUtil.toValidJavaIdentifier(folderName, 0))));
+            String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
             pkgTestClassMetaInfo.append(Constant.DOT_PATH).append(testClassName);
             String fullTestClassName = pkgTestClassMetaInfo.toString();
-            MyLog.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
+            MyLog.info("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
             if (fileTestClassMap.containsKey(fullTestClassName)) {
                 Set<String> testClassList = fileTestClassMap.get(fullTestClassName);
                 testClassList.add(fileMainName);

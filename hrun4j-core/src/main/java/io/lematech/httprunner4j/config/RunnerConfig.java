@@ -67,12 +67,11 @@ public class RunnerConfig {
     private static RunnerConfig instance = new RunnerConfig();
 
     public void setPkgName(String pkgName) {
-        if (JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
-            this.pkgName = pkgName;
-        } else {
-            String exceptionMsg = String.format("pkg name {} is invalid,not apply java identifier,please modify it", pkgName);
+        if (!JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
+            String exceptionMsg = String.format("The package name %s set is invalid. Please change it", pkgName);
             throw new DefinedException(exceptionMsg);
         }
+        this.pkgName = pkgName;
     }
     private RunnerConfig() {
         testCasePaths = new ArrayList<>();

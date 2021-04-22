@@ -16,108 +16,88 @@ import io.lematech.httprunner4j.common.DefinedException;
 public class JavaIdentifierUtil {
 
     /**
-     * identifierName transfer to valid java  identifier
-     * char value replace '_' if it not validate
+     * validate method、classname valid
+     * tips：Extension support "-", runtime auto transfer "_"
      *
-     * @param identifierName
-     * @param type           0 : 非包名，1：包名
+     * @param className
      * @return
      */
-    public static String toValidJavaIdentifier(String identifierName, Integer type) {
-        if (StrUtil.isEmpty(identifierName)) {
-            String exceptionMsg = String.format(" name {} is invalid,not apply java identifier,please modify it", identifierName);
-            throw new DefinedException(exceptionMsg);
-        }
-        StringBuffer validName = new StringBuffer();
-        char[] nameChars = identifierName.toCharArray();
-        for (int index = 0; index < nameChars.length; index++) {
-            char tmpChar = nameChars[index];
-            if (tmpChar == '.' && type == 1) {
-                validName.append(".");
-                continue;
-            }
-            if (tmpChar == ' ') {
-                continue;
-            }
-            if (index == 0) {
-                if (Character.isJavaIdentifierStart(tmpChar)) {
-                    validName.append(tmpChar);
-                } else {
-                    validName.append("_");
-                }
-            } else {
-                if (Character.isJavaIdentifierPart(tmpChar)) {
-                    validName.append(tmpChar);
-                } else {
-                    validName.append("_");
-                }
-            }
-        }
-        return validName.toString();
-    }
-
-    /**
-     * validate java variable name valid
-     *
-     * @param name
-     * @return
-     */
-    public static boolean isValidJavaIdentifier(String name) {
-        if (StrUtil.isEmpty(name)) {
+    public static boolean isValidJavaIdentifier(String className) {
+        if (StrUtil.isEmpty(className) || !Character.isJavaIdentifierStart(className.charAt(0))) {
             return false;
         }
-        char []nameChars = name.toCharArray();
-        for(int index = 0;index<nameChars.length;index++){
-            char tmpChar = nameChars[index];
-            if(index == 0){
-                if(!Character.isJavaIdentifierStart(tmpChar)){
-                    return false;
-                }
-            }else {
-                if(!Character.isJavaIdentifierPart(tmpChar)){
-                    return false;
-                }
+        String name = className.substring(1);
+        for (int i = 0; i < name.length(); i++) {
+            char tmpChar = name.charAt(i);
+            if (!Character.isJavaIdentifierPart(tmpChar)) {
+                return false;
             }
         }
         return true;
     }
 
     /**
-     * validate package name or validate package and class
+     *  validate package name or validate package and class
      * @param fullName
      * @return
      */
-    public static boolean isValidJavaFullClassName(String fullName){
-        if(fullName.equals("")){
+    public static boolean isValidJavaFullClassName(String fullName) {
+        if (StrUtil.isEmpty(fullName)) {
             return false;
         }
         boolean flag = true;
-        try{
-            if(!fullName.endsWith(Constant.DOT_PATH)){
-                int index = fullName.indexOf(Constant.DOT_PATH);
-                if(index!=-1){
-                    String[] str = fullName.split("\\.");
-                    for(String name : str){
-                        if(name.equals("")){
-                            flag = false;
-                            break;
-                        }else if(!isValidJavaIdentifier(name)){
-                            flag = false;
-                            break;
-                        }
+        if (!fullName.endsWith(Constant.DOT_PATH)) {
+            int index = fullName.indexOf(Constant.DOT_PATH);
+            if (index != -1) {
+                String[] str = fullName.split("\\.");
+                for (String name : str) {
+                    if (StrUtil.isEmpty(name)) {
+                        flag = false;
+                        break;
+                    } else if (!isValidJavaIdentifier(name)) {
+                        flag = false;
+                        break;
                     }
-                }else if(!isValidJavaIdentifier(fullName)){
-                    flag = false;
                 }
-            }else {
+            } else if (!isValidJavaIdentifier(fullName)) {
                 flag = false;
             }
-        }catch(Exception ex){
+        } else {
             flag = false;
-            ex.printStackTrace();
         }
         return flag;
     }
 
+
+    /**
+     * Verify that the package name is valid
+     *
+     * @param identifierName
+     * @return
+     */
+    public static String validateIdentifierName(String identifierName) {
+        String validateInfo = "";
+        if (StrUtil.isEmpty(identifierName)) {
+            return " The package  name cannot be empty";
+        }
+        if (!identifierName.endsWith(Constant.DOT_PATH)) {
+            int index = identifierName.indexOf(Constant.DOT_PATH);
+            if (index != -1) {
+                String[] str = identifierName.split("\\.");
+                for (String name : str) {
+                    if (StrUtil.isEmpty(name)) {
+                        return String.format(" The package name [%s] ,sub package name  cannot be empty", identifierName);
+                    } else if (!isValidJavaIdentifier(name)) {
+                        return String.format(" The package name [%s] ,sub package name [%s] is not valid", identifierName, name);
+                    }
+                }
+            } else if (!isValidJavaIdentifier(identifierName)) {
+                return String.format(" The package name [%s] is not valid", identifierName);
+            }
+        } else {
+            return String.format(" The package name [%s] can not ends with '.'", identifierName);
+        }
+        return validateInfo;
+    }
 
 }

@@ -1,11 +1,13 @@
 package io.lematech.httprunner4j.cli.commands;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestNGEngine;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
@@ -37,7 +39,6 @@ public class Run extends Command {
     @Option(name = "--testjar", usage = "Specifies a jar file that contains aviator exp implemenets.")
     File testJar;
 
-
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         initRunnerConfig();
@@ -46,25 +47,30 @@ public class Run extends Command {
     }
 
     private void initRunnerConfig() {
+        if (testcasePaths.size() == 0) {
+            String exceptionMsg = String.format("The test case path cannot be empty");
+            throw new DefinedException(exceptionMsg);
+        }
+        for (File caseFile : testcasePaths) {
+            if (Objects.isNull(caseFile) || !caseFile.exists()) {
+                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.fileValidateAndGetCanonicalPath(caseFile));
+                throw new DefinedException(exceptionMsg);
+            }
+        }
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File("."));
         } else {
-            if (!Objects.isNull(testJar)) {
-                if (!testJar.exists() || !testJar.isFile()) {
-                    String exceptionMsg = String.format("file: %s is not exist or testjar must set .jar file path", testJar.getAbsolutePath());
-                    throw new DefinedException(exceptionMsg);
-                }
-                if (!FileUtil.isAbsolutePath(testJar.getPath())) {
-                    String exceptionMsg = String.format("testjar path must set absolute path", testJar.getAbsolutePath());
-                    throw new DefinedException(exceptionMsg);
-                }
-                File workFile = testJar.getParentFile();
-                MyLog.info("工作区路径：{}", workFile.getAbsolutePath());
-                RunnerConfig.getInstance().setWorkDirectory(workFile);
-                Properties property = System.getProperties();
-                property.setProperty("user.dir", workFile.getAbsolutePath());
+            if (!testJar.exists() || !testJar.isFile() || !FileUtil.extName(testJar).endsWith("jar")) {
+                String exceptionMsg = String.format("testjar: %s is not exist,not directory or  must set .jar file path"
+                        , FilesUtil.fileValidateAndGetCanonicalPath(testJar));
+                throw new DefinedException(exceptionMsg);
             }
-
+            File workFile = testJar.getParentFile();
+            String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(workFile);
+            MyLog.info("The workspace path：{}", workDirPath);
+            Properties property = System.getProperties();
+            property.setProperty("user.dir", workDirPath);
+            RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
         }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(1);
