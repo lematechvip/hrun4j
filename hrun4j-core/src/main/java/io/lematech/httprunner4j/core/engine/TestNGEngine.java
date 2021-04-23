@@ -1,11 +1,9 @@
 package io.lematech.httprunner4j.core.engine;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
+
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.HotLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;

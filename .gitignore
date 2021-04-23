@@ -29,3 +29,4 @@ hs_err_pid*
 !/logs/
 /hrun4j-core/src/test/resources/test-output/httprunner4j/
 /resources/
+/hrun4j-core/src/test/resources/test-output/

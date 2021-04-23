@@ -62,11 +62,17 @@ public class Searcher {
     public File searchDataFileByRelativePath(String fileRelativePath) {
         if (runMode == 1) {
             fileRelativePath = (workDirectory.endsWith("/") ? workDirectory : workDirectory + File.separator) + fileRelativePath;
+            if (StrUtil.isEmpty(FileUtil.extName(fileRelativePath))) {
+                fileRelativePath = fileRelativePath + Constant.DOT_PATH + testCaseExtName;
+            }
+            return new File(fileRelativePath);
+        } else if (runMode == 2) {
+            String fileName = FileUtil.getName(fileRelativePath);
+            String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
+            String pkgClassName = FilesUtil.dirPath2pkgName(filePathName);
+            return searchDataFileByRule(pkgClassName, fileName);
         }
-        String fileName = FileUtil.getName(fileRelativePath);
-        String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
-        String pkgClassName = FilesUtil.dirPath2pkgName(filePathName);
-        return searchDataFileByRule(pkgClassName, fileName);
+        return null;
     }
 
     /**
@@ -120,8 +126,8 @@ public class Searcher {
     private String pkgClassNameToFilePath(String pkgClassName, String methodName) {
         StringBuffer filePath = new StringBuffer();
         String removePrefixPkgClassName = pkgClassName.replaceFirst(pkgName, "");
-        if (removePrefixPkgClassName.startsWith("_")) {
-            removePrefixPkgClassName = removePrefixPkgClassName.replaceFirst("_", workDirectory);
+        if (removePrefixPkgClassName.startsWith("_") && runMode == 1) {
+            removePrefixPkgClassName = removePrefixPkgClassName.replaceFirst("_", (workDirectory.endsWith("/") ? workDirectory : workDirectory + File.separator));
         }
         String removeSuffixTestName = RegularUtil.replaceLast(removePrefixPkgClassName, "Test", "");
         String caseDirPath = FilesUtil.pkgPath2DirPath(removeSuffixTestName);

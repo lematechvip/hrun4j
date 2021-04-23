@@ -71,7 +71,6 @@ public class FilesUtil {
     public static Map<String, Set<String>> fileList2TestClass(List<File> listFile) {
         Map<String, Set<String>> fileTestClassMap = Maps.newHashMap();
         for (File file : listFile) {
-            fileValidateAndGetCanonicalPath(file);
             if (FileUtil.isAbsolutePath(file.getPath())) {
                 filePathFlag = false;
             }
@@ -151,6 +150,7 @@ public class FilesUtil {
                 String workDirPath = fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
                 filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
             } else {
+                pkgName.append(Constant.DOT_PATH);
                 filePath = fileParentCanonicalPath;
             }
             String transferPackageName = FilesUtil.dirPath2pkgName(filePath);

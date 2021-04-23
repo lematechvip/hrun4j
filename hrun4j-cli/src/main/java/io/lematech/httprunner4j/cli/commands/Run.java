@@ -47,16 +47,7 @@ public class Run extends Command {
     }
 
     private void initRunnerConfig() {
-        if (testcasePaths.size() == 0) {
-            String exceptionMsg = String.format("The test case path cannot be empty");
-            throw new DefinedException(exceptionMsg);
-        }
-        for (File caseFile : testcasePaths) {
-            if (Objects.isNull(caseFile) || !caseFile.exists()) {
-                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.fileValidateAndGetCanonicalPath(caseFile));
-                throw new DefinedException(exceptionMsg);
-            }
-        }
+
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File("."));
         } else {
@@ -71,6 +62,24 @@ public class Run extends Command {
             Properties property = System.getProperties();
             property.setProperty("user.dir", workDirPath);
             RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
+        }
+
+        if (testcasePaths.size() == 0) {
+            String exceptionMsg = String.format("The test case path cannot be empty");
+            throw new DefinedException(exceptionMsg);
+        }
+        List<File> canonicalTestCasePaths = new ArrayList<>();
+        String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+        for (File caseFile : testcasePaths) {
+            File canonicalCaseFile = caseFile;
+            if (!FileUtil.isAbsolutePath(caseFile.getPath())) {
+                canonicalCaseFile = new File(workDirPath, caseFile.getPath());
+            }
+            if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
+                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.fileValidateAndGetCanonicalPath(caseFile));
+                throw new DefinedException(exceptionMsg);
+            }
+            canonicalTestCasePaths.add(canonicalCaseFile);
         }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(1);
