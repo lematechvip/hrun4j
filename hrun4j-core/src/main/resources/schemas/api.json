@@ -4,28 +4,28 @@
   "type": "object",
   "properties": {
     "name": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/name"
+      "$ref": "resource:/schemas/common.json#/definitions/name"
     },
     "base_url": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/base_url"
+      "$ref": "resource:/schemas/common.json#/definitions/base_url"
     },
     "variables": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/variables"
+      "$ref": "resource:/schemas/common.json#/definitions/variables"
     },
     "request": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/request"
+      "$ref": "resource:/schemas/common.json#/definitions/request"
     },
     "setup_hooks": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+      "$ref": "resource:/schemas/common.json#/definitions/hook"
     },
     "teardown_hooks": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+      "$ref": "resource:/schemas/common.json#/definitions/hook"
     },
     "extract": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/extract"
+      "$ref": "resource:/schemas/common.json#/definitions/extract"
     },
     "validate": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/validate"
+      "$ref": "resource:/schemas/common.json#/definitions/validate"
     }
   },
   "required": [

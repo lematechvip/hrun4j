@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.base;
 
+import cn.hutool.core.io.FileUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import io.lematech.httprunner4j.widget.exp.HttpRunner4j;
 import io.lematech.httprunner4j.common.Constant;
@@ -42,32 +43,8 @@ public class TestBase {
     public Object[][] dataProvider(Method method) {
         Object[][] objects;
         this.testCaseName = method.getName();
-        try {
-            objects = new NGDataProvider().dataProvider(fromClassExtractPkg(method.getDeclaringClass().getName()), testCaseName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            String exceptionMsg = String.format("testcase %s ,data provider occur exception: %s", testCaseName, e.getMessage());
-            throw new DefinedException(exceptionMsg);
-        }
+        String packageName = FileUtil.mainName(method.getDeclaringClass().getName());
+        objects = new NGDataProvider().dataProvider(packageName, testCaseName);
         return objects;
-    }
-    /**
-     * method.getDeclaringClass().getPackage().getName()
-     * avoid dyn load class ,getpakcage nullpointerexception
-     * @param className
-     * @return
-     */
-    public String fromClassExtractPkg(String className) {
-        if (className == null) {
-            return null;
-        } else {
-            int index = className.lastIndexOf(Constant.DOT_PATH);
-            if (index == -1) {
-                return "";
-            } else {
-                String ext = className.substring(0,index);
-                return ext;
-            }
-        }
     }
 }

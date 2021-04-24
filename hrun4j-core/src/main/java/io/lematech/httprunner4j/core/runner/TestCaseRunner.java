@@ -27,7 +27,6 @@ import io.lematech.httprunner4j.widget.utils.HttpClientUtil;
 import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

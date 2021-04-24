@@ -36,7 +36,7 @@ public class RunnerConfig {
      * 1： non Standard Java project
      * 2: platform model
      */
-    private int runMode = 2;
+    private RunMode runMode = RunMode.API;
 
     public File getWorkDirectory() {
         return Objects.isNull(this.workDirectory) ? new File(".") : this.workDirectory;
@@ -68,17 +68,30 @@ public class RunnerConfig {
 
     public void setPkgName(String pkgName) {
         if (!JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
-            String exceptionMsg = String.format("The package name %s set is invalid. Please change it", pkgName);
+            String exceptionMsg = String.format("The package name %s is invalid", pkgName);
             throw new DefinedException(exceptionMsg);
         }
         this.pkgName = pkgName;
     }
+
     private RunnerConfig() {
         testCasePaths = new ArrayList<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
     }
-    public static RunnerConfig getInstance(){
+
+    public static RunnerConfig getInstance() {
         return instance;
     }
 
+    /**
+     * @author lematech@foxmail.com
+     * @version 1.0.0
+     * @className RunMode
+     * @description supports cli 、api integration
+     * @created 2021/4/24 5:55 下午
+     * @publicWechat lematech
+     */
+    public enum RunMode {
+        CLI, API, PLATFORM
+    }
 }

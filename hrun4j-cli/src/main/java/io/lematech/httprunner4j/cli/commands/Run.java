@@ -1,6 +1,5 @@
 package io.lematech.httprunner4j.cli.commands;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.cli.Command;
@@ -9,8 +8,6 @@ import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestNGEngine;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
-import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
-import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -35,16 +32,21 @@ public class Run extends Command {
         return "Print run command information.";
     }
 
-    @Option(name = "--verbose", usage = "show method and line number details")
-    private boolean verbose = false;
+    @Option(name = "--ext_name", usage = "Specify the use case extension.")
+    String extName;
+
+    @Option(name = "--pkg_name", usage = "Specify the project package name.")
+    String pkgName;
 
     @Option(name = "--testjar", usage = "Specifies a jar file that contains aviator exp implemenets.")
     File testJar;
 
+    @Option(name = "--i18n", usage = "Internationalization support,support en/zh.")
+    String i18n;
+
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         initRunnerConfig();
-
         TestNGEngine.run();
         return 0;
     }
@@ -73,7 +75,6 @@ public class Run extends Command {
         List<File> canonicalTestCasePaths = new ArrayList<>();
         String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
         FilesUtil.dirPath2pkgName(workDirPath);
-
         for (File caseFile : testcasePaths) {
             File canonicalCaseFile = caseFile;
             String caseFilePath = caseFile.getPath();
@@ -87,7 +88,16 @@ public class Run extends Command {
             }
             canonicalTestCasePaths.add(canonicalCaseFile);
         }
+        if (!StrUtil.isEmpty(pkgName)) {
+            RunnerConfig.getInstance().setPkgName(pkgName);
+        }
+        if (!StrUtil.isEmpty(extName)) {
+            RunnerConfig.getInstance().setTestCaseExtName(extName);
+        }
+        if (!StrUtil.isEmpty(i18n)) {
+            RunnerConfig.getInstance().setI18n(i18n);
+        }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
-        RunnerConfig.getInstance().setRunMode(1);
+        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
     }
 }

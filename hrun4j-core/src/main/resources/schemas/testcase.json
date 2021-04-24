@@ -9,26 +9,26 @@
         {
           "properties": {
             "name": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/name"
+              "$ref": "resource:/schemas/common.json#/definitions/name"
             },
             "request": {
               "description": "define api request directly",
-              "$ref": "resource:/schemas/common.schema.json#/definitions/request"
+              "$ref": "resource:/schemas/common.json#/definitions/request"
             },
             "variables": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/variables"
+              "$ref": "resource:/schemas/common.json#/definitions/variables"
             },
             "extract": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/extract"
+              "$ref": "resource:/schemas/common.json#/definitions/extract"
             },
             "validate": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/validate"
+              "$ref": "resource:/schemas/common.json#/definitions/validate"
             },
             "setup_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             },
             "teardown_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             }
           },
           "required": [
@@ -39,14 +39,14 @@
         {
           "properties": {
             "name": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/name"
+              "$ref": "resource:/schemas/common.json#/definitions/name"
             },
             "api": {
               "description": "api reference, value is api file relative path",
               "type": "string"
             },
             "variables": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/variables"
+              "$ref": "resource:/schemas/common.json#/definitions/variables"
             },
             "extract": {
               "oneOf": [
@@ -57,18 +57,18 @@
                   }
                 },
                 {
-                  "$ref": "resource:/schemas/common.schema.json#/definitions/extract"
+                  "$ref": "resource:/schemas/common.json#/definitions/extract"
                 }
               ]
             },
             "validate": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/validate"
+              "$ref": "resource:/schemas/common.json#/definitions/validate"
             },
             "setup_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             },
             "teardown_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             }
           },
           "required": [
@@ -79,14 +79,14 @@
         {
           "properties": {
             "name": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/name"
+              "$ref": "resource:/schemas/common.json#/definitions/name"
             },
             "testcase": {
               "description": "testcase reference, value is testcase file relative path",
               "type": "string"
             },
             "variables": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/variables"
+              "$ref": "resource:/schemas/common.json#/definitions/variables"
             },
             "extract": {
               "oneOf": [
@@ -97,18 +97,18 @@
                   }
                 },
                 {
-                  "$ref": "resource:/schemas/common.schema.json#/definitions/extract"
+                  "$ref": "resource:/schemas/common.json#/definitions/extract"
                 }
               ]
             },
             "validate": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/validate"
+              "$ref": "resource:/schemas/common.json#/definitions/validate"
             },
             "setup_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             },
             "teardown_hooks": {
-              "$ref": "resource:/schemas/common.schema.json#/definitions/hook"
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
             }
           },
           "required": [
@@ -121,7 +121,7 @@
   },
   "properties": {
     "config": {
-      "$ref": "resource:/schemas/common.schema.json#/definitions/config"
+      "$ref": "resource:/schemas/common.json#/definitions/config"
     },
     "teststeps": {
       "description": "teststep of a testcase",

@@ -43,8 +43,8 @@ public class NGDataProvider {
         String definePackageName = RunnerConfig.getInstance().getPkgName();
         if (pkgName.startsWith(definePackageName)) {
             pkgName = FilesUtil.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
-            if (pkgName.startsWith("_")) {
-                pkgName = pkgName.replaceFirst("_", Constant.DOT_PATH);
+            if (pkgName.startsWith(Constant.UNDERLINE)) {
+                pkgName = pkgName.replaceFirst(Constant.UNDERLINE, Constant.DOT_PATH);
             }
         } else {
             pkgName = FilesUtil.pkgPath2DirPath(pkgName);

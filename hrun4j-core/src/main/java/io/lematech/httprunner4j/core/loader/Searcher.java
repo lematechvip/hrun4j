@@ -27,7 +27,7 @@ public class Searcher {
      * 1： non Standard Java project
      * 2: platform model
      */
-    private Integer runMode;
+    private RunnerConfig.RunMode runMode;
     /**
      * work directory
      */
@@ -53,13 +53,13 @@ public class Searcher {
             filePath = filePath + Constant.DOT_PATH + testCaseExtName;
         }
         File searchFile = null;
-        if (runMode == 1) {
+        if (runMode == RunnerConfig.RunMode.CLI) {
             if (FileUtil.isAbsolutePath(filePath)) {
                 searchFile = new File(filePath);
             } else {
                 searchFile = new File(workDirectory, FilesUtil.filePathDecode(filePath));
             }
-        } else if (runMode == 2) {
+        } else if (runMode == RunnerConfig.RunMode.API) {
             if (!filePath.startsWith(File.separator)) {
                 filePath = File.separator + filePath;
             }
@@ -77,7 +77,7 @@ public class Searcher {
         if (searchFile.exists() && searchFile.isFile()) {
             return searchFile;
         } else {
-            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getParentFile().getAbsolutePath(), searchFile.getName());
+            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FilesUtil.fileValidateAndGetCanonicalPath(searchFile.getParentFile()));
             throw new DefinedException(exceptionMsg);
         }
     }
