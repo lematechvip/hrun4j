@@ -86,16 +86,16 @@ public class JavaIdentifierUtil {
                 String[] str = identifierName.split("\\.");
                 for (String name : str) {
                     if (StrUtil.isEmpty(name)) {
-                        return String.format(" The package name [%s] ,sub package name  cannot be empty", identifierName);
+                        return String.format(" The package/directory name [%s] ,sub package name  cannot be empty", identifierName);
                     } else if (!isValidJavaIdentifier(name)) {
-                        return String.format(" The package name [%s] ,sub package name [%s] is not valid", identifierName, name);
+                        return String.format(" The package/directory name [%s] ,sub package name [%s] is not valid", identifierName, name);
                     }
                 }
             } else if (!isValidJavaIdentifier(identifierName)) {
-                return String.format(" The package name [%s] is not valid", identifierName);
+                return String.format(" The package/directory name [%s] is not valid", identifierName);
             }
         } else {
-            return String.format(" The package name [%s] can not ends with '.'", identifierName);
+            return String.format(" The package/directory name [%s] can not ends with '.'", identifierName);
         }
         return validateInfo;
     }

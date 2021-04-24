@@ -2,12 +2,14 @@ package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestNGEngine;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
@@ -42,12 +44,12 @@ public class Run extends Command {
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         initRunnerConfig();
+
         TestNGEngine.run();
         return 0;
     }
 
     private void initRunnerConfig() {
-
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File("."));
         } else {
@@ -70,10 +72,14 @@ public class Run extends Command {
         }
         List<File> canonicalTestCasePaths = new ArrayList<>();
         String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+        FilesUtil.dirPath2pkgName(workDirPath);
+
         for (File caseFile : testcasePaths) {
             File canonicalCaseFile = caseFile;
-            if (!FileUtil.isAbsolutePath(caseFile.getPath())) {
-                canonicalCaseFile = new File(workDirPath, caseFile.getPath());
+            String caseFilePath = caseFile.getPath();
+            FilesUtil.dirPath2pkgName(caseFilePath);
+            if (!FileUtil.isAbsolutePath(caseFilePath)) {
+                canonicalCaseFile = new File(workDirPath, caseFilePath);
             }
             if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
                 String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.fileValidateAndGetCanonicalPath(caseFile));
