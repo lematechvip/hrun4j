@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.Searcher;
@@ -14,6 +15,7 @@ import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.testng.collections.Maps;
 
 import java.io.File;
@@ -29,12 +31,26 @@ public class NGDataProvider {
     }
 
     public Object[][] dataProvider(String pkgName, String testCaseName) {
+        File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        File dataFilePath = searcher.searchDataFileByRule(pkgName, testCaseName);
         TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                 .load(dataFilePath, TestCase.class);
         Object[][] testCases = getObjects(testCase);
         return testCases;
+    }
+
+    private String caseFilePath(String pkgName, String testCaseName) {
+        String definePackageName = RunnerConfig.getInstance().getPkgName();
+        if (pkgName.startsWith(definePackageName)) {
+            pkgName = FilesUtil.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
+            if (pkgName.startsWith("_")) {
+                pkgName = pkgName.replaceFirst("_", Constant.DOT_PATH);
+            }
+        } else {
+            pkgName = FilesUtil.pkgPath2DirPath(pkgName);
+        }
+        return pkgName + File.separator + testCaseName;
+
     }
 
     private Object[][] getObjects(TestCase testCase) {

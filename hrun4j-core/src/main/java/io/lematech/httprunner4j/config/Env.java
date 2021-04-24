@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
 
@@ -40,15 +41,9 @@ public class Env {
             envMap = new HashMap<>();
             envMap.putAll(System.getenv());
             Properties properties = new Properties();
-            InputStream inputStream = null;
             try {
-                if (runMode == 1) {
-                    String workDir = RunnerConfig.getInstance().getWorkDirectory().getCanonicalPath();
-                    inputStream = new FileInputStream(new File(workDir, Constant.ENV_FILE_NAME));
-                } else if (runMode == 2) {
-                    inputStream = TestCase.class.getClassLoader().getResourceAsStream(Constant.ENV_FILE_NAME);
-                }
-                properties.load(inputStream);
+                File envFile = new Searcher().quicklySearchFile(Constant.ENV_FILE_NAME);
+                properties.load(new FileInputStream(envFile));
                 envMap.putAll((Map) properties);
             } catch (Exception e) {
                 MyLog.warn(Constant.ENV_FILE_NAME + " is not exist");

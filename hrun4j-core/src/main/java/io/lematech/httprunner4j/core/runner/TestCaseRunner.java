@@ -206,7 +206,7 @@ public class TestCaseRunner {
             if (StrUtil.isEmpty(FileUtil.extName(testcase))) {
                 testcase = testcase + Constant.DOT_PATH + extName;
             }
-            File testCasePath = searcher.searchDataFileByRelativePath(testcase);
+            File testCasePath = searcher.quicklySearchFile(testcase);
 
             /**
              * config variables can express to reference testcases
@@ -233,7 +233,7 @@ public class TestCaseRunner {
             if (StrUtil.isEmpty(FileUtil.extName(api))) {
                 api = api + Constant.DOT_PATH + extName;
             }
-            File apiFilePath = searcher.searchDataFileByRelativePath(api);
+            File apiFilePath = searcher.quicklySearchFile(api);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep trsTestStep = (TestStep) objectsExtendsPropertyValue(testStep, apiModel2TestStep(apiModel));
             MyLog.debug("Api：{},TS：{},RS：{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(trsTestStep));

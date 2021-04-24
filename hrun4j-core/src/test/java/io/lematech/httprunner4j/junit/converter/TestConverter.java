@@ -30,7 +30,7 @@ public class TestConverter {
         Searcher searcher = new Searcher();
         TestCaseRunner testCaseRunner = new TestCaseRunner();
         String api = "apis/getToken";
-        File dataFileResourcePath = searcher.searchDataFileByRelativePath(api);
+        File dataFileResourcePath = searcher.quicklySearchFile(api);
         ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
         SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
         TestCase testCase = ObjectConverter.api2TestCase(apiModel);

@@ -10,7 +10,9 @@ import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * @author lematech@foxmail.com
@@ -21,6 +23,18 @@ import java.util.*;
  * @publicWechat lematech
  */
 public class FilesUtil {
+
+    public static String filePathDecode(String filePath) {
+        String decodePath;
+        try {
+            decodePath = URLDecoder.decode(filePath, Constant.CHARSET_UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            String exceptionMsg = String.format("filepath %s decode occur error %s", filePath, e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        }
+        return decodePath;
+    }
+
     /**
      * 路径转包名
      *
@@ -59,9 +73,10 @@ public class FilesUtil {
      */
     public static String pkgPath2DirPath(String pkgPath) {
         if (StrUtil.isEmpty(pkgPath)) {
-            return null;
+            String exceptionMsg = "The package name cannot be empty";
+            throw new DefinedException(exceptionMsg);
         }
-        return pkgPath.replaceAll("\\.", "/");
+        return pkgPath.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
     }
 
     /**
@@ -150,7 +165,6 @@ public class FilesUtil {
                 String workDirPath = fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
                 filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
             } else {
-                pkgName.append(Constant.DOT_PATH);
                 filePath = fileParentCanonicalPath;
             }
             String transferPackageName = FilesUtil.dirPath2pkgName(filePath);
@@ -158,7 +172,7 @@ public class FilesUtil {
             if (!StrUtil.isEmpty(validatePackageInfo)) {
                 throw new DefinedException(validatePackageInfo);
             }
-            pkgName.append(transferPackageName);
+            pkgName.append(Constant.DOT_PATH).append(transferPackageName);
             StringBuffer pkgTestClassMetaInfo = new StringBuffer(pkgName.toString());
             String folderName = file.getParentFile().getName();
             String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
