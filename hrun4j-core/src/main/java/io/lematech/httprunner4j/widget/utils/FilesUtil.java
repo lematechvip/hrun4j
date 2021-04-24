@@ -18,12 +18,18 @@ import java.util.regex.Matcher;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className FileUtil
- * @description TODO
+ * @description fileUtil
  * @created 2021/4/20 1:21 下午
  * @publicWechat lematech
  */
 public class FilesUtil {
 
+    /**
+     * file path decode,support zh
+     *
+     * @param filePath
+     * @return
+     */
     public static String filePathDecode(String filePath) {
         String decodePath;
         try {

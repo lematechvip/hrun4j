@@ -15,11 +15,21 @@ import java.io.IOException;
 import java.util.*;
 
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className HotLoader
+ * @description Hot loader for loading classes files
+ * @created 2021/1/20 4:50 下午
+ * @publicWechat lematech
+ */
+
 public class HotLoader {
     public static Set<Class> hotLoaderClasses = new HashSet<>();
     private static JavaStringCompiler compiler;
-    public static synchronized JavaStringCompiler getInstance(){
-        if(compiler == null){
+
+    public static synchronized JavaStringCompiler getInstance() {
+        if (compiler == null) {
             compiler = new JavaStringCompiler();
         }
         return compiler;
@@ -32,7 +42,7 @@ public class HotLoader {
      * @param source
      * @return
      */
-    public static synchronized Class<?> hotLoadClass(String pkgName,String className,String source){
+    public static synchronized Class<?> hotLoadClass(String pkgName, String className, String source){
         if(StrUtil.isEmpty(className)||StrUtil.isEmpty(source)){
             throw new DefinedException("hot load class occur exception: className or source is empty");
         }

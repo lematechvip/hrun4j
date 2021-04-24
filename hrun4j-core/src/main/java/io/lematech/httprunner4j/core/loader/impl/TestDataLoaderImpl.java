@@ -21,6 +21,16 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className TestDataLoaderImpl
+ * @description Data loading implementation class, support file loading
+ * @created 2021/1/20 4:41 下午
+ * @publicWechat lematech
+ */
+
+
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
     private Yaml yaml;
     private String extName;
@@ -30,6 +40,14 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         yaml = new Yaml(new Constructor(JSONObject.class));
     }
 
+    /**
+     * File serialization to object
+     *
+     * @param testDataName
+     * @param clazz
+     * @param inputStream
+     * @return
+     */
     private T getObject(String testDataName, Class clazz, InputStream inputStream) {
         T result;
         if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
@@ -54,6 +72,13 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         return result;
     }
 
+    /**
+     * File load
+     *
+     * @param fileName
+     * @param clazz
+     * @return
+     */
     @Override
     public T load(File fileName, Class clazz) {
         T testData;

@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className I18NFactory
- * @description TODO
+ * @description I18NFactory
  * @created 2021/3/15 3:40 下午
  * @publicWechat lematech
  */

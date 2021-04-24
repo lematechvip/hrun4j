@@ -23,6 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className NGDataProvider
+ * @description testng data provider and Complete data-driven grouping
+ * @created 2021/1/20 4:41 下午
+ * @publicWechat lematech
+ */
+
 public class NGDataProvider {
     private Searcher searcher;
 
@@ -50,7 +59,6 @@ public class NGDataProvider {
             pkgName = FilesUtil.pkgPath2DirPath(pkgName);
         }
         return pkgName + File.separator + testCaseName;
-
     }
 
     private Object[][] getObjects(TestCase testCase) {
@@ -81,7 +89,6 @@ public class NGDataProvider {
         if (parameters instanceof Map) {
             parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
         }
-
         MyLog.debug("class:{}", parameters.getClass());
         if (parameters instanceof JSONObject) {
             JSONObject jsonObject = (JSONObject) parameters;

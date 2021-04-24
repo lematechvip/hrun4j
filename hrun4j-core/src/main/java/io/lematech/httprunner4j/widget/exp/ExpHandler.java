@@ -23,13 +23,12 @@ import java.util.*;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className ExpressionProcessor
- * @description TODO
+ * @description expression processor
  * @created 2021/1/26 5:20 下午
  * @publicWechat lematech
  */
 @Data
 public class ExpHandler<T> {
-
     private Map<String, Object> currentVariable = new HashMap<>();
     private Map<String, Object> configVars = new HashMap<>();
     private Map<String, Object> testStepVars = new HashMap<>();

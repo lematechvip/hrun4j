@@ -1,12 +1,7 @@
 package io.lematech.httprunner4j.base;
 
 import cn.hutool.core.io.FileUtil;
-import com.googlecode.aviator.AviatorEvaluator;
-import io.lematech.httprunner4j.widget.exp.HttpRunner4j;
-import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
-import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.annotations.*;
 
@@ -16,7 +11,7 @@ import java.lang.reflect.Method;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className TestBase
- * @description TODO
+ * @description Test base classes for pre -, post -, and data loading
  * @created 2021/1/20 4:41 下午
  * @publicWechat lematech
  */

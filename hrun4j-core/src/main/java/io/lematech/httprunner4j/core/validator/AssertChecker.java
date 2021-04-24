@@ -23,7 +23,7 @@ import java.util.*;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className AssertChecker
- * @description TODO
+ * @description assert checker
  * @created 2021/1/22 4:07 下午
  * @publicWechat lematech
  */

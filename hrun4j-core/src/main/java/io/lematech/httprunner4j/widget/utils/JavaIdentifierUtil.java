@@ -8,7 +8,7 @@ import io.lematech.httprunner4j.common.DefinedException;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className JavaIdentifierUtil
- * @description TODO
+ * @description java identifier validation
  * @created 2021/1/28 4:59 下午
  * @publicWechat lematech
  */

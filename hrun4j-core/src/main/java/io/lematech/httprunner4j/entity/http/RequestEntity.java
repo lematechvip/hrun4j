@@ -11,8 +11,8 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className CustomRequest
- * @description TODO
+ * @className RequestEntity
+ * @description request entity
  * @created 2021/1/20 5:01 下午
  * @publicWechat lematech
  */

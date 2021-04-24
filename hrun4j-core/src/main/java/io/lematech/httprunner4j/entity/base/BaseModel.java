@@ -7,7 +7,7 @@ import lombok.Data;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className BaseModel
- * @description TODO
+ * @description base model class
  * @created 2021/1/20 4:41 下午
  * @publicWechat lematech
  */

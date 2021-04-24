@@ -17,6 +17,16 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import java.io.IOException;
 import java.util.Iterator;
 
+
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className SchemaValidator
+ * @description validator schemas
+ * @created 2021/1/22 4:07 下午
+ * @publicWechat lematech
+ */
+
 public class SchemaValidator {
 
     private final static JsonSchemaFactory factory = JsonSchemaFactory.byDefault();

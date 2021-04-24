@@ -19,19 +19,31 @@ import org.uncommons.reportng.HTMLReporter;
 import java.io.File;
 import java.util.*;
 
+
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className TestCaseExecutorEngine
+ * @description testnge engine
+ * @created 2021/4/6 11:30 下午
+ * @publicWechat lematech
+ */
+
 @Data
 public class TestNGEngine {
     private static TestNG testNG;
     private static String suiteName;
     private static SchemaValidator schemaValidator = new SchemaValidator();
     public static Map<String, Set<String>> testCasePkgGroup = new HashMap<>();
-    public static TestNG getInstance(){
-        if(testNG == null){
+
+    public static TestNG getInstance() {
+        if (testNG == null) {
             testNG = new TestNG();
             setDefaultProperties();
         }
         return testNG;
     }
+
     private static void setDefaultProperties(){
         testNG.setDefaultSuiteName("httprunner4j");
         HTMLReporter htmlReporter = new HTMLReporter();
@@ -45,15 +57,19 @@ public class TestNGEngine {
      * @param testListenerList
      * @return
      */
-    public static TestNG addListener(List<ITestListener> testListenerList){
+    public static TestNG addListener(List<ITestListener> testListenerList) {
         getInstance();
-        if(testListenerList.size()>0){
-            for(ITestListener testListener : testListenerList){
+        if (testListenerList.size() > 0) {
+            for (ITestListener testListener : testListenerList) {
                 testNG.addListener(testListener);
             }
         }
         return testNG;
     }
+
+    /**
+     * init testng classes and testng  run
+     */
     public static void run() {
         List<File> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
         testCasePkgGroup = FilesUtil.fileList2TestClass(testCasePaths);
@@ -63,7 +79,8 @@ public class TestNGEngine {
         addTestClasses();
         runNG();
     }
-    private static void runNG(){
+
+    private static void runNG() {
         getInstance().run();
     }
 

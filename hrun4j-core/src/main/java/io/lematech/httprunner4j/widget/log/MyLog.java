@@ -10,7 +10,7 @@ import org.testng.Reporter;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className MyLog
- * @description TODO
+ * @description logger output
  * @created 2021/4/9 3:20 下午
  * @publicWechat lematech
  */

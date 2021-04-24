@@ -13,7 +13,7 @@ import java.util.*;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className RunnerConfig
- * @description TODO
+ * @description Initialize the run configuration parameters
  * @created 2021/1/20 4:41 下午
  * @publicWechat lematech
  */
@@ -31,10 +31,7 @@ public class RunnerConfig {
     }
 
     /**
-     * run model
-     * default 0： Standard Java project
-     * 1： non Standard Java project
-     * 2: platform model
+     * supports cli 、api integration
      */
     private RunMode runMode = RunMode.API;
 
@@ -66,6 +63,11 @@ public class RunnerConfig {
 
     private static RunnerConfig instance = new RunnerConfig();
 
+    /**
+     * set package name
+     *
+     * @param pkgName
+     */
     public void setPkgName(String pkgName) {
         if (!JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
             String exceptionMsg = String.format("The package name %s is invalid", pkgName);
