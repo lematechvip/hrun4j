@@ -1,8 +1,15 @@
 config:
-  name: 测试指定步骤下的request和response信息输出
+  name: 复杂操作案例之获取Token信息
   base_url: http://127.0.0.1:8000
 teststeps:
   - name: 步骤名称
+    setup_hooks:
+      - "${hook(xteststep_setup_hooks1)}"
+      - "${hook(xteststep_setup_hooks2)}"
+      - "${hook(xteststep_setup_hooks3)}"
+      - "${hook(xteststep_setup_hooks4)}"
+      - total1: '${add(1, 5)}'
+      - total2: '${add(3, 5)}'
     api: apis/getToken
     request:
       url: /api/get-token
@@ -52,3 +59,9 @@ teststeps:
         "expect": "ok！"
     teardown_hooks:
       - "${hook(xteststep_teardown_hooks1)}"
+      - "${hook(xteststep_teardown_hooks2)}"
+      - "${hook(xteststep_teardown_hooks3)}"
+      - "${hook(xteststep_teardown_hooks4)}"
+      - total1: '${add(1, 5)}'
+      - total2: '${add(3, 5)}'
+    output: [variables]

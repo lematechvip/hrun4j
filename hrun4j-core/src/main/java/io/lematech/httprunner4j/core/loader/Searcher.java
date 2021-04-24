@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.core.loader;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
@@ -61,11 +62,7 @@ public class Searcher {
      */
     public File searchDataFileByRelativePath(String fileRelativePath) {
         if (runMode == 1) {
-            fileRelativePath = (workDirectory.endsWith("/") ? workDirectory : workDirectory + File.separator) + fileRelativePath;
-            if (StrUtil.isEmpty(FileUtil.extName(fileRelativePath))) {
-                fileRelativePath = fileRelativePath + Constant.DOT_PATH + testCaseExtName;
-            }
-            return new File(fileRelativePath);
+            return new File(workDirectory, fileRelativePath);
         } else if (runMode == 2) {
             String fileName = FileUtil.getName(fileRelativePath);
             String filePathName = RegularUtil.replaceLast(fileRelativePath, fileName, "");
@@ -99,7 +96,7 @@ public class Searcher {
             if (!filePath.startsWith("/")) {
                 filePath = File.separator + filePath;
             }
-            URL url = this.getClass().getResource(filePath);
+            URL url = TestBase.class.getResource(filePath);
             if (Objects.isNull(url)) {
                 String exceptionMsg = String.format("in %s path,not found  %s", dataFilePath.getAbsolutePath(), testCaseName);
                 throw new DefinedException(exceptionMsg);
@@ -129,6 +126,7 @@ public class Searcher {
         if (removePrefixPkgClassName.startsWith("_") && runMode == 1) {
             removePrefixPkgClassName = removePrefixPkgClassName.replaceFirst("_", (workDirectory.endsWith("/") ? workDirectory : workDirectory + File.separator));
         }
+
         String removeSuffixTestName = RegularUtil.replaceLast(removePrefixPkgClassName, "Test", "");
         String caseDirPath = FilesUtil.pkgPath2DirPath(removeSuffixTestName);
         filePath.append(caseDirPath)

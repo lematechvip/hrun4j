@@ -29,7 +29,11 @@ public class Env {
     }
 
     private static Map<String, Object> envMap;
-    private static int runMode = 1;
+    private static int runMode;
+
+    static {
+        runMode = RunnerConfig.getInstance().getRunMode();
+    }
 
     private static synchronized void initializeEnv() {
         if (envMap == null) {

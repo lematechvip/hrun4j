@@ -164,7 +164,7 @@ public class FilesUtil {
             String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
             pkgTestClassMetaInfo.append(Constant.DOT_PATH).append(testClassName);
             String fullTestClassName = pkgTestClassMetaInfo.toString();
-            MyLog.info("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
+            MyLog.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
             if (fileTestClassMap.containsKey(fullTestClassName)) {
                 Set<String> testClassList = fileTestClassMap.get(fullTestClassName);
                 testClassList.add(fileMainName);

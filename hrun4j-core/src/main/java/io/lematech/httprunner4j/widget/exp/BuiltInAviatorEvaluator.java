@@ -6,9 +6,9 @@ import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
-import io.lematech.httprunner4j.HttpRunner4j;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +25,7 @@ import java.util.Objects;
 public class BuiltInAviatorEvaluator {
     static {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
+        AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionAdd());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionSubtract());
@@ -41,6 +42,23 @@ public class BuiltInAviatorEvaluator {
         } catch (Exception e) {
             String exceptionMsg = String.format("execute exp %s occur error: %s", expression, e.getMessage());
             throw new DefinedException(exceptionMsg);
+        }
+    }
+
+    /**
+     * built-in helloWorld
+     */
+    public static class BuiltInFunctionHelloWorld extends AbstractFunction {
+        @Override
+        public AviatorObject call() {
+            String output = "Hello,HttpRunner!!!";
+            MyLog.info(output);
+            return new AviatorString(output);
+        }
+
+        @Override
+        public String getName() {
+            return "helloWorld";
         }
     }
 

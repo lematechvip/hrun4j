@@ -1,11 +1,11 @@
-package io.lematech.httprunner4j.testcases;
+package io.lematech.httprunner4j.demo;
 
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -17,7 +17,8 @@ import org.testng.annotations.Test;
  * @publicWechat lematech
  */
 public class DemoTest extends TestBase {
-    @BeforeSuite
+
+    @BeforeClass
     public void configRunner() {
         RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
     }
@@ -147,15 +148,6 @@ public class DemoTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
-    /**
-     * 简单案例
-     *
-     * @param testCase
-     */
-    @Test(dataProvider = "dataProvider")
-    public void getToken(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
 
 
 }
