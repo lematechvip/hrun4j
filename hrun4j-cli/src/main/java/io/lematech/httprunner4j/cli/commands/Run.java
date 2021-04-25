@@ -41,7 +41,7 @@ public class Run extends Command {
     @Option(name = "--testjar", usage = "Specifies a jar file that contains aviator exp implemenets.")
     File testJar;
 
-    @Option(name = "--i18n", usage = "Internationalization support,support en/zh.")
+    @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
     String i18n;
 
     @Override

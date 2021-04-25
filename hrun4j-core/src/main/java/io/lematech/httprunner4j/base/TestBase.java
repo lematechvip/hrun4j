@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.base;
 
 import cn.hutool.core.io.FileUtil;
+import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.provider.NGDataProvider;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.annotations.*;
@@ -39,7 +40,12 @@ public class TestBase {
         Object[][] objects;
         this.testCaseName = method.getName();
         String packageName = FileUtil.mainName(method.getDeclaringClass().getName());
-        objects = new NGDataProvider().dataProvider(packageName, testCaseName);
+        try {
+            objects = new NGDataProvider().dataProvider(packageName, testCaseName);
+        } catch (Exception e) {
+            String exceptionMsg = String.format("Abnormal testng data loading occurs, and the reason for the exception is as follows: %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        }
         return objects;
     }
 }

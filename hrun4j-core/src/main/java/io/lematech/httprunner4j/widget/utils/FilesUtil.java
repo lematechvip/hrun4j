@@ -98,6 +98,7 @@ public class FilesUtil {
             if (filePathFlag) {
                 file = new File(RunnerConfig.getInstance().getWorkDirectory().getPath(), file.getPath());
             }
+            FilesUtil.fileValidate(file);
             fileTraverse(file, fileTestClassMap);
         }
 
@@ -137,19 +138,23 @@ public class FilesUtil {
      * @param file
      * @return
      */
-    public static String fileValidateAndGetCanonicalPath(File file) {
-        if (Objects.isNull(file) || !file.exists()) {
-            String exceptionMsg = String.format("file %s does not exist", file.getAbsolutePath());
-            throw new DefinedException(exceptionMsg);
-        }
+    public static String getCanonicalPath(File file) {
         String fileFullPath = null;
         try {
             fileFullPath = file.getCanonicalPath();
         } catch (IOException e) {
-            String exceptionMsg = String.format("file %s get canonical path occur exception: %s", file.getAbsolutePath(), e.getMessage());
+            String exceptionMsg = String.format("There is an exception in the canonical path of the file %s, and the exception information is::%s", file.getAbsolutePath(), e.getMessage());
             new DefinedException(exceptionMsg);
         }
         return fileFullPath;
+    }
+
+    public static File fileValidate(File file) {
+        if (Objects.isNull(file) || !file.exists()) {
+            String exceptionMsg = String.format("File %s does not exist", getCanonicalPath(file));
+            throw new DefinedException(exceptionMsg);
+        }
+        return file;
     }
 
     private static void fileToTestClassMap(Map<String, Set<String>> fileTestClassMap, File file) {
@@ -157,18 +162,18 @@ public class FilesUtil {
         if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                 || Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
             String fileMainName = FileNameUtil.mainName(file.getName());
-            String fileCanonicalPath = fileValidateAndGetCanonicalPath(file);
+            String fileCanonicalPath = getCanonicalPath(file);
             if (!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)) {
                 String exceptionMsg = String.format("file name:%s  does not match Java identifier(No special characters are allowed. The first character must be '$',' _ ', 'letter'. No special characters such as' - ', 'space', '/' are allowed), in the path: ", fileCanonicalPath);
                 throw new DefinedException(exceptionMsg);
             }
-            String fileParentCanonicalPath = fileValidateAndGetCanonicalPath(file.getParentFile());
+            String fileParentCanonicalPath = getCanonicalPath(file.getParentFile());
             StringBuffer pkgName = new StringBuffer();
             pkgName.append(RunnerConfig.getInstance().getPkgName());
             String filePath;
             if (filePathFlag) {
                 pkgName.append("_");
-                String workDirPath = fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+                String workDirPath = getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
                 filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
             } else {
                 filePath = fileParentCanonicalPath;

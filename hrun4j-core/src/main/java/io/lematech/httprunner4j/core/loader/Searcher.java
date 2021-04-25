@@ -6,6 +6,7 @@ import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import java.io.File;
 import java.net.URL;
@@ -22,12 +23,11 @@ import java.util.Objects;
 public class Searcher {
 
     /**
-     * run model
-     * default 0： Standard Java project
-     * 1： non Standard Java project
-     * 2: platform model
+     * run mode
+     * supports cli 、api integration
      */
     private RunnerConfig.RunMode runMode;
+
     /**
      * work directory
      */
@@ -80,12 +80,12 @@ public class Searcher {
             String exceptionMsg = String.format("File %s is not exist", filePath);
             throw new DefinedException(exceptionMsg);
         }
-        if (searchFile.exists() && searchFile.isFile()) {
-            return searchFile;
-        } else {
-            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FilesUtil.fileValidateAndGetCanonicalPath(searchFile.getParentFile()));
+        if (!searchFile.exists() || !searchFile.isFile()) {
+            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FilesUtil.getCanonicalPath(searchFile.getParentFile()));
             throw new DefinedException(exceptionMsg);
         }
+        MyLog.info("Run mode: {}, Test case path {}", runMode, FilesUtil.getCanonicalPath(searchFile));
+        return searchFile;
     }
 
 }

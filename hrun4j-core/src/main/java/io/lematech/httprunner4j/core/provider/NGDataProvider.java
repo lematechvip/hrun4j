@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com
@@ -39,6 +40,13 @@ public class NGDataProvider {
         searcher = new Searcher();
     }
 
+    /**
+     * datq provider implement
+     *
+     * @param pkgName
+     * @param testCaseName
+     * @return
+     */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
@@ -48,6 +56,13 @@ public class NGDataProvider {
         return testCases;
     }
 
+    /**
+     * package name and testcase name transfer to file path name
+     *
+     * @param pkgName
+     * @param testCaseName
+     * @return
+     */
     private String caseFilePath(String pkgName, String testCaseName) {
         String definePackageName = RunnerConfig.getInstance().getPkgName();
         if (pkgName.startsWith(definePackageName)) {
@@ -63,7 +78,7 @@ public class NGDataProvider {
 
     private Object[][] getObjects(TestCase testCase) {
         Object[][] testCases;
-        List<TestCase> result = handleMultiGroupData(testCase);
+        List<TestCase> result = handleMultiParametersData(testCase);
         testCases = new Object[result.size()][];
         for (int i = 0; i < result.size(); i++) {
             testCases[i] = new Object[]{result.get(i)};
@@ -79,13 +94,14 @@ public class NGDataProvider {
      * - ["user2", "222222"]
      * - ["user3", "333333"]
      */
-    private List<TestCase> handleMultiGroupData(TestCase testCase) {
+    private List<TestCase> handleMultiParametersData(TestCase testCase) {
         ArrayList<TestCase> result = new ArrayList<>();
         Object parameters = testCase.getConfig().getParameters();
-        if (parameters == null) {
+        if (Objects.isNull(parameters)) {
             result.add(testCase);
             return result;
         }
+        // TODO: 2021/4/25  code review
         if (parameters instanceof Map) {
             parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
         }

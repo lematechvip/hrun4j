@@ -11,6 +11,7 @@ import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -30,43 +31,43 @@ import java.util.Objects;
  * @publicWechat lematech
  */
 
-
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
     private Yaml yaml;
     private String extName;
+    private ObjectMapper mapper;
 
-    public TestDataLoaderImpl() {
-        extName = RunnerConfig.getInstance().getTestCaseExtName();
-        yaml = new Yaml(new Constructor(JSONObject.class));
+    public TestDataLoaderImpl(String extName) {
+        this.extName = extName;
+        this.yaml = new Yaml(new Constructor(JSONObject.class));
+        mapper = new ObjectMapper();
     }
 
     /**
      * File serialization to object
      *
-     * @param testDataName
      * @param clazz
-     * @param inputStream
+     * @param file
      * @return
      */
-    private T getObject(String testDataName, Class clazz, InputStream inputStream) {
+    private T fileSerialization2Object(File file, Class clazz) {
         T result;
-        if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                result = (T) mapper.readValue(inputStream, clazz);
-            } catch (IOException e) {
-                String exceptionMsg = String.format("read file %s.%s occur io exception: %s", testDataName, extName, e.getMessage());
+        String testDataName = file.getName();
+        try {
+            if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
+                result = (T) mapper.readValue(new FileInputStream(file), clazz);
+            } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
+                JSONObject jsonObject = yaml.load(new FileInputStream(file));
+                result = (T) jsonObject.toJavaObject(clazz);
+            } else {
+                String exceptionMsg = String.format("The current format %s is not currently supported,you can implement ITestDataLoader interface and try to override load() method", extName);
                 throw new DefinedException(exceptionMsg);
             }
-        } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
-            JSONObject jsonObject = yaml.load(inputStream);
-            result = (T) jsonObject.toJavaObject(clazz);
-        } else {
-            String exceptionMsg = String.format("not support %s format,you can implement ITestDataLoader.java and try override load() method", extName);
-            throw new DefinedException(exceptionMsg);
-        }
-        if (Objects.isNull(result)) {
-            String exceptionMsg = String.format("文件%s内容不能为空", testDataName);
+            if (Objects.isNull(result)) {
+                String exceptionMsg = String.format("The serialized file %s cannot be empty", testDataName);
+                throw new DefinedException(exceptionMsg);
+            }
+        } catch (IOException e) {
+            String exceptionMsg = String.format("Error in file %s.%s serialization,Exception Information: %s", testDataName, extName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return result;
@@ -74,7 +75,6 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
 
     /**
      * File load
-     *
      * @param fileName
      * @param clazz
      * @return
@@ -82,19 +82,16 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     @Override
     public T load(File fileName, Class clazz) {
         T testData;
-        if (!fileName.exists()) {
-            String exceptionMsg = String.format("file %s not found exception", fileName);
-            throw new DefinedException(exceptionMsg);
-        }
+        FilesUtil.fileValidate(fileName);
         String testDataName = fileName.getName();
         try {
-            testData = getObject(testDataName, clazz, new FileInputStream(fileName));
+            testData = fileSerialization2Object(fileName, clazz);
             String validateResult = SchemaValidator.validateJsonObjectFormat(clazz, testData);
             if (StrUtil.isEmpty(validateResult)) {
                 return testData;
             } else {
                 if (clazz == TestCase.class) {
-                    ApiModel apiModel = (ApiModel) getObject(testDataName, ApiModel.class, new FileInputStream(fileName));
+                    ApiModel apiModel = (ApiModel) fileSerialization2Object(fileName, ApiModel.class);
                     String validateInfo = SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
                     if (StrUtil.isEmpty(validateInfo)) {
                         return (T) ObjectConverter.api2TestCase(apiModel);
@@ -108,7 +105,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            String exceptionMsg = String.format("read file %s.%s occur exception: %s", testDataName, extName, e.getMessage());
+            String exceptionMsg = String.format("An exception occurred in the loading %s file. Exception information:%s", testDataName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
     }

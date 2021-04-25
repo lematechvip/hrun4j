@@ -14,9 +14,9 @@ import io.lematech.httprunner4j.core.runner.TestCaseRunner;
  */
 
 public class TestCaseExecutorEngine {
-    private static TestCaseRunner tdy = null;
+    private static TestCaseRunner tcr = null;
     public static synchronized TestCaseRunner getInstance() {
-        tdy = new TestCaseRunner();
-        return tdy;
+        tcr = new TestCaseRunner();
+        return tcr;
     }
 }
