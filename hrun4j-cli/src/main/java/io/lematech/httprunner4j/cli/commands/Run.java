@@ -57,11 +57,11 @@ public class Run extends Command {
         } else {
             if (!testJar.exists() || !testJar.isFile() || !FileUtil.extName(testJar).endsWith("jar")) {
                 String exceptionMsg = String.format("testjar: %s is not exist,not directory or  must set .jar file path"
-                        , FilesUtil.fileValidateAndGetCanonicalPath(testJar));
+                        , FilesUtil.getCanonicalPath(testJar));
                 throw new DefinedException(exceptionMsg);
             }
             File workFile = testJar.getParentFile();
-            String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(workFile);
+            String workDirPath = FilesUtil.getCanonicalPath(workFile);
             MyLog.info("The workspace path：{}", workDirPath);
             Properties property = System.getProperties();
             property.setProperty("user.dir", workDirPath);
@@ -73,7 +73,7 @@ public class Run extends Command {
             throw new DefinedException(exceptionMsg);
         }
         List<File> canonicalTestCasePaths = new ArrayList<>();
-        String workDirPath = FilesUtil.fileValidateAndGetCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+        String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
         FilesUtil.dirPath2pkgName(workDirPath);
         for (File caseFile : testcasePaths) {
             File canonicalCaseFile = caseFile;
@@ -83,7 +83,7 @@ public class Run extends Command {
                 canonicalCaseFile = new File(workDirPath, caseFilePath);
             }
             if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
-                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.fileValidateAndGetCanonicalPath(caseFile));
+                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.getCanonicalPath(caseFile));
                 throw new DefinedException(exceptionMsg);
             }
             canonicalTestCasePaths.add(canonicalCaseFile);
