@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
-import io.lematech.httprunner4j.widget.exp.ExpHandler;
+import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -30,10 +30,10 @@ import java.util.*;
 
 
 public class AssertChecker {
-    private ExpHandler expHandler;
+    private ExpProcessor expProcessor;
 
-    public AssertChecker(ExpHandler expHandler) {
-        this.expHandler = expHandler;
+    public AssertChecker(ExpProcessor expProcessor) {
+        this.expProcessor = expProcessor;
     }
 
     private static Map<String, String> alisaMap = new HashMap<>();
@@ -124,7 +124,7 @@ public class AssertChecker {
          * expression evaluation: sum(a+b)
          */
         if (RegExpUtil.isExp(exp)) {
-            return expHandler.executeStringExpression(exp);
+            return expProcessor.dynHandleContainsExpObject(exp);
         } else if (exp.startsWith("^") && exp.endsWith("$")) {
             String expression = exp.substring(1, exp.length() - 1);
             String regSearch = RegExpUtil.findString(expression, respStr);

@@ -13,6 +13,7 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
+import io.lematech.httprunner4j.core.processor.PreAndPostProcessor;
 import io.lematech.httprunner4j.core.validator.AssertChecker;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
@@ -22,7 +23,7 @@ import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
-import io.lematech.httprunner4j.widget.exp.ExpHandler;
+import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.widget.utils.HttpClientUtil;
 import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -42,7 +43,11 @@ import java.util.*;
  * @publicWechat lematech
  */
 public class TestCaseRunner {
-    private ExpHandler expHandler;
+
+    /**
+     * expression processor
+     */
+    private ExpProcessor expProcessor;
     /**
      * testcase context variables
      */
@@ -53,6 +58,9 @@ public class TestCaseRunner {
      */
     private Map<String, Object> testStepConfigVariable;
 
+    /**
+     * seracher file by file path
+     */
     private Searcher searcher;
 
     /**
@@ -60,23 +68,30 @@ public class TestCaseRunner {
      */
     private AssertChecker assertChecker;
 
+    /**
+     * Pre - and post-processor
+     */
+    private PreAndPostProcessor preAndPostProcessor;
+
     public TestCaseRunner() {
-        expHandler = new ExpHandler();
+        expProcessor = new ExpProcessor();
         testContextVariable = Maps.newHashMap();
         searcher = new Searcher();
-        assertChecker = new AssertChecker(expHandler);
+        assertChecker = new AssertChecker(expProcessor);
     }
 
     /**
-     * real execute testcase logic
+     * Actual execution of the test case logic
      */
     public void execute(TestCase testCase) {
+        Config config = (Config) expProcessor.dynHandleContainsExpObject(testCase.getConfig());
         List<TestStep> testSteps = testCase.getTestSteps();
-        Config config = (Config) expHandler.executeExpression(testCase.getConfig());
         setupHook(config);
+        preAndPostProcessor.preProcess();
         for (int index = 0; index < testSteps.size(); index++) {
             testStepConfigVariable = Maps.newHashMap();
-            MyLog.info("步骤 : {}", testSteps.get(index).getName());
+            preAndPostProcessor.preProcess();
+            MyLog.info("当前步骤 : {}", testSteps.get(index).getName());
             Map configVariables = Objects.isNull(config) ? Maps.newHashMap() : (Map) config.getVariables();
             TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), configVariables);
             RequestEntity initializeRequestEntity = testStep.getRequest();
@@ -85,17 +100,19 @@ public class TestCaseRunner {
             }
             testStepConfigVariable.put("request", initializeRequestEntity);
             setupHook(testStep);
-            expHandler.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
-            RequestEntity requestEntity = (RequestEntity) expHandler.executeExpression(initializeRequestEntity);
+            expProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
+            RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
             requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
             ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
             List<Map<String, Object>> validateList = testStep.getValidate();
             testStepConfigVariable.put("response", responseEntity);
             teardownHook(testStep);
+            preAndPostProcessor.postProcess();
             assertChecker.assertList(validateList, responseEntity, this.testStepConfigVariable);
             extractVariables(testStep.getExtract(), responseEntity);
         }
         teardownHook(config);
+        preAndPostProcessor.postProcess();
     }
 
     private void setupHook(Object obj) {
@@ -118,7 +135,7 @@ public class TestCaseRunner {
                 hookObj = transConfig.getTeardownHooks();
             }
             MyLog.info("执行配置{}方法集：", type);
-            result = expHandler.handleHookExp(hookObj);
+            result = expProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll(MapUtil.isEmpty((Map) transConfig.getVariables()) ? Maps.newHashMap() : (Map) transConfig.getVariables());
             variablesMap.putAll(MapUtil.isEmpty(result) ? Maps.newHashMap() : result);
@@ -134,7 +151,7 @@ public class TestCaseRunner {
                 return;
             }
             MyLog.info("执行步骤{}方法集：", type);
-            result = expHandler.handleHookExp(hookObj);
+            result = expProcessor.handleHookExp(hookObj);
             Map variablesMap = Maps.newHashMap();
             variablesMap.putAll((Map) transTestStep.getVariables());
             variablesMap.putAll(result);

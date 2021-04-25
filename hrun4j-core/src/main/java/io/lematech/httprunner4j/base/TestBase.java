@@ -42,6 +42,8 @@ public class TestBase {
         String packageName = FileUtil.mainName(method.getDeclaringClass().getName());
         try {
             objects = new NGDataProvider().dataProvider(packageName, testCaseName);
+        } catch (DefinedException e) {
+            throw e;
         } catch (Exception e) {
             String exceptionMsg = String.format("Abnormal testng data loading occurs, and the reason for the exception is as follows: %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
