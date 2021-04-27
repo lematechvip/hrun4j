@@ -62,6 +62,9 @@ public class PreAndPostProcessor {
 
     }
 
+    /**
+     * @param transTestStep
+     */
     private void outputVariables(TestStep transTestStep) {
         List outputs = transTestStep.getOutput();
         if (!Objects.isNull(outputs)) {

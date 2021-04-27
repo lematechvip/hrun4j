@@ -140,7 +140,7 @@ public class TestCaseRunner {
             if (referenceCaseVariables instanceof Map) {
                 tcConfig.setVariables(objectConverter.mapExtendsKeyValue(variables, (Map) referenceCaseVariables));
             } else {
-                MyLog.warn("Reference test case %s, configuration variable type is not Map type", testcase);
+                MyLog.warn("Reference test case {}, configuration variable type is not Map type", testcase);
             }
             this.execute(testCase);
         }

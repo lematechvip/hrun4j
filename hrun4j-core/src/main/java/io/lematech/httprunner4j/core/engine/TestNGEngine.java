@@ -84,7 +84,10 @@ public class TestNGEngine {
         getInstance().run();
     }
 
-    private static void addTestClasses(){
+    /**
+     * Dynamically construct test cases
+     */
+    private static void addTestClasses() {
         List<Class> classes = new ArrayList<>();
         for (Map.Entry<String, Set<String>> entry : testCasePkgGroup.entrySet()) {
             String fullTestClassName = entry.getKey();

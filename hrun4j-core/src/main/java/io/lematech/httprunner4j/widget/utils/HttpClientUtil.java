@@ -405,12 +405,12 @@ public class HttpClientUtil {
         Map<String, String> headers = requestEntity.getHeaders();
         RequestParameterEntity requestParameterEntity = new RequestParameterEntity();
         BeanUtil.copyProperties(requestEntity, requestParameterEntity);
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestUrl"), SmallUtil.emptyIfNull(requestEntity.getUrl())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestMethod"), SmallUtil.emptyIfNull(requestEntity.getMethod())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestHeader"), SmallUtil.emptyIfNull(requestEntity.getHeaders())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestCookie"), SmallUtil.emptyIfNull(requestEntity.getCookies())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestParameter"), SmallUtil.emptyIfNull(requestEntity.getParams())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("requestJson"), SmallUtil.emptyIfNull(requestEntity.getJson())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.url"), SmallUtil.emptyIfNull(requestEntity.getUrl())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.method"), SmallUtil.emptyIfNull(requestEntity.getMethod())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.header"), SmallUtil.emptyIfNull(requestEntity.getHeaders())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.cookie"), SmallUtil.emptyIfNull(requestEntity.getCookies())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), SmallUtil.emptyIfNull(requestEntity.getParams())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.json"), SmallUtil.emptyIfNull(requestEntity.getJson())));
         if (HttpConstant.GET.equalsIgnoreCase(requestEntity.getMethod())) {
             responseEntity = doGet(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
@@ -425,11 +425,11 @@ public class HttpClientUtil {
         if (Objects.isNull(responseEntity)) {
             throw new DefinedException("The interface response information cannot be empty!");
         }
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseStatusCode"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseBody"), SmallUtil.emptyIfNull(responseEntity.getContent())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseTime"), SmallUtil.emptyIfNull(responseEntity.getTime())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseHeader"), SmallUtil.emptyIfNull(responseEntity.getHeaders())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("responseCookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getContent())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.time"), SmallUtil.emptyIfNull(responseEntity.getTime())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(responseEntity.getHeaders())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));
         return responseEntity;
     }
 }
