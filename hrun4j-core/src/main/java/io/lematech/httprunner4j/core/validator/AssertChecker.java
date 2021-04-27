@@ -103,7 +103,7 @@ public class AssertChecker {
         if (!methodAlisaMap.containsKey(comparatorName)) {
             throw new DefinedException(String.format("Validation methods %s are not currently supported. The list of supported method names is:%s", comparatorName, methodAlisaMap));
         }
-        String exp = comparator.getCheck();
+        Object exp = comparator.getCheck();
         Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity, env);
         MyLog.debug("Expression: {}, The extracted value is : {}", exp, actual);
         String assertKeyInfo = String.format("%s%s%s%s%s%s%s", I18NFactory.getLocaleMessage("assert.check.point"), exp
@@ -155,7 +155,7 @@ public class AssertChecker {
                         String exceptionMsg = "Verify that the expression is ill-formatted,correct Format eg: '-eq: [statusCode, 200]'";
                         throw new DefinedException(exceptionMsg);
                     }
-                    comparator.setCheck(String.valueOf(objValues.get(0)));
+                    comparator.setCheck(objValues.get(0));
                     comparator.setExpect(objValues.get(1));
                 }
             }

@@ -41,47 +41,30 @@ public class DataExtractor {
      * @param responseEntity
      * @return
      */
-    public Object handleExpDataExtractor(String exp, ResponseEntity responseEntity, Map<String, Object> env) {
-        if (StrUtil.isEmpty(exp)) {
+    public Object handleExpDataExtractor(Object exp, ResponseEntity responseEntity, Map<String, Object> env) {
+        if (!(exp instanceof String) || Objects.isNull(exp)) {
+            return exp;
+        }
+        String expStr = String.valueOf(exp);
+        if (StrUtil.isEmpty(expStr)) {
             return "";
         }
         Object dataExtractorValue;
         String responseStr = JSON.toJSONString(responseEntity);
-        if (RegExpUtil.isExp(exp)) {
-            dataExtractorValue = expProcessor.handleStringExp(exp);
-        } else if (exp.startsWith(Constant.DATA_EXTRACTOR_REGEX_START) && exp.endsWith(Constant.DATA_EXTRACTOR_REGEX_END)) {
-            String expression = exp.substring(1, exp.length() - 1);
+        if (RegExpUtil.isExp(expStr)) {
+            dataExtractorValue = expProcessor.handleStringExp(expStr);
+        } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_REGEX_START) && expStr.endsWith(Constant.DATA_EXTRACTOR_REGEX_END)) {
+            String expression = expStr.substring(1, expStr.length() - 1);
             dataExtractorValue = RegExpUtil.findString(expression, responseStr);
-        } else if (exp.startsWith(Constant.DATA_EXTRACTOR_JSONPATH_START)) {
-            dataExtractorValue = JsonUtil.getJsonPathResult(exp, responseStr);
+        } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_JSONPATH_START)) {
+            dataExtractorValue = JsonUtil.getJsonPathResult(expStr, responseStr);
         } else {
-            try {
-                JsonNode jsonNode = JsonUtil.getJmesPathResult(exp, responseStr);
-                dataExtractorValue = getJsonNodeValue(jsonNode);
-            } catch (Exception e) {
-                dataExtractorValue = exp;
-            }
+            dataExtractorValue = JsonUtil.getJmesPathResult(expStr, responseStr);
         }
         return dataExtractorValue;
     }
 
-    /**
-     * Gets the data value of the node
-     *
-     * @param jsonNode
-     * @return
-     */
-    private Object getJsonNodeValue(JsonNode jsonNode) {
-        if (jsonNode.isBoolean()) {
-            return jsonNode.asBoolean();
-        } else if (jsonNode.isDouble() || jsonNode.isFloat()) {
-            return jsonNode.asDouble();
-        } else if (jsonNode.isInt()) {
-            return jsonNode.asInt();
-        } else {
-            return jsonNode.asText();
-        }
-    }
+
 
     /**
      * Extract data according to the extraction rules
@@ -124,7 +107,7 @@ public class DataExtractor {
                 String exceptionMsg = String.format("The data extraction rule cannot be empty");
                 throw new DefinedException(exceptionMsg);
             }
-            String expValue = String.valueOf(entry.getValue());
+            Object expValue = entry.getValue();
             String extractValue = (String) handleExpDataExtractor(expValue, responseEntity, testStepConfigVariable);
             if (extractValue.equals(expValue)) {
                 String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rulel", expValue);
