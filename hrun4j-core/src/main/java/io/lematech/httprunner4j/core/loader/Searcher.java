@@ -88,4 +88,24 @@ public class Searcher {
         return searchFile;
     }
 
+    /**
+     * @param dataFileType
+     * @param directoryName
+     * @return
+     */
+    public String spliceFilePath(String dataFileType, String directoryName) {
+        if (!dataFileType.startsWith(directoryName + File.separator) &&
+                !dataFileType.startsWith(File.separator + directoryName + File.separator)) {
+            dataFileType = directoryName + File.separator + dataFileType;
+        }
+        if (FileUtil.isAbsolutePath(dataFileType)) {
+            dataFileType = Constant.DOT_PATH + dataFileType;
+        }
+        if (StrUtil.isEmpty(FileUtil.extName(dataFileType))) {
+            dataFileType = dataFileType + Constant.DOT_PATH + testCaseExtName;
+        }
+        return dataFileType;
+    }
+
+
 }

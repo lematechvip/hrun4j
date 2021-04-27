@@ -121,7 +121,7 @@ public class NGDataProvider {
                         try {
                             cpTestCase = objectMapper.readValue(objectMapper.writeValueAsString(testCase), TestCase.class);
                         } catch (JsonProcessingException e) {
-                            String exceptionMsg = String.format("testcase deep copy exception : %s", e.getMessage());
+                            String exceptionMsg = String.format("An exception occurred in the deep copy of the test case ,Exception Informations:  %s", e.getMessage());
                             throw new DefinedException(exceptionMsg);
                         }
                         Map<String, Object> configVariables = (Map) cpTestCase.getConfig().getVariables();

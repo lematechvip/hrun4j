@@ -35,14 +35,14 @@ public class FilesUtil {
         try {
             decodePath = URLDecoder.decode(filePath, Constant.CHARSET_UTF_8);
         } catch (UnsupportedEncodingException e) {
-            String exceptionMsg = String.format("filepath %s decode occur error %s", filePath, e.getMessage());
+            String exceptionMsg = String.format("The file %s encoding is abnormal,Exception information:%s", filePath, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return decodePath;
     }
 
     /**
-     * 路径转包名
+     * Path subcontract name
      *
      * @param dirPath
      * @return
@@ -55,14 +55,14 @@ public class FilesUtil {
         if (dirPath.startsWith(Constant.DOT_PATH)) {
             dirPath = dirPath.replaceFirst("\\.", "");
         }
-        if (dirPath.startsWith("/")) {
-            dirPath = dirPath.replaceFirst("/", "");
+        if (dirPath.startsWith(File.separator)) {
+            dirPath = dirPath.replaceFirst(File.separator, "");
         }
-        if (dirPath.endsWith("/")) {
-            dirPath = RegularUtil.replaceLast(dirPath, "/", "");
+        if (dirPath.endsWith(File.separator)) {
+            dirPath = SmallUtil.replaceLast(dirPath, File.separator, "");
         }
-        if (dirPath.contains("/")) {
-            dirPath = dirPath.replaceAll("/", Constant.DOT_PATH);
+        if (dirPath.contains(File.separator)) {
+            dirPath = dirPath.replaceAll(File.separator, Constant.DOT_PATH);
         }
         pkgName.append(dirPath);
         String packageName = pkgName.toString();
@@ -164,7 +164,7 @@ public class FilesUtil {
             String fileMainName = FileNameUtil.mainName(file.getName());
             String fileCanonicalPath = getCanonicalPath(file);
             if (!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)) {
-                String exceptionMsg = String.format("file name:%s  does not match Java identifier(No special characters are allowed. The first character must be '$',' _ ', 'letter'. No special characters such as' - ', 'space', '/' are allowed), in the path: ", fileCanonicalPath);
+                String exceptionMsg = String.format("File name:%s  does not match Java identifier(No special characters are allowed. The first character must be '$',' _ ', 'letter'. No special characters such as' - ', 'space', '/' are allowed), in the path: ", fileCanonicalPath);
                 throw new DefinedException(exceptionMsg);
             }
             String fileParentCanonicalPath = getCanonicalPath(file.getParentFile());
@@ -189,7 +189,7 @@ public class FilesUtil {
             String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
             pkgTestClassMetaInfo.append(Constant.DOT_PATH).append(testClassName);
             String fullTestClassName = pkgTestClassMetaInfo.toString();
-            MyLog.debug("full test class name is：{},class file is：{},method name is：{}", fullTestClassName, testClassName, fileMainName);
+            MyLog.debug("Complete class package name:{}, filename: {},method name: {}", fullTestClassName, testClassName, fileMainName);
             if (fileTestClassMap.containsKey(fullTestClassName)) {
                 Set<String> testClassList = fileTestClassMap.get(fullTestClassName);
                 testClassList.add(fileMainName);
@@ -199,7 +199,7 @@ public class FilesUtil {
                 fileTestClassMap.put(fullTestClassName, testClassList);
             }
         } else {
-            MyLog.debug("in pkgPath {} file {} not support,only support .json or.yml suffix", file.getPath(), file.getName());
+            MyLog.debug("Current file {}.{} format support, only support YML or JSON file suffix", file.getPath(), file.getName());
         }
     }
 

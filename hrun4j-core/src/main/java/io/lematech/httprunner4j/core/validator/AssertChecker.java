@@ -3,21 +3,23 @@ package io.lematech.httprunner4j.core.validator;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Maps;
+import com.sun.tools.javac.comp.Check;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.core.processor.DataExtractor;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
 import io.lematech.httprunner4j.core.processor.ExpProcessor;
-import io.lematech.httprunner4j.widget.utils.JsonUtil;
-import io.lematech.httprunner4j.widget.utils.RegExpUtil;
+import io.lematech.httprunner4j.widget.i18n.I18NFactory;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
+
 
 /**
  * @author lematech@foxmail.com
@@ -30,27 +32,59 @@ import java.util.*;
 
 
 public class AssertChecker {
-    private ExpProcessor expProcessor;
+
+    /**
+     * Data extractor
+     */
+    private DataExtractor dataExtractor;
 
     public AssertChecker(ExpProcessor expProcessor) {
-        this.expProcessor = expProcessor;
+        dataExtractor = new DataExtractor(expProcessor);
     }
 
     private static Map<String, String> alisaMap = new HashMap<>();
+    /**
+     * Built-in method alias manager
+     */
+    private static Map<String, String> builtInAlisaMap = new HashMap<>();
 
+    /**
+     * Dynamically build matcher object
+     *
+     * @param comparatorName
+     * @param params
+     * @param expect
+     * @return
+     */
     private static Matcher buildMatcherObj(String comparatorName, List<String> params, Object expect) {
-        Object obj = null;
+        Object obj;
         try {
             Class<?> clzValue = Class.forName("org.hamcrest.Matchers");
             String methodName = alisaMap.containsKey(comparatorName) ? alisaMap.get(comparatorName) : comparatorName;
-            Method method = clzValue.getMethod(methodName, Class.forName(params.get(0)));
+            Method method = null;
+            if (params.size() == 0) {
+                method = clzValue.getMethod(methodName);
+            } else if (params.size() == 1) {
+                method = clzValue.getMethod(methodName, Class.forName(params.get(0)));
+            } else if (params.size() == 2) {
+                method = clzValue.getMethod(methodName, Class.forName(params.get(0)), Class.forName(params.get(1)));
+            }
             obj = method.invoke(null, expect);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            String exceptionMsg = String.format("Class not found exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (NoSuchMethodException e) {
+            String exceptionMsg = String.format("No such method exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            String exceptionMsg = String.format("Illegal access exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            String exceptionMsg = String.format("Invocation target exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (Exception e) {
+            String exceptionMsg = String.format("Dynamically build matcher object exceptions, exception information:: %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
         }
         return (Matcher)obj;
     }
@@ -61,8 +95,55 @@ public class AssertChecker {
      */
     public void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
+        Comparator comparator = buildComparator(objectMap);
+        String comparatorName = comparator.getComparator();
+        if (StrUtil.isEmpty(comparatorName)) {
+            throw new DefinedException("The validation method name cannot be empty");
+        }
+        if (!methodAlisaMap.containsKey(comparatorName)) {
+            throw new DefinedException(String.format("Validation methods %s are not currently supported. The list of supported method names is:%s", comparatorName, methodAlisaMap));
+        }
+        String exp = comparator.getCheck();
+        Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity, env);
+        MyLog.debug("Expression: {}, The extracted value is : {}", exp, actual);
+        String assertKeyInfo = String.format("%s%s%s%s%s%s%s", I18NFactory.getLocaleMessage("assert.check.point"), exp
+                , I18NFactory.getLocaleMessage("assert.expect.value"), comparator.getExpect()
+                , I18NFactory.getLocaleMessage("assert.actual.value"), actual
+                , I18NFactory.getLocaleMessage("assert.check.result"));
+        try {
+            Class<?> clz = Class.forName("org.junit.Assert");
+            Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
+            method.invoke(null, actual
+                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), comparator.getExpect()));
+            MyLog.info(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.pass"));
+        } catch (ClassNotFoundException e) {
+            String exceptionMsg = String.format("Class not found exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (NoSuchMethodException e) {
+            String exceptionMsg = String.format("No such method exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (IllegalAccessException e) {
+            String exceptionMsg = String.format("Illegal access exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (InvocationTargetException targetException) {
+            MyLog.error(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.fail"));
+            throw new AssertionError(targetException.getCause());
+        } catch (Exception e) {
+            String exceptionMsg = String.format("Unknown exception occurs in the process of verifying data. Exception information: %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        }
+        return;
+    }
+
+    /**
+     * Build a comparator dynamically
+     *
+     * @param objectMap
+     * @return
+     */
+    private Comparator buildComparator(Map<String, Object> objectMap) {
         Comparator comparator = new Comparator();
-        if (objectMap.containsKey("check") && objectMap.containsKey("expect")) {
+        if (objectMap.containsKey(Constant.ASSERT_CHECK) && objectMap.containsKey(Constant.ASSERT_EXPECT)) {
             comparator = JSON.parseObject(JSON.toJSONString(objectMap), Comparator.class);
         } else {
             for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
@@ -70,90 +151,26 @@ public class AssertChecker {
                 Object objValue = entry.getValue();
                 if (objValue instanceof List) {
                     List<Object> objValues = (List) objValue;
-                    if (objValues.size() == 2) {
-                        comparator.setCheck(String.valueOf(objValues.get(0)));
-                        comparator.setExpect(objValues.get(1));
-                    } else {
-                        String exceptionMsg = "校验表达式格式有误";
+                    if (objValues.size() != 2) {
+                        String exceptionMsg = "Verify that the expression is ill-formatted,correct Format eg: '-eq: [statusCode, 200]'";
                         throw new DefinedException(exceptionMsg);
                     }
+                    comparator.setCheck(String.valueOf(objValues.get(0)));
+                    comparator.setExpect(objValues.get(1));
                 }
             }
         }
-        String comparatorName = comparator.getComparator();
-        if (StrUtil.isEmpty(comparatorName)) {
-            throw new DefinedException("比较器名称不能为空");
-        }
-        if (!methodAlisaMap.containsKey(comparatorName)) {
-            throw new DefinedException(String.format("当前不支持 %s 比较器，已支持方法名称列表：%s", comparatorName, methodAlisaMap));
-        }
-        String exp = comparator.getCheck();
-        Object actual = dataTransfer(exp, responseEntity, env);
-        MyLog.debug("表达式：{},提取结果：{}", exp, actual);
-        try {
-            Class<?> clz = Class.forName("org.junit.Assert");
-            Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
-            method.invoke(null, comparator.getExpect()
-                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), actual));
-            MyLog.info("检查点：{},预期值：{},实际值：{},校验结果：通过", exp, comparator.getExpect(), actual);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException targetException) {
-            MyLog.error("检查点：{}，预期值：{}，实际值：{}，校验结果：失败", exp, comparator.getExpect(), actual);
-            String exceptionMsg = String.format("检查点：%s，校验失败，%s", comparator.getCheck(), targetException.getCause().toString());
-            throw new AssertionError(exceptionMsg);
-        }
-        return;
+        return comparator;
     }
+
 
     /**
-     * support regex/jsonpath/jmespath expression evaluator
+     * List with assertions
      *
-     * @param exp
+     * @param mapList
      * @param responseEntity
-     * @return
+     * @param env
      */
-    public Object dataTransfer(String exp, ResponseEntity responseEntity, Map<String, Object> env) {
-        if (StringUtils.isEmpty(exp)) {
-            return "";
-        }
-        String respStr = JSON.toJSONString(responseEntity);
-        /**
-         * expression evaluation: sum(a+b)
-         */
-        if (RegExpUtil.isExp(exp)) {
-            return expProcessor.dynHandleContainsExpObject(exp);
-        } else if (exp.startsWith("^") && exp.endsWith("$")) {
-            String expression = exp.substring(1, exp.length() - 1);
-            String regSearch = RegExpUtil.findString(expression, respStr);
-            return regSearch;
-        } else if (exp.startsWith("$.")) {
-            return JsonUtil.getJsonPathResult(exp, respStr);
-        } else {
-            JsonNode jsonNode;
-            try {
-                jsonNode = JsonUtil.getJmesPathResult(exp, respStr);
-                return typeTransfer(jsonNode);
-            } catch (Exception e) {
-                return exp;
-            }
-        }
-    }
-
-    private static Object typeTransfer(JsonNode jsonNode) {
-        if (jsonNode.isBoolean()) {
-            return jsonNode.asBoolean();
-        } else if (jsonNode.isDouble() || jsonNode.isFloat()) {
-            return jsonNode.asDouble();
-        } else if (jsonNode.isInt()) {
-            return jsonNode.asInt();
-        } else {
-            return jsonNode.asText();
-        }
-    }
-
     public void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity, Map<String, Object> env) {
         if (Objects.isNull(mapList)) {
             return;
@@ -163,16 +180,19 @@ public class AssertChecker {
         }
     }
 
+    /**
+     * @return
+     */
     public static Map<String, List> comparatorAlisaMap() {
-        Map<String, List> methodMap = new HashMap<>();
+        Map<String, List> methodMap = Maps.newHashMap();
         try {
             Class matcherClz = Class.forName("org.hamcrest.Matchers");
-            Method [] methods = matcherClz.getDeclaredMethods();
-            for(Method method : methods){
+            Method[] methods = matcherClz.getDeclaredMethods();
+            for (Method method : methods) {
                 Type[] types = method.getParameterTypes();
                 String methodName = method.getName();
                 List<String> typeList = new ArrayList<>();
-                for(Type type : types){
+                for (Type type : types){
                     typeList.add(type.getTypeName());
                 }
                 methodMap.put(methodName,typeList);
@@ -184,31 +204,49 @@ public class AssertChecker {
                         methodMap.put(methodAlisa,typeList);
                     }else {
                         String overrideMethodName = String.format("%s_%s",methodAlisa,parameterSize);
-                        methodMap.put(overrideMethodName,typeList);
+                        methodMap.put(overrideMethodName, typeList);
                     }
                 }
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            String exceptionMsg = String.format("Class not found exception %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
         }
         return methodMap;
     }
-    private static boolean isSetAlisa(String methodName){
+
+    /**
+     * Non - built-in method aliases. A method name with more than 5 characters is not considered for aliases
+     *
+     * @param methodName
+     * @return
+     */
+    private static boolean isSetAlisa(String methodName) {
         boolean flag = true;
-        if(methodName.length() <= 5){
+        if (methodName.length() <= 5) {
             flag = false;
         }
         return flag;
     }
-    private static String transferMethodAlisa(String methodName){
+
+    /**
+     * Parameter alias extraction rules with more than 5 characters
+     *
+     * @param methodName
+     * @return
+     */
+    private static String transferMethodAlisa(String methodName) {
+        if (builtInAlisaMap.containsKey(methodName)) {
+            return builtInAlisaMap.get(methodName);
+        }
         StringBuilder methodAlisa = new StringBuilder();
         char[] chars = methodName.toCharArray();
-        for(int index=0 ;index<chars.length ; index++){
+        for (int index = 0; index < chars.length; index++) {
             char letter = chars[index];
-            if(index == 0){
+            if (index == 0) {
                 methodAlisa.append(letter);
-            }else{
-                if(Character.isUpperCase(letter)){
+            } else {
+                if (Character.isUpperCase(letter)) {
                     methodAlisa.append(letter);
                 }
             }
@@ -216,4 +254,15 @@ public class AssertChecker {
         String simpleMethodName = methodAlisa.toString().toLowerCase();
         return simpleMethodName;
     }
+
+    static {
+        builtInAlisaMap.put("equalTo", "eq");
+        builtInAlisaMap.put("lessThan", "lt");
+        builtInAlisaMap.put("lessThanOrEqualTo", "le");
+        builtInAlisaMap.put("greaterThan", "gt");
+        builtInAlisaMap.put("greaterThanOrEqualTo", "ge");
+        builtInAlisaMap.put("not", "ne");
+    }
+
+
 }

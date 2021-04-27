@@ -46,7 +46,7 @@ teststeps:
     variables:
       - test_step_variable_exp: "${2+2}"
     validate:
-      - equalTo: [statusCode, 200]
+      - eq: [statusCode, 200]
       - "check": "statusCode"
         "comparator": "equalTo"
         "expect": 200

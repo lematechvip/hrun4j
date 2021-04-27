@@ -59,5 +59,32 @@ public class Constant {
      */
     public static final String TEST_SUITE_DIRECTORY_NAME = "testsuites";
 
+    /**
+     * request variable name
+     */
+    public static final String REQUEST_VARIABLE_NAME = "$REQUEST";
+    /**
+     * response variable name
+     */
+    public static final String RESPONSE_VARIABLE_NAME = "$RESPONSE";
 
+    /**
+     * assert check point
+     */
+    public static final String ASSERT_CHECK = "check";
+    /**
+     * assert expect value
+     */
+    public static final String ASSERT_EXPECT = "expect";
+
+    public static final String DATA_EXTRACTOR_REGEX_START = "^";
+
+    /**
+     * data extractor regex end
+     */
+    public static final String DATA_EXTRACTOR_REGEX_END = "$";
+    /**
+     * data extractor jsonpath start
+     */
+    public static final String DATA_EXTRACTOR_JSONPATH_START = "$.";
 }

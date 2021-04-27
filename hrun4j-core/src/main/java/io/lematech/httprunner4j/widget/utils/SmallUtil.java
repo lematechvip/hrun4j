@@ -19,7 +19,7 @@ import java.util.Objects;
  * @created 2021/3/16 6:00 下午
  * @publicWechat lematech
  */
-public class RegularUtil {
+public class SmallUtil {
 
 
     /**
@@ -57,6 +57,13 @@ public class RegularUtil {
     public static String getSimpleDateFormat() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(new Date());
+    }
+
+    public static Object emptyIfNull(Object obj) {
+        if (Objects.isNull(obj)) {
+            return "";
+        }
+        return obj;
     }
 
     public static String formatJsonOutput(Object output) {

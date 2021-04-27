@@ -45,13 +45,13 @@ public class HttpRunner4j {
     public static class ReuqestAndResponseHook extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
-            log.info("当前请求详细信息：{}", env.get("request"));
-            log.info("当前响应详细信息：{}", env.get("response"));
+            log.info("当前请求详细信息：{}", env.get("$REQUEST"));
+            log.info("当前响应详细信息：{}", env.get("$RESPONSE"));
             return new AviatorString(String.valueOf(arg));
         }
         @Override
         public String getName() {
-            return "RHook";
+            return "RRHook";
         }
     }
 

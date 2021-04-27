@@ -74,7 +74,7 @@ public class TestNGEngine {
         List<File> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
         testCasePkgGroup = FilesUtil.fileList2TestClass(testCasePaths);
         if (MapUtil.isEmpty(testCasePkgGroup)) {
-            MyLog.warn("in path [{}] not found valid testcases", testCasePaths);
+            MyLog.warn("No valid test cases were found on the current path: {}", testCasePaths);
         }
         addTestClasses();
         runNG();
@@ -99,7 +99,7 @@ public class TestNGEngine {
             MyLog.debug("test case content:{}", templateRenderContent);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
             classes.add(clazz);
-            MyLog.debug("class full path：[{}],pkg path：[{}],class name：{} added done.", fullTestClassName, pkgName, className);
+            MyLog.debug("lass full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
         }
         Class [] execClass = classes.toArray(new Class[0]);
         getInstance().setTestClasses(execClass);

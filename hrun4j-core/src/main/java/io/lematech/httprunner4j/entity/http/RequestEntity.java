@@ -2,7 +2,7 @@ package io.lematech.httprunner4j.entity.http;
 
 
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.widget.utils.RegularUtil;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.Data;
 
 import java.util.Map;
@@ -55,15 +55,15 @@ public class RequestEntity<T> {
     private Integer connectionRequestTimeout;
 
     public Integer getConnectionRequestTimeout() {
-        return RegularUtil.s2ms(this.connectionRequestTimeout);
+        return SmallUtil.s2ms(this.connectionRequestTimeout);
     }
 
     public Integer getConnectTimeout() {
-        return RegularUtil.s2ms(this.connectTimeout);
+        return SmallUtil.s2ms(this.connectTimeout);
     }
 
     public Integer getSocketTimeout() {
-        return RegularUtil.s2ms(this.socketTimeout);
+        return SmallUtil.s2ms(this.socketTimeout);
     }
 
     private Integer connectTimeout;

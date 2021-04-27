@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.core.converter.ObjectConverter;
+import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
@@ -32,6 +34,11 @@ public class ExpProcessor<T> {
     private Map<String, Object> currentVariable = new HashMap<>();
     private Map<String, Object> configVars = new HashMap<>();
     private Map<String, Object> testStepVars = new HashMap<>();
+    private ObjectConverter objectConverter;
+
+    public ExpProcessor() {
+        this.objectConverter = new ObjectConverter();
+    }
 
     /**
      * Dynamically handle the object that contains the value of the expression
@@ -128,27 +135,18 @@ public class ExpProcessor<T> {
     public Map handleHookExp(Object hookObj) {
         Map result = Maps.newHashMap();
         if (hookObj instanceof Map) {
-            handleMapExp(result, (Map<String, String>) hookObj);
+            result.putAll((Map) dynHandleContainsExpObject(hookObj));
         } else if (hookObj instanceof List) {
             List tempList = (List) hookObj;
             for (Object obj : tempList) {
                 if (obj instanceof String) {
                     this.handleStringExp(String.valueOf(obj));
                 } else if (obj instanceof Map) {
-                    handleMapExp(result, (Map<String, String>) obj);
+                    result.putAll((Map) dynHandleContainsExpObject(obj));
                 }
             }
         }
         return result;
-    }
-
-    private void handleMapExp(Map result, Map<String, String> hookObj) {
-        Map<String, String> tempMap = hookObj;
-        for (Map.Entry<String, String> entry : tempMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            result.put(key, this.handleStringExp(value));
-        }
     }
 
     /**
@@ -180,7 +178,7 @@ public class ExpProcessor<T> {
             fields[index].setAccessible(true);
             String methodName = attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
             try {
-                Object fieldValue = getFieldValueByName(fields[index].getName(), object);
+                Object fieldValue = objectConverter.getFieldValueByName(fields[index].getName(), object);
                 if (StrUtil.isEmptyIfStr(fieldValue)) {
                     continue;
                 }
@@ -212,23 +210,32 @@ public class ExpProcessor<T> {
         return object;
     }
 
+
     /**
-     * get object field value by name
-     * @param fieldName
-     * @param o
-     * @return
+     * Converts data types to key-value pairs ,for variable
+     *
+     * @param baseModel
      */
-    private Object getFieldValueByName(String fieldName, Object o) {
-        try {
-            String firstLetter = fieldName.substring(0, 1).toUpperCase();
-            String getter = "get" + firstLetter + fieldName.substring(1);
-            Method method = o.getClass().getMethod(getter, new Class[] {});
-            Object value = method.invoke(o, new Object[] {});
-            return value;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public void handleVariables2Map(BaseModel baseModel) {
+        Object obj = baseModel.getVariables();
+        if (obj instanceof Map) {
+            return;
         }
+        Map result = Maps.newHashMap();
+        if (obj instanceof List) {
+            List tempList = (List) obj;
+            for (Object elementObj : tempList) {
+                if (elementObj instanceof String) {
+                    Object executeResult = BuiltInAviatorEvaluator.execute(String.valueOf(obj), this.currentVariable);
+                    if (executeResult instanceof Map) {
+                        result.putAll((Map) executeResult);
+                    }
+                } else if (elementObj instanceof Map) {
+                    result.putAll((Map) elementObj);
+                }
+            }
+        }
+        baseModel.setVariables(result);
     }
 
 

@@ -33,7 +33,7 @@ public class TestConverter {
         File dataFileResourcePath = searcher.quicklySearchFile(api);
         ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(api)).load(dataFileResourcePath, ApiModel.class);
         SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
-        TestCase testCase = ObjectConverter.api2TestCase(apiModel);
+        TestCase testCase = new ObjectConverter().apiModel2TestCase(apiModel);
         testCaseRunner.execute(testCase);
     }
 

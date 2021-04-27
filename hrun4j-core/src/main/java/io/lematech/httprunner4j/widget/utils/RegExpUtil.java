@@ -22,7 +22,12 @@ import java.util.regex.Pattern;
 
 public class RegExpUtil {
 
-
+    /**
+     * is exp
+     *
+     * @param exp
+     * @return
+     */
     public static Boolean isExp(String exp) {
         Boolean flag = false;
         if (StringUtils.isEmpty(exp)) {
@@ -34,10 +39,20 @@ public class RegExpUtil {
         return flag;
     }
 
+    /**
+     * @param reg
+     * @param str
+     * @return
+     */
     private static boolean match(String reg, String str) {
         return Pattern.matches(reg, str);
     }
 
+    /**
+     * @param reg
+     * @param str
+     * @return
+     */
     public static List<String> find(String reg, String str) {
         Matcher matcher = Pattern.compile(reg).matcher(str);
         List<String> list = new ArrayList<>();
@@ -47,6 +62,13 @@ public class RegExpUtil {
         return list;
     }
 
+    /**
+     * According to the regular search to meet the requirements
+     *
+     * @param reg
+     * @param str
+     * @return
+     */
     public static String findString(String reg, String str) {
         if (StrUtil.isEmpty(reg)) {
             String exceptionMsg = String.format("regex expresssion can not empty or null: %s", reg);
@@ -64,6 +86,12 @@ public class RegExpUtil {
         return returnStr;
     }
 
+    /**
+     * is url
+     *
+     * @param s
+     * @return
+     */
     public static boolean isUrl(String s) {
         try {
             Pattern patt = Pattern.compile(Constant.URL_REGEX);
