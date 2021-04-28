@@ -33,7 +33,6 @@ import java.util.*;
 public class TestNGEngine {
     private static TestNG testNG;
     private static String suiteName;
-    private static SchemaValidator schemaValidator = new SchemaValidator();
     public static Map<String, Set<String>> testCasePkgGroup = new HashMap<>();
 
     public static TestNG getInstance() {
@@ -44,7 +43,10 @@ public class TestNGEngine {
         return testNG;
     }
 
-    private static void setDefaultProperties(){
+    /**
+     * Setting Default Properties
+     */
+    private static void setDefaultProperties() {
         testNG.setDefaultSuiteName("httprunner4j");
         HTMLReporter htmlReporter = new HTMLReporter();
         JUnitXMLReporter jUnitXMLReporter = new JUnitXMLReporter();
@@ -92,17 +94,17 @@ public class TestNGEngine {
         for (Map.Entry<String, Set<String>> entry : testCasePkgGroup.entrySet()) {
             String fullTestClassName = entry.getKey();
             Set methodNameList = entry.getValue();
-            String pkgName = StrUtil.subBefore(fullTestClassName, ".", true);
-            String className = StrUtil.upperFirst(StrUtil.subAfter(fullTestClassName, ".", true));
+            String pkgName = StrUtil.subBefore(fullTestClassName, Constant.DOT_PATH, true);
+            String className = StrUtil.upperFirst(StrUtil.subAfter(fullTestClassName, Constant.DOT_PATH, true));
             VelocityContext ctx = new VelocityContext();
             ctx.put("pkgName", pkgName);
             ctx.put("className", className);
             ctx.put("methodList", methodNameList);
             String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH, ctx);
-            MyLog.debug("test case content:{}", templateRenderContent);
-            Class<?> clazz = HotLoader.hotLoadClass(pkgName,className,templateRenderContent);
+            MyLog.debug("Render Template Engine Content:{}", templateRenderContent);
+            Class<?> clazz = HotLoader.hotLoadClass(pkgName, className, templateRenderContent);
             classes.add(clazz);
-            MyLog.debug("lass full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
+            MyLog.debug("Class full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
         }
         Class [] execClass = classes.toArray(new Class[0]);
         getInstance().setTestClasses(execClass);

@@ -83,6 +83,12 @@ public class Constant {
      * data extractor regex end
      */
     public static final String DATA_EXTRACTOR_REGEX_END = "$";
+
+    /**
+     * data extractor regex end
+     */
+    public static final String TEST_JAR_END_SUFFIX = "jar";
+
     /**
      * data extractor jsonpath start
      */

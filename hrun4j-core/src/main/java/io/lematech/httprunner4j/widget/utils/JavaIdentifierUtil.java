@@ -4,6 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 
+import java.io.File;
+import java.nio.file.FileSystem;
+
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
@@ -99,5 +102,33 @@ public class JavaIdentifierUtil {
         }
         return validateInfo;
     }
+
+
+    /**
+     * Verify that the file path meets the requirements
+     *
+     * @param filePath
+     * @return
+     */
+    public static String verifyFilePathValid(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            String exceptionMsg = String.format(" The file path cannot be empty");
+            throw new DefinedException(exceptionMsg);
+        }
+        StringBuffer validName = new StringBuffer();
+        char[] nameChars = filePath.toCharArray();
+        for (int index = 0; index < nameChars.length; index++) {
+            char tmpChar = nameChars[index];
+            if (tmpChar == File.separatorChar) {
+                continue;
+            }
+            if (!Character.isJavaIdentifierPart(tmpChar)) {
+                String exceptionMsg = String.format(" The file path cannot contain special characters: %s", tmpChar);
+                throw new DefinedException(exceptionMsg);
+            }
+        }
+        return validName.toString();
+    }
+
 
 }

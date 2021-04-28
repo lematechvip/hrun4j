@@ -90,7 +90,7 @@ public class HttpRunner4J extends Command {
     public static void main(final String... args) throws Exception {
         final PrintWriter out = new PrintWriter(System.out, true);
         final PrintWriter err = new PrintWriter(System.err, true);
-        final int returncode = new HttpRunner4J(args).execute(out, err);
-        System.exit(returncode);
+        final int returnCode = new HttpRunner4J(args).execute(out, err);
+        System.exit(returnCode);
     }
 }

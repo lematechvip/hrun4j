@@ -37,6 +37,9 @@ public class JsonUtil {
             Expression<JsonNode> compileExp = jmespath.compile(exp);
             JsonNode jsonNode = compileExp.search(actualObj);
             dataExtractorValue = getJsonNodeValue(jsonNode);
+            /**
+             * jmespath 0.5 bug jsonNode not null,is "null" To fix
+             */
             if (Objects.isNull(dataExtractorValue) || "null".equals(jsonNode.asText())) {
                 return exp;
             }
