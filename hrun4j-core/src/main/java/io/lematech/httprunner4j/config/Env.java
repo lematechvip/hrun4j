@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -33,15 +34,18 @@ public class Env {
 
     private static synchronized void initializeEnv() {
         if (envMap == null) {
+            RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
             envMap = new HashMap<>();
             envMap.putAll(System.getenv());
             Properties properties = new Properties();
             try {
-                File envFile = new Searcher().quicklySearchFile(Constant.ENV_FILE_NAME);
+                String envFilePath = (runMode == RunnerConfig.RunMode.API) ? Constant.ENV_FILE_NAME : RunnerConfig.getInstance().getDotEnvPath();
+                File envFile = new Searcher().quicklySearchFile(envFilePath);
                 properties.load(new FileInputStream(envFile));
                 envMap.putAll((Map) properties);
             } catch (Exception e) {
-                MyLog.warn(Constant.ENV_FILE_NAME + " is not exist");
+                String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
+                throw new DefinedException(exceptionMsg);
             }
         }
     }

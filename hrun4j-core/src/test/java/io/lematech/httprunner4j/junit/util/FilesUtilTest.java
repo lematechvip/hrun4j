@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.junit.util;
 
+import groovy.lang.GroovyClassLoader;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.testng.annotations.Test;
@@ -33,6 +34,17 @@ public class FilesUtilTest {
             MyLog.info("文件路径：{}", file.getCanonicalPath());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test() {
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        groovyClassLoader.addClasspath("/Users/arkhe/Desktop/resources/hrun4j-cli.jar");
+        // groovyClassLoader.ge
+        Class[] clzs = groovyClassLoader.getLoadedClasses();
+        for (Class clz : clzs) {
+            MyLog.info("包名：{},类名：{}", clz.getPackage(), clz.getName());
         }
     }
 

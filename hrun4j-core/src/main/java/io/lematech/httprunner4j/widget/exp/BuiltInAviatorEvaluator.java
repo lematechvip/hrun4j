@@ -1,15 +1,31 @@
 package io.lematech.httprunner4j.widget.exp;
 
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.text.csv.CsvData;
+import cn.hutool.core.text.csv.CsvReader;
+import cn.hutool.core.text.csv.CsvRow;
+import cn.hutool.core.text.csv.CsvUtil;
+import cn.hutool.core.util.StrUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
+import com.googlecode.aviator.runtime.type.AviatorJavaType;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.testng.collections.Maps;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,6 +41,7 @@ import java.util.Objects;
 public class BuiltInAviatorEvaluator {
     static {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
+        AviatorEvaluator.addFunction(new BuiltInFunctionParameterize());
         AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
         AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionAdd());
@@ -75,9 +92,68 @@ public class BuiltInAviatorEvaluator {
             }
             return new AviatorString(String.valueOf(envValue));
         }
+
         @Override
         public String getName() {
             return "ENV";
+        }
+    }
+
+    /**
+     * built-in $P
+     */
+    public static class BuiltInFunctionParameterize extends AbstractFunction {
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject csvFilePathObj) {
+            if (Objects.isNull(csvFilePathObj) || StrUtil.isEmpty(csvFilePathObj.toString())) {
+                String exceptionMsg = String.format("The CVS file path cannot be empty");
+                throw new DefinedException(exceptionMsg);
+            }
+            String csvFilePathValue = csvFilePathObj.toString();
+            String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+            File cvsFilePath;
+            if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
+                cvsFilePath = new File(workDirPath, csvFilePathValue);
+                if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
+                    String exceptionMsg = String.format("The CVS file %s does not exist"
+                            , FilesUtil.getCanonicalPath(cvsFilePath));
+                    throw new DefinedException(exceptionMsg);
+                }
+            } else {
+                cvsFilePath = new File(csvFilePathValue);
+                if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
+                    String exceptionMsg = String.format("The CVS file %s does not exist"
+                            , FilesUtil.getCanonicalPath(cvsFilePath));
+                    throw new DefinedException(exceptionMsg);
+                }
+            }
+            CsvReader reader = CsvUtil.getReader();
+            CsvData data = reader.read(cvsFilePath);
+            List<CsvRow> rows = data.getRows();
+            List<Map<String, Object>> csvParameters = new ArrayList<>();
+            Map<Integer, String> parameterNameIndexMap = Maps.newHashMap();
+            Map<String, Object> parameter = Maps.newHashMap();
+            for (int index = 0; index < rows.size(); index++) {
+                CsvRow csvRow = rows.get(index);
+                if (index == 0) {
+                    for (int columnIndex = 0; columnIndex < csvRow.size(); columnIndex++) {
+                        parameterNameIndexMap.put(columnIndex, csvRow.get(columnIndex));
+                    }
+                } else {
+                    for (int columnIndex = 0; columnIndex < csvRow.size(); columnIndex++) {
+                        String paramName = parameterNameIndexMap.get(columnIndex);
+                        String paramValue = csvRow.get(columnIndex);
+                        parameter.put(paramName, paramValue);
+                    }
+                    csvParameters.add(parameter);
+                }
+            }
+            return (AviatorObject) csvParameters;
+        }
+
+        @Override
+        public String getName() {
+            return "P";
         }
     }
 

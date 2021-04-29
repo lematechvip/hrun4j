@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
+import groovy.lang.GroovyClassLoader;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -55,7 +56,6 @@ public class HotLoader {
             Map<String, byte[]> results = getInstance().compile(javaFileName, replaceSource);
             clazz = compiler.loadClass(pkgClassName, results);
             MyLog.debug("hot load class[{}] finished", pkgClassName);
-            //todo：考虑常驻内存及out of Memory 可能
             hotLoaderClasses.add(clazz);
         } catch (IOException e) {
             String exceptionMsg = String.format("compile %s occur exception: ",javaFileName,e.getMessage());

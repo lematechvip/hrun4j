@@ -37,6 +37,9 @@ public class Run extends Command {
     @Option(name = "--ext_name", usage = "Specify the use case extension.")
     String extName;
 
+    @Option(name = "--dot_env_path", usage = "Specify the path to the.env file")
+    File dotEnvPath;
+
     @Option(name = "--pkg_name", usage = "Specify the project package name.")
     String pkgName;
 
@@ -69,6 +72,7 @@ public class Run extends Command {
             RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
         }
 
+
         if (testcasePaths.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
             throw new DefinedException(exceptionMsg);
@@ -76,6 +80,35 @@ public class Run extends Command {
         List<File> canonicalTestCasePaths = new ArrayList<>();
         String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
         MyLog.info("The workspace path：{}", workDirPath);
+
+        if (!Objects.isNull(dotEnvPath)) {
+            if (!FileUtil.isAbsolutePath(dotEnvPath.getPath())) {
+                File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
+                if (!dotFilePath.exists() || !dotFilePath.isFile()) {
+                    String exceptionMsg = String.format("The .env file %s does not exist"
+                            , FilesUtil.getCanonicalPath(dotFilePath));
+                    throw new DefinedException(exceptionMsg);
+                }
+                RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
+            } else {
+                if (!dotEnvPath.exists() || !dotEnvPath.isFile()) {
+                    String exceptionMsg = String.format("The .env file %s does not exist"
+                            , FilesUtil.getCanonicalPath(dotEnvPath));
+                    throw new DefinedException(exceptionMsg);
+                }
+                RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotEnvPath));
+            }
+        } else {
+            File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
+            if (!dotFilePath.exists() || !dotFilePath.isFile()) {
+                String exceptionMsg = String.format("The .env file %s does not exist"
+                        , FilesUtil.getCanonicalPath(dotFilePath));
+                MyLog.warn(exceptionMsg);
+            }
+            RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
+        }
+
+
         JavaIdentifierUtil.verifyFilePathValid(workDirPath);
         FilesUtil.dirPath2pkgName(workDirPath);
         for (File caseFile : testcasePaths) {

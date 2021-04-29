@@ -93,4 +93,9 @@ public class Constant {
      * data extractor jsonpath start
      */
     public static final String DATA_EXTRACTOR_JSONPATH_START = "$.";
+
+    /**
+     * Parameter separator
+     */
+    public static final String PARAMETER_SEPARATOR = "-";
 }

@@ -26,6 +26,19 @@ public class RunnerConfig {
      */
     private String i18n;
 
+    public String getDotEnvPath() {
+        return dotEnvPath;
+    }
+
+    public void setDotEnvPath(String dotEnvPath) {
+        this.dotEnvPath = dotEnvPath;
+    }
+
+    /**
+     * .env file path
+     */
+    private String dotEnvPath;
+
     public List<File> getTestCasePaths() {
         return testCasePaths;
     }
@@ -36,7 +49,7 @@ public class RunnerConfig {
     private RunMode runMode = RunMode.API;
 
     public File getWorkDirectory() {
-        return Objects.isNull(this.workDirectory) ? new File(".") : this.workDirectory;
+        return Objects.isNull(this.workDirectory) ? new File(Constant.DOT_PATH) : this.workDirectory;
     }
 
     /**
