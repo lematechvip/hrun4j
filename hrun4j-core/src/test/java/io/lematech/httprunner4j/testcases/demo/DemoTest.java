@@ -149,5 +149,23 @@ public class DemoTest extends TestBase {
     }
 
 
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testDataProviderFromCsvDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
 
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testDataAssociatedProviderDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
 }

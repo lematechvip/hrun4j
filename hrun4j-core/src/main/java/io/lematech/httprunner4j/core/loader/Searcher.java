@@ -33,15 +33,10 @@ public class Searcher {
      */
     private String workDirectory;
 
-    /**
-     * testcase extension name
-     */
-    private String testCaseExtName;
 
     public Searcher() {
         runMode = RunnerConfig.getInstance().getRunMode();
         workDirectory = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
-        testCaseExtName = RunnerConfig.getInstance().getTestCaseExtName();
     }
 
     /**
@@ -56,7 +51,7 @@ public class Searcher {
             throw new DefinedException(exceptionMsg);
         }
         if (StrUtil.isEmpty(FileUtil.extName(filePath))) {
-            filePath = filePath + Constant.DOT_PATH + testCaseExtName;
+            filePath = filePath + Constant.DOT_PATH + RunnerConfig.getInstance().getTestCaseExtName();
         }
         File searchFile = null;
         if (runMode == RunnerConfig.RunMode.CLI) {
@@ -93,7 +88,7 @@ public class Searcher {
      * @param directoryName
      * @return
      */
-    public String spliceFilePath(String dataFileType, String directoryName) {
+    public static String spliceFilePath(String dataFileType, String directoryName) {
         if (!dataFileType.startsWith(directoryName + File.separator) &&
                 !dataFileType.startsWith(File.separator + directoryName + File.separator)) {
             dataFileType = directoryName + File.separator + dataFileType;
@@ -102,7 +97,7 @@ public class Searcher {
             dataFileType = Constant.DOT_PATH + dataFileType;
         }
         if (StrUtil.isEmpty(FileUtil.extName(dataFileType))) {
-            dataFileType = dataFileType + Constant.DOT_PATH + testCaseExtName;
+            dataFileType = dataFileType + Constant.DOT_PATH + RunnerConfig.getInstance().getTestCaseExtName();
         }
         return dataFileType;
     }

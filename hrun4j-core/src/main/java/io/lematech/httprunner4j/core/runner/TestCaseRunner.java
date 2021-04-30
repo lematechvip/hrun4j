@@ -89,7 +89,6 @@ public class TestCaseRunner {
             preAndPostProcessor.preProcess(config, null);
             List<TestStep> testSteps = testCase.getTestSteps();
             for (int index = 0; index < testSteps.size(); index++) {
-
                 Map<String, Object> testStepConfigVariable = Maps.newHashMap();
                 preAndPostProcessor.setTestStepConfigVariable(testStepConfigVariable);
                 MyLog.info(I18NFactory.getLocaleMessage("runner.current.step") + " : {}", testSteps.get(index).getName());
@@ -146,7 +145,7 @@ public class TestCaseRunner {
         }
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
-            String spliceApiFilePath = searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
+            String spliceApiFilePath = Searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
             File apiFilePath = searcher.quicklySearchFile(spliceApiFilePath);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(testStep, objectConverter.apiModel2TestStep(apiModel));

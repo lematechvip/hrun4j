@@ -61,21 +61,8 @@ public class ExpProcessor<T> {
                     result.put(key, value);
                     continue;
                 }
-                Class valueClass = entry.getValue().getClass();
-                String handledValue = handleStringExp(value);
-                if (valueClass == Integer.class) {
-                    result.put(key, Integer.parseInt(handledValue));
-                } else if (valueClass == String.class) {
-                    result.put(key, handledValue);
-                } else if (valueClass == Long.class) {
-                    result.put(key, Long.valueOf(handledValue));
-                } else if (valueClass == Double.class) {
-                    result.put(key, Double.valueOf(handledValue));
-                } else if (valueClass == Float.class) {
-                    result.put(key, Float.valueOf(handledValue));
-                } else {
-                    result.put(key, handledValue);
-                }
+                Object handledValue = handleStringExp(value);
+                result.put(key, handledValue);
                 MyLog.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", value, handledValue, currentVariable);
             }
             return (T)result;
@@ -95,21 +82,40 @@ public class ExpProcessor<T> {
      * @param exp
      * @return
      */
-    public String handleStringExp(String exp) {
+    public Object handleStringExp(String exp, Map<String, Object> environment) {
+        this.currentVariable.putAll(environment);
+        return handleStringExp(exp);
+    }
+
+    /**
+     * execute string expression
+     *
+     * @param exp
+     * @return
+     */
+    public Object handleStringExp(String exp) {
         if (RegExpUtil.isExp(exp)) {
             String handleExp = new String(exp.getBytes());
             try {
-                List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION, exp);
-                List<String> matchedList = new ArrayList<>();
-                for (String subExp : matchList) {
-                    Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
-                    String handleResult = String.valueOf(result);
-                    matchedList.add(handleResult);
-                }
-                for (String matched : matchedList) {
-                    exp = exp.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, matched);
+                List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION_FLAG, exp);
+                String matchExp = matchList.get(0);
+                if (matchList.size() == 1 && exp.equals(matchExp)) {
+                    String resultExp = RegExpUtil.findString(Constant.REGEX_EXPRESSION, exp);
+                    Object result = BuiltInAviatorEvaluator.execute(resultExp, currentVariable);
+                    return result;
+                } else {
+                    List<String> matchedList = new ArrayList<>();
+                    for (String subExp : matchList) {
+                        Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
+                        String handleResult = String.valueOf(result);
+                        matchedList.add(handleResult);
+                    }
+                    for (String matched : matchedList) {
+                        exp = exp.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, matched);
+                    }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 String exceptionMsg = String.format("Handle expression %s handles exception, exception information: %s", exp, e.getMessage());
                 throw new DefinedException(exceptionMsg);
             }

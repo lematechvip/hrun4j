@@ -4,7 +4,6 @@ package io.lematech.httprunner4j.core.validator;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.sun.tools.javac.comp.Check;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.processor.DataExtractor;

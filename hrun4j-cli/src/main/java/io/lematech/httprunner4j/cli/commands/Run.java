@@ -71,8 +71,6 @@ public class Run extends Command {
             property.setProperty("user.dir", workDirPath);
             RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
         }
-
-
         if (testcasePaths.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
             throw new DefinedException(exceptionMsg);
@@ -80,7 +78,6 @@ public class Run extends Command {
         List<File> canonicalTestCasePaths = new ArrayList<>();
         String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
         MyLog.info("The workspace path：{}", workDirPath);
-
         if (!Objects.isNull(dotEnvPath)) {
             if (!FileUtil.isAbsolutePath(dotEnvPath.getPath())) {
                 File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
@@ -107,8 +104,6 @@ public class Run extends Command {
             }
             RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
         }
-
-
         JavaIdentifierUtil.verifyFilePathValid(workDirPath);
         FilesUtil.dirPath2pkgName(workDirPath);
         for (File caseFile : testcasePaths) {
@@ -133,8 +128,6 @@ public class Run extends Command {
         if (!StrUtil.isEmpty(i18n)) {
             RunnerConfig.getInstance().setI18n(i18n);
         }
-
-
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
     }

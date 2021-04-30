@@ -13,7 +13,9 @@ import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorJavaType;
 import com.googlecode.aviator.runtime.type.AviatorObject;
+import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 import com.googlecode.aviator.runtime.type.AviatorString;
+import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
@@ -24,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +58,8 @@ public class BuiltInAviatorEvaluator {
     }
 
     public static Object execute(String expression, Map<String, Object> env) {
-        Expression compiledExp = AviatorEvaluator.compile(expression, false);
         try {
-            return compiledExp.execute(env);
+            return AviatorEvaluator.execute(expression, env, false);
         } catch (Exception e) {
             String exceptionMsg = String.format("execute exp %s occur error: %s", expression, e.getMessage());
             throw new DefinedException(exceptionMsg);
@@ -105,34 +109,46 @@ public class BuiltInAviatorEvaluator {
     public static class BuiltInFunctionParameterize extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject csvFilePathObj) {
-            if (Objects.isNull(csvFilePathObj) || StrUtil.isEmpty(csvFilePathObj.toString())) {
+            Object csvFile = csvFilePathObj.getValue(env);
+            if (Objects.isNull(csvFile) || StrUtil.isEmpty(csvFile.toString())) {
                 String exceptionMsg = String.format("The CVS file path cannot be empty");
                 throw new DefinedException(exceptionMsg);
             }
-            String csvFilePathValue = csvFilePathObj.toString();
-            String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
-            File cvsFilePath;
-            if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
+            String csvFilePathValue = csvFile.toString();
+            String workDirPath;
+            RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
+            File cvsFilePath = null;
+            if (runMode == RunnerConfig.RunMode.API) {
+                workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
                 cvsFilePath = new File(workDirPath, csvFilePathValue);
                 if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
-                    String exceptionMsg = String.format("The CVS file %s does not exist"
+                    String exceptionMsg = String.format("The CVS file %s does not exist,Note that in API mode, absolute paths are not allowed, only class paths can be used"
                             , FilesUtil.getCanonicalPath(cvsFilePath));
                     throw new DefinedException(exceptionMsg);
                 }
-            } else {
-                cvsFilePath = new File(csvFilePathValue);
-                if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
-                    String exceptionMsg = String.format("The CVS file %s does not exist"
-                            , FilesUtil.getCanonicalPath(cvsFilePath));
-                    throw new DefinedException(exceptionMsg);
+            } else if (runMode == RunnerConfig.RunMode.CLI) {
+                workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+                if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
+                    cvsFilePath = new File(workDirPath, csvFilePathValue);
+                    if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
+                        String exceptionMsg = String.format("The CVS file %s does not exist"
+                                , FilesUtil.getCanonicalPath(cvsFilePath));
+                        throw new DefinedException(exceptionMsg);
+                    }
+                } else {
+                    cvsFilePath = new File(csvFilePathValue);
+                    if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
+                        String exceptionMsg = String.format("The CVS file %s does not exist"
+                                , FilesUtil.getCanonicalPath(cvsFilePath));
+                        throw new DefinedException(exceptionMsg);
+                    }
                 }
             }
             CsvReader reader = CsvUtil.getReader();
-            CsvData data = reader.read(cvsFilePath);
+            CsvData data = reader.read(cvsFilePath, Charset.defaultCharset());
             List<CsvRow> rows = data.getRows();
             List<Map<String, Object>> csvParameters = new ArrayList<>();
             Map<Integer, String> parameterNameIndexMap = Maps.newHashMap();
-            Map<String, Object> parameter = Maps.newHashMap();
             for (int index = 0; index < rows.size(); index++) {
                 CsvRow csvRow = rows.get(index);
                 if (index == 0) {
@@ -140,6 +156,7 @@ public class BuiltInAviatorEvaluator {
                         parameterNameIndexMap.put(columnIndex, csvRow.get(columnIndex));
                     }
                 } else {
+                    Map<String, Object> parameter = Maps.newHashMap();
                     for (int columnIndex = 0; columnIndex < csvRow.size(); columnIndex++) {
                         String paramName = parameterNameIndexMap.get(columnIndex);
                         String paramValue = csvRow.get(columnIndex);
@@ -148,7 +165,7 @@ public class BuiltInAviatorEvaluator {
                     csvParameters.add(parameter);
                 }
             }
-            return (AviatorObject) csvParameters;
+            return AviatorRuntimeJavaType.valueOf(csvParameters);
         }
 
         @Override

@@ -40,6 +40,23 @@ public class RegExpUtil {
     }
 
     /**
+     * Is parameterize exp
+     *
+     * @param exp
+     * @return
+     */
+    public static Boolean isParameterizeExp(String exp) {
+        Boolean flag = false;
+        if (StringUtils.isEmpty(exp)) {
+            return false;
+        }
+        if (match(Constant.REGEX_PARAMETERIZE_EXPRESSION_FLAG, exp)) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
      * @param reg
      * @param str
      * @return

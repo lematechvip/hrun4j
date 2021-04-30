@@ -25,6 +25,10 @@ public class Constant {
     public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
+
+    public static final String REGEX_PARAMETERIZE_EXPRESSION_FLAG = "(.*)(?<=\\$\\{)P\\((.*)\\)(?=})(.*)";
+    public static final String REGEX_PARAMETERIZE_EXPRESSION = "(?<=\\$\\{P\\()(.*?)(?=\\)})";
+
     public static final String DOT_PATH = ".";
     public static final String UNDERLINE = "_";
     /**
@@ -98,4 +102,6 @@ public class Constant {
      * Parameter separator
      */
     public static final String PARAMETER_SEPARATOR = "-";
+
+    public static final String CSV_FILE_PATH_KEY = "CVS_FILE_PATH";
 }

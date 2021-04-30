@@ -6,8 +6,7 @@ config:
     varB: "configB"
     varC: "configC"
   parameters:             # parameter variables
-    varA: ["paramA1","paramA2","paramA3","paramA4"]
-    varB: ["paramB1"]
+    varB-varA: "${P(data/AssociatedCsvFile.csv)}"
 teststeps:
   - name: step 1
     variables:              # step variables

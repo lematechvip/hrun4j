@@ -8,10 +8,8 @@ import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.processor.ExpProcessor;
-import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
 import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import io.lematech.httprunner4j.widget.utils.RegExpUtil;
-import jdk.nashorn.internal.runtime.regexp.RegExp;
 
 import java.util.*;
 
@@ -24,31 +22,36 @@ import java.util.*;
  * @publicWechat lematech
  */
 public class DataConstructor {
+
     private ExpProcessor expProcessor;
 
     public DataConstructor() {
-        expProcessor = new ExpProcessor();
+        this.expProcessor = new ExpProcessor();
     }
 
     /**
-     * @param paramsObj
+     * Parameterization, which supports associating parameters, reading from files, or dynamically generating expressions
+     *
+     * @param parameterObj
      * @return
      */
-    public List<Map<String, Object>> parameterized(Object paramsObj) {
+    public List<Map<String, Object>> parameterized(Object parameterObj) {
         List<Map<String, Object>> parameters = new ArrayList<>();
-        if (Objects.isNull(paramsObj)) {
+        if (Objects.isNull(parameterObj)) {
             return parameters;
         }
-        String paramsStr = JSON.toJSONString(paramsObj);
+        String paramsStr = JSON.toJSONString(parameterObj);
         if (!JsonUtil.isJson(paramsStr)) {
             String exceptionMsg = String.format("The parameters data %s json format is incorrect", paramsStr);
             throw new DefinedException(exceptionMsg);
         } else {
-            paramsObj = JSONObject.parseObject(paramsStr);
+            parameterObj = JSONObject.parseObject(paramsStr);
         }
-        JSONObject jsonObject = (JSONObject) paramsObj;
+        JSONObject jsonObject = (JSONObject) parameterObj;
         boolean isAssociationParameter = false;
         List<List<Object>> dimValue = new ArrayList<>();
+        int paramNameIndex = 0;
+        Map<Integer, String> paramNameIndexMap = Maps.newHashMap();
         for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
             String paramsName = entry.getKey();
             if (StrUtil.isEmpty(paramsName)) {
@@ -66,39 +69,92 @@ public class DataConstructor {
                     String exceptionMsg = String.format(" Even if the associated parameter is also a specified parameter is not allowed");
                     throw new DefinedException(exceptionMsg);
                 }
+                isAssociationParameter = true;
                 return associationParameterized(paramName, parameterValue);
             } else {
-                if (parameterValue instanceof JSONArray) {
-                    List<Object> parameterMutiValues = new ArrayList<>();
-                    JSONArray lineMetaArray = (JSONArray) parameterValue;
-                    int size = lineMetaArray.size();
-                    for (int index = 0; index < size; index++) {
-                        parameterMutiValues.add(lineMetaArray.get(index));
-                    }
-                    dimValue.add(parameterMutiValues);
-                } else if (parameterValue instanceof String && RegExpUtil.isExp((String) parameterValue)) {
-                    Object handleResult = BuiltInAviatorEvaluator.execute(String.valueOf(parameterValue), Maps.newHashMap());
+                paramNameIndexMap.put(paramNameIndex++, paramsName);
+                nonAssociationParameterized(dimValue, parameterValue);
+            }
+        }
+        List<List<Object>> result = new ArrayList<>();
+        descartes(dimValue, result, 0, new ArrayList<>());
+        for (List objList : result) {
+            Map<String, Object> parameter = Maps.newHashMap();
+            for (int index = 0; index < objList.size(); index++) {
+                String paramName = paramNameIndexMap.get(index);
+                Object paramValue = objList.get(index);
+                parameter.put(paramName, paramValue);
+            }
+            parameters.add(parameter);
+        }
+        return parameters;
+    }
+
+    /**
+     * Non association parameterized
+     *
+     * @param dimValue
+     * @param parameterValue
+     */
+    private void nonAssociationParameterized(List<List<Object>> dimValue, Object parameterValue) {
+        if (parameterValue instanceof JSONArray) {
+            List<Object> parameterMutiValues = new ArrayList<>();
+            JSONArray lineMetaArray = (JSONArray) parameterValue;
+            int size = lineMetaArray.size();
+            if (size == 1 && lineMetaArray.get(0) instanceof String) {
+                String expValue = (String) lineMetaArray.get(0);
+                if (RegExpUtil.isExp(expValue)) {
+                    Object handleResult = handleParameterizeExp(expValue);
                     List<Map<String, Object>> csvParameters = (List<Map<String, Object>>) handleResult;
-                    List<Object> parameterMutiValues = new ArrayList<>();
                     for (Map<String, Object> objectMap : csvParameters) {
                         for (Map.Entry<String, Object> csvParameter : objectMap.entrySet()) {
                             parameterMutiValues.add(csvParameter);
                         }
                     }
-                    dimValue.add(parameterMutiValues);
                 } else {
-                    String exceptionMsg = String.format("The parameter value data type is invalid. It can only be String or List");
-                    throw new DefinedException(exceptionMsg);
+                    parameterMutiValues.add(expValue);
                 }
-                List<List<Object>> result = new ArrayList<>();
-                descartes(dimValue, result, 0, new ArrayList<>());
-
+            } else {
+                for (int index = 0; index < size; index++) {
+                    parameterMutiValues.add(lineMetaArray.get(index));
+                }
             }
+            dimValue.add(parameterMutiValues);
+        } else if (parameterValue instanceof String && RegExpUtil.isExp((String) parameterValue)) {
+            Object handleResult = handleParameterizeExp((String) parameterValue);
+            List<Map<String, Object>> csvParameters = (List<Map<String, Object>>) handleResult;
+            List<Object> parameterMutiValues = new ArrayList<>();
+            for (Map<String, Object> objectMap : csvParameters) {
+                for (Map.Entry<String, Object> csvParameter : objectMap.entrySet()) {
+                    parameterMutiValues.add(csvParameter);
+                }
+            }
+            dimValue.add(parameterMutiValues);
+        } else if (parameterValue instanceof String) {
+            List<Object> onlyOne = new ArrayList<>();
+            onlyOne.add(parameterValue);
+            dimValue.add(onlyOne);
+        } else {
+            String exceptionMsg = String.format("The parameter value data type is invalid. It can only be String or List");
+            throw new DefinedException(exceptionMsg);
         }
-
-
-        return parameters;
     }
+
+    private Object handleParameterizeExp(String parameterValue) {
+        String expValue = parameterValue;
+        Object handleResult;
+        if (RegExpUtil.isParameterizeExp(expValue)) {
+            String filePathValue = RegExpUtil.findString(Constant.REGEX_PARAMETERIZE_EXPRESSION, expValue);
+            Map environment = Maps.newHashMap();
+            environment.put(Constant.CSV_FILE_PATH_KEY, filePathValue);
+            String aliasFileExp = String.format("${P(%s)}", Constant.CSV_FILE_PATH_KEY);
+            handleResult = this.expProcessor.handleStringExp(aliasFileExp, environment);
+        } else {
+            handleResult = this.expProcessor.handleStringExp(expValue);
+        }
+        return handleResult;
+    }
+
 
     /**
      * association parameterized
@@ -127,14 +183,14 @@ public class DataConstructor {
                         oneGroupValue.put(paramName, Objects.isNull(paramValue) ? "" : paramValue);
                     }
                     parameters.add(oneGroupValue);
-                } else if (lineArray instanceof String && RegExpUtil.isExp((String) lineArray)) {
-                    Object handleResult = BuiltInAviatorEvaluator.execute(String.valueOf(lineArray), Maps.newHashMap());
-                    return (List<Map<String, Object>>) handleResult;
-                } else {
-                    String exceptionMsg = String.format("The parameter value data type is invalid. It can only be String or List");
-                    throw new DefinedException(exceptionMsg);
                 }
             }
+        } else if (paramValues instanceof String && RegExpUtil.isExp((String) paramValues)) {
+            Object handleResult = handleParameterizeExp((String) paramValues);
+            return (List<Map<String, Object>>) handleResult;
+        } else {
+            String exceptionMsg = String.format("The parameter value data type is invalid. It can only be String or List");
+            throw new DefinedException(exceptionMsg);
         }
         return parameters;
     }

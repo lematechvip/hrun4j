@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.entity.testcase.TestCase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.Objects;
  * @created 2021/3/16 6:00 下午
  * @publicWechat lematech
  */
-public class SmallUtil {
+public class SmallUtil<T> {
 
 
     /**
@@ -76,5 +77,17 @@ public class SmallUtil {
         } catch (JsonProcessingException e) {
             return String.valueOf(output);
         }
+    }
+
+    public static Object objectDeepCopy(Object obj, Class clz) {
+        Object copyObj;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            copyObj = objectMapper.readValue(objectMapper.writeValueAsString(obj), clz);
+        } catch (JsonProcessingException e) {
+            String exceptionMsg = String.format("An exception occurred in the deep copy of the test case ,Exception Informations:  %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        }
+        return copyObj;
     }
 }

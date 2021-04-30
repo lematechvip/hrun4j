@@ -16,6 +16,7 @@ import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import org.testng.collections.Maps;
 
 import java.io.File;
@@ -35,9 +36,10 @@ import java.util.Objects;
 
 public class NGDataProvider {
     private Searcher searcher;
-
+    private DataConstructor dataConstructor;
     public NGDataProvider() {
         searcher = new Searcher();
+        dataConstructor = new DataConstructor();
     }
 
     /**
@@ -78,7 +80,33 @@ public class NGDataProvider {
 
     private Object[][] getObjects(TestCase testCase) {
         Object[][] testCases;
-        List<TestCase> result = handleMultiParametersData(testCase);
+        Object parameterValues = testCase.getConfig().getParameters();
+        List<Map<String, Object>> parameters = dataConstructor.parameterized(parameterValues);
+        if (Objects.isNull(parameters) || parameters.size() == 0) {
+            testCases = new Object[1][];
+            testCases[0] = new Object[]{testCase};
+            return testCases;
+        }
+        List<TestCase> result = new ArrayList<>();
+        Object configVariables = testCase.getConfig().getVariables();
+        if (Objects.isNull(configVariables)) {
+            configVariables = Maps.newHashMap();
+        }
+        if (!(configVariables instanceof Map)) {
+            String exceptionMsg = String.format("Use case configuration variable types can only be key-value pair types; they cannot be %s", configVariables.getClass());
+            throw new DefinedException(exceptionMsg);
+        }
+        for (Map<String, Object> parameterVariables : parameters) {
+            Map resultVariables = Maps.newHashMap();
+            resultVariables.putAll((Map) configVariables);
+            resultVariables.putAll(MapUtil.isEmpty(parameterVariables) ? Maps.newHashMap() : parameterVariables);
+            TestCase copyTestCase = (TestCase) SmallUtil.objectDeepCopy(testCase, TestCase.class);
+            Config config = copyTestCase.getConfig();
+            config.setVariables(resultVariables);
+            config.setParameters(parameterVariables);
+            copyTestCase.setConfig(config);
+            result.add(copyTestCase);
+        }
         testCases = new Object[result.size()][];
         for (int i = 0; i < result.size(); i++) {
             testCases[i] = new Object[]{result.get(i)};
