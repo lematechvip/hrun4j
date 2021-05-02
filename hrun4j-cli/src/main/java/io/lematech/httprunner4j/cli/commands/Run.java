@@ -4,14 +4,12 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestNGEngine;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import org.kohsuke.args4j.Option;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.*;
@@ -51,19 +49,14 @@ public class Run extends Command {
 
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        initRunnerConfig();
-        TestNGEngine.run();
-        return 0;
-    }
-
-    private void initRunnerConfig() {
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
             if (!testJar.exists() || !testJar.isFile() || !FileUtil.extName(testJar).endsWith(Constant.TEST_JAR_END_SUFFIX)) {
                 String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in.jar"
                         , FilesUtil.getCanonicalPath(testJar));
-                throw new DefinedException(exceptionMsg);
+                MyLog.error(exceptionMsg);
+                return 1;
             }
             File workFile = testJar.getParentFile();
             String workDirPath = FilesUtil.getCanonicalPath(workFile);
@@ -73,7 +66,8 @@ public class Run extends Command {
         }
         if (testcasePaths.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
-            throw new DefinedException(exceptionMsg);
+            MyLog.error(exceptionMsg);
+            return 1;
         }
         List<File> canonicalTestCasePaths = new ArrayList<>();
         String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
@@ -84,14 +78,16 @@ public class Run extends Command {
                 if (!dotFilePath.exists() || !dotFilePath.isFile()) {
                     String exceptionMsg = String.format("The .env file %s does not exist"
                             , FilesUtil.getCanonicalPath(dotFilePath));
-                    throw new DefinedException(exceptionMsg);
+                    MyLog.error(exceptionMsg);
+                    return 1;
                 }
                 RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
             } else {
                 if (!dotEnvPath.exists() || !dotEnvPath.isFile()) {
                     String exceptionMsg = String.format("The .env file %s does not exist"
                             , FilesUtil.getCanonicalPath(dotEnvPath));
-                    throw new DefinedException(exceptionMsg);
+                    MyLog.error(exceptionMsg);
+                    return 1;
                 }
                 RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotEnvPath));
             }
@@ -115,7 +111,8 @@ public class Run extends Command {
             }
             if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
                 String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.getCanonicalPath(caseFile));
-                throw new DefinedException(exceptionMsg);
+                MyLog.error(exceptionMsg);
+                return 1;
             }
             canonicalTestCasePaths.add(canonicalCaseFile);
         }
@@ -130,5 +127,7 @@ public class Run extends Command {
         }
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
+        TestNGEngine.run();
+        return 0;
     }
 }

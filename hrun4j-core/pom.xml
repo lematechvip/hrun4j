@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.googlecode.aviator</groupId>
             <artifactId>aviator</artifactId>
-            <version>5.2.3</version>
+            <version>5.2.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

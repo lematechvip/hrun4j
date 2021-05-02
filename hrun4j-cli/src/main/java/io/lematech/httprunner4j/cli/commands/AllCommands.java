@@ -21,7 +21,8 @@ public final class AllCommands {
      * @return list of new instances of all available commands
      */
     public static List<Command> get() {
-        return Arrays.asList(new Version(), new Run(), new Har2Case());
+        return Arrays.asList(new Version()
+                , new Run(), new ViewHar(), new Har2Case());
     }
 
     /**

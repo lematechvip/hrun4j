@@ -5,8 +5,6 @@ import io.lematech.httprunner4j.cli.CommandHandler;
 import io.lematech.httprunner4j.cli.CommandParser;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
-
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 

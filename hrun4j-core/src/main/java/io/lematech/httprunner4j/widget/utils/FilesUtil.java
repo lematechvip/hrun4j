@@ -203,4 +203,41 @@ public class FilesUtil {
         }
     }
 
+    public static void checkFileExists(String absoluteFilePath) {
+        if (StrUtil.isEmpty(absoluteFilePath)) {
+            throw new DefinedException("Absolute file path cannot be null/empty");
+        } else {
+            File file = new File(absoluteFilePath);
+            checkFileExists(file);
+        }
+    }
+
+    public static void checkFileExists(File file) {
+        if (Objects.isNull(null)) {
+            throw new DefinedException("File instance cannot be null");
+        } else if (!file.exists()) {
+            throw new DefinedException("File does not exist on device");
+        } else if (!file.isFile()) {
+            throw new DefinedException("File does not represent a valid file");
+        }
+    }
+
+    public static void checkDirectoryExists(String absoluteDirPath) {
+        if (StrUtil.isEmpty(absoluteDirPath)) {
+            throw new DefinedException("Absolute dir path cannot be null/empty");
+        } else {
+            File file = new File(absoluteDirPath);
+            checkDirectoryExists(file);
+        }
+    }
+
+    public static void checkDirectoryExists(File directory) {
+        if (directory == null) {
+            throw new DefinedException("File instance cannot be null");
+        } else if (!directory.exists()) {
+            throw new DefinedException("Directory does not exist on device");
+        } else if (!directory.isFile()) {
+            throw new DefinedException("File does not represent a valid directory");
+        }
+    }
 }

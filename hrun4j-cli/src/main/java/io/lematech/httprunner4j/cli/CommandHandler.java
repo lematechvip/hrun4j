@@ -36,6 +36,11 @@ public class CommandHandler extends OptionHandler {
                 }, setter);
     }
 
+    /**
+     * @param params
+     * @return
+     * @throws CmdLineException
+     */
     @Override
     public int parseArguments(Parameters params) throws CmdLineException {
         final String subCmd = params.getParameter(0);
@@ -44,7 +49,7 @@ public class CommandHandler extends OptionHandler {
             if (c.name().equals(subCmd)) {
                 parseSubArguments(c, params);
                 setter.addValue(c);
-                return params.size(); // consume all the remaining tokens
+                return params.size();
             }
         }
         throw new CmdLineException(owner,
@@ -56,6 +61,11 @@ public class CommandHandler extends OptionHandler {
         return "<command>";
     }
 
+    /**
+     * @param c
+     * @param params
+     * @throws CmdLineException
+     */
     private void parseSubArguments(final Command c, final Parameters params)
             throws CmdLineException {
         final CmdLineParser p = new CommandParser(c);
