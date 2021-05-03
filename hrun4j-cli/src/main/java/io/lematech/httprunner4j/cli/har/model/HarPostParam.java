@@ -32,17 +32,11 @@ import lombok.Data;
  */
 
 @Data
-public class HarPostParam {
-
-	private String name;
-
-	private String value;
+public class HarPostParam extends HarBaseModel {
 
 	private String fileName;
 
 	private String contentType;
-
-	private String comment;
 
 	@Override
 	public String toString() {

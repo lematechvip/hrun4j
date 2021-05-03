@@ -31,11 +31,7 @@ import lombok.Data;
  */
 
 @Data
-public class HarCookie {
-
-	private String name;
-
-	private String value;
+public class HarCookie extends HarBaseModel {
 
 	private String path;
 
@@ -44,8 +40,6 @@ public class HarCookie {
 	private boolean httpOnly;
 
 	private boolean secure;
-
-	private String comment;
 
 	@Override
 	public String toString() {

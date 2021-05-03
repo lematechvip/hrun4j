@@ -19,6 +19,7 @@
 
 package io.lematech.httprunner4j.cli.har.model;
 
+import cn.hutool.core.util.URLUtil;
 import com.sangupta.jerry.util.UriUtils;
 import lombok.Data;
 
@@ -58,7 +59,7 @@ public class HarEntry implements Comparable<HarEntry> {
 
     @Override
     public String toString() {
-        return request.method + " " + UriUtils.extractPath(request.url);
+        return request.getMethod() + " " + URLUtil.getPath(request.getUrl());
     }
 
     @Override

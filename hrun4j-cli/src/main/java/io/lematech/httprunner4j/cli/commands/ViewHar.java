@@ -54,13 +54,14 @@ public class ViewHar extends Command {
 			MyLog.error(exceptionMsg);
 			return 1;
 		}
-		List<HarPage> harPages = har.getLog().getPages();
-		if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(harPages)) {
+
+		if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(har.getLog().getPages())) {
 			String exceptionMsg = String.format("HAR file %s has no pages!", FilesUtil.getCanonicalPath(harFilePath));
 			MyLog.error(exceptionMsg);
 			return 1;
 		}
 		HarUtils.connectReferences(har);
+		List<HarPage> harPages = har.getLog().getPages();
 		viewInConsole(harPages);
 		return 0;
 	}

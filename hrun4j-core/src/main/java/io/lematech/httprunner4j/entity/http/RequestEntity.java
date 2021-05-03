@@ -40,9 +40,9 @@ public class RequestEntity<T> {
      */
     private JSONObject json;
 
-    public Map<String, String> getHeaders() {
+    public Map<String, Object> getHeaders() {
         if (!Objects.isNull(this.cookies)) {
-            headers.put("Cookie", String.valueOf(this.cookies));
+            headers.put("Cookie", this.cookies);
         }
         return headers;
     }
@@ -50,7 +50,7 @@ public class RequestEntity<T> {
     /**
      * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
      */
-    private Map<String, String> headers;
+    private Map<String, Object> headers;
 
     private Integer connectionRequestTimeout;
 

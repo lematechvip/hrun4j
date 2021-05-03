@@ -32,13 +32,7 @@ import lombok.Data;
  */
 
 @Data
-public class HarHeader {
-
-    private String name;
-
-    private String value;
-
-    private String comment;
+public class HarHeader extends HarBaseModel {
 
     @Override
     public String toString() {

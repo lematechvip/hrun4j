@@ -31,13 +31,8 @@ import lombok.Data;
  */
 
 @Data
-public class HarQueryParm {
+public class HarQueryParm extends HarBaseModel {
 
-	private String name;
-
-	private String value;
-
-	private String comment;
 
 	@Override
 	public String toString() {

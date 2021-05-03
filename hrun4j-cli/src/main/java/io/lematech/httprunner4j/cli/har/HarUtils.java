@@ -128,14 +128,14 @@ public class HarUtils {
 		}
 		for (HarPage page : harPages) {
 			String pageID = page.getId();
-			List<HarEntry> entries = new ArrayList<HarEntry>();
+			List<HarEntry> entries = new ArrayList<>();
 			for (HarEntry entry : harEntries) {
 				if (pageID.equals(entry.getPageref())) {
 					entries.add(entry);
 				}
 			}
 			Collections.sort(entries);
-			har.getLog().setEntries(entries);
+			page.setEntries(entries);
 		}
 	}
 

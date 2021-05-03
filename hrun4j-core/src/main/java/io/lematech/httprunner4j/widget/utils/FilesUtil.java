@@ -213,7 +213,7 @@ public class FilesUtil {
     }
 
     public static void checkFileExists(File file) {
-        if (Objects.isNull(null)) {
+        if (Objects.isNull(file)) {
             throw new DefinedException("File instance cannot be null");
         } else if (!file.exists()) {
             throw new DefinedException("File does not exist on device");
