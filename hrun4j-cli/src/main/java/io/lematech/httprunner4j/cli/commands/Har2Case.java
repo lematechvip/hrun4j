@@ -5,10 +5,7 @@ import cn.hutool.core.util.URLUtil;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.har.HarUtils;
-import io.lematech.httprunner4j.cli.har.model.Har;
-import io.lematech.httprunner4j.cli.har.model.HarEntry;
-import io.lematech.httprunner4j.cli.har.model.HarPage;
-import io.lematech.httprunner4j.cli.har.model.HarRequest;
+import io.lematech.httprunner4j.cli.har.model.*;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
@@ -22,6 +19,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -72,16 +70,35 @@ public class Har2Case extends Command {
             MyLog.info(page.toString());
             MyLog.info("Output the calls for this page: ");
             for (HarEntry entry : page.getEntries()) {
+                MyLog.info("\t" + entry);
                 TestStep testStep = new TestStep();
                 HarRequest request = entry.getRequest();
-                MyLog.info("\t" + entry);
                 testStep.setName(String.format("Request api:%s", URLUtil.getPath(request.getUrl())));
                 RequestEntity requestEntity = new RequestEntity();
                 requestEntity.setMethod(request.getMethod());
                 requestEntity.setUrl(request.getUrl());
-                //requestEntity.setHeaders(request.getHeaders());
-                requestEntity.setCookies(request.getCookies());
+                //set headers
+                List<HarHeader> harHeaders = request.getHeaders();
+                Map<String, Object> headers = Maps.newHashMap();
+                for (HarHeader harHeader : harHeaders) {
+                    headers.put(String.valueOf(harHeader.getName()), harHeader.getValue());
+                }
+                requestEntity.setHeaders(headers);
+                //set cookie
+                List<HarCookie> harCookies = request.getCookies();
+                Map<String, Object> cookie = Maps.newHashMap();
+                for (HarCookie harCookie : harCookies) {
+                    cookie.put(String.valueOf(harCookie.getName()), harCookie.getValue());
+                }
+                requestEntity.setCookies(cookie);
+                List<HarQueryParm> queryParams = request.getQueryString();
+                Map<String, Object> params = Maps.newHashMap();
+                for (HarQueryParm harQueryParm : queryParams) {
+                    params.put(String.valueOf(harQueryParm.getName()), harQueryParm.getValue());
+                }
+                requestEntity.setParams(params);
                 testStep.setRequest(requestEntity);
+                testSteps.add(testStep);
             }
         }
         return 0;
