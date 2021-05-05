@@ -11,7 +11,12 @@ import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.widget.log.MyLog;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 
 /**
@@ -118,5 +123,20 @@ public class JsonUtil {
             flag = false;
         }
         return flag;
+    }
+
+    public static void jsonWriteToFile(File jsonFilePath, Object json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String value = mapper.writeValueAsString(json);
+            OutputStream out = new FileOutputStream(jsonFilePath);
+            byte[] b = value.getBytes();
+            for (int i = 0; i < b.length; i++) {
+                out.write(b[i]);
+            }
+            out.close();
+        } catch (IOException e) {
+            MyLog.info("JSON write file exception, exception information: %s", e.getMessage());
+        }
     }
 }

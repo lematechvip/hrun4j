@@ -20,6 +20,7 @@
 package io.lematech.httprunner4j.cli.har;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
@@ -103,22 +104,22 @@ public class HarUtils {
 		return GsonUtils.getGson().fromJson(jsonElement, Har.class);
 	}
 
-	/**
-	 * Connect references between page and entries so that they can be obtained as needed.
-	 *
-	 * @param har
-	 */
-	public static void connectReferences(Har har) {
-		if (Objects.isNull(har)) {
-			throw new DefinedException("HAR object cannot be null");
-		}
-		List<HarPage> harPages = har.getLog().getPages();
-		List<HarEntry> harEntries = har.getLog().getEntries();
-		if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(harPages)) {
-			MyLog.warn("No page found");
-			return;
-		}
-		if (CollectionUtil.isEmpty(harEntries)) {
+    /**
+     * Connect references between page and entries so that they can be obtained as needed.
+     *
+     * @param har
+     */
+    public static void connectReferences(Har har, List<String> requestSuffixs) {
+        if (Objects.isNull(har)) {
+            throw new DefinedException("HAR object cannot be null");
+        }
+        List<HarPage> harPages = har.getLog().getPages();
+        List<HarEntry> harEntries = har.getLog().getEntries();
+        if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(harPages)) {
+            MyLog.warn("No page found");
+            return;
+        }
+        if (CollectionUtil.isEmpty(harEntries)) {
 			MyLog.warn("No har entry - initialize empty list");
 			for (HarPage page : har.getLog().getPages()) {
 				page.setEntries(new ArrayList<>());
@@ -130,9 +131,16 @@ public class HarUtils {
 			String pageID = page.getId();
 			List<HarEntry> entries = new ArrayList<>();
 			for (HarEntry entry : harEntries) {
-				if (pageID.equals(entry.getPageref())) {
-					entries.add(entry);
-				}
+                if (pageID.equals(entry.getPageref())) {
+                    String requestSuffix = FileUtil.extName(entry.getRequest().getUrl());
+                    if (requestSuffixs.size() > 0) {
+                        if (requestSuffixs.contains(requestSuffix)) {
+                            entries.add(entry);
+                        }
+                        continue;
+                    }
+                    entries.add(entry);
+                }
 			}
 			Collections.sort(entries);
 			page.setEntries(entries);
