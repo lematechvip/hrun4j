@@ -20,7 +20,6 @@
 package io.lematech.httprunner4j.cli.har.model;
 
 import cn.hutool.core.util.URLUtil;
-import com.sangupta.jerry.util.UriUtils;
 import lombok.Data;
 
 import java.util.Objects;

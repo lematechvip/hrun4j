@@ -9,5 +9,15 @@ package io.lematech.httprunner4j.cli;
  * @publicWechat lematech
  */
 public class Constants {
-    public static final String GENERATE_YML_FORMAT = "2yml";
+    /**
+     * generate yml format testcase
+     */
+    public static final String GENERATE_YML_FORMAT = "-2y";
+
+    /**
+     * generate json format testcase
+     */
+    public static final String GENERATE_JSON_FORMAT = "-2j";
+
+
 }

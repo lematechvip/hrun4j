@@ -48,13 +48,12 @@ teststeps:
     validate:
       - "check": "headers.Content-Type"
         "comparator": "equalTo"
-        "expect": "00"
+        "expect": "application/json;charset=UTF-8"
       - eq: [a, "a"]
       - eq: [1.1, 1.1]
       - "check": "statusCode"
         "comparator": "equalTo"
         "expect": 200
-
       - "check": "content.message"
         "comparator": "equalTo"
         "expect": "ok！"

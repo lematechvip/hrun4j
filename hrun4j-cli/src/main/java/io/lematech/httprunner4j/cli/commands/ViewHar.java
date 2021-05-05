@@ -1,19 +1,17 @@
 package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
+import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.har.HarUtils;
 import io.lematech.httprunner4j.cli.har.model.Har;
 import io.lematech.httprunner4j.cli.har.model.HarEntry;
 import io.lematech.httprunner4j.cli.har.model.HarPage;
-
-import java.io.PrintWriter;
-
-import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +27,7 @@ import java.util.Objects;
 
 public class ViewHar extends Command {
 	@Option(name = "--file", usage = "Specify the HAR file path.")
-	String harFile;
+	String file;
 
 	@Override
 	public String description() {
@@ -45,7 +43,7 @@ public class ViewHar extends Command {
 	 */
 	@Override
 	public int execute(PrintWriter out, PrintWriter err) {
-		File harFilePath = new File(this.harFile);
+		File harFilePath = new File(this.file);
 		Har har;
 		try {
 			har = HarUtils.read(harFilePath);

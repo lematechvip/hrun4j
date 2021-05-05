@@ -10,6 +10,7 @@ import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
 import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
 
 import java.util.Objects;
 
@@ -43,18 +44,31 @@ public class JsonUtil {
              * jmespath 0.5 bug jsonNode not null,is "null" To fix
              */
             if (Objects.isNull(dataExtractorValue) || "null".equals(jsonNode.asText())) {
-                /**
-                 * jmespath 0.5 bug  Unable to compile expression "headers.Content-Type": syntax error token recognition error at: '-T'
-                 */
-                if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START) && exp.contains(Constant.PARAMETER_SEPARATOR)) {
-                    JSONObject responseJson = JSONObject.parseObject(JSON.toJSONString(responseEntity));
-                    return null;
-                }
                 return exp;
             }
         } catch (Exception e) {
-
+            if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_Content_START + Constant.DOT_PATH)) {
+                return null;
+            }
+            /**
+             * jmespath 0.5 bug  Unable to compile expression "headers.Content-Type": syntax error token recognition error at: '-T'
+             */
+            if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START + Constant.DOT_PATH)) {
+                if (exp.contains(Constant.PARAMETER_SEPARATOR)) {
+                    JSONObject responseJson = JSONObject.parseObject(responseEntity);
+                    JSONObject headersJson = responseJson.getJSONObject(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START);
+                    String[] headerMetas = exp.split(Constant.DOT_ESCAPE_PATH);
+                    if (headerMetas.length == 2) {
+                        return headersJson.get(headerMetas[1]);
+                    } else {
+                        String exceptionMsg = String.format("Jmespath does not support the current expression %s, please use jsonpath", exp);
+                        throw new DefinedException(exceptionMsg);
+                    }
+                }
+                return null;
+            }
             dataExtractorValue = exp;
+
         }
         return dataExtractorValue;
     }

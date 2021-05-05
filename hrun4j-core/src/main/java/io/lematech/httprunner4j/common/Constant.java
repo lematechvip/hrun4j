@@ -30,6 +30,8 @@ public class Constant {
     public static final String REGEX_PARAMETERIZE_EXPRESSION = "(?<=\\$\\{P\\()(.*?)(?=\\)})";
 
     public static final String DOT_PATH = ".";
+
+    public static final String DOT_ESCAPE_PATH = "\\.";
     public static final String UNDERLINE = "_";
     /**
      * CHARSET UTF-8
@@ -101,12 +103,12 @@ public class Constant {
     /**
      * data extractor jmespath headers start
      */
-    public static final String DATA_EXTRACTOR_JMESPATH_HEADERS_START = "headers.";
+    public static final String DATA_EXTRACTOR_JMESPATH_HEADERS_START = "headers";
 
     /**
      * data extractor jmespath content start
      */
-    public static final String DATA_EXTRACTOR_JMESPATH_Content_START = "content.";
+    public static final String DATA_EXTRACTOR_JMESPATH_Content_START = "content";
 
     /**
      * Parameter separator
