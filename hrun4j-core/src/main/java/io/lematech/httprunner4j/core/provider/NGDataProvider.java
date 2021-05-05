@@ -1,8 +1,7 @@
 package io.lematech.httprunner4j.core.provider;
 
-import cn.hutool.core.io.FileUtil;
+
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,34 +10,103 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
-import io.lematech.httprunner4j.widget.utils.RegularUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import org.testng.collections.Maps;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
+
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className NGDataProvider
+ * @description testng data provider and Complete data-driven grouping
+ * @created 2021/1/20 4:41 下午
+ * @publicWechat lematech
+ */
 
 public class NGDataProvider {
-    private String testCasePath;
+    private Searcher searcher;
+    private DataConstructor dataConstructor;
+    public NGDataProvider() {
+        searcher = new Searcher();
+        dataConstructor = new DataConstructor();
+    }
 
+    /**
+     * datq provider implement
+     *
+     * @param pkgName
+     * @param testCaseName
+     * @return
+     */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
+        File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        String dataFileResourcePath = seekDataFileByRule(pkgName, testCaseName, extName);
         TestCase testCase = TestDataLoaderFactory.getLoader(extName)
-                .load(dataFileResourcePath, TestCase.class);
+                .load(dataFilePath, TestCase.class);
         Object[][] testCases = getObjects(testCase);
         return testCases;
     }
 
+    /**
+     * package name and testcase name transfer to file path name
+     *
+     * @param pkgName
+     * @param testCaseName
+     * @return
+     */
+    private String caseFilePath(String pkgName, String testCaseName) {
+        String definePackageName = RunnerConfig.getInstance().getPkgName();
+        if (pkgName.startsWith(definePackageName)) {
+            pkgName = FilesUtil.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
+            if (pkgName.startsWith(Constant.UNDERLINE)) {
+                pkgName = pkgName.replaceFirst(Constant.UNDERLINE, Constant.DOT_PATH);
+            }
+        } else {
+            pkgName = FilesUtil.pkgPath2DirPath(pkgName);
+        }
+        return pkgName + File.separator + testCaseName;
+    }
+
     private Object[][] getObjects(TestCase testCase) {
         Object[][] testCases;
-        List<TestCase> result = handleMultiGroupData(testCase);
+        Object parameterValues = testCase.getConfig().getParameters();
+        List<Map<String, Object>> parameters = dataConstructor.parameterized(parameterValues);
+        if (Objects.isNull(parameters) || parameters.size() == 0) {
+            testCases = new Object[1][];
+            testCases[0] = new Object[]{testCase};
+            return testCases;
+        }
+        List<TestCase> result = new ArrayList<>();
+        Object configVariables = testCase.getConfig().getVariables();
+        if (Objects.isNull(configVariables)) {
+            configVariables = Maps.newHashMap();
+        }
+        if (!(configVariables instanceof Map)) {
+            String exceptionMsg = String.format("Use case configuration variable types can only be key-value pair types; they cannot be %s", configVariables.getClass());
+            throw new DefinedException(exceptionMsg);
+        }
+        for (Map<String, Object> parameterVariables : parameters) {
+            Map resultVariables = Maps.newHashMap();
+            resultVariables.putAll((Map) configVariables);
+            resultVariables.putAll(MapUtil.isEmpty(parameterVariables) ? Maps.newHashMap() : parameterVariables);
+            TestCase copyTestCase = (TestCase) SmallUtil.objectDeepCopy(testCase, TestCase.class);
+            Config config = copyTestCase.getConfig();
+            config.setVariables(resultVariables);
+            config.setParameters(parameterVariables);
+            copyTestCase.setConfig(config);
+            result.add(copyTestCase);
+        }
         testCases = new Object[result.size()][];
         for (int i = 0; i < result.size(); i++) {
             testCases[i] = new Object[]{result.get(i)};
@@ -46,158 +114,4 @@ public class NGDataProvider {
         return testCases;
     }
 
-    public String seekModelFileByCasePath(String filePath) {
-        if (!StrUtil.isEmpty(filePath)) {
-            if (filePath.startsWith(Constant.TEST_CASE_FILE_PATH)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_FILE_PATH, "");
-            } else if (filePath.startsWith(Constant.TEST_CASE_DIRECTORY_NAME)) {
-                filePath = filePath.replaceFirst(Constant.TEST_CASE_DIRECTORY_NAME, "");
-            }
-            String extName = FileUtil.extName(filePath);
-            String mainName = FileUtil.mainName(filePath);
-            if (StrUtil.isEmpty(extName)) {
-                extName = RunnerConfig.getInstance().getTestCaseExtName();
-            } else {
-                filePath = RegularUtil.replaceLast(filePath, mainName + Constant.DOT_PATH + extName, "");
-                if (filePath.endsWith("/")) {
-                    filePath = RegularUtil.replaceLast(filePath, "/", "");
-                }
-            }
-            MyLog.debug("路径名：{},文件名：{}，扩展名：{}", RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-            return seekDataFileByRule(RegularUtil.dirPath2pkgName(filePath), mainName, extName);
-        }
-        return "";
-    }
-
-    private String seekDataFileByRule(String pkgName, String testCaseName, String extName) {
-        Set<String> executePaths = RunnerConfig.getInstance().getExecutePaths();
-        if (executePaths.size() > 0) {
-            for (String path : executePaths) {
-                searchTestCaseByName(path, testCaseName);
-                if (!StrUtil.isEmpty(testCasePath)) {
-                    break;
-                }
-            }
-            if (StrUtil.isEmpty(testCasePath)) {
-                String exceptionMsg = String.format("in %s path,not found  %s.%s", executePaths, testCaseName, extName);
-                throw new DefinedException(exceptionMsg);
-            }
-            return testCasePath;
-        }
-
-        StringBuffer dataFileResourcePath = new StringBuffer();
-        dataFileResourcePath.append(Constant.TEST_CASE_DIRECTORY_NAME).append(File.separator);
-        if(!StrUtil.isEmpty(pkgName)){
-            String[] pkgNameMetas = pkgName.split("\\.");
-            int pkgNameMetaLength = pkgNameMetas.length;
-            if (pkgNameMetaLength >= 2) {
-                MyLog.debug("full package: {},company type,company name: {} project name: {}", pkgName, pkgNameMetas[0], pkgNameMetas[1], pkgNameMetas[2]);
-            }
-            for(int index = 3;index< pkgNameMetaLength; index++) {
-                dataFileResourcePath.append(pkgNameMetas[index]).append(File.separator);
-            }
-        }
-        dataFileResourcePath.append(testCaseName);
-        return dataFileResourcePath.toString();
-    }
-
-
-    /**
-     * @param path
-     * @param testCaseName
-     * @return
-     */
-    private String searchTestCaseByName(String path, String testCaseName) {
-        File filesPath = new File(path);
-        if (!filesPath.exists()) {
-            String exceptionMsg = String.format("file %s is not exits", filesPath.getAbsolutePath());
-            throw new DefinedException(exceptionMsg);
-        }
-        File[] files = filesPath.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                StringBuffer testCaseFullName = new StringBuffer();
-                testCaseFullName.append(testCaseName).append(Constant.DOT_PATH)
-                        .append(RunnerConfig.getInstance().getTestCaseExtName());
-                if (file.exists() && file.getName().equalsIgnoreCase(testCaseFullName.toString())) {
-                    MyLog.debug("filename {}", file.getName());
-                    MyLog.debug("testCaseFullName:{}", testCaseFullName.toString().trim());
-                    MyLog.debug("file Path {}", file.getPath());
-                    testCasePath = file.getPath();
-                    return testCasePath;
-                }
-            }else {
-                searchTestCaseByName(file.getPath(),testCaseName);
-            }
-        }
-        return "";
-    }
-
-
-    /**
-     * user_id: [1001, 1002, 1003, 1004]
-     * username-password:
-     * - ["user1", "111111"]
-     * - ["user2", "222222"]
-     * - ["user3", "333333"]
-     */
-    private List<TestCase> handleMultiGroupData(TestCase testCase) {
-        ArrayList<TestCase> result = new ArrayList<>();
-        Object parameters = testCase.getConfig().getParameters();
-        if (parameters == null) {
-            result.add(testCase);
-            return result;
-        }
-        if (parameters instanceof Map) {
-            parameters = JSONObject.parseObject(JSON.toJSONString(parameters));
-        }
-
-        MyLog.debug("class:{}", parameters.getClass());
-        if (parameters instanceof JSONObject) {
-            JSONObject jsonObject = (JSONObject) parameters;
-            for (Map.Entry entry : jsonObject.entrySet()) {
-                String key = (String) entry.getKey();
-                String[] params = key.split("-");
-                Object value = entry.getValue();
-                if (value instanceof JSONArray) {
-                    JSONArray array = (JSONArray) value;
-                    for (int i = 0; i < array.size(); i++) {
-                        Object arr = array.get(i);
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        TestCase cpTestCase;
-                        try {
-                            cpTestCase = objectMapper.readValue(objectMapper.writeValueAsString(testCase), TestCase.class);
-                        } catch (JsonProcessingException e) {
-                            String exceptionMsg = String.format("testcase deep copy exception : %s", e.getMessage());
-                            throw new DefinedException(exceptionMsg);
-                        }
-                        Map<String, Object> configVariables = (Map) cpTestCase.getConfig().getVariables();
-                        Map parameterVariables = Maps.newHashMap();
-                        Map resultVariables = Maps.newHashMap();
-                        if (params.length == 1) {
-                            String name = params[0];
-                            parameterVariables.put(name, arr);
-                        } else {
-                            if (arr instanceof JSONArray) {
-                                JSONArray jsonArray = (JSONArray) arr;
-                                int size = jsonArray.size();
-                                for (int index = 0; index < size; index++) {
-                                    String name = params[index];
-                                    parameterVariables.put(name, jsonArray.get(index));
-                                }
-                            }
-                        }
-                        resultVariables.putAll(MapUtil.isEmpty(configVariables) ? Maps.newHashMap() : configVariables);
-                        resultVariables.putAll(MapUtil.isEmpty(parameterVariables) ? Maps.newHashMap() : parameterVariables);
-                        Config config = cpTestCase.getConfig();
-                        config.setVariables(resultVariables);
-                        config.setParameters(parameterVariables);
-                        cpTestCase.setConfig(config);
-                        result.add(cpTestCase);
-                    }
-                }
-            }
-        }
-        return result;
-    }
 }

@@ -1,10 +1,12 @@
 config:
   name: 复杂操作案例之获取Token信息
   base_url: http://127.0.0.1:8000
+  variables:
+    variable_exp: "${1+2}"
 teststeps:
   - name: 步骤名称
     setup_hooks:
-      - "${hook(xteststep_setup_hooks1)}"
+      - "${1+2}"
       - "${hook(xteststep_setup_hooks2)}"
       - "${hook(xteststep_setup_hooks3)}"
       - "${hook(xteststep_setup_hooks4)}"
@@ -19,7 +21,7 @@ teststeps:
         os_platform: MacOS
         app_version: 1.0.0
       params:
-        a: A
+        a: ${variable_exp}
         b: B
       data:
         data1: dataV1
@@ -42,23 +44,25 @@ teststeps:
       json:
         sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
     variables:
-      - aaa: bbb
+      - test_step_variable_exp: "${2+2}"
     validate:
-      - equalTo: [statusCode, 200]
+      - "check": "headers.Content-Type"
+        "comparator": "equalTo"
+        "expect": "00"
+      - eq: [a, "a"]
+      - eq: [1.1, 1.1]
       - "check": "statusCode"
         "comparator": "equalTo"
         "expect": 200
-      - "check": "content.code"
-        "comparator": "equalTo"
-        "expect": "00"
+
       - "check": "content.message"
         "comparator": "equalTo"
         "expect": "ok！"
     teardown_hooks:
-      - "${hook(xteststep_teardown_hooks1)}"
-      - "${hook(xteststep_teardown_hooks2)}"
-      - "${hook(xteststep_teardown_hooks3)}"
-      - "${hook(xteststep_teardown_hooks4)}"
+      - "${hook(test_step_variable_exp)}"
+      - "${hook(test_step_variable_exp)}"
+      - "${hook(test_step_variable_exp)}"
+      - "${hook(test_step_variable_exp)}"
       - total1: '${add(1, 5)}'
       - total2: '${add(3, 5)}'
     output: [variables]

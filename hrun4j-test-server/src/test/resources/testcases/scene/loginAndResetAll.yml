@@ -7,8 +7,8 @@ config:
     app_version: 1.0.0
 teststeps:
   - name: 登录系统
-    api: apimodel/getSimpleToken
+    api: apis/getSimpleToken
     validate:
       - equalTo: [statusCode,200]
   - name: 添加用户
-    api: apimodel/resetAll
+    api: apis/resetAll

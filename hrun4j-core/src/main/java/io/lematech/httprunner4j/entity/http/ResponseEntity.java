@@ -8,7 +8,7 @@ import java.util.Map;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className ResponseEntity
- * @description TODO
+ * @description response entity
  * @created 2021/1/27 10:06 上午
  * @publicWechat lematech
  */
@@ -21,7 +21,7 @@ public class ResponseEntity {
     /**
      * response headers
      */
-    private Map<String, String> headers;
+    private Map<String, Object> headers;
     /**
      * response time
      */
@@ -33,7 +33,10 @@ public class ResponseEntity {
     /**
      * response cookies
      */
-    private Map<String, String> cookies;
+    private Map<String, Object> cookies;
 
+    /**
+     * response content length
+     */
     private Long contentLength;
 }

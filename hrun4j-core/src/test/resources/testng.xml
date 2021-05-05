@@ -6,9 +6,9 @@
     </listeners>
     <test name="httprunner4j">
         <classes>
-            <class name="io.lematech.httprunner4j.demo.DemoTest">
+            <class name="DemoTest">
             </class>
-            <class name="io.lematech.httprunner4j.demo.DemoJsonTest">
+            <class name="DemoJsonTest">
             </class>
         </classes>
     </test>

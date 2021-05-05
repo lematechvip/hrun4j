@@ -6,7 +6,7 @@ config:
     varB: "configB"
     varC: "configC"
   parameters:             # parameter variables
-    varA: ["paramA1"]
+    varA: ["paramA1","paramA2","paramA3","paramA4"]
     varB: ["paramB1"]
 teststeps:
   - name: step 1

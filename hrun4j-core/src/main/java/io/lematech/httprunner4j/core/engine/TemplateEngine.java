@@ -10,17 +10,32 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import java.io.StringWriter;
 
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className TemplateEngine
+ * @description template engine
+ * @created 2021/4/6 10:55 下午
+ * @publicWechat lematech
+ */
+
 public class TemplateEngine {
     private static VelocityEngine velocityEngine;
-    public static synchronized VelocityEngine getInstance(){
-        if(velocityEngine == null){
+
+    /**
+     * get velocity engine instance
+     *
+     * @return
+     */
+    public static synchronized VelocityEngine getInstance() {
+        if (velocityEngine == null) {
             velocityEngine = new VelocityEngine();
             velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
             velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
             try {
                 velocityEngine.init();
             } catch (Exception e) {
-                String exceptionMsg = String.format("velocity engine init exception :%s",e.getMessage());
+                String exceptionMsg = String.format("Velocity engine init exception :%s", e.getMessage());
                 throw new DefinedException(exceptionMsg);
             }
         }
@@ -38,14 +53,14 @@ public class TemplateEngine {
         try {
             template = getInstance().getTemplate(templateName);
         } catch (Exception e) {
-            String exceptionMsg = String.format("get template %s occur exception :",templateName,e.getMessage());
+            String exceptionMsg = String.format("There was an exception getting the template %s,Exception Informations: ", templateName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         StringWriter sw = new StringWriter();
         try {
             template.merge(context,sw);
         } catch (Exception e) {
-            String exceptionMsg = String.format("paramete template %s occur exception :",templateName,e.getMessage());
+            String exceptionMsg = String.format("An exception occurred in the rendering engine template %s based on the constructed data,,Exception Informations: %s", templateName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return sw.toString();

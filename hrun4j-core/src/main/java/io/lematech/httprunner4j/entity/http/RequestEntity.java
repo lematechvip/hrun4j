@@ -1,18 +1,23 @@
 package io.lematech.httprunner4j.entity.http;
 
 
+import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSONObject;
-import io.lematech.httprunner4j.widget.utils.RegularUtil;
+import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.Data;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className CustomRequest
- * @description TODO
+ * @className RequestEntity
+ * @description request entity
  * @created 2021/1/20 5:01 下午
  * @publicWechat lematech
  */
@@ -40,30 +45,47 @@ public class RequestEntity<T> {
      */
     private JSONObject json;
 
-    public Map<String, String> getHeaders() {
+    public Map<String, Object> getHeaders() {
         if (!Objects.isNull(this.cookies)) {
-            headers.put("Cookie", String.valueOf(this.cookies));
+            headers.put("Set-Cookie", getCookiesWithParams(this.cookies));
         }
         return headers;
+    }
+
+    private String getCookiesWithParams(Map<String, Object> cookies) {
+        StringBuilder sb = new StringBuilder();
+        if (MapUtil.isNotEmpty(cookies)) {
+            for (String key : cookies.keySet()) {
+                String value = cookies.get(key).toString();
+                try {
+                    String sVal = URLEncoder.encode(value, Constant.CHARSET_UTF_8);
+                    sb.append(key).append("=").append(sVal).append(";");
+                } catch (UnsupportedEncodingException e) {
+                    String exceptionMsg = String.format("Parameter %s encoding exception, exception information::%s", value, e.getMessage());
+                    throw new DefinedException(exceptionMsg);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
      * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
      */
-    private Map<String, String> headers;
+    private Map<String, Object> headers;
 
     private Integer connectionRequestTimeout;
 
     public Integer getConnectionRequestTimeout() {
-        return RegularUtil.s2ms(this.connectionRequestTimeout);
+        return SmallUtil.s2ms(this.connectionRequestTimeout);
     }
 
     public Integer getConnectTimeout() {
-        return RegularUtil.s2ms(this.connectTimeout);
+        return SmallUtil.s2ms(this.connectTimeout);
     }
 
     public Integer getSocketTimeout() {
-        return RegularUtil.s2ms(this.socketTimeout);
+        return SmallUtil.s2ms(this.socketTimeout);
     }
 
     private Integer connectTimeout;
@@ -78,7 +100,7 @@ public class RequestEntity<T> {
     /**
      * request cookies
      */
-    private Object cookies;
+    private Map<String, Object> cookies;
 
     /**
      * request files, used to upload files

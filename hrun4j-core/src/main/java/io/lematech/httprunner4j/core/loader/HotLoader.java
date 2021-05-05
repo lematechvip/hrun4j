@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
+import groovy.lang.GroovyClassLoader;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -15,11 +16,21 @@ import java.io.IOException;
 import java.util.*;
 
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className HotLoader
+ * @description Hot loader for loading classes files
+ * @created 2021/1/20 4:50 下午
+ * @publicWechat lematech
+ */
+
 public class HotLoader {
     public static Set<Class> hotLoaderClasses = new HashSet<>();
     private static JavaStringCompiler compiler;
-    public static synchronized JavaStringCompiler getInstance(){
-        if(compiler == null){
+
+    public static synchronized JavaStringCompiler getInstance() {
+        if (compiler == null) {
             compiler = new JavaStringCompiler();
         }
         return compiler;
@@ -32,7 +43,7 @@ public class HotLoader {
      * @param source
      * @return
      */
-    public static synchronized Class<?> hotLoadClass(String pkgName,String className,String source){
+    public static synchronized Class<?> hotLoadClass(String pkgName, String className, String source){
         if(StrUtil.isEmpty(className)||StrUtil.isEmpty(source)){
             throw new DefinedException("hot load class occur exception: className or source is empty");
         }
@@ -45,13 +56,12 @@ public class HotLoader {
             Map<String, byte[]> results = getInstance().compile(javaFileName, replaceSource);
             clazz = compiler.loadClass(pkgClassName, results);
             MyLog.debug("hot load class[{}] finished", pkgClassName);
-            //todo：考虑常驻内存及out of Memory 可能
             hotLoaderClasses.add(clazz);
         } catch (IOException e) {
             String exceptionMsg = String.format("compile %s occur exception: ",javaFileName,e.getMessage());
             throw new DefinedException(exceptionMsg);
         } catch (ClassNotFoundException e) {
-            String exceptionMsg = String.format("class %s not found exception",pkgClassName);
+            String exceptionMsg = String.format("class %s not found exception: ", pkgClassName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return clazz;

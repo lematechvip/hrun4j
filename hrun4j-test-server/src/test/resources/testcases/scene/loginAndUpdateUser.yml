@@ -9,11 +9,11 @@ config:
     uid: [1]
 teststeps:
   - name: 登录系统
-    api: apimodel/getSimpleToken
+    api: apis/getSimpleToken
     validate:
       - equalTo: [statusCode,200]
   - name: 更新用户信息
-    api: apimodel/updateUser
+    api: apis/updateUser
     validate:
       - equalTo: [statusCode,200]
       - equalTo: [content.code,"09"]

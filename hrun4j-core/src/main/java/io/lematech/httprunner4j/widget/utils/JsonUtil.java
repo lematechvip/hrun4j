@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.widget.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
@@ -9,6 +9,9 @@ import com.jayway.jsonpath.JsonPath;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
+import io.lematech.httprunner4j.common.Constant;
+
+import java.util.Objects;
 
 /**
  * @author lematech@foxmail.com
@@ -25,20 +28,53 @@ public class JsonUtil {
      * get value by jmespath
      *
      * @param exp
-     * @param jsonobj
+     * @param responseEntity
      * @return
      */
-    public static JsonNode getJmesPathResult(String exp, String jsonobj) {
-        JsonNode jsonResult = null;
+    public static Object getJmesPathResult(String exp, String responseEntity) {
+        Object dataExtractorValue;
         try {
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode actualObj = mapper.readTree(jsonobj);
+            JsonNode actualObj = mapper.readTree(responseEntity);
             Expression<JsonNode> compileExp = jmespath.compile(exp);
-            jsonResult = compileExp.search(actualObj);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            JsonNode jsonNode = compileExp.search(actualObj);
+            dataExtractorValue = getJsonNodeValue(jsonNode);
+            /**
+             * jmespath 0.5 bug jsonNode not null,is "null" To fix
+             */
+            if (Objects.isNull(dataExtractorValue) || "null".equals(jsonNode.asText())) {
+                /**
+                 * jmespath 0.5 bug  Unable to compile expression "headers.Content-Type": syntax error token recognition error at: '-T'
+                 */
+                if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START) && exp.contains(Constant.PARAMETER_SEPARATOR)) {
+                    JSONObject responseJson = JSONObject.parseObject(JSON.toJSONString(responseEntity));
+                    return null;
+                }
+                return exp;
+            }
+        } catch (Exception e) {
+
+            dataExtractorValue = exp;
         }
-        return jsonResult;
+        return dataExtractorValue;
+    }
+
+    /**
+     * Gets the data value of the node
+     *
+     * @param jsonNode
+     * @return
+     */
+    private static Object getJsonNodeValue(JsonNode jsonNode) {
+        if (jsonNode.isBoolean()) {
+            return jsonNode.asBoolean();
+        } else if (jsonNode.isDouble() || jsonNode.isFloat()) {
+            return jsonNode.asDouble();
+        } else if (jsonNode.isInt()) {
+            return jsonNode.asInt();
+        } else {
+            return jsonNode.asText();
+        }
     }
 
     /**

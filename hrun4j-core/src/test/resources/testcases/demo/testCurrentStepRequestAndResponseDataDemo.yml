@@ -51,4 +51,4 @@ teststeps:
         "comparator": "equalTo"
         "expect": "ok！"
     teardown_hooks:
-      - "${RHook(xteststep_teardown_hooks1)}"
+      - "${RRHook(xteststep_teardown_hooks1)}"

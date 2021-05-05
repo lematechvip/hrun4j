@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Data
 public class Comparator {
-    private String check;
+    private Object check;
     private String comparator;
     private Object expect;
 

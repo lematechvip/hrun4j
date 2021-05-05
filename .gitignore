@@ -12,7 +12,7 @@
 target
 *.iml
 # Package Files #
-*.jar
+
 .gitee
 .gitignore
 *.war
@@ -27,3 +27,6 @@ hs_err_pid*
 /hrun4j-core/test-output/
 /test-output/
 !/logs/
+/hrun4j-core/src/test/resources/test-output/httprunner4j/
+/resources/
+/hrun4j-core/src/test/resources/test-output/

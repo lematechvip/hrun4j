@@ -17,32 +17,41 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import java.io.IOException;
 import java.util.Iterator;
 
+
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * @className SchemaValidator
+ * @description validator schemas
+ * @created 2021/1/22 4:07 下午
+ * @publicWechat lematech
+ */
+
 public class SchemaValidator {
 
     private final static JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 
     /**
+     * Verify that the object file format meets the requirements
+     *
      * @param clz
      * @param obj
      */
     public static String validateJsonObjectFormat(Class clz, Object obj) {
         JsonNode schemaNode;
-        String jsonFormatSchema = "";
+        String jsonFormatSchema;
+        if (clz == TestCase.class) {
+            jsonFormatSchema = Constant.TEST_CASE_SCHEMA;
+        } else if (clz == ApiModel.class) {
+            jsonFormatSchema = Constant.API_MODEL_SCHEMA;
+        } else {
+            String exceptionMsg = String.format("Current class %s format validation is not currently supported", clz);
+            throw new DefinedException(exceptionMsg);
+        }
         try {
-            if (clz == TestCase.class) {
-                jsonFormatSchema = Constant.TEST_CASE_SCHEMA;
-            } else if (clz == ApiModel.class) {
-                jsonFormatSchema = Constant.API_MODEL_SCHEMA;
-            } else {
-                String exceptionMsg = String.format("not support %s class validate: %s", clz, obj);
-                throw new DefinedException(exceptionMsg);
-            }
             schemaNode = JsonLoader.fromResource(jsonFormatSchema);
         } catch (IOException ioException) {
-            String exceptionMsg = String.format("load resource %s io exception: %s", jsonFormatSchema, ioException.getMessage());
-            throw new DefinedException(exceptionMsg);
-        } catch (Exception e) {
-            String exceptionMsg = String.format("load resource %s io exception: %s", jsonFormatSchema, e.getMessage());
+            String exceptionMsg = String.format("Error in loading schema file %s. Exception message: %s", jsonFormatSchema, ioException.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         JsonNode dataNode;
@@ -59,11 +68,11 @@ public class SchemaValidator {
                         errorInfo.append(message);
                     }
                 }
-                String exceptionMsg = String.format("schema validate failure: %s,clz: %s,object: %s", errorInfo.toString(), clz.getSimpleName(), JSON.toJSON(obj));
+                String exceptionMsg = String.format("Class: %s,object: %s,JSON data validation failed because:: %s,", clz.getSimpleName(), JSON.toJSON(obj), errorInfo.toString());
                 return exceptionMsg;
             }
         } catch (IOException | ProcessingException ioException) {
-            String exceptionMsg = String.format("schema validate data error:%s", ioException);
+            String exceptionMsg = String.format("By trying to verify that the JSON exception has occurred, the exception message is:%s", ioException.getMessage());
             return exceptionMsg;
         }
         return null;

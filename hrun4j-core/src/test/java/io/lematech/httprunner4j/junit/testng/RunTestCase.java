@@ -44,7 +44,7 @@ public class RunTestCase extends TestBase {
          * 1、多线程运行，同包同类文件创建，需要区分，可在包命名时动态生成唯一文件夹（顶层目录）
          * 2、运行之后的卸载问题，以防out of memeory
 */      Map<String, List<String>> pkgGroup =  Maps.newHashMap();
-        RunTestCase.generatePkgGroup(new File(Constant.TEST_CASE_FILE_PATH),pkgGroup);
+        RunTestCase.generatePkgGroup(new File(File.separator + Constant.TEST_CASE_DIRECTORY_NAME), pkgGroup);
         try {
             // 设置变量
 
@@ -111,7 +111,7 @@ public class RunTestCase extends TestBase {
         File [] files = listFile.listFiles();
         for(File file : files){
             if(file.isFile()){
-                String pkgPath = file.getParent().replace(Constant.TEST_CASE_FILE_PATH,"");
+                String pkgPath = file.getParent().replace(Constant.TEST_CASE_DIRECTORY_NAME, "");
                 //String pkgRootKey = String.format("hrun4j%s", TimeString.getTimeString());
                 StringBuffer pkgName = new StringBuffer(dirPath2pkgName(pkgPath));
                 String fileMainName = FileNameUtil.mainName(file.getName());
