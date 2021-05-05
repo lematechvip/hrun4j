@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.widget.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
@@ -8,6 +9,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
+import io.lematech.httprunner4j.common.Constant;
 
 import java.util.Objects;
 
@@ -41,9 +43,17 @@ public class JsonUtil {
              * jmespath 0.5 bug jsonNode not null,is "null" To fix
              */
             if (Objects.isNull(dataExtractorValue) || "null".equals(jsonNode.asText())) {
+                /**
+                 * jmespath 0.5 bug  Unable to compile expression "headers.Content-Type": syntax error token recognition error at: '-T'
+                 */
+                if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START) && exp.contains(Constant.PARAMETER_SEPARATOR)) {
+                    JSONObject responseJson = JSONObject.parseObject(JSON.toJSONString(responseEntity));
+                    return null;
+                }
                 return exp;
             }
         } catch (Exception e) {
+
             dataExtractorValue = exp;
         }
         return dataExtractorValue;

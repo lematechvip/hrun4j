@@ -21,7 +21,7 @@ public class ResponseEntity {
     /**
      * response headers
      */
-    private Map<String, String> headers;
+    private Map<String, Object> headers;
     /**
      * response time
      */
@@ -33,7 +33,7 @@ public class ResponseEntity {
     /**
      * response cookies
      */
-    private Map<String, String> cookies;
+    private Map<String, Object> cookies;
 
     /**
      * response content length

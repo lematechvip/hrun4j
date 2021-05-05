@@ -1,8 +1,10 @@
 package io.lematech.httprunner4j.widget.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.HttpConstant;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
@@ -269,12 +271,12 @@ public class HttpClientUtil {
         responseEntity.setStatusCode(statusCode);
         responseEntity.setContentLength(response.getEntity().getContentLength());
         responseEntity.setTime((elapsedTime * 1.0) / 1000);
-        HashMap<String, String> headersMap = new HashMap<>();
+        HashMap<String, Object> headersMap = new HashMap<>();
         Header[] headerArr = response.getAllHeaders();
         for (Header header : headerArr) {
             headersMap.put(header.getName(), header.getValue());
         }
-        HashMap<String, String> cookiesMap = new HashMap<>();
+        HashMap<String, Object> cookiesMap = new HashMap<>();
         if (httpCookieStore != null) {
             List<Cookie> cookies = httpCookieStore.getCookies();
             for (Cookie cookie : cookies) {
@@ -282,7 +284,6 @@ public class HttpClientUtil {
             }
             responseEntity.setCookies(cookiesMap);
         }
-
         responseEntity.setHeaders(headersMap);
         if (statusCode == HttpStatus.SC_OK) {
             HttpEntity entityRes = response.getEntity();
@@ -307,7 +308,7 @@ public class HttpClientUtil {
     private static String getUrlWithParams(String url, Map<String, Object> params) {
         boolean first = true;
         StringBuilder sb = new StringBuilder(url);
-        if (params != null) {
+        if (MapUtil.isNotEmpty(params)) {
             for (String key : params.keySet()) {
                 char ch = '&';
                 if (first == true) {
@@ -316,9 +317,11 @@ public class HttpClientUtil {
                 }
                 String value = params.get(key).toString();
                 try {
-                    String sval = URLEncoder.encode(value, "UTF-8");
-                    sb.append(ch).append(key).append("=").append(sval);
+                    String sVal = URLEncoder.encode(value, Constant.CHARSET_UTF_8);
+                    sb.append(ch).append(key).append("=").append(sVal);
                 } catch (UnsupportedEncodingException e) {
+                    String exceptionMsg = String.format("Parameter %s encoding exception, exception information::%s", value, e.getMessage());
+                    throw new DefinedException(exceptionMsg);
                 }
             }
         }
@@ -428,7 +431,7 @@ public class HttpClientUtil {
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getContent())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.time"), SmallUtil.emptyIfNull(responseEntity.getTime())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(responseEntity.getHeaders())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));
         return responseEntity;
     }

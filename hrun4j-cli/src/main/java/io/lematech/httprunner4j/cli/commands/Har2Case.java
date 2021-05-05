@@ -2,12 +2,14 @@ package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.URLUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.har.HarUtils;
 import io.lematech.httprunner4j.cli.har.model.*;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
+import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.widget.log.MyLog;
@@ -78,25 +80,51 @@ public class Har2Case extends Command {
                 requestEntity.setMethod(request.getMethod());
                 requestEntity.setUrl(request.getUrl());
                 //set headers
-                List<HarHeader> harHeaders = request.getHeaders();
-                Map<String, Object> headers = Maps.newHashMap();
-                for (HarHeader harHeader : harHeaders) {
-                    headers.put(String.valueOf(harHeader.getName()), harHeader.getValue());
+                List<HarHeader> harRequestHeaders = request.getHeaders();
+                Map<String, Object> requestHeaders = Maps.newHashMap();
+                for (HarHeader harHeader : harRequestHeaders) {
+                    requestHeaders.put(String.valueOf(harHeader.getName()), harHeader.getValue());
                 }
-                requestEntity.setHeaders(headers);
+                requestEntity.setHeaders(requestHeaders);
                 //set cookie
-                List<HarCookie> harCookies = request.getCookies();
-                Map<String, Object> cookie = Maps.newHashMap();
-                for (HarCookie harCookie : harCookies) {
-                    cookie.put(String.valueOf(harCookie.getName()), harCookie.getValue());
+                List<HarCookie> harRequestCookies = request.getCookies();
+                Map<String, Object> requestCookie = Maps.newHashMap();
+                for (HarCookie harCookie : harRequestCookies) {
+                    requestCookie.put(String.valueOf(harCookie.getName()), harCookie.getValue());
                 }
-                requestEntity.setCookies(cookie);
+                requestEntity.setCookies(requestCookie);
+                //set get  params
                 List<HarQueryParm> queryParams = request.getQueryString();
                 Map<String, Object> params = Maps.newHashMap();
-                for (HarQueryParm harQueryParm : queryParams) {
-                    params.put(String.valueOf(harQueryParm.getName()), harQueryParm.getValue());
+                if (queryParams.size() > 0) {
+                    for (HarQueryParm harQueryParm : queryParams) {
+                        params.put(String.valueOf(harQueryParm.getName()), harQueryParm.getValue());
+                    }
                 }
-                requestEntity.setParams(params);
+                //set post params
+                HarPostData harPostData = request.getPostData();
+                String postContent = harPostData.getText();
+                requestEntity.setJson(JSONObject.parseObject(postContent));
+                List<HarPostParam> postParams = harPostData.getParams();
+                Map<String, Object> postParam = Maps.newHashMap();
+                if (postParams.size() > 0) {
+                    for (HarPostParam harPostParam : postParams) {
+                        postParam.put(String.valueOf(harPostParam.getName()), harPostParam.getValue());
+                    }
+                }
+
+                //set response headers
+
+                List<Map<String, Object>> validate = new ArrayList<>();
+                HarResponse response = entry.getResponse();
+
+                int statusCode = response.getStatus();
+                List validateStatusCodeMeta = new ArrayList();
+                validateStatusCodeMeta.add("statusCode");
+                validateStatusCodeMeta.add(statusCode);
+                Map<String, Object> validateMap = Maps.newHashMap();
+                validateMap.put("eq", validateStatusCodeMeta);
+                validate.add(validateMap);
                 testStep.setRequest(requestEntity);
                 testSteps.add(testStep);
             }

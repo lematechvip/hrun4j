@@ -99,6 +99,16 @@ public class Constant {
     public static final String DATA_EXTRACTOR_JSONPATH_START = "$.";
 
     /**
+     * data extractor jmespath headers start
+     */
+    public static final String DATA_EXTRACTOR_JMESPATH_HEADERS_START = "headers.";
+
+    /**
+     * data extractor jmespath content start
+     */
+    public static final String DATA_EXTRACTOR_JMESPATH_Content_START = "content.";
+
+    /**
      * Parameter separator
      */
     public static final String PARAMETER_SEPARATOR = "-";

@@ -1,10 +1,15 @@
 package io.lematech.httprunner4j.entity.http;
 
 
+import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.Data;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,9 +47,26 @@ public class RequestEntity<T> {
 
     public Map<String, Object> getHeaders() {
         if (!Objects.isNull(this.cookies)) {
-            headers.put("Cookie", this.cookies);
+            headers.put("Set-Cookie", getCookiesWithParams(this.cookies));
         }
         return headers;
+    }
+
+    private String getCookiesWithParams(Map<String, Object> cookies) {
+        StringBuilder sb = new StringBuilder();
+        if (MapUtil.isNotEmpty(cookies)) {
+            for (String key : cookies.keySet()) {
+                String value = cookies.get(key).toString();
+                try {
+                    String sVal = URLEncoder.encode(value, Constant.CHARSET_UTF_8);
+                    sb.append(key).append("=").append(sVal).append(";");
+                } catch (UnsupportedEncodingException e) {
+                    String exceptionMsg = String.format("Parameter %s encoding exception, exception information::%s", value, e.getMessage());
+                    throw new DefinedException(exceptionMsg);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -78,7 +100,7 @@ public class RequestEntity<T> {
     /**
      * request cookies
      */
-    private Object cookies;
+    private Map<String, Object> cookies;
 
     /**
      * request files, used to upload files

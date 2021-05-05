@@ -51,6 +51,8 @@ public class DataExtractor {
         }
         Object dataExtractorValue;
         String responseStr = JSON.toJSONString(responseEntity);
+
+
         if (RegExpUtil.isExp(expStr)) {
             dataExtractorValue = expProcessor.handleStringExp(expStr);
         } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_REGEX_START) && expStr.endsWith(Constant.DATA_EXTRACTOR_REGEX_END)) {
@@ -63,7 +65,6 @@ public class DataExtractor {
         }
         return dataExtractorValue;
     }
-
 
 
     /**
