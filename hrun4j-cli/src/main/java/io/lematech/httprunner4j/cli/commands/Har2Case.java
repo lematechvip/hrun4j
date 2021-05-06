@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.cli.commands;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
@@ -9,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
+import com.sangupta.jerry.util.UriUtils;
 import io.lematech.httprunner4j.cli.CliConstants;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.har.HarUtils;
@@ -24,7 +26,6 @@ import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import org.kohsuke.args4j.Option;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -120,7 +121,7 @@ public class Har2Case extends Command {
             testCase.setConfig(config);
             testCase.setTestSteps(testSteps);
             try {
-                String caseFileName = FileUtil.getName(harFile);
+                String caseFileName = FileUtil.mainName(harFile);
                 File jsonFile;
                 JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(testCase, SerializerFeature.PrettyFormat), Feature.OrderedField);
                 if (Objects.isNull(format) || format.equalsIgnoreCase(CliConstants.GENERATE_YML_FORMAT)) {
@@ -149,7 +150,7 @@ public class Har2Case extends Command {
 
     private TestStep buildTestStep(HarEntry entry) {
         HarRequest request = entry.getRequest();
-        String url = URLUtil.getPath(request.getUrl());
+        String url = UriUtils.extractPath(request.getUrl());
         TestStep testStep = new TestStep();
         testStep.setName(String.format("Request api:%s", url));
         RequestEntity requestEntity = new RequestEntity();
@@ -194,7 +195,6 @@ public class Har2Case extends Command {
                 }
             }
         }
-
         //set response headers
         List<Map<String, Object>> validate = new ArrayList<>();
         HarResponse response = entry.getResponse();
@@ -215,10 +215,11 @@ public class Har2Case extends Command {
         }
         HarContent harContent = response.getContent();
         String mimeType = harContent.getMimeType();
-        if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType)) {
+        if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
             String content = harContent.getText();
-            if (JsonUtil.isJson(content)) {
-                JSONObject jsonContent = JSONObject.parseObject(content);
+            String base64Content = Base64.decodeStr(content);
+            if (JsonUtil.isJson(base64Content)) {
+                JSONObject jsonContent = JSONObject.parseObject(base64Content);
                 List<String> defaultItems = new ArrayList<>();
                 defaultItems.add("code");
                 defaultItems.add("msg");

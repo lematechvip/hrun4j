@@ -26,6 +26,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import io.lematech.httprunner4j.cli.har.model.Har;
 import io.lematech.httprunner4j.cli.har.model.HarEntry;
+import io.lematech.httprunner4j.cli.har.model.HarLog;
 import io.lematech.httprunner4j.cli.har.model.HarPage;
 import io.lematech.httprunner4j.cli.har.util.GsonUtils;
 import io.lematech.httprunner4j.common.Constant;
@@ -110,16 +111,34 @@ public class HarUtils {
      * @param har
      */
     public static void connectReferences(Har har, List<String> requestSuffixs) {
-        if (Objects.isNull(har)) {
-            throw new DefinedException("HAR object cannot be null");
-        }
-        List<HarPage> harPages = har.getLog().getPages();
-        List<HarEntry> harEntries = har.getLog().getEntries();
-        if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(harPages)) {
-            MyLog.warn("No page found");
-            return;
-        }
-        if (CollectionUtil.isEmpty(harEntries)) {
+		if (Objects.isNull(har)) {
+			throw new DefinedException("HAR object cannot be null");
+		}
+		HarLog harLog = har.getLog();
+		List<HarPage> harPages = har.getLog().getPages();
+		List<HarEntry> harEntries = har.getLog().getEntries();
+		if (Objects.isNull(har.getLog())) {
+			MyLog.warn("HAR file invalid");
+			return;
+		}
+
+		if (CollectionUtil.isEmpty(harPages)) {
+			if (CollectionUtil.isEmpty(harEntries)) {
+				MyLog.warn("No page found");
+				return;
+			}
+			harPages = new ArrayList<>();
+			HarEntry harEntry = harEntries.get(0);
+			HarPage harPage = new HarPage();
+			harPage.setEntries(harEntries);
+			harPage.setComment("For RESTful API requests, HTTPrunner4J is automatically added");
+			harPage.setId(StrUtil.isEmpty(harEntry.getPageref()) ? harEntry.getRequest().getUrl() : harEntry.getPageref());
+			harPage.setStartedDateTime(harEntry.getStartedDateTime());
+			harPage.setTitle("For RESTful API requests");
+			harPages.add(harPage);
+			harLog.setPages(harPages);
+		}
+		if (CollectionUtil.isEmpty(harEntries)) {
 			MyLog.warn("No har entry - initialize empty list");
 			for (HarPage page : har.getLog().getPages()) {
 				page.setEntries(new ArrayList<>());
@@ -127,11 +146,12 @@ public class HarUtils {
 
 			return;
 		}
+
 		for (HarPage page : harPages) {
 			String pageID = page.getId();
 			List<HarEntry> entries = new ArrayList<>();
 			for (HarEntry entry : harEntries) {
-                if (pageID.equals(entry.getPageref())) {
+				//if (pageID.equals(StrUtil.isEmpty(entry.getPageref())?entry.getRequest().getUrl():entry.getPageref())) {
                     String requestSuffix = FileUtil.extName(entry.getRequest().getUrl());
                     if (requestSuffixs.size() > 0) {
                         if (requestSuffixs.contains(requestSuffix)) {
@@ -140,7 +160,7 @@ public class HarUtils {
                         continue;
                     }
                     entries.add(entry);
-                }
+				//}
 			}
 			Collections.sort(entries);
 			page.setEntries(entries);
