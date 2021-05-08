@@ -32,14 +32,14 @@ teststeps:
       json:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     validate:
-      - equalTo: [statusCode, 200]
-      - "check": "statusCode"
+      - equalTo: [status_code, 200]
+      - "check": "status_code"
         "comparator": "equalTo"
         "expect": 200
-      - "check": "content.code"
+      - "check": "body.code"
         "comparator": "equalTo"
         "expect": "00"
-      - "check": "content.message"
+      - "check": "body.message"
         "comparator": "equalTo"
         "expect": "ok！"
     teardown_hooks:

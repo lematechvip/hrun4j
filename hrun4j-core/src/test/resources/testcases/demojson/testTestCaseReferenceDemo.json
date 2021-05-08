@@ -10,13 +10,13 @@
       "validate": [
         {
           "equalTo": [
-            "statusCode",
+            "status_code",
             200
           ]
         },
         {
           "equalTo": [
-            "content.code",
+            "body.code",
             "00"
           ]
         }

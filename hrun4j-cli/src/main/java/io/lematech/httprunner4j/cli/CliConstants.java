@@ -49,4 +49,9 @@ public class CliConstants {
      */
     public static final String APPLICATION_JSON_MIME_TYPE_UTF_8 = "application/json;charset=UTF-8";
 
+    /**
+     * generate mode of easy,to content-type meta element
+     */
+    public static final String HAR_REQUEST_HEADER_COOKIE = "Cookie";
+
 }

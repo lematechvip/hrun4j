@@ -5,7 +5,7 @@ teststeps:
   - name: 获取Token
     api: apis/getToken
     validate:
-      - equalTo: [statusCode, 200]
-      - equalTo: [content.code, "00"]
+      - equalTo: [status_code, 200]
+      - equalTo: [body.code, "00"]
   - name: 引用测试用例
     testcase: testcases/demojson/testComplexSingleDemo.json

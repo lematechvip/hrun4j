@@ -14,7 +14,7 @@ teststeps:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     validate:
       - eq:
-          - statusCode
+          - status_code
           - 200
-      - equalTo: [content.code,"00"]
-      - equalTo: [content.message,"ok！"]
+      - equalTo: [body.code,"00"]
+      - equalTo: [body.message,"ok！"]

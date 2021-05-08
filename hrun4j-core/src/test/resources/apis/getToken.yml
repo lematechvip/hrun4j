@@ -43,6 +43,6 @@ request:
   json:
     sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
 validate:
-  - equalTo: [statusCode,200]
-  - equalTo: [content.code,"00"]
-  - equalTo: [content.message,"ok！"]
+  - equalTo: [status_code,200]
+  - equalTo: [body.code,"00"]
+  - equalTo: [body.message,"ok！"]

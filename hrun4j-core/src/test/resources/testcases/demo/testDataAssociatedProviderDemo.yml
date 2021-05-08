@@ -22,12 +22,12 @@ teststeps:
       json:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     extract:                # extracted variables
-      varA: content.code   # suppose varA="extractVarA"
-      varB: content.message   # suppose varB="extractVarB"
+      varA: body.code   # suppose varA="extractVarA"
+      varB: body.message   # suppose varB="extractVarB"
     validate:
-      - equalTo: [statusCode,200]
-      - equalTo: [content.code,"00"]
-      - equalTo: [content.message,"ok！"]
+      - equalTo: [status_code,200]
+      - equalTo: [body.code,"00"]
+      - equalTo: [body.message,"ok！"]
     output:
       - variables
       - extract
@@ -45,9 +45,9 @@ teststeps:
       json:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     validate:
-      - equalTo: [statusCode,200]
-      - equalTo: [content.code,"00"]
-      - equalTo: [content.message,"ok！"]
+      - equalTo: [status_code,200]
+      - equalTo: [body.code,"00"]
+      - equalTo: [body.message,"ok！"]
     extract:                # extracted variables
-      varA: content.code   # suppose varA="extractVarA"
-      varB: content.message   # suppose varB="extractVarB"
+      varA: body.code   # suppose varA="extractVarA"
+      varB: body.message   # suppose varB="extractVarB"

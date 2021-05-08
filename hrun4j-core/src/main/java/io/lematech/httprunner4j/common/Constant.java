@@ -108,7 +108,7 @@ public class Constant {
     /**
      * data extractor jmespath content start
      */
-    public static final String DATA_EXTRACTOR_JMESPATH_Content_START = "content";
+    public static final String DATA_EXTRACTOR_JMESPATH_Content_START = "body";
 
     /**
      * Parameter separator
@@ -116,4 +116,9 @@ public class Constant {
     public static final String PARAMETER_SEPARATOR = "-";
 
     public static final String CSV_FILE_PATH_KEY = "CVS_FILE_PATH";
+
+    /**
+     * data extractor jmespath node null value
+     */
+    public static final String DATA_EXTRACTOR_JMESPATH_NODE_NULL = "null";
 }

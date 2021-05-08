@@ -11,10 +11,8 @@ import io.lematech.httprunner4j.cli.har.model.HarPage;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.kohsuke.args4j.Option;
-
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,11 +27,15 @@ import java.util.Objects;
  */
 
 public class ViewHar extends Command {
+
 	@Option(name = "--file", usage = "Specify the HAR file path.")
 	String file;
 
 	@Option(name = "--filter_suffix", usage = "Filter out the specified request suffix, support multiple suffix formats, multiple in English status ';' division.")
 	String filterSuffix;
+
+	@Option(name = "--filter_uri", usage = "Filter out the URIs that meet the requirements by keyword, multiple in English status ';' division.")
+	String filterUriByKeywords;
 
 	@Override
 	public String description() {
@@ -64,11 +66,7 @@ public class ViewHar extends Command {
 			MyLog.error(exceptionMsg);
 			return 1;
 		}
-		List<String> filterSuffixs = new ArrayList<>();
-		if (Objects.nonNull(filterSuffix)) {
-			filterSuffixs = ListUtil.toList(filterSuffix.split(CliConstants.FILTER_REQUEST_SUFFIX_SEPARATOR));
-		}
-		HarUtils.connectReferences(har, filterSuffixs);
+		HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
 		List<HarPage> harPages = har.getLog().getPages();
 		viewInConsole(harPages);
 		return 0;

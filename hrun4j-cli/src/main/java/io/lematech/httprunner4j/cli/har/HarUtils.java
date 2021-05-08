@@ -20,10 +20,13 @@
 package io.lematech.httprunner4j.cli.har;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+import com.sangupta.jerry.util.UriUtils;
+import io.lematech.httprunner4j.cli.CliConstants;
 import io.lematech.httprunner4j.cli.har.model.Har;
 import io.lematech.httprunner4j.cli.har.model.HarEntry;
 import io.lematech.httprunner4j.cli.har.model.HarLog;
@@ -105,12 +108,22 @@ public class HarUtils {
 		return GsonUtils.getGson().fromJson(jsonElement, Har.class);
 	}
 
-    /**
-     * Connect references between page and entries so that they can be obtained as needed.
-     *
-     * @param har
-     */
-    public static void connectReferences(Har har, List<String> requestSuffixs) {
+	/**
+	 * Connect references between page and entries so that they can be obtained as needed.
+	 *
+	 * @param har
+	 */
+	public static void connectReferences(Har har, String filterSuffix, String filterUriByKeywords) {
+		List<String> filterSuffixList = new ArrayList<>();
+		if (Objects.nonNull(filterSuffix)) {
+			filterSuffixList = ListUtil.toList(filterSuffix.split(CliConstants.FILTER_REQUEST_SUFFIX_SEPARATOR));
+		}
+
+		List<String> filterUriList = new ArrayList<>();
+		if (Objects.nonNull(filterUriByKeywords)) {
+			filterUriList = ListUtil.toList(filterUriByKeywords.split(CliConstants.FILTER_REQUEST_SUFFIX_SEPARATOR));
+		}
+
 		if (Objects.isNull(har)) {
 			throw new DefinedException("HAR object cannot be null");
 		}
@@ -122,28 +135,30 @@ public class HarUtils {
 			return;
 		}
 
+		boolean isRestfulApi = false;
 		if (CollectionUtil.isEmpty(harPages)) {
 			if (CollectionUtil.isEmpty(harEntries)) {
 				MyLog.warn("No page found");
 				return;
 			}
+			isRestfulApi = true;
 			harPages = new ArrayList<>();
 			HarEntry harEntry = harEntries.get(0);
 			HarPage harPage = new HarPage();
 			harPage.setEntries(harEntries);
-			harPage.setComment("For RESTful API requests, HTTPrunner4J is automatically added");
+			harPage.setComment("For RESTful API requests, Httprunner4J is automatically added");
 			harPage.setId(StrUtil.isEmpty(harEntry.getPageref()) ? harEntry.getRequest().getUrl() : harEntry.getPageref());
 			harPage.setStartedDateTime(harEntry.getStartedDateTime());
 			harPage.setTitle("For RESTful API requests");
 			harPages.add(harPage);
 			harLog.setPages(harPages);
 		}
+
 		if (CollectionUtil.isEmpty(harEntries)) {
 			MyLog.warn("No har entry - initialize empty list");
 			for (HarPage page : har.getLog().getPages()) {
 				page.setEntries(new ArrayList<>());
 			}
-
 			return;
 		}
 
@@ -151,20 +166,37 @@ public class HarUtils {
 			String pageID = page.getId();
 			List<HarEntry> entries = new ArrayList<>();
 			for (HarEntry entry : harEntries) {
-				//if (pageID.equals(StrUtil.isEmpty(entry.getPageref())?entry.getRequest().getUrl():entry.getPageref())) {
-                    String requestSuffix = FileUtil.extName(entry.getRequest().getUrl());
-                    if (requestSuffixs.size() > 0) {
-                        if (requestSuffixs.contains(requestSuffix)) {
-                            entries.add(entry);
-                        }
-                        continue;
-                    }
-                    entries.add(entry);
-				//}
+				if (isRestfulApi || harPages.size() == 1) {
+					addRequestEntry(filterSuffixList, filterUriList, entries, entry);
+				} else {
+					if (pageID.equals(StrUtil.isEmpty(entry.getPageref()) ? entry.getRequest().getUrl() : entry.getPageref())) {
+						addRequestEntry(filterSuffixList, filterUriList, entries, entry);
+					}
+				}
 			}
 			Collections.sort(entries);
 			page.setEntries(entries);
 		}
+	}
+
+	/**
+	 * Add request entry information
+	 *
+	 * @param filterSuffixList
+	 * @param filterUriList
+	 * @param entries
+	 * @param entry
+	 */
+	private static void addRequestEntry(List<String> filterSuffixList, List<String> filterUriList, List<HarEntry> entries, HarEntry entry) {
+		String baseUri = UriUtils.extractPath(entry.getRequest().getUrl());
+		String requestSuffix = FileUtil.extName(baseUri);
+		if (filterSuffixList.size() > 0 || filterUriList.size() > 0) {
+			if (filterSuffixList.contains(requestSuffix) || filterUriList.contains(baseUri)) {
+				entries.add(entry);
+			}
+			return;
+		}
+		entries.add(entry);
 	}
 
 

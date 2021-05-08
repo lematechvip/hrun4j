@@ -49,9 +49,8 @@ public class Run extends Command {
 
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        if (Objects.isNull(testJar)) {
-            RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
-        } else {
+        validateOrSetParams();
+        if (Objects.nonNull(testJar)) {
             if (!testJar.exists() || !testJar.isFile() || !FileUtil.extName(testJar).endsWith(Constant.TEST_JAR_END_SUFFIX)) {
                 String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in.jar"
                         , FilesUtil.getCanonicalPath(testJar));
@@ -116,6 +115,19 @@ public class Run extends Command {
             }
             canonicalTestCasePaths.add(canonicalCaseFile);
         }
+        RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
+        TestNGEngine.run();
+        return 0;
+    }
+
+    /**
+     * Verify the validity of data or set parameter values
+     */
+    private void validateOrSetParams() {
+        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
+        if (Objects.isNull(testJar)) {
+            RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
+        }
         if (!StrUtil.isEmpty(pkgName)) {
             RunnerConfig.getInstance().setPkgName(pkgName);
         }
@@ -125,9 +137,5 @@ public class Run extends Command {
         if (!StrUtil.isEmpty(i18n)) {
             RunnerConfig.getInstance().setI18n(i18n);
         }
-        RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
-        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
-        TestNGEngine.run();
-        return 0;
     }
 }

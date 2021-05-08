@@ -86,7 +86,7 @@ public class TestCaseRunner {
     public void execute(TestCase testCase) {
         try {
             Config config = (Config) expProcessor.dynHandleContainsExpObject(testCase.getConfig());
-            preAndPostProcessor.preProcess(config, null);
+            preAndPostProcessor.preProcess(config, new RequestEntity());
             List<TestStep> testSteps = testCase.getTestSteps();
             for (int index = 0; index < testSteps.size(); index++) {
                 Map<String, Object> testStepConfigVariable = Maps.newHashMap();
@@ -108,7 +108,7 @@ public class TestCaseRunner {
                 assertChecker.assertList(validateList, responseEntity, testStepConfigVariable);
                 dataExtractor.extractVariables(testStep.getExtract(), responseEntity, testStepConfigVariable);
             }
-            preAndPostProcessor.postProcess(config, null);
+            preAndPostProcessor.postProcess(config, new ResponseEntity());
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {

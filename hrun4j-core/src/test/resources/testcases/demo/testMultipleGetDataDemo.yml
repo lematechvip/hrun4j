@@ -15,11 +15,11 @@ teststeps:
       json:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     validate:
-      - equalTo: [statusCode, 200]
-      - equalTo: [content.message, "ok！"]
-      - equalTo: [content.code, "00"]
+      - equalTo: [status_code, 200]
+      - equalTo: [body.message, "ok！"]
+      - equalTo: [body.code, "00"]
       - equalTo: ["${expectCode}", "00"]
-      - equalTo: [$.content.code, "00"]
-      - equalTo: [$.content.code, "00"]
+      - equalTo: [$.body.code, "00"]
+      - equalTo: [$.body.code, "00"]
       - equalTo: ["^message\":\"(.*?)\"$", "message\":\"ok！\""]
       - equalTo: [$.headers.Content-Type, "application/json;charset=UTF-8"]

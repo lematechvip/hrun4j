@@ -60,6 +60,9 @@ public class Har2Case extends Command {
     @Option(name = "--filter_suffix", usage = "Filter out the specified request suffix, support multiple suffix formats, multiple in English status ';' division.")
     String filterSuffix;
 
+    @Option(name = "--filter_uri", usage = "Filter out the URIs that meet the requirements by keyword, multiple in English status ';' division.")
+    String filterUriByKeywords;
+
     @Override
     public String description() {
         return "Print har2yml command information.";
@@ -98,11 +101,7 @@ public class Har2Case extends Command {
             }
             workDirPath = FilesUtil.getCanonicalPath(generateCaseDirectory);
         }
-        List<String> filterSuffixList = new ArrayList<>();
-        if (Objects.nonNull(filterSuffix)) {
-            filterSuffixList = ListUtil.toList(filterSuffix.split(CliConstants.FILTER_REQUEST_SUFFIX_SEPARATOR));
-        }
-        HarUtils.connectReferences(har, filterSuffixList);
+        HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
         TestCase testCase = new TestCase();
         Config config = new Config();
         config.setName("Testcase Description");
@@ -111,7 +110,8 @@ public class Har2Case extends Command {
         List<TestStep> testSteps = new ArrayList<>();
         List<HarPage> harPages = har.getLog().getPages();
         MyLog.info("Number of pages viewed: " + harPages.size());
-        for (HarPage page : harPages) {
+        for (int index = 0; index < harPages.size(); index++) {
+            HarPage page = harPages.get(index);
             MyLog.info(page.toString());
             MyLog.info("Output the calls for this page: ");
             for (HarEntry entry : page.getEntries()) {
@@ -122,6 +122,9 @@ public class Har2Case extends Command {
             testCase.setTestSteps(testSteps);
             try {
                 String caseFileName = FileUtil.mainName(harFile);
+                if (harPages.size() > 1) {
+                    caseFileName = String.format("%s_%s", caseFileName, index + 1);
+                }
                 File jsonFile;
                 JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(testCase, SerializerFeature.PrettyFormat), Feature.OrderedField);
                 if (Objects.isNull(format) || format.equalsIgnoreCase(CliConstants.GENERATE_YML_FORMAT)) {
@@ -138,9 +141,7 @@ public class Har2Case extends Command {
                 return 0;
             } catch (IOException ioException) {
                 ioException.printStackTrace();
-                String exceptionMsg = String.format("\n" +
-                        "生成测试用例出现异常，异常信息:\n" +
-                        "Exception occurs when generating test cases. Exception information: %s", ioException.getMessage());
+                String exceptionMsg = String.format("Exception occurs when generating test cases. Exception information: %s", ioException.getMessage());
                 MyLog.error(exceptionMsg);
                 return 1;
             }
@@ -150,17 +151,20 @@ public class Har2Case extends Command {
 
     private TestStep buildTestStep(HarEntry entry) {
         HarRequest request = entry.getRequest();
-        String url = UriUtils.extractPath(request.getUrl());
+        String requestUrl = request.getUrl();
+        String url = String.format("%s%s", UriUtils.getBaseUrl(requestUrl), UriUtils.extractPath(requestUrl));
         TestStep testStep = new TestStep();
-        testStep.setName(String.format("Request api:%s", url));
+        testStep.setName(String.format("Request api:%s", UriUtils.extractPath(requestUrl)));
         RequestEntity requestEntity = new RequestEntity();
         requestEntity.setMethod(request.getMethod());
-        requestEntity.setUrl(request.getUrl());
+        requestEntity.setUrl(url);
         //set headers
         List<HarHeader> harRequestHeaders = request.getHeaders();
         Map<String, String> requestHeaders = Maps.newHashMap();
         for (HarHeader harHeader : harRequestHeaders) {
-            requestHeaders.put(String.valueOf(harHeader.getName()), harHeader.getValue());
+            if (!CliConstants.HAR_REQUEST_HEADER_COOKIE.equalsIgnoreCase(harHeader.getName())) {
+                requestHeaders.put(harHeader.getName(), harHeader.getValue());
+            }
         }
         requestEntity.setHeaders(requestHeaders);
         //set cookie
@@ -179,13 +183,22 @@ public class Har2Case extends Command {
             for (HarQueryParm harQueryParm : queryParams) {
                 params.put(String.valueOf(harQueryParm.getName()), harQueryParm.getValue());
             }
+            requestEntity.setParams(params);
         }
         //set post params
         HarPostData harPostData = request.getPostData();
         if (!Objects.isNull(harPostData)) {
             String postContent = harPostData.getText();
-            if (JsonUtil.isJson(postContent)) {
-                requestEntity.setJson(JSONObject.parseObject(postContent));
+
+            String mimeType = harPostData.getMimeType();
+            if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
+                if (JsonUtil.isJson(postContent)) {
+                    requestEntity.setJson(JSONObject.parseObject(postContent));
+                } else {
+                    requestEntity.setJson(postContent);
+                }
+            } else {
+                requestEntity.setJson(postContent);
             }
             List<HarPostParam> postParams = harPostData.getParams();
             Map<String, Object> postParam = Maps.newHashMap();
@@ -199,46 +212,77 @@ public class Har2Case extends Command {
         List<Map<String, Object>> validate = new ArrayList<>();
         HarResponse response = entry.getResponse();
         int statusCode = response.getStatus();
-        validate.add(buildValidateMap("statusCode", statusCode));
+        validate.add(buildValidateMap("status_code", statusCode));
         List<HarHeader> headers = response.getHeaders();
         for (HarHeader harHeader : headers) {
             String headerName = harHeader.getName();
             String headerValue = harHeader.getValue();
             String headerJmesPath = String.format("%s%s%s", Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START, Constant.DOT_PATH, headerName);
             if (CliConstants.GENERATE_MODE_EASY.equalsIgnoreCase(generationMode)) {
-                if (CliConstants.GENERATE_MODE_EASY_CONTENT_TYPE_META.equalsIgnoreCase(headerName)) {
+                if (CliConstants.GENERATE_MODE_EASY_CONTENT_TYPE_META.equalsIgnoreCase(headerName) && false) {
                     validate.add(buildValidateMap(headerJmesPath, headerValue));
                 }
             } else if (CliConstants.GENERATE_MODE_FULL.equalsIgnoreCase(generationMode)) {
                 validate.add(buildValidateMap(headerJmesPath, headerValue));
             }
         }
-        HarContent harContent = response.getContent();
-        String mimeType = harContent.getMimeType();
-        if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
-            String content = harContent.getText();
-            String base64Content = Base64.decodeStr(content);
-            if (JsonUtil.isJson(base64Content)) {
-                JSONObject jsonContent = JSONObject.parseObject(base64Content);
-                List<String> defaultItems = new ArrayList<>();
-                defaultItems.add("code");
-                defaultItems.add("msg");
-                buildInJsonContentValidateItem(defaultItems, validate, jsonContent);
-            } else {
-                MyLog.warn("MIME type returned is application/json, but response content {} cannot be JSON", content);
-            }
-        }
+        buildInJsonContentValidateItem(validate, response);
         testStep.setValidate(validate);
         testStep.setRequest(requestEntity);
         return testStep;
     }
 
-    private void buildInJsonContentValidateItem(List<String> defaultItems, List<Map<String, Object>> validate, JSONObject jsonContent) {
-        for (String item : defaultItems) {
-            if (jsonContent.containsKey(item)) {
-                Object codeValue = jsonContent.get(item);
-                validate.add(buildValidateMap(String.format("content.%s", item), codeValue));
+    /**
+     * @param validate
+     * @param response
+     */
+    private void buildInJsonContentValidateItem(List<Map<String, Object>> validate, HarResponse response) {
+        HarContent harContent = response.getContent();
+        String mimeType = harContent.getMimeType();
+        if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
+            String content = harContent.getText();
+            if (isBase64(content)) {
+                content = Base64.decodeStr(content);
             }
+            if (JsonUtil.isJson(content)) {
+                JSONObject jsonContent = JSONObject.parseObject(content);
+                List<String> defaultItems = new ArrayList<>();
+                defaultItems.add("code");
+                defaultItems.add("msg");
+                for (String item : defaultItems) {
+                    if (jsonContent.containsKey(item)) {
+                        Object codeValue = jsonContent.get(item);
+                        validate.add(buildValidateMap(String.format("body.%s", item), codeValue));
+                    }
+                }
+            } else {
+                MyLog.warn("MIME type returned is application/json, but response content {} cannot be JSON", content);
+            }
+        }
+    }
+
+    /**
+     * @param str
+     * @return
+     */
+    private static boolean isBase64(String str) {
+        if (str == null || str.trim().length() == 0) {
+            return false;
+        } else {
+            if (str.length() % 4 != 0) {
+                return false;
+            }
+
+            char[] charA = str.toCharArray();
+            for (char c : charA) {
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+                        || c == '+' || c == '/' || c == '=') {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 

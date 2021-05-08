@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.http.HttpConstant;
@@ -24,6 +25,8 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -267,7 +270,6 @@ public class HttpClientUtil {
             return responseEntity;
         }
         int statusCode = response.getStatusLine().getStatusCode();
-
         responseEntity.setStatusCode(statusCode);
         responseEntity.setContentLength(response.getEntity().getContentLength());
         responseEntity.setTime((elapsedTime * 1.0) / 1000);
@@ -292,13 +294,13 @@ public class HttpClientUtil {
                 Header contentType = response.getFirstHeader("Content-Type");
                 if (contentType != null && contentType.getValue().contains("application/json")) {
                     if (JsonUtil.isJson(responseContent)) {
-                        responseEntity.setContent(JSON.parseObject(responseContent));
+                        responseEntity.setBody(JSON.parseObject(responseContent));
                     } else {
                         String exceptionMsg = "json格式化失败：" + responseContent;
                         throw new DefinedException(exceptionMsg);
                     }
                 } else {
-                    responseEntity.setContent(responseContent);
+                    responseEntity.setBody(responseContent);
                 }
             }
         }
@@ -400,12 +402,48 @@ public class HttpClientUtil {
         return builder.build();
     }
 
+    /**
+     * @param requestEntity
+     * @return
+     */
+    private static Map<String, String> handleHeadersCookie(RequestEntity requestEntity) {
+        Map<String, String> headers = requestEntity.getHeaders();
+        Map<String, String> cookies = requestEntity.getCookies();
+        if (MapUtil.isEmpty(headers)) {
+            headers = Maps.newConcurrentMap();
+        }
+        if (!Objects.isNull(cookies)) {
+            headers.put("Cookie", getCookiesWithParams(cookies));
+        }
+        return headers;
+    }
+
+    /**
+     * @param cookies
+     * @return
+     */
+    private static String getCookiesWithParams(Map<String, String> cookies) {
+        StringBuilder sb = new StringBuilder();
+        if (MapUtil.isNotEmpty(cookies)) {
+            for (String key : cookies.keySet()) {
+                String value = cookies.get(key).toString();
+                try {
+                    String sVal = URLEncoder.encode(value, Constant.CHARSET_UTF_8);
+                    sb.append(key).append("=").append(sVal).append(";");
+                } catch (UnsupportedEncodingException e) {
+                    String exceptionMsg = String.format("Parameter %s encoding exception, exception information::%s", value, e.getMessage());
+                    throw new DefinedException(exceptionMsg);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
     public static ResponseEntity executeReq(RequestEntity requestEntity) {
         ResponseEntity responseEntity = null;
         String method = requestEntity.getMethod();
         String url = requestEntity.getUrl();
-
-        Map<String, String> headers = requestEntity.getHeaders();
+        Map<String, String> headers = handleHeadersCookie(requestEntity);
         RequestParameterEntity requestParameterEntity = new RequestParameterEntity();
         BeanUtil.copyProperties(requestEntity, requestParameterEntity);
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.url"), SmallUtil.emptyIfNull(requestEntity.getUrl())));
@@ -429,7 +467,7 @@ public class HttpClientUtil {
             throw new DefinedException("The interface response information cannot be empty!");
         }
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getContent())));
+        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getBody())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.time"), SmallUtil.emptyIfNull(responseEntity.getTime())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));

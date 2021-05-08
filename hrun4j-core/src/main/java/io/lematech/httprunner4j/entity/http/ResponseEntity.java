@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.entity.http;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class ResponseEntity {
     /**
      * status code
      */
+    @JSONField(name = "status_code")
     private Integer statusCode;
     /**
      * response headers
@@ -29,7 +31,8 @@ public class ResponseEntity {
     /**
      * response content
      */
-    private Object content;
+    @JSONField(name = "body")
+    private Object body;
     /**
      * response cookies
      */

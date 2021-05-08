@@ -21,19 +21,19 @@
       "validate": [
         {
           "equalTo": [
-            "statusCode",
+            "status_code",
             200
           ]
         },
         {
           "equalTo": [
-            "content.code",
+            "body.code",
             "00"
           ]
         },
         {
           "equalTo": [
-            "content.message",
+            "body.message",
             "ok！"
           ]
         }

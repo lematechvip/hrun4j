@@ -48,7 +48,11 @@ public class JsonUtil {
             /**
              * jmespath 0.5 bug jsonNode not null,is "null" To fix
              */
-            if (Objects.isNull(dataExtractorValue) || "null".equals(jsonNode.asText())) {
+            if (Objects.isNull(dataExtractorValue) || Constant.DATA_EXTRACTOR_JMESPATH_NODE_NULL.equals(jsonNode.asText())) {
+                if (exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_Content_START + Constant.DOT_PATH) ||
+                        exp.startsWith(Constant.DATA_EXTRACTOR_JMESPATH_HEADERS_START + Constant.DOT_PATH)) {
+                    return null;
+                }
                 return exp;
             }
         } catch (Exception e) {
