@@ -130,5 +130,29 @@ public class JavaIdentifierUtil {
         return validName.toString();
     }
 
+    /**
+     * format that the file path meets the requirements
+     *
+     * @param filePath
+     * @return
+     */
+    public static String formatFilePath(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            String exceptionMsg = String.format(" The file path cannot be empty");
+            throw new DefinedException(exceptionMsg);
+        }
+        StringBuffer validName = new StringBuffer();
+        char[] nameChars = filePath.toCharArray();
+        for (int index = 0; index < nameChars.length; index++) {
+            char tmpChar = nameChars[index];
+            if (!Character.isJavaIdentifierPart(tmpChar)) {
+                validName.append(Constant.UNDERLINE);
+            } else {
+                validName.append(tmpChar);
+            }
+        }
+        return validName.toString();
+    }
+
 
 }

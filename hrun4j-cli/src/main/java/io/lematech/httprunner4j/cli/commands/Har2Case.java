@@ -22,6 +22,7 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import org.kohsuke.args4j.Option;
 import org.yaml.snakeyaml.DumperOptions;
@@ -71,7 +72,7 @@ public class Har2Case extends Command {
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         FilesUtil.checkFileExists(harFile);
-        if (StrUtil.isEmpty(format) && (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) || !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format))) {
+        if (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) || !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format)) {
             String exceptionMsg = String.format("Specifies the generation format %s exception. Only - 2Y or - 2J format is supported", format);
             MyLog.error(exceptionMsg);
         }
@@ -121,7 +122,7 @@ public class Har2Case extends Command {
             testCase.setConfig(config);
             testCase.setTestSteps(testSteps);
             try {
-                String caseFileName = FileUtil.mainName(harFile);
+                String caseFileName = JavaIdentifierUtil.formatFilePath(FileUtil.mainName(harFile));
                 if (harPages.size() > 1) {
                     caseFileName = String.format("%s_%s", caseFileName, index + 1);
                 }
@@ -189,7 +190,6 @@ public class Har2Case extends Command {
         HarPostData harPostData = request.getPostData();
         if (!Objects.isNull(harPostData)) {
             String postContent = harPostData.getText();
-
             String mimeType = harPostData.getMimeType();
             if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
                 if (JsonUtil.isJson(postContent)) {
@@ -241,7 +241,8 @@ public class Har2Case extends Command {
         String mimeType = harContent.getMimeType();
         if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
             String content = harContent.getText();
-            if (isBase64(content)) {
+            String encoding = harContent.getEncoding();
+            if (CliConstants.APPLICATION_ENCODING_BASE64.equalsIgnoreCase(encoding)) {
                 content = Base64.decodeStr(content);
             }
             if (JsonUtil.isJson(content)) {

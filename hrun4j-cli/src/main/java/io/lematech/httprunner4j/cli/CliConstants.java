@@ -52,6 +52,11 @@ public class CliConstants {
     /**
      * generate mode of easy,to content-type meta element
      */
+    public static final String APPLICATION_ENCODING_BASE64 = "base64";
+
+    /**
+     * generate mode of easy,to content-type meta element
+     */
     public static final String HAR_REQUEST_HEADER_COOKIE = "Cookie";
 
 }
