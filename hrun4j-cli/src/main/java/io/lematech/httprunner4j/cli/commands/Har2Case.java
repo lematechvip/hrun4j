@@ -73,8 +73,8 @@ public class Har2Case extends Command {
     public int execute(PrintWriter out, PrintWriter err) {
         FilesUtil.checkFileExists(harFile);
         if (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) || !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format)) {
-            String exceptionMsg = String.format("Specifies the generation format %s exception. Only - 2Y or - 2J format is supported", format);
-            MyLog.error(exceptionMsg);
+            String exceptionMsg = String.format("Specifies the generation format %s exception. Only - 2Y or - 2J format is supported,default set 2y", format);
+            MyLog.warn(exceptionMsg);
         }
         MyLog.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
         Har har;
