@@ -42,6 +42,11 @@ public class CliConstants {
     /**
      * generate mode of easy,to content-type meta element
      */
+    public static final String PSEUDO_REQUEST_HEADER = ":";
+
+    /**
+     * generate mode of easy,to content-type meta element
+     */
     public static final String APPLICATION_JSON_MIME_TYPE = "application/json";
 
     /**

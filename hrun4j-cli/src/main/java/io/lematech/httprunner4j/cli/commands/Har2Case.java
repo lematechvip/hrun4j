@@ -163,6 +163,10 @@ public class Har2Case extends Command {
         List<HarHeader> harRequestHeaders = request.getHeaders();
         Map<String, String> requestHeaders = Maps.newHashMap();
         for (HarHeader harHeader : harRequestHeaders) {
+            String headerName = harHeader.getName();
+            if (headerName.startsWith(CliConstants.PSEUDO_REQUEST_HEADER)) {
+                continue;
+            }
             if (!CliConstants.HAR_REQUEST_HEADER_COOKIE.equalsIgnoreCase(harHeader.getName())) {
                 requestHeaders.put(harHeader.getName(), harHeader.getValue());
             }
