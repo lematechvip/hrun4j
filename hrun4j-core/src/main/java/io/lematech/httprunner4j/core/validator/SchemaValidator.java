@@ -13,6 +13,7 @@ import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.testcase.ApiModel;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.entity.testcase.TestSuite;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -44,6 +45,8 @@ public class SchemaValidator {
             jsonFormatSchema = Constant.TEST_CASE_SCHEMA;
         } else if (clz == ApiModel.class) {
             jsonFormatSchema = Constant.API_MODEL_SCHEMA;
+        } else if (clz == TestSuite.class) {
+            jsonFormatSchema = Constant.TEST_SUITE_SCHEMA;
         } else {
             String exceptionMsg = String.format("Current class %s format validation is not currently supported", clz);
             throw new DefinedException(exceptionMsg);

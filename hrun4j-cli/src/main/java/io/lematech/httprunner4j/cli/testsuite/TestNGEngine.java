@@ -1,14 +1,14 @@
-package io.lematech.httprunner4j.core.engine;
+package io.lematech.httprunner4j.cli.testsuite;
 
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.engine.TemplateEngine;
 import io.lematech.httprunner4j.core.loader.HotLoader;
-import io.lematech.httprunner4j.core.validator.SchemaValidator;
-import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import lombok.Data;
 import org.apache.velocity.VelocityContext;
 import org.testng.ITestListener;
@@ -78,6 +78,7 @@ public class TestNGEngine {
         if (MapUtil.isEmpty(testCasePkgGroup)) {
             MyLog.warn("No valid test cases were found on the current path: {}", testCasePaths);
         }
+
         addTestClasses();
         runNG();
     }

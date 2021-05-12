@@ -22,6 +22,7 @@ public class Constant {
     public static final String SUPPORT_TEST_CASE_FILE_EXT_YML_NAME = "yml";
     public static final String TEST_CASE_SCHEMA = "/schemas/testcase.json";
     public static final String API_MODEL_SCHEMA = "/schemas/api.json";
+    public static final String TEST_SUITE_SCHEMA = "/schemas/testsuite.json";
     public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";

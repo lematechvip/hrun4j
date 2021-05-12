@@ -1,7 +1,6 @@
 package io.lematech.httprunner4j.junit.testng;
 
 import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.core.engine.TestNGEngine;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.annotations.Test;
 
@@ -22,15 +21,6 @@ import java.util.Set;
 public class TestNGEngineTest {
     @Test
     public void testEngine() {
-        List<File> testCasePaths = new ArrayList<>();
-        testCasePaths.add(new File("/Users/arkhe/Documents/lema/others/httprunner4j/hrun4j-core/src/test/resources/testcases"));
-        testCasePaths.add(new File("/Users/arkhe/Documents/lema/others/httprunner4j/hrun4j-core/src/test/resources/apis"));
-        RunnerConfig.getInstance().setTestCasePaths(testCasePaths);
-        TestNGEngine.run();
-        Map<String, Set<String>> testCasePackageGroup = TestNGEngine.testCasePkgGroup;
-        for (Map.Entry entry : testCasePackageGroup.entrySet()) {
-            MyLog.info("包名：{}", entry.getKey());
-            MyLog.info("类名：{}", entry.getValue());
-        }
+
     }
 }
