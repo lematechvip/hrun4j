@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 
@@ -50,7 +51,7 @@ public class Env {
         }
     }
 
-    public static void setEnv(String key, String value) {
+    public static void setEnv(String key, Object value) {
         if (envMap == null) {
             initializeEnv();
         }

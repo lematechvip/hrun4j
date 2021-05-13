@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.NamespaceMap;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
@@ -50,6 +51,7 @@ public class NGDataProvider {
      * @return
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
+        MyLog.info("namespacemap:{}", NamespaceMap.getNamespaceMap());
         File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
         String extName = RunnerConfig.getInstance().getTestCaseExtName();
         TestCase testCase = TestDataLoaderFactory.getLoader(extName)

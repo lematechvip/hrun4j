@@ -145,7 +145,7 @@ public class TestCaseRunner {
         }
         String api = testStep.getApi();
         if (!StrUtil.isEmpty(api)) {
-            String spliceApiFilePath = Searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
+            String spliceApiFilePath = searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
             File apiFilePath = searcher.quicklySearchFile(spliceApiFilePath);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(testStep, objectConverter.apiModel2TestStep(apiModel));

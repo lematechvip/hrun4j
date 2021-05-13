@@ -7,10 +7,10 @@
       "type": "object",
       "properties": {
         "name": {
-          "$ref": "common.json#/definitions/name"
+          "$ref": "resource:/schemas/common.json#/definitions/name"
         },
         "variables": {
-          "$ref": "common.json#/definitions/variables"
+          "$ref": "resource:/schemas/common.json#/definitions/variables"
         },
         "parameters": {
           "description": "generate cartesian product variables with parameters, each group of variables will be run once",
@@ -28,14 +28,14 @@
   },
   "properties": {
     "config": {
-      "$ref": "common.json#/definitions/config"
+      "$ref": "resource:/schemas/common.json#/definitions/config"
     },
     "testcases": {
       "description": "testcase of a testsuite",
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "testsuite.json#/definitions/testcase"
+        "$ref": "resource:/schemas/testsuite.json#/definitions/testcase"
       }
     }
   },

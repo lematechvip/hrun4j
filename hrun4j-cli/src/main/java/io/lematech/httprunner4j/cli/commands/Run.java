@@ -5,17 +5,22 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.testsuite.TestNGEngine;
-import io.lematech.httprunner4j.cli.testsuite.TestSuite;
-import io.lematech.httprunner4j.cli.testsuite.TestSuiteCase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
+import io.lematech.httprunner4j.config.Env;
+import io.lematech.httprunner4j.config.NamespaceMap;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.core.converter.ObjectConverter;
+import io.lematech.httprunner4j.core.loader.Searcher;
 import io.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
+import io.lematech.httprunner4j.entity.testcase.TestSuite;
+import io.lematech.httprunner4j.entity.testcase.TestSuiteCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -33,7 +38,7 @@ import java.util.*;
 public class Run extends Command {
 
     @Option(name = "--testcase_paths", usage = "list of testcase path to execute", metaVar = "<testcase_paths>")
-    List<File> testcasePaths = new ArrayList<>();
+    List<File> testcasePaths;
 
     @Override
     public String description() {
@@ -58,9 +63,13 @@ public class Run extends Command {
     @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
     String i18n;
 
+    private Searcher searcher = new Searcher();
+    private ObjectConverter objectConverter = new ObjectConverter();
+
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-
+        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
+        MyLog.info("Run mode: {}", RunnerConfig.RunMode.CLI);
         if (Objects.nonNull(testSuitePath) && Objects.nonNull(testcasePaths)) {
             String exceptionMsg = String.format("It is not allowed to specify both testSuitePath and testcasePaths option values");
             MyLog.error(exceptionMsg);
@@ -90,35 +99,52 @@ public class Run extends Command {
                 MyLog.error(exceptionMsg);
             }
             Config testSuiteConfig = testSuite.getConfig();
+            testcasePaths = new ArrayList<>();
             List<TestSuiteCase> testSuiteCases = testSuite.getTestCases();
+            searcher.setRunMode(RunnerConfig.RunMode.CLI);
+            searcher.setWorkDirectory(workDirPath);
             for (TestSuiteCase testSuiteCase : testSuiteCases) {
                 String caseRelativePath = testSuiteCase.getCaseRelativePath();
+                String extName = FileUtil.extName(caseRelativePath);
+                String namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
+                File dataFile = searcher.quicklySearchFile(caseRelativePath);
+                TestCase testCase = TestDataLoaderFactory.getLoader(extName)
+                        .load(dataFile, TestCase.class);
+                Config testCaseConfig = testCase.getConfig();
+                testCaseConfig.setParameters(null);
+                Config resultConfig = (Config) objectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
+                testCase.setConfig(resultConfig);
+                Map environment = Env.getEnvMap();
+                if (environment.containsKey(namespace)) {
+                    String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
+                    MyLog.warn(exceptionMsg);
+                }
+                NamespaceMap.setEnv(namespace, testCase);
+                testcasePaths.add(new File(caseRelativePath));
             }
+        }
 
+        if (testcasePaths.size() == 0) {
+            String exceptionMsg = String.format("The test case path cannot be empty");
+            MyLog.error(exceptionMsg);
+            return 1;
+        }
 
-        } else {
-            if (testcasePaths.size() == 0) {
-                String exceptionMsg = String.format("The test case path cannot be empty");
+        for (File caseFile : testcasePaths) {
+            File canonicalCaseFile = caseFile;
+            String caseFilePath = caseFile.getPath();
+            FilesUtil.dirPath2pkgName(caseFilePath);
+            if (!FileUtil.isAbsolutePath(caseFilePath)) {
+                canonicalCaseFile = new File(workDirPath, caseFilePath);
+            }
+            if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
+                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.getCanonicalPath(caseFile));
                 MyLog.error(exceptionMsg);
                 return 1;
             }
-
-            for (File caseFile : testcasePaths) {
-                File canonicalCaseFile = caseFile;
-                String caseFilePath = caseFile.getPath();
-                FilesUtil.dirPath2pkgName(caseFilePath);
-                if (!FileUtil.isAbsolutePath(caseFilePath)) {
-                    canonicalCaseFile = new File(workDirPath, caseFilePath);
-                }
-                if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
-                    String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.getCanonicalPath(caseFile));
-                    MyLog.error(exceptionMsg);
-                    return 1;
-                }
-                canonicalTestCasePaths.add(canonicalCaseFile);
-            }
-            testcasePaths = canonicalTestCasePaths;
+            canonicalTestCasePaths.add(canonicalCaseFile);
         }
+        testcasePaths = canonicalTestCasePaths;
         RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
         TestNGEngine.run();
         return 0;
@@ -159,7 +185,7 @@ public class Run extends Command {
      * Verify the validity of data or set parameter values
      */
     private void validateOrSetParams() {
-        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
+
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
@@ -179,6 +205,8 @@ public class Run extends Command {
         }
         if (!StrUtil.isEmpty(extName)) {
             RunnerConfig.getInstance().setTestCaseExtName(extName);
+        } else {
+            extName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
         }
         if (!StrUtil.isEmpty(i18n)) {
             RunnerConfig.getInstance().setI18n(i18n);
