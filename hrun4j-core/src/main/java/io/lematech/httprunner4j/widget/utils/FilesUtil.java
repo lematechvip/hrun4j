@@ -203,15 +203,6 @@ public class FilesUtil {
         }
     }
 
-    public static void checkFileExists(String absoluteFilePath) {
-        if (StrUtil.isEmpty(absoluteFilePath)) {
-            throw new DefinedException("Absolute file path cannot be null/empty");
-        } else {
-            File file = new File(absoluteFilePath);
-            checkFileExists(file);
-        }
-    }
-
     public static void checkFileExists(File file) {
         if (Objects.isNull(file)) {
             throw new DefinedException("File instance cannot be null");

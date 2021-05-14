@@ -106,7 +106,10 @@ public class Run extends Command {
             for (TestSuiteCase testSuiteCase : testSuiteCases) {
                 String caseRelativePath = testSuiteCase.getCaseRelativePath();
                 String extName = FileUtil.extName(caseRelativePath);
-                String namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
+                String namespace = JavaIdentifierUtil.formatFilePath(caseRelativePath);
+                if (!StrUtil.isEmpty(extName)) {
+                    namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
+                }
                 File dataFile = searcher.quicklySearchFile(caseRelativePath);
                 TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                         .load(dataFile, TestCase.class);
@@ -123,6 +126,7 @@ public class Run extends Command {
                 testcasePaths.add(new File(caseRelativePath));
             }
         }
+
 
         if (testcasePaths.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
