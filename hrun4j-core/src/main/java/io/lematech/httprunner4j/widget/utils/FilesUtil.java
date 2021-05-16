@@ -98,7 +98,7 @@ public class FilesUtil {
             if (filePathFlag) {
                 file = new File(RunnerConfig.getInstance().getWorkDirectory().getPath(), file.getPath());
             }
-            FilesUtil.fileValidate(file);
+            FilesUtil.checkFileExists(file);
             fileTraverse(file, fileTestClassMap);
         }
 
@@ -149,13 +149,6 @@ public class FilesUtil {
         return fileFullPath;
     }
 
-    public static File fileValidate(File file) {
-        if (Objects.isNull(file) || !file.exists()) {
-            String exceptionMsg = String.format("File %s does not exist", getCanonicalPath(file));
-            throw new DefinedException(exceptionMsg);
-        }
-        return file;
-    }
 
     private static void fileToTestClassMap(Map<String, Set<String>> fileTestClassMap, File file) {
         String extName = FileUtil.extName(file);

@@ -193,7 +193,7 @@ public class Run extends Command {
         if (Objects.isNull(testJar)) {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
-            if (!testJar.exists() || !testJar.isFile() || !FileUtil.extName(testJar).endsWith(Constant.TEST_JAR_END_SUFFIX)) {
+            if (!testJar.exists() || !testJar.isFile() || !Constant.TEST_JAR_END_SUFFIX.endsWith(FileUtil.extName(testJar))) {
                 String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in.jar"
                         , FilesUtil.getCanonicalPath(testJar));
                 throw new DefinedException(exceptionMsg);

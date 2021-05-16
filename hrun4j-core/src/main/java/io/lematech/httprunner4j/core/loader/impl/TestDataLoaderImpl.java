@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.converter.ObjectConverter;
 import io.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import io.lematech.httprunner4j.core.validator.SchemaValidator;
@@ -18,7 +17,6 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 
@@ -83,7 +81,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     @Override
     public T load(File fileName, Class clazz) {
         T testData;
-        FilesUtil.fileValidate(fileName);
+        FilesUtil.checkFileExists(fileName);
         String testDataName = fileName.getName();
         try {
             testData = fileSerialization2Object(fileName, clazz);

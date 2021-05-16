@@ -78,7 +78,6 @@ public class TestNGEngine {
         if (MapUtil.isEmpty(testCasePkgGroup)) {
             MyLog.warn("No valid test cases were found on the current path: {}", testCasePaths);
         }
-
         addTestClasses();
         runNG();
     }

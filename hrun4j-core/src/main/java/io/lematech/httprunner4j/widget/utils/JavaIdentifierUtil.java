@@ -5,7 +5,6 @@ import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 
 /**
  * @author lematech@foxmail.com
@@ -123,7 +122,7 @@ public class JavaIdentifierUtil {
                 continue;
             }
             if (!Character.isJavaIdentifierPart(tmpChar)) {
-                String exceptionMsg = String.format(" The file path cannot contain special characters: %s", tmpChar);
+                String exceptionMsg = String.format(" The file path %s cannot contain special characters: %s", filePath, tmpChar);
                 throw new DefinedException(exceptionMsg);
             }
         }
