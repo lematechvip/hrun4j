@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.cli.commands;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.cli.Command;
@@ -22,7 +23,6 @@ import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import org.kohsuke.args4j.Option;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.*;
@@ -38,7 +38,7 @@ import java.util.*;
 public class Run extends Command {
 
     @Option(name = "--testcase_paths", usage = "list of testcase path to execute", metaVar = "<testcase_paths>")
-    List<File> testcasePaths;
+    List<String> testCasePaths;
 
     @Override
     public String description() {
@@ -46,7 +46,7 @@ public class Run extends Command {
     }
 
     @Option(name = "--ext_name", usage = "Specify the use case extension.")
-    String extName;
+    String extName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
 
     @Option(name = "--testsuite_path", usage = "Specify the TestSuite path", metaVar = "<testsuite_path>")
     File testSuitePath;
@@ -61,7 +61,7 @@ public class Run extends Command {
     File testJar;
 
     @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
-    String i18n;
+    String i18n = Constant.I18N_CN;
 
     private Searcher searcher = new Searcher();
     private ObjectConverter objectConverter = new ObjectConverter();
@@ -70,118 +70,153 @@ public class Run extends Command {
     public int execute(PrintWriter out, PrintWriter err) {
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
         MyLog.info("Run mode: {}", RunnerConfig.RunMode.CLI);
-        if (Objects.nonNull(testSuitePath) && Objects.nonNull(testcasePaths)) {
-            String exceptionMsg = String.format("It is not allowed to specify both testSuitePath and testcasePaths option values");
+        if (Objects.nonNull(testSuitePath) && Objects.nonNull(testCasePaths)) {
+            String exceptionMsg = String.format("It is not allowed to specify both testSuitePath and testCasePaths option values");
             MyLog.error(exceptionMsg);
             return 1;
         }
 
-        if (Objects.isNull(testSuitePath) && Objects.isNull(testcasePaths)) {
-            String exceptionMsg = String.format("You must specify either testSuitePath or testcasePaths");
+        if (Objects.isNull(testSuitePath) && Objects.isNull(testCasePaths)) {
+            String exceptionMsg = String.format("You must specify either testSuitePath or testCasePaths");
             MyLog.error(exceptionMsg);
             return 1;
         }
 
         validateOrSetParams();
-        String workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
-        JavaIdentifierUtil.verifyFilePathValid(workDirPath);
-        FilesUtil.dirPath2pkgName(workDirPath);
+        String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
         MyLog.info("The workspace path：{}", workDirPath);
         initEnvPath(workDirPath);
-        List<File> canonicalTestCasePaths = new ArrayList<>();
-        if (Objects.nonNull(testSuitePath)) {
+        TestSuite testSuite = new TestSuite();
+        searcher.setRunMode(RunnerConfig.RunMode.CLI);
+        searcher.setWorkDirectory(workDirPath);
+        List<String> testCaseMapFiles = new ArrayList<>();
+        if (CollUtil.isNotEmpty(testCasePaths)) {
+            Config config = new Config();
+            config.setName("Command line execution configuration name");
+            testSuite.setConfig(config);
+            List<TestSuiteCase> testSuiteCases = new ArrayList<>();
+            testSuite.setTestCases(testSuiteCases);
+            HashSet<String> dataFilesSet = new HashSet();
+            for (String dataFilePath : testCasePaths) {
+                File dataFile = new File(dataFilePath);
+                if (!dataFile.exists()) {
+                    String exceptionMsg = String.format("The test case file %s does not exist"
+                            , FileUtil.getAbsolutePath(dataFile));
+                    MyLog.error(exceptionMsg);
+                    throw new DefinedException(exceptionMsg);
+                }
+                fileTraverse(dataFile, dataFilesSet);
+            }
+            for (String dataFilePath : dataFilesSet) {
+                TestSuiteCase testSuiteCase = new TestSuiteCase();
+                String dataResultFile = null;
+                if (dataFilePath.startsWith(workDirPath)) {
+                    dataResultFile = dataFilePath.replaceFirst(workDirPath, Constant.DOT_PATH);
+                }
+                if (!StrUtil.isEmpty(dataResultFile)) {
+                    testSuiteCase.setCaseRelativePath(dataResultFile);
+                }
+                testSuiteCases.add(testSuiteCase);
+            }
+        } else {
             FilesUtil.checkFileExists(testSuitePath);
             String testSuiteExtName = FileUtil.extName(testSuitePath);
-            TestSuite testSuite = TestDataLoaderFactory.getLoader(testSuiteExtName)
+            testSuite = TestDataLoaderFactory.getLoader(testSuiteExtName)
                     .load(testSuitePath, TestSuite.class);
             if (Objects.isNull(testSuite)) {
-                String exceptionMsg = String.format("TestSuite file %s is invalid, load data is empty, please check", FilesUtil.getCanonicalPath(testSuitePath));
+                String exceptionMsg = String.format("TestSuite file %s is invalid, load data is empty, please check", FileUtil.getAbsolutePath(testSuitePath));
                 MyLog.error(exceptionMsg);
             }
-            Config testSuiteConfig = testSuite.getConfig();
-            testcasePaths = new ArrayList<>();
-            List<TestSuiteCase> testSuiteCases = testSuite.getTestCases();
-            searcher.setRunMode(RunnerConfig.RunMode.CLI);
-            searcher.setWorkDirectory(workDirPath);
-            for (TestSuiteCase testSuiteCase : testSuiteCases) {
-                String caseRelativePath = testSuiteCase.getCaseRelativePath();
-                String extName = FileUtil.extName(caseRelativePath);
-                String namespace = JavaIdentifierUtil.formatFilePath(caseRelativePath);
-                if (!StrUtil.isEmpty(extName)) {
-                    namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
-                }
-                File dataFile = searcher.quicklySearchFile(caseRelativePath);
-                TestCase testCase = TestDataLoaderFactory.getLoader(extName)
-                        .load(dataFile, TestCase.class);
-                Config testCaseConfig = testCase.getConfig();
-                testCaseConfig.setParameters(null);
-                Config resultConfig = (Config) objectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
-                testCase.setConfig(resultConfig);
-                Map environment = Env.getEnvMap();
-                if (environment.containsKey(namespace)) {
-                    String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
-                    MyLog.warn(exceptionMsg);
-                }
-                NamespaceMap.setEnv(namespace, testCase);
-                testcasePaths.add(new File(caseRelativePath));
-            }
         }
-
-
-        if (testcasePaths.size() == 0) {
+        Config testSuiteConfig = testSuite.getConfig();
+        List<TestSuiteCase> testSuiteCases = testSuite.getTestCases();
+        for (TestSuiteCase testSuiteCase : testSuiteCases) {
+            String caseRelativePath = testSuiteCase.getCaseRelativePath();
+            testCaseMapFiles.add(caseRelativePath);
+            String extName = FileUtil.extName(caseRelativePath);
+            String namespace = JavaIdentifierUtil.formatFilePath(caseRelativePath);
+            if (!StrUtil.isEmpty(extName)) {
+                namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
+            }
+            MyLog.info("namespace:{}", namespace);
+            File dataFile = searcher.quicklySearchFile(caseRelativePath);
+            TestCase testCase = TestDataLoaderFactory.getLoader(extName)
+                    .load(dataFile, TestCase.class);
+            Config testCaseConfig = testCase.getConfig();
+            testCaseConfig.setParameters(null);
+            Config resultConfig = (Config) objectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
+            testCase.setConfig(resultConfig);
+            Map environment = Env.getEnvMap();
+            if (environment.containsKey(namespace)) {
+                String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
+                MyLog.warn(exceptionMsg);
+            }
+            NamespaceMap.setDataObject(namespace, testCase);
+        }
+        if (testCaseMapFiles.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
             MyLog.error(exceptionMsg);
             return 1;
         }
-
-        for (File caseFile : testcasePaths) {
-            File canonicalCaseFile = caseFile;
-            String caseFilePath = caseFile.getPath();
-            FilesUtil.dirPath2pkgName(caseFilePath);
-            if (!FileUtil.isAbsolutePath(caseFilePath)) {
-                canonicalCaseFile = new File(workDirPath, caseFilePath);
-            }
-            if (Objects.isNull(canonicalCaseFile) || !canonicalCaseFile.exists()) {
-                String exceptionMsg = String.format("Case file %s does not exist", FilesUtil.getCanonicalPath(caseFile));
-                MyLog.error(exceptionMsg);
-                return 1;
-            }
-            canonicalTestCasePaths.add(canonicalCaseFile);
-        }
-        testcasePaths = canonicalTestCasePaths;
-        RunnerConfig.getInstance().setTestCasePaths(testcasePaths);
+        RunnerConfig.getInstance().setTestCasePaths(testCaseMapFiles);
         TestNGEngine.run();
         return 0;
     }
 
+    /**
+     * file traverse
+     *
+     * @param file
+     * @param dataFiles
+     */
+    private void fileTraverse(File file, HashSet<String> dataFiles) {
+        if (file.isFile()) {
+            String dataExtName = FileUtil.extName(file);
+            if (extName.equalsIgnoreCase(dataExtName)) {
+                dataFiles.add(FileUtil.getAbsolutePath(file));
+            }
+        } else {
+            File[] fileList = file.listFiles();
+            for (File subFile : fileList) {
+                if (subFile.isFile()) {
+                    String dataExtName = FileUtil.extName(file);
+                    if (extName.equalsIgnoreCase(dataExtName)) {
+                        dataFiles.add(FileUtil.getAbsolutePath(subFile));
+                    }
+                } else {
+                    fileTraverse(subFile, dataFiles);
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialize the path to the.env file
+     *
+     * @param workDirPath
+     */
     private void initEnvPath(String workDirPath) {
         if (!Objects.isNull(dotEnvPath)) {
+            if (!dotEnvPath.exists() || !dotEnvPath.isFile()) {
+                String exceptionMsg = String.format("The .env file %s does not exist"
+                        , FileUtil.getAbsolutePath(dotEnvPath));
+                MyLog.error(exceptionMsg);
+                throw new DefinedException(exceptionMsg);
+            }
             if (!FileUtil.isAbsolutePath(dotEnvPath.getPath())) {
                 File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
-                if (!dotFilePath.exists() || !dotFilePath.isFile()) {
-                    String exceptionMsg = String.format("The .env file %s does not exist"
-                            , FilesUtil.getCanonicalPath(dotFilePath));
-                    MyLog.error(exceptionMsg);
-                    throw new DefinedException(exceptionMsg);
-                }
-                RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
+                RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
             } else {
-                if (!dotEnvPath.exists() || !dotEnvPath.isFile()) {
-                    String exceptionMsg = String.format("The .env file %s does not exist"
-                            , FilesUtil.getCanonicalPath(dotEnvPath));
-                    MyLog.error(exceptionMsg);
-                    throw new DefinedException(exceptionMsg);
-                }
-                RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotEnvPath));
+                RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotEnvPath));
             }
         } else {
             File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
             if (!dotFilePath.exists() || !dotFilePath.isFile()) {
                 String exceptionMsg = String.format("The .env file %s does not exist"
-                        , FilesUtil.getCanonicalPath(dotFilePath));
+                        , FileUtil.getAbsolutePath(dotFilePath));
                 MyLog.warn(exceptionMsg);
             }
-            RunnerConfig.getInstance().setDotEnvPath(FilesUtil.getCanonicalPath(dotFilePath));
+            RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
         }
     }
 
@@ -194,12 +229,12 @@ public class Run extends Command {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
             if (!testJar.exists() || !testJar.isFile() || !Constant.TEST_JAR_END_SUFFIX.endsWith(FileUtil.extName(testJar))) {
-                String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in.jar"
-                        , FilesUtil.getCanonicalPath(testJar));
+                String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in `.jar`"
+                        , FileUtil.getAbsolutePath(testJar));
                 throw new DefinedException(exceptionMsg);
             }
             File workFile = testJar.getParentFile();
-            String workDirPath = FilesUtil.getCanonicalPath(workFile);
+            String workDirPath = FileUtil.getAbsolutePath(workFile);
             Properties property = System.getProperties();
             property.setProperty("user.dir", workDirPath);
             RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
@@ -209,12 +244,11 @@ public class Run extends Command {
         }
         if (!StrUtil.isEmpty(extName)) {
             RunnerConfig.getInstance().setTestCaseExtName(extName);
-        } else {
-            extName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
         }
         if (!StrUtil.isEmpty(i18n)) {
             RunnerConfig.getInstance().setI18n(i18n);
         }
 
     }
+
 }

@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j.config;
 
+import io.lematech.httprunner4j.entity.testcase.TestCase;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,14 +14,14 @@ import java.util.Map;
  * @publicWechat lematech
  */
 public class NamespaceMap {
-    public static Map<String, Object> getNamespaceMap() {
+    public static Map<String, TestCase> getNamespaceMap() {
         if (namespaceMap == null) {
             initializeEnv();
         }
         return namespaceMap;
     }
 
-    private static Map<String, Object> namespaceMap;
+    private static Map<String, TestCase> namespaceMap;
 
     private static synchronized void initializeEnv() {
         if (namespaceMap == null) {
@@ -27,15 +29,15 @@ public class NamespaceMap {
         }
     }
 
-    public static void setEnv(String key, Object value) {
+    public static void setDataObject(String key, TestCase value) {
         if (namespaceMap == null) {
             initializeEnv();
         }
         namespaceMap.put(key, value);
     }
 
-    public static Object getEnv(String key) {
-        Object value = null;
+    public static TestCase getDataObject(String key) {
+        TestCase value = null;
         if (namespaceMap == null) {
             initializeEnv();
         }

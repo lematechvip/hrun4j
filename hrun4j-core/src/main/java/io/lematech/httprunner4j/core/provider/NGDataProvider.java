@@ -17,6 +17,7 @@ import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
 import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import org.testng.collections.Maps;
 
@@ -52,10 +53,16 @@ public class NGDataProvider {
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         MyLog.info("namespacemap:{}", NamespaceMap.getNamespaceMap());
-        File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
-        String extName = RunnerConfig.getInstance().getTestCaseExtName();
-        TestCase testCase = TestDataLoaderFactory.getLoader(extName)
-                .load(dataFilePath, TestCase.class);
+        TestCase testCase;
+        if (RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.CLI) {
+            String namespace = getNamespace(pkgName, testCaseName);
+            testCase = NamespaceMap.getDataObject(namespace);
+        } else {
+            File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
+            String extName = RunnerConfig.getInstance().getTestCaseExtName();
+            testCase = TestDataLoaderFactory.getLoader(extName)
+                    .load(dataFilePath, TestCase.class);
+        }
         Object[][] testCases = getObjects(testCase);
         return testCases;
     }
@@ -68,7 +75,6 @@ public class NGDataProvider {
      * @return
      */
     private String caseFilePath(String pkgName, String testCaseName) {
-        String definePackageName = RunnerConfig.getInstance().getPkgName();
         if (pkgName.startsWith(definePackageName)) {
             pkgName = FilesUtil.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
             if (pkgName.startsWith(Constant.UNDERLINE)) {
@@ -78,6 +84,34 @@ public class NGDataProvider {
             pkgName = FilesUtil.pkgPath2DirPath(pkgName);
         }
         return pkgName + File.separator + testCaseName;
+    }
+
+    String definePackageName = RunnerConfig.getInstance().getPkgName();
+
+    /**
+     * Get the namespace by package name and method name
+     *
+     * @param pkgName
+     * @param testCaseName
+     * @return
+     */
+    private String getNamespace(String pkgName, String testCaseName) {
+        StringBuffer namespace = new StringBuffer();
+        if (pkgName.startsWith(definePackageName)) {
+            pkgName = pkgName.replaceFirst(definePackageName, "");
+            if (pkgName.startsWith(Constant.UNDERLINE)) {
+                pkgName = pkgName.replaceFirst(Constant.UNDERLINE, "");
+            }
+            if (pkgName.startsWith(Constant.DOT_PATH)) {
+                pkgName = pkgName.replaceFirst(Constant.DOT_PATH, "");
+            }
+        } else {
+            pkgName = FilesUtil.pkgPath2DirPath(pkgName);
+        }
+        namespace.append(JavaIdentifierUtil.formatFilePath(pkgName));
+        namespace.append(Constant.UNDERLINE);
+        namespace.append(testCaseName);
+        return namespace.toString();
     }
 
     private Object[][] getObjects(TestCase testCase) {

@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.io.FileUtil;
 import io.lematech.httprunner4j.cli.CliConstants;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.har.HarUtils;
@@ -56,13 +57,13 @@ public class ViewHar extends Command {
 		try {
 			har = HarUtils.read(harFilePath);
 		} catch (Exception e) {
-			String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FilesUtil.getCanonicalPath(harFilePath), e.getMessage());
+			String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFilePath), e.getMessage());
 			MyLog.error(exceptionMsg);
 			return 1;
 		}
 
 		if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(har.getLog().getPages())) {
-			String exceptionMsg = String.format("HAR file %s has no pages!", FilesUtil.getCanonicalPath(harFilePath));
+			String exceptionMsg = String.format("HAR file %s has no pages!", FileUtil.getAbsolutePath(harFilePath));
 			MyLog.error(exceptionMsg);
 			return 1;
 		}

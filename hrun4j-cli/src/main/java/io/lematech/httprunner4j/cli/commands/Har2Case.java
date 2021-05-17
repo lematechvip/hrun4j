@@ -81,26 +81,26 @@ public class Har2Case extends Command {
         try {
             har = HarUtils.read(harFile);
         } catch (Exception e) {
-            String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FilesUtil.getCanonicalPath(harFile), e.getMessage());
+            String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFile), e.getMessage());
             MyLog.error(exceptionMsg);
             return 1;
         }
         if (Objects.isNull(har.getLog())) {
-            String exceptionMsg = String.format("HAR file %s has no pages!", FilesUtil.getCanonicalPath(harFile));
+            String exceptionMsg = String.format("HAR file %s has no pages!", FileUtil.getAbsolutePath(harFile));
             MyLog.error(exceptionMsg);
             return 1;
         }
         String workDirPath;
         if (Objects.isNull(generateCaseDirectory)) {
-            workDirPath = FilesUtil.getCanonicalPath(new File(Constant.DOT_PATH));
+            workDirPath = FileUtil.getAbsolutePath(new File(Constant.DOT_PATH));
         } else {
             if (!generateCaseDirectory.exists() || !generateCaseDirectory.isDirectory()) {
                 String exceptionMsg = String.format("The case directory %s does not exist"
-                        , FilesUtil.getCanonicalPath(generateCaseDirectory));
+                        , FileUtil.getAbsolutePath(generateCaseDirectory));
                 MyLog.error(exceptionMsg);
                 return 1;
             }
-            workDirPath = FilesUtil.getCanonicalPath(generateCaseDirectory);
+            workDirPath = FileUtil.getAbsolutePath(generateCaseDirectory);
         }
         HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
         TestCase testCase = new TestCase();
@@ -138,7 +138,7 @@ public class Har2Case extends Command {
                     jsonFile = new File(workDirPath, String.format("%s.%s", caseFileName, "json"));
                     JsonUtil.jsonWriteToFile(jsonFile, data);
                 }
-                MyLog.info("Generated successfully! File path:{}", FilesUtil.getCanonicalPath(jsonFile));
+                MyLog.info("Generated successfully! File path:{}", FileUtil.getAbsolutePath(jsonFile));
                 return 0;
             } catch (IOException ioException) {
                 ioException.printStackTrace();

@@ -123,23 +123,23 @@ public class BuiltInAviatorEvaluator {
                 cvsFilePath = new File(workDirPath, csvFilePathValue);
                 if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
                     String exceptionMsg = String.format("The CVS file %s does not exist,Note that in API mode, absolute paths are not allowed, only class paths can be used"
-                            , FilesUtil.getCanonicalPath(cvsFilePath));
+                            , FileUtil.getAbsolutePath(cvsFilePath));
                     throw new DefinedException(exceptionMsg);
                 }
             } else if (runMode == RunnerConfig.RunMode.CLI) {
-                workDirPath = FilesUtil.getCanonicalPath(RunnerConfig.getInstance().getWorkDirectory());
+                workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
                 if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
                     cvsFilePath = new File(workDirPath, csvFilePathValue);
                     if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
                         String exceptionMsg = String.format("The CVS file %s does not exist"
-                                , FilesUtil.getCanonicalPath(cvsFilePath));
+                                , FileUtil.getAbsolutePath(cvsFilePath));
                         throw new DefinedException(exceptionMsg);
                     }
                 } else {
                     cvsFilePath = new File(csvFilePathValue);
                     if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
                         String exceptionMsg = String.format("The CVS file %s does not exist"
-                                , FilesUtil.getCanonicalPath(cvsFilePath));
+                                , FileUtil.getAbsolutePath(cvsFilePath));
                         throw new DefinedException(exceptionMsg);
                     }
                 }

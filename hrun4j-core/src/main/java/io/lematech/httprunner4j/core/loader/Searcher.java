@@ -79,10 +79,10 @@ public class Searcher {
             throw new DefinedException(exceptionMsg);
         }
         if (!searchFile.exists() || !searchFile.isFile()) {
-            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FilesUtil.getCanonicalPath(searchFile.getParentFile()));
+            String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FileUtil.getAbsolutePath(searchFile.getParentFile()));
             throw new DefinedException(exceptionMsg);
         }
-        MyLog.debug("Run mode: {}, Test case path {}", runMode, FilesUtil.getCanonicalPath(searchFile));
+        MyLog.debug("Run mode: {}, Test case path {}", runMode, FileUtil.getAbsolutePath(searchFile));
         return searchFile;
     }
 

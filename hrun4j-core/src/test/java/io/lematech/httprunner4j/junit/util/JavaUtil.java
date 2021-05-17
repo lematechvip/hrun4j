@@ -1,7 +1,11 @@
 package io.lematech.httprunner4j.junit.util;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.testng.annotations.Test;
+
+import java.io.File;
 
 /**
  * @author lematech@foxmail.com
@@ -14,13 +18,16 @@ import org.testng.annotations.Test;
 public class JavaUtil {
     @Test
     public void javaUtilTest() {
-        String fullName = "com.sdf.cccc.Test";
+
+        // System.out.println( FileUtil.normalize("./test"));
+        /*String fullName = "com.sdf.cccc.Test";
         JavaUtil javaTest = new JavaUtil();
         if (javaTest.isValidJavaFullClassName(fullName)) {
             System.out.println(fullName + "  符合JAVA命名规范");
         } else {
             System.out.println(fullName + "  不符合JAVA命名规范");
-        }
+        }*/
+
     }
 
     /**

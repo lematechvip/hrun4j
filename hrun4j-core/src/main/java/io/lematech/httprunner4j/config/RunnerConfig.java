@@ -39,9 +39,6 @@ public class RunnerConfig {
      */
     private String dotEnvPath;
 
-    public List<File> getTestCasePaths() {
-        return testCasePaths;
-    }
 
     /**
      * supports cli 、api integration
@@ -72,7 +69,7 @@ public class RunnerConfig {
     /**
      * test case paths
      */
-    private List<File> testCasePaths;
+    private List<String> testCasePaths;
 
     private static RunnerConfig instance = new RunnerConfig();
 
