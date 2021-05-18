@@ -18,6 +18,13 @@ import java.io.File;
 public class JavaUtil {
     @Test
     public void javaUtilTest() {
+        System.out.println(FileUtil.normalize("/test/xxx.json"));
+        System.out.println(FileUtil.normalize("/test"));
+        System.out.println(FileUtil.mainName("/test/xxx.json"));
+        System.out.println(FileUtil.getPrefix("/test/xxx.json"));
+
+        System.out.println(FileUtil.getName("/test/xxx.json"));
+        System.out.println(FileUtil.getAbsolutePath("/test/xxx.json"));
 
         // System.out.println( FileUtil.normalize("./test"));
         /*String fullName = "com.sdf.cccc.Test";

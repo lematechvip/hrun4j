@@ -105,6 +105,7 @@ public class TestCaseRunner {
                 ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
                 List<Map<String, Object>> validateList = testStep.getValidate();
+                MyLog.info("校验数量：{},信息：{}", validateList.size(), validateList);
                 assertChecker.assertList(validateList, responseEntity, testStepConfigVariable);
                 dataExtractor.extractVariables(testStep.getExtract(), responseEntity, testStepConfigVariable);
             }

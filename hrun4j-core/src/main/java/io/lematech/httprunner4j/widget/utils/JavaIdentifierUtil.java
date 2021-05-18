@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.widget.utils;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
@@ -140,6 +141,7 @@ public class JavaIdentifierUtil {
             String exceptionMsg = String.format(" The file path cannot be empty");
             throw new DefinedException(exceptionMsg);
         }
+        filePath = FileUtil.normalize(filePath);
         StringBuffer validName = new StringBuffer();
         char[] nameChars = filePath.toCharArray();
         for (int index = 0; index < nameChars.length; index++) {

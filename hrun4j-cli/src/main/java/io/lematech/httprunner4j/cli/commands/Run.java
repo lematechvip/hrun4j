@@ -63,9 +63,8 @@ public class Run extends Command {
     @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
     String i18n = Constant.I18N_CN;
 
-    private Searcher searcher = new Searcher();
+    private Searcher searcher;
     private ObjectConverter objectConverter = new ObjectConverter();
-
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
@@ -87,15 +86,13 @@ public class Run extends Command {
         MyLog.info("The workspace path：{}", workDirPath);
         initEnvPath(workDirPath);
         TestSuite testSuite = new TestSuite();
-        searcher.setRunMode(RunnerConfig.RunMode.CLI);
-        searcher.setWorkDirectory(workDirPath);
+        searcher = new Searcher();
         List<String> testCaseMapFiles = new ArrayList<>();
         if (CollUtil.isNotEmpty(testCasePaths)) {
             Config config = new Config();
             config.setName("Command line execution configuration name");
             testSuite.setConfig(config);
             List<TestSuiteCase> testSuiteCases = new ArrayList<>();
-            testSuite.setTestCases(testSuiteCases);
             HashSet<String> dataFilesSet = new HashSet();
             for (String dataFilePath : testCasePaths) {
                 File dataFile = new File(dataFilePath);
@@ -115,9 +112,10 @@ public class Run extends Command {
                 }
                 if (!StrUtil.isEmpty(dataResultFile)) {
                     testSuiteCase.setCaseRelativePath(dataResultFile);
+                    testSuiteCases.add(testSuiteCase);
                 }
-                testSuiteCases.add(testSuiteCase);
             }
+            testSuite.setTestCases(testSuiteCases);
         } else {
             FilesUtil.checkFileExists(testSuitePath);
             String testSuiteExtName = FileUtil.extName(testSuitePath);
@@ -151,7 +149,7 @@ public class Run extends Command {
                 String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
                 MyLog.warn(exceptionMsg);
             }
-            NamespaceMap.setDataObject(namespace, testCase);
+            NamespaceMap.setDataObject(String.format("%s:%s", RunnerConfig.RunMode.CLI, namespace), testCase);
         }
         if (testCaseMapFiles.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
@@ -179,7 +177,7 @@ public class Run extends Command {
             File[] fileList = file.listFiles();
             for (File subFile : fileList) {
                 if (subFile.isFile()) {
-                    String dataExtName = FileUtil.extName(file);
+                    String dataExtName = FileUtil.extName(subFile);
                     if (extName.equalsIgnoreCase(dataExtName)) {
                         dataFiles.add(FileUtil.getAbsolutePath(subFile));
                     }

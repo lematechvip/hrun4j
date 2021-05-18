@@ -90,9 +90,11 @@ public class FilesUtil {
         if (Objects.isNull(file)) {
             throw new DefinedException("File instance cannot be null");
         } else if (!file.exists()) {
-            throw new DefinedException("File does not exist on device");
+            String exceptionMsg = String.format("File %s does not exist on device", file.getAbsolutePath());
+            throw new DefinedException(exceptionMsg);
         } else if (!file.isFile()) {
-            throw new DefinedException("File does not represent a valid file");
+            String exceptionMsg = String.format("File does not represent a valid file", file.getAbsolutePath());
+            throw new DefinedException(exceptionMsg);
         }
     }
 

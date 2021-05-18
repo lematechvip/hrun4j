@@ -52,16 +52,20 @@ public class NGDataProvider {
      * @return
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
-        MyLog.info("namespacemap:{}", NamespaceMap.getNamespaceMap());
         TestCase testCase;
         if (RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.CLI) {
             String namespace = getNamespace(pkgName, testCaseName);
-            testCase = NamespaceMap.getDataObject(namespace);
+            testCase = NamespaceMap.getDataObject(String.format("%s:%s", RunnerConfig.RunMode.CLI, namespace));
         } else {
             File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
             String extName = RunnerConfig.getInstance().getTestCaseExtName();
             testCase = TestDataLoaderFactory.getLoader(extName)
                     .load(dataFilePath, TestCase.class);
+        }
+        if (Objects.isNull(testCase)) {
+            String exceptionMsg = String.format("According to the current running mode %s and matching rules [pkgName:%s,caseName:%s], find the use case data is empty"
+                    , RunnerConfig.getInstance().getRunMode(), pkgName, testCaseName);
+            throw new DefinedException(exceptionMsg);
         }
         Object[][] testCases = getObjects(testCase);
         return testCases;
