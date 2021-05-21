@@ -28,7 +28,6 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -46,15 +45,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
         </dependency>
-
         <dependency>
             <groupId>io.github.lematechx</groupId>
             <artifactId>hrun4j-core</artifactId>
             <version>1.0.0</version>
         </dependency>
-
     </dependencies>
-
     <build>
         <finalName>httprunner4j-test-demo</finalName>
         <plugins>
