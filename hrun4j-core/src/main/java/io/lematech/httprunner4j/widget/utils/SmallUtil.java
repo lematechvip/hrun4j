@@ -5,6 +5,8 @@ package io.lematech.httprunner4j.widget.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lematech.httprunner4j.common.DefinedException;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -72,6 +74,9 @@ public class SmallUtil<T> {
             ObjectMapper objectMapper = new ObjectMapper();
             copyObj = objectMapper.readValue(objectMapper.writeValueAsString(obj), clz);
         } catch (JsonProcessingException e) {
+            String exceptionMsg = String.format("An exception occurred in the deep copy of the test case ,Exception Informations:  %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
+        } catch (IOException e) {
             String exceptionMsg = String.format("An exception occurred in the deep copy of the test case ,Exception Informations:  %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
