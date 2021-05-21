@@ -61,9 +61,9 @@ public class RegExpUtil {
     }
 
     /**
-     * @param reg
-     * @param str
-     * @return
+     * @param reg regex pattern
+     * @param str string
+     * @return find result
      */
     public static List<String> find(String reg, String str) {
         Matcher matcher = Pattern.compile(reg).matcher(str);
@@ -76,9 +76,10 @@ public class RegExpUtil {
 
     /**
      * According to the regular search to meet the requirements
+     *
      * @param reg regular expression
      * @param str The character to be found
-     * @return
+     * @return find result
      */
     public static String findString(String reg, String str) {
         if (StrUtil.isEmpty(reg)) {

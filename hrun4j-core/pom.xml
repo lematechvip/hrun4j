@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>httprunner4j</artifactId>
-        <groupId>io.lematech.httprunner4j</groupId>
+        <groupId>io.lematech</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.lematech.httprunner4j</groupId>
+    <groupId>io.github.lematechx</groupId>
     <artifactId>hrun4j-core</artifactId>
     <version>1.0.0</version>
     <name>hrun4j-core</name>
-    <url>http://lematech.io</url>
+    <url>https://lematech.io</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
-            <version>5.5.9</version>
+            <version>5.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

@@ -86,7 +86,7 @@ public class Searcher {
     /**
      * @param dataFileType
      * @param directoryName
-     * @return
+     * @return file path of splice
      */
     public String spliceFilePath(String dataFileType, String directoryName) {
         if (!dataFileType.startsWith(directoryName + File.separator) &&

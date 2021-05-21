@@ -17,9 +17,9 @@ public interface ITestDataLoader {
     /**
      * file load
      *
-     * @param fileName
-     * @param clazz
-     * @param <T>
+     * @param fileName The file name
+     * @param clazz    The specified class
+     * @param <T>      The generic type
      * @return
      */
     <T> T load(File fileName, Class<T> clazz);

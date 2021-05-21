@@ -105,8 +105,9 @@ public class JavaIdentifierUtil {
 
     /**
      * format that the file path meets the requirements
-     * @param filePath
-     * @return
+     *
+     * @param filePath The file path
+     * @return format that the file path meets the requirements
      */
     public static String formatFilePath(String filePath) {
         if (StrUtil.isEmpty(filePath)) {

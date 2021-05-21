@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.lematech.httprunner4j</groupId>
+    <groupId>io.lematech</groupId>
     <artifactId>hrun4j-test-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <name>hrun4j-test-demo</name>
 
     <properties>
@@ -18,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.lematech.httprunner4j</groupId>
+            <groupId>io.github.lematechx</groupId>
             <artifactId>hrun4j-core</artifactId>
             <version>1.0.0</version>
         </dependency>

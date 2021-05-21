@@ -40,7 +40,6 @@ import java.util.*;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HttpClientUtil
  */
 public class HttpClientUtil {
     public static ResponseEntity doGet(String url) {

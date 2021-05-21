@@ -18,7 +18,7 @@ public class FilesUtil {
     /**
      * file path decode,support zh
      *
-     * @param filePath
+     * @param filePath file path
      * @return file path
      */
     public static String filePathDecode(String filePath) {
@@ -34,8 +34,8 @@ public class FilesUtil {
 
     /**
      * Path subcontract name
-     * @param dirPath
-     * @return
+     * @param dirPath directory path
+     * @return package name
      */
     public static String dirPath2pkgName(String dirPath) {
         StringBuffer pkgName = new StringBuffer();
@@ -64,7 +64,7 @@ public class FilesUtil {
 
 
     /**
-     * @param pkgPath
+     * @param pkgPath The package path
      * @return file path
      */
     public static String pkgPath2DirPath(String pkgPath) {

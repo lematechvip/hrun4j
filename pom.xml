@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.lematech.httprunner4j</groupId>
+    <groupId>io.lematech</groupId>
     <artifactId>httprunner4j</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
@@ -111,7 +111,6 @@
                 </repository>
             </distributionManagement>
         </profile>
-
     </profiles>
     <modules>
         <module>hrun4j-core</module>
