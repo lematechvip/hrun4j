@@ -21,23 +21,20 @@ import java.util.Iterator;
 
 
 /**
+ * validator schemas
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className SchemaValidator
- * @description validator schemas
- * @created 2021/1/22 4:07 下午
- * @publicWechat lematech
  */
-
 public class SchemaValidator {
 
     private final static JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 
     /**
      * Verify that the object file format meets the requirements
-     *
-     * @param clz
-     * @param obj
+     * @param clz The specified class
+     * @param obj Verify the object
+     * @return If the string data is null, the validation is passed; otherwise, the reason for the validation failure is returned
      */
     public static String validateJsonObjectFormat(Class clz, Object obj) {
         JsonNode schemaNode;

@@ -41,9 +41,6 @@ import java.util.*;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className HttpClientUtil
- * @description TODO
- * @created 2021/1/28 4:59 下午
- * @publicWechat lematech
  */
 public class HttpClientUtil {
     public static ResponseEntity doGet(String url) {

@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 /**
+ * build in fuction
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HttpRunner4j
- * @description build in fuction
- * @created 2021/1/25 2:49 下午
- * @publicWechat lematech
  */
 @Slf4j
 public class HttpRunner4j {

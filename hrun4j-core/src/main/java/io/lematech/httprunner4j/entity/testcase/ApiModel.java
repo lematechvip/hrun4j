@@ -11,10 +11,6 @@ import java.util.Map;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className ApiModel
- * @description api model define
- * @created 2021/3/16 11:13 上午
- * @publicWechat lematech
  */
 @Data
 public class ApiModel<T> extends BaseModel {

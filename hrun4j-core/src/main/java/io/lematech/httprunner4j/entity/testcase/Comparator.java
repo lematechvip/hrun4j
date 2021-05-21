@@ -7,10 +7,6 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Comparator
- * @description TODO
- * @created 2021/1/20 5:01 下午
- * @publicWechat lematech
  */
 @Data
 public class Comparator {
@@ -21,7 +17,7 @@ public class Comparator {
     /**
      * set comparator defualt is equalTo
      *
-     * @param comparator
+     * @param comparator comparator object
      */
     public void setComparator(String comparator) {
         if (Objects.isNull(this.comparator)) {

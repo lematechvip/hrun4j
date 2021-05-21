@@ -25,10 +25,6 @@ import java.util.*;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className ExpProcessor
- * @description expression processor
- * @created 2021/1/26 5:20 下午
- * @publicWechat lematech
  */
 public class ExpProcessor<T> {
     private Map<String, Object> currentVariable = new HashMap<>();
@@ -43,8 +39,8 @@ public class ExpProcessor<T> {
     /**
      * Dynamically handle the object that contains the value of the expression
      *
-     * @param t
-     * @return
+     * @param t The generic object
+     * @return The generic object
      */
     public <T> T dynHandleContainsExpObject(T t) {
         if (Objects.isNull(t)) {
@@ -78,9 +74,9 @@ public class ExpProcessor<T> {
 
     /**
      * execute string expression
-     *
-     * @param exp
-     * @return
+     * @param exp The expression to
+     * @param environment  The environment
+     * @return result of the expression
      */
     public Object handleStringExp(String exp, Map<String, Object> environment) {
         this.currentVariable.putAll(environment);
@@ -89,9 +85,8 @@ public class ExpProcessor<T> {
 
     /**
      * execute string expression
-     *
-     * @param exp
-     * @return
+     * @param exp The expression
+     * @return result of the expression
      */
     public Object handleStringExp(String exp) {
         if (RegExpUtil.isExp(exp)) {
@@ -138,6 +133,12 @@ public class ExpProcessor<T> {
     /**
      * handle setup or teardwon hook expression
      */
+    /**
+     * handle setup or teardwon hook expression
+     *
+     * @param hookObj hook expression
+     * @return handle expression results
+     */
     public Map handleHookExp(Object hookObj) {
         Map result = Maps.newHashMap();
         if (hookObj instanceof Map) {
@@ -157,9 +158,9 @@ public class ExpProcessor<T> {
 
     /**
      * Handle variable priority
-     * @param testContextVariable
-     * @param configVars
-     * @param testStepVars
+     * @param testContextVariable The test context variable
+     * @param configVars The configuration variables
+     * @param testStepVars The test step variables
      */
     public void setVariablePriority(Map<String, Object> currentVariable, Map<String, Object> testContextVariable, Map<String, Object> configVars, Map<String, Object> testStepVars) {
         handleVariablesExpression(configVars, testStepVars);
@@ -219,8 +220,7 @@ public class ExpProcessor<T> {
 
     /**
      * Converts data types to key-value pairs ,for variable
-     *
-     * @param baseModel
+     * @param baseModel The base model
      */
     public void handleVariables2Map(BaseModel baseModel) {
         Object obj = baseModel.getVariables();

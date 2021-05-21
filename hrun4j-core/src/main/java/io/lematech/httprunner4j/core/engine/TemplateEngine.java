@@ -13,10 +13,6 @@ import java.io.StringWriter;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TemplateEngine
- * @description template engine
- * @created 2021/4/6 10:55 下午
- * @publicWechat lematech
  */
 
 public class TemplateEngine {
@@ -25,7 +21,7 @@ public class TemplateEngine {
     /**
      * get velocity engine instance
      *
-     * @return
+     * @return velocity engine instance
      */
     public static synchronized VelocityEngine getInstance() {
         if (velocityEngine == null) {
@@ -44,9 +40,9 @@ public class TemplateEngine {
 
     /**
      * render template by context self-defined variables
-     * @param templateName
-     * @param context
-     * @return
+     * @param templateName template of name
+     * @param context context
+     * @return The contents of the template after rendering
      */
     public static String getTemplateRenderContent(String templateName, VelocityContext context){
         Template template;

@@ -6,10 +6,10 @@ import lombok.Data;
 import java.util.Map;
 
 /**
+ * request parameter
+ *
  * @version 1.0.0
  * @author: chenfanghang@foxmail.com
- * @date: 2021/4/17
- * @description: request parameter
  */
 @Data
 public class RequestParameterEntity<T> {

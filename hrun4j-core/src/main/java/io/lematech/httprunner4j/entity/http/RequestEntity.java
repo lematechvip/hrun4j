@@ -1,7 +1,6 @@
 package io.lematech.httprunner4j.entity.http;
 
 
-import com.alibaba.fastjson.JSONObject;
 import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.Data;
 
@@ -10,10 +9,6 @@ import java.util.Map;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className RequestEntity
- * @description request entity
- * @created 2021/1/20 5:01 下午
- * @publicWechat lematech
  */
 @Data
 public class RequestEntity<T> {

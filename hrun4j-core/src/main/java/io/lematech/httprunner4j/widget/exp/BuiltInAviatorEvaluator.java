@@ -35,12 +35,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * build in aviator evaluator
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className BuiltInAviatorEvaluator
- * @description build in aviator evaluator
- * @created 2021/1/25 2:06 下午
- * @publicWechat lematech
  */
 @Slf4j
 public class BuiltInAviatorEvaluator {

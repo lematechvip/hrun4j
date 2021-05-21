@@ -9,20 +9,17 @@ import io.lematech.httprunner4j.widget.log.MyLog;
 
 
 /**
+ * Test data loader factory by test case extname
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestDataLoaderFactory
- * @description Test data loader factory by test case extname
- * @created 2021/4/19 4:12 下午
- * @publicWechat lematech
  */
 
 public class TestDataLoaderFactory {
     /**
      * get file loader
-     *
-     * @param extName
-     * @return
+     * @param extName extension name
+     * @return test data loader
      */
     public synchronized static ITestDataLoader getLoader(String extName) {
         if (StrUtil.isEmpty(extName)) {

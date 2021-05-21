@@ -12,10 +12,6 @@ import java.util.Map;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestStep
- * @description 1、http请求/2、关联其他用例/3、api reference, value is api file relative path
- * @created 2021/1/20 2:34 下午
- * @publicWechat lematech
  */
 @EqualsAndHashCode(callSuper = false)
 @Data

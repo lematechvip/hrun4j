@@ -1,13 +1,10 @@
 package io.lematech.httprunner4j.widget.utils;
 
 
-import cn.hutool.core.util.StrUtil;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.entity.testcase.TestCase;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -15,32 +12,22 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className RegularUtil
- * @description TODO
- * @created 2021/3/16 6:00 下午
- * @publicWechat lematech
  */
 public class SmallUtil<T> {
 
 
     /**
-     * 根据正则替换最后一个符合条件的字符
+     * Replace the last qualified character according to the regular
      *
-     * @param text
-     * @param regex
-     * @param replacement
-     * @return
+     * @param text        content text
+     * @param regex       regular expression
+     * @param replacement replacement text
+     * @return Replace the following character
      */
     public static String replaceLast(String text, String regex, String replacement) {
         return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
     }
 
-
-    /**
-     * 毫秒转秒
-     *
-     * @return
-     */
     public static Integer s2ms(Integer s) {
         if (Objects.isNull(s)) {
             return null;

@@ -15,12 +15,10 @@ import java.net.URL;
 import java.util.Objects;
 
 /**
+ * seracher file by file path
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Searcher
- * @description seracher file by file path
- * @created 2021/4/19 4:12 下午
- * @publicWechat lematech
  */
 @Data
 public class Searcher {
@@ -44,9 +42,8 @@ public class Searcher {
 
     /**
      * quickly search file by file path
-     *
-     * @param filePath
-     * @return
+     * @param filePath The file path
+     * @return File object
      */
     public File quicklySearchFile(String filePath) {
         if (StrUtil.isEmpty(filePath)) {

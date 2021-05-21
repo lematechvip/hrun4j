@@ -1,12 +1,10 @@
 package io.lematech.httprunner4j.common;
 
 /**
+ * Constant definition
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Constant
- * @description Constant definition
- * @created 2021/1/20 10:50 上午
- * @publicWechat lematech
  */
 public class Constant {
     /**

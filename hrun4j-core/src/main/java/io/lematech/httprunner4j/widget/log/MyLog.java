@@ -7,12 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.Reporter;
 
 /**
+ * logger output
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className MyLog
- * @description logger output
- * @created 2021/4/9 3:20 下午
- * @publicWechat lematech
  */
 @Slf4j
 public class MyLog {
@@ -35,8 +33,8 @@ public class MyLog {
     /**
      * error log output and reporter output
      *
-     * @param logStr
-     * @param args
+     * @param logStr logger output
+     * @param args arguments
      */
     public static void error(String logStr, Object... args) {
         log.error(formatInfo(logStr, args));

@@ -5,12 +5,10 @@ import java.io.File;
 
 
 /**
+ * Data loading define class, support file loading
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestDataLoaderImpl
- * @description Data loading define class, support file loading
- * @created 2021/1/20 4:50 下午
- * @publicWechat lematech
  */
 
 public interface ITestDataLoader {

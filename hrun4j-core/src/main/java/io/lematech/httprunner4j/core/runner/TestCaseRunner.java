@@ -27,12 +27,11 @@ import java.io.File;
 import java.util.*;
 
 /**
+ * \
+ * Test case execution handler
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestCaseDefined
- * @description Test case execution handler
- * @created 2021/1/20 11:07 上午
- * @publicWechat lematech
  */
 public class TestCaseRunner {
 
@@ -82,6 +81,7 @@ public class TestCaseRunner {
 
     /**
      * Actual execution of the test case logic
+     * @param testCase The specified test case
      */
     public void execute(TestCase testCase) {
         try {

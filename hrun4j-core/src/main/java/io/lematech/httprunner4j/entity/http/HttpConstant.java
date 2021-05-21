@@ -3,10 +3,6 @@ package io.lematech.httprunner4j.entity.http;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HttpMethodEnum
- * @description http constant items
- * @created 2021/3/23 11:08 上午
- * @publicWechat lematech
  */
 public @interface HttpConstant {
     String GET = "GET";

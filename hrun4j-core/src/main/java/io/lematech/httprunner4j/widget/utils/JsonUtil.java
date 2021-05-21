@@ -22,10 +22,6 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className JsonUtil
- * @description TODO
- * @created 2021/2/3 5:57 下午
- * @publicWechat lematech
  */
 public class JsonUtil {
     private static JmesPath<JsonNode> jmespath = new JacksonRuntime();
@@ -33,9 +29,9 @@ public class JsonUtil {
     /**
      * get value by jmespath
      *
-     * @param exp
-     * @param responseEntity
-     * @return
+     * @param exp            expression
+     * @param responseEntity The response entity
+     * @return Extracted data
      */
     public static Object getJmesPathResult(String exp, String responseEntity) {
         Object dataExtractorValue;
@@ -102,10 +98,9 @@ public class JsonUtil {
 
     /**
      * get value by jsonpath
-     *
-     * @param exp
-     * @param respStr
-     * @return
+     * @param exp  The expression
+     * @param respStr The response string
+     * @return result of expression
      */
     public static String getJsonPathResult(String exp, String respStr) {
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(respStr);
@@ -115,9 +110,8 @@ public class JsonUtil {
 
     /**
      * is json
-     *
      * @param jsonStr
-     * @return
+     * @return true if json
      */
     public static boolean isJson(String jsonStr) {
         boolean flag = true;

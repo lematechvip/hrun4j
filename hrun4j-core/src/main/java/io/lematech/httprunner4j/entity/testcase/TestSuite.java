@@ -7,12 +7,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * Test Case Suite
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestSuite
- * @description Test Case Suite
- * @created 2021/5/12 4:14 下午
- * @publicWechat lematech
  */
 @Data
 public class TestSuite {

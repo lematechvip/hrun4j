@@ -13,7 +13,6 @@ import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.widget.i18n.I18NFactory;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.hamcrest.Matcher;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -21,15 +20,12 @@ import java.util.*;
 
 
 /**
+ * Created 2021/1/22 4:07 下午
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className AssertChecker
- * @description assert checker
- * @created 2021/1/22 4:07 下午
- * @publicWechat lematech
+ * assert checker
  */
-
-
 public class AssertChecker {
 
     /**
@@ -89,8 +85,10 @@ public class AssertChecker {
     }
 
     /**
-     * @param objectMap
-     * @param responseEntity
+     *
+     * @param objectMap Asserts the properties contained by the object
+     * @param responseEntity Response structure
+     * @param env Current environment variable
      */
     public void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
@@ -103,7 +101,7 @@ public class AssertChecker {
             throw new DefinedException(String.format("Validation methods %s are not currently supported. The list of supported method names is:%s", comparatorName, methodAlisaMap));
         }
         Object exp = comparator.getCheck();
-        Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity, env);
+        Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity);
         MyLog.debug("Expression: {}, The extracted value is : {}", exp, actual);
         String assertKeyInfo = String.format("%s%s%s%s%s%s%s", I18NFactory.getLocaleMessage("assert.check.point"), exp
                 , I18NFactory.getLocaleMessage("assert.expect.value"), comparator.getExpect()
@@ -136,8 +134,7 @@ public class AssertChecker {
 
     /**
      * Build a comparator dynamically
-     *
-     * @param objectMap
+     * @param objectMap Comparison object Meta
      * @return
      */
     private Comparator buildComparator(Map<String, Object> objectMap) {
@@ -166,9 +163,9 @@ public class AssertChecker {
     /**
      * List with assertions
      *
-     * @param mapList
-     * @param responseEntity
-     * @param env
+     * @param mapList Assertion map list
+     * @param responseEntity Response structure
+     * @param env Current environment variable
      */
     public void assertList(List<Map<String, Object>> mapList, ResponseEntity responseEntity, Map<String, Object> env) {
         if (Objects.isNull(mapList)) {
@@ -180,7 +177,8 @@ public class AssertChecker {
     }
 
     /**
-     * @return
+     *
+     * @return Comparator method alias mapping relationship
      */
     public static Map<String, List> comparatorAlisaMap() {
         Map<String, List> methodMap = Maps.newHashMap();
@@ -230,8 +228,7 @@ public class AssertChecker {
 
     /**
      * Parameter alias extraction rules with more than 5 characters
-     *
-     * @param methodName
+     * @param methodName  method of name
      * @return
      */
     private static String transferMethodAlisa(String methodName) {
@@ -250,8 +247,7 @@ public class AssertChecker {
                 }
             }
         }
-        String simpleMethodName = methodAlisa.toString().toLowerCase();
-        return simpleMethodName;
+        return methodAlisa.toString().toLowerCase();
     }
 
     static {

@@ -15,10 +15,6 @@ import java.util.*;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className DataExtractor
- * @description Data extractor
- * @created 2021/4/26 9:04 下午
- * @publicWechat lematech
  */
 public class DataExtractor {
 
@@ -37,11 +33,11 @@ public class DataExtractor {
     /**
      * Support regular, JSONPATH, JMESPATH, expression and other ways to extract parameters
      *
-     * @param exp
-     * @param responseEntity
-     * @return
+     * @param exp            expression language
+     * @param responseEntity response entity
+     * @return The object after processing
      */
-    public Object handleExpDataExtractor(Object exp, ResponseEntity responseEntity, Map<String, Object> env) {
+    public Object handleExpDataExtractor(Object exp, ResponseEntity responseEntity) {
         if (!(exp instanceof String) || Objects.isNull(exp)) {
             return exp;
         }
@@ -69,10 +65,9 @@ public class DataExtractor {
 
     /**
      * Extract data according to the extraction rules
-     *
-     * @param extracts
-     * @param responseEntity
-     * @param variable
+     * @param extracts extracted data
+     * @param responseEntity The response entity
+     * @param variable variable map
      */
     public void extractVariables(Object extracts, ResponseEntity responseEntity, Map<String, Object> variable) {
         if (Objects.isNull(extracts)) {
@@ -109,7 +104,7 @@ public class DataExtractor {
                 throw new DefinedException(exceptionMsg);
             }
             Object expValue = entry.getValue();
-            String extractValue = (String) handleExpDataExtractor(expValue, responseEntity, testStepConfigVariable);
+            String extractValue = (String) handleExpDataExtractor(expValue, responseEntity);
             if (extractValue.equals(expValue)) {
                 String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rulel", expValue);
                 throw new DefinedException(exceptionMsg);

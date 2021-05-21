@@ -7,10 +7,6 @@ import lombok.Data;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestSuiteCase
- * @description TODO
- * @created 2021/5/12 4:17 下午
- * @publicWechat lematech
  */
 @Data
 public class TestSuiteCase<T> {

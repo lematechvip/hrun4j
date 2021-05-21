@@ -18,10 +18,6 @@ import java.util.Properties;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className EnvProperties
- * @description TODO
- * @created 2021/1/22 3:36 下午
- * @publicWechat lematech
  */
 public class Env {
     public static Map<String, Object> getEnvMap() {

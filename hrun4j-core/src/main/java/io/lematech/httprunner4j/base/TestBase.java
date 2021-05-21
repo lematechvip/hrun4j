@@ -9,12 +9,10 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 /**
+ * Test base classes for pre -, post -, and data loading
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestBase
- * @description Test base classes for pre -, post -, and data loading
- * @created 2021/1/20 4:41 下午
- * @publicWechat lematech
  */
 
 public class TestBase {

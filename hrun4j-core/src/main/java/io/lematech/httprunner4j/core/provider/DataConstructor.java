@@ -16,10 +16,6 @@ import java.util.*;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className DataConstructor
- * @description Data constructor
- * @created 2021/4/29 2:32 下午
- * @publicWechat lematech
  */
 public class DataConstructor {
 
@@ -32,8 +28,8 @@ public class DataConstructor {
     /**
      * Parameterization, which supports associating parameters, reading from files, or dynamically generating expressions
      *
-     * @param parameterObj
-     * @return
+     * @param parameterObj The parameter object
+     * @return data list
      */
     public List<Map<String, Object>> parameterized(Object parameterObj) {
         List<Map<String, Object>> parameters = new ArrayList<>();

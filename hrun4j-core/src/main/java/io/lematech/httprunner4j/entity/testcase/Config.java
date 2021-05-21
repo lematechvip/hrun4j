@@ -9,10 +9,6 @@ import lombok.EqualsAndHashCode;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Config
- * @description config class
- * @created 2021/1/20 2:25 下午
- * @publicWechat lematech
  */
 @EqualsAndHashCode(callSuper = false)
 @Data

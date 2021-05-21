@@ -21,12 +21,10 @@ import java.util.Objects;
 
 
 /**
+ * Data loading implementation class, support file loading
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestDataLoaderImpl
- * @description Data loading implementation class, support file loading
- * @created 2021/1/20 4:41 下午
- * @publicWechat lematech
  */
 
 public class TestDataLoaderImpl<T> implements ITestDataLoader {
@@ -74,9 +72,9 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
 
     /**
      * File load
-     * @param fileName
-     * @param clazz
-     * @return
+     * @param fileName file name
+     * @param clazz The specified class
+     * @return The generic object
      */
     @Override
     public T load(File fileName, Class clazz) {

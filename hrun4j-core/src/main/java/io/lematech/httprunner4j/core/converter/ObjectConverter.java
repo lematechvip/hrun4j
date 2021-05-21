@@ -23,20 +23,18 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * api to testcase converter
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className ObjConverter
- * @description api to testcase converter
- * @created 2021/4/6 5:55 下午
- * @publicWechat lematech
  */
 public class ObjectConverter {
 
     /**
      * api to testcase
      *
-     * @param apiModel
-     * @return
+     * @param apiModel Interface definition entity
+     * @return Test case object
      */
     public TestCase apiModel2TestCase(ApiModel apiModel) {
         TestCase testCase = new TestCase();
@@ -54,8 +52,8 @@ public class ObjectConverter {
     /**
      * api to teststep
      *
-     * @param apiModel
-     * @return
+     * @param apiModel Interface definition entity
+     * @return Test step object
      */
     public TestStep apiModel2TestStep(ApiModel apiModel) {
         TestStep sourceTestStep = new TestStep();
@@ -69,9 +67,9 @@ public class ObjectConverter {
     /**
      * objects extends property values
      *
-     * @param targetObj
-     * @param sourceObj
-     * @return
+     * @param targetObj target object
+     * @param sourceObj source object
+     * @return The object after processing
      */
     public Object objectsExtendsPropertyValue(Object targetObj, Object sourceObj) {
         Field[] fields = getObjectAllFields(sourceObj);
@@ -227,27 +225,27 @@ public class ObjectConverter {
     /**
      * get object field value by name
      *
-     * @param fieldName
-     * @param o
-     * @return
+     * @param fieldName field of name
+     * @param obj       object
+     * @return Gets the value of the object's specified property
      */
-    public Object getFieldValueByName(String fieldName, Object o) {
+    public Object getFieldValueByName(String fieldName, Object obj) {
         try {
             String firstLetter = fieldName.substring(0, 1).toUpperCase();
             String getter = "get" + firstLetter + fieldName.substring(1);
-            Method method = o.getClass().getMethod(getter, new Class[]{});
-            Object value = method.invoke(o, new Object[]{});
+            Method method = obj.getClass().getMethod(getter, new Class[]{});
+            Object value = method.invoke(obj, new Object[]{});
             return value;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            String exceptionMsg = String.format("Abnormal reflection, abnormal message: %s", e.getMessage());
+            throw new DefinedException(exceptionMsg);
         }
     }
 
     /**
-     * @param sourceMap
-     * @param targetMap
-     * @return
+     * @param sourceMap The source mapping relationship
+     * @param targetMap The target mapping relationship
+     * @return The mapping relationship after superposition
      */
     public Map<String, Object> mapExtendsKeyValue(Map sourceMap, Map targetMap) {
         if (MapUtil.isEmpty(targetMap)) {

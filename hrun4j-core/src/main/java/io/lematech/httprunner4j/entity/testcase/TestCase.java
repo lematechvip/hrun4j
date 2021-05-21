@@ -9,10 +9,6 @@ import java.util.List;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestCase
- * @description testcase
- * @created 2021/1/20 2:39 下午
- * @publicWechat lematech
  */
 
 @Data

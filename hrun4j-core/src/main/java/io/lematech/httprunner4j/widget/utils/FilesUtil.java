@@ -1,14 +1,9 @@
 package io.lematech.httprunner4j.widget.utils;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
+
 import cn.hutool.core.util.StrUtil;
-import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.config.RunnerConfig;
-import io.lematech.httprunner4j.widget.log.MyLog;
-
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.*;
@@ -17,10 +12,6 @@ import java.util.regex.Matcher;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className FileUtil
- * @description fileUtil
- * @created 2021/4/20 1:21 下午
- * @publicWechat lematech
  */
 public class FilesUtil {
 
@@ -28,7 +19,7 @@ public class FilesUtil {
      * file path decode,support zh
      *
      * @param filePath
-     * @return
+     * @return file path
      */
     public static String filePathDecode(String filePath) {
         String decodePath;
@@ -43,7 +34,6 @@ public class FilesUtil {
 
     /**
      * Path subcontract name
-     *
      * @param dirPath
      * @return
      */
@@ -75,7 +65,7 @@ public class FilesUtil {
 
     /**
      * @param pkgPath
-     * @return
+     * @return file path
      */
     public static String pkgPath2DirPath(String pkgPath) {
         if (StrUtil.isEmpty(pkgPath)) {

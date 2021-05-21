@@ -17,12 +17,10 @@ import java.util.*;
 
 
 /**
+ * Hot loader for loading classes files
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HotLoader
- * @description Hot loader for loading classes files
- * @created 2021/1/20 4:50 下午
- * @publicWechat lematech
  */
 
 public class HotLoader {
@@ -38,10 +36,10 @@ public class HotLoader {
 
     /**
      * hot load self-defined class
-     * @param pkgName
-     * @param className
-     * @param source
-     * @return
+     * @param pkgName The package name
+     * @param className The class name
+     * @param source The source code
+     * @return The generated class
      */
     public static synchronized Class<?> hotLoadClass(String pkgName, String className, String source){
         if(StrUtil.isEmpty(className)||StrUtil.isEmpty(source)){
@@ -67,39 +65,6 @@ public class HotLoader {
         return clazz;
     }
 
-    /**
-     *  by src path hot load directory java file
-     * @param srcPath
-     * @return
-     */
-    public static List<Class<?>> hotLoadSrcDirectoryJava(String srcPath){
-        List<Class<?>> classes = new ArrayList<>();
-        File file;
-        if(StrUtil.isEmpty(srcPath)){
-            file = new File(Constant.DOT_PATH);
-            MyLog.warn("src path is empty ,file path is set current path.");
-        }else{
-            file = new File(srcPath);
-        }
-        String rootPath = file.getAbsolutePath();
-        List<Map<String,String>> javaMetaInfos = new ArrayList<>();
-        traverseSrcJava(rootPath,file,javaMetaInfos);
-        for(Map<String,String> javaMetaInfo : javaMetaInfos){
-            String pkgName = javaMetaInfo.get("pkgName");
-            String className = javaMetaInfo.get("className");
-            String source = javaMetaInfo.get("source");
-            Class<?> javaClass = hotLoadClass(pkgName,className,source);
-            classes.add(javaClass);
-        }
-        return classes;
-    }
-
-    /**
-     * traverse path files
-     * @param rootPath
-     * @param file
-     * @param javaMetaInfos
-     */
     private static void traverseSrcJava(String rootPath,File file,List<Map<String,String>> javaMetaInfos){
 
         if(!file.exists()){

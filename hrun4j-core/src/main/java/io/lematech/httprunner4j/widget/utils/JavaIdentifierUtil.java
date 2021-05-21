@@ -8,12 +8,10 @@ import io.lematech.httprunner4j.common.DefinedException;
 import java.io.File;
 
 /**
+ * java identifier validation
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className JavaIdentifierUtil
- * @description java identifier validation
- * @created 2021/1/28 4:59 下午
- * @publicWechat lematech
  */
 
 public class JavaIdentifierUtil {
@@ -23,7 +21,7 @@ public class JavaIdentifierUtil {
      * tips：Extension support "-", runtime auto transfer "_"
      *
      * @param className
-     * @return
+     * @return true or false
      */
     public static boolean isValidJavaIdentifier(String className) {
         if (StrUtil.isEmpty(className) || !Character.isJavaIdentifierStart(className.charAt(0))) {
@@ -40,9 +38,9 @@ public class JavaIdentifierUtil {
     }
 
     /**
-     *  validate package name or validate package and class
+     * validate package name or validate package and class
      * @param fullName
-     * @return
+     * @return true or false
      */
     public static boolean isValidJavaFullClassName(String fullName) {
         if (StrUtil.isEmpty(fullName)) {
@@ -75,8 +73,8 @@ public class JavaIdentifierUtil {
     /**
      * Verify that the package name is valid
      *
-     * @param identifierName
-     * @return
+     * @param identifierName identifier name
+     * @return If it is null, the validation passes, anyway, the reason for the validation failure
      */
     public static String validateIdentifierName(String identifierName) {
         String validateInfo = "";
@@ -104,35 +102,9 @@ public class JavaIdentifierUtil {
     }
 
 
-    /**
-     * Verify that the file path meets the requirements
-     *
-     * @param filePath
-     * @return
-     */
-    public static String verifyFilePathValid(String filePath) {
-        if (StrUtil.isEmpty(filePath)) {
-            String exceptionMsg = String.format(" The file path cannot be empty");
-            throw new DefinedException(exceptionMsg);
-        }
-        StringBuffer validName = new StringBuffer();
-        char[] nameChars = filePath.toCharArray();
-        for (int index = 0; index < nameChars.length; index++) {
-            char tmpChar = nameChars[index];
-            if (tmpChar == File.separatorChar) {
-                continue;
-            }
-            if (!Character.isJavaIdentifierPart(tmpChar)) {
-                String exceptionMsg = String.format(" The file path %s cannot contain special characters: %s", filePath, tmpChar);
-                throw new DefinedException(exceptionMsg);
-            }
-        }
-        return validName.toString();
-    }
 
     /**
      * format that the file path meets the requirements
-     *
      * @param filePath
      * @return
      */
@@ -154,6 +126,4 @@ public class JavaIdentifierUtil {
         }
         return validName.toString();
     }
-
-
 }

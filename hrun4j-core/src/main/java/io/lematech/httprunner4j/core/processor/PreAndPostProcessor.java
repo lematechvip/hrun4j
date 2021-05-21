@@ -16,12 +16,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * Pre - and post-processor
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className PreAndPostProcessor
- * @description Pre - and post-processor
- * @created 2021/4/25 10:36 下午
- * @publicWechat lematech
  */
 public class PreAndPostProcessor {
     public void setTestStepConfigVariable(Map<String, Object> testStepConfigVariable) {
@@ -43,7 +41,9 @@ public class PreAndPostProcessor {
     }
 
     /**
-     * pre preprocess
+     * preprocessor
+     * @param baseModel Based on the object
+     * @param requestEntity The request entity
      */
     public void preProcess(BaseModel baseModel, RequestEntity requestEntity) {
         if (baseModel instanceof TestStep && !Objects.isNull(requestEntity)) {
@@ -79,6 +79,8 @@ public class PreAndPostProcessor {
 
     /**
      * post preprocess
+     * @param obj The base model
+     * @param responseEntity The response entity
      */
     public void postProcess(BaseModel obj, ResponseEntity responseEntity) {
         if (obj instanceof TestStep && !Objects.isNull(responseEntity)) {

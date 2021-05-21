@@ -10,12 +10,10 @@ import java.io.File;
 import java.util.*;
 
 /**
+ * Initialize the run configuration parameters
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className RunnerConfig
- * @description Initialize the run configuration parameters
- * @created 2021/1/20 4:41 下午
- * @publicWechat lematech
  */
 
 @Data
@@ -75,8 +73,7 @@ public class RunnerConfig {
 
     /**
      * set package name
-     *
-     * @param pkgName
+     * @param pkgName package name
      */
     public void setPkgName(String pkgName) {
         if (!JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
@@ -96,12 +93,9 @@ public class RunnerConfig {
     }
 
     /**
+     * supports cli 、api integration
      * @author lematech@foxmail.com
      * @version 1.0.0
-     * @className RunMode
-     * @description supports cli 、api integration
-     * @created 2021/4/24 5:55 下午
-     * @publicWechat lematech
      */
     public enum RunMode {
         CLI, API, PLATFORM

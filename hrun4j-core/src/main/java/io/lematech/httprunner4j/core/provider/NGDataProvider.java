@@ -28,14 +28,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * testng data provider and Complete data-driven grouping
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className NGDataProvider
- * @description testng data provider and Complete data-driven grouping
- * @created 2021/1/20 4:41 下午
- * @publicWechat lematech
  */
-
 public class NGDataProvider {
     private Searcher searcher;
     private DataConstructor dataConstructor;
@@ -47,9 +44,9 @@ public class NGDataProvider {
     /**
      * datq provider implement
      *
-     * @param pkgName
-     * @param testCaseName
-     * @return
+     * @param pkgName The package name
+     * @param testCaseName The test case name
+     * @return The data provider
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         TestCase testCase;

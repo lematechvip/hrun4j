@@ -14,10 +14,6 @@ import java.util.regex.Pattern;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className RegExpUtil
- * @description TODO
- * @created 2021/1/22 4:07 下午
- * @publicWechat lematech
  */
 
 public class RegExpUtil {
@@ -25,8 +21,8 @@ public class RegExpUtil {
     /**
      * is exp
      *
-     * @param exp
-     * @return
+     * @param exp The expression
+     * @return true or false
      */
     public static Boolean isExp(String exp) {
         Boolean flag = false;
@@ -41,9 +37,8 @@ public class RegExpUtil {
 
     /**
      * Is parameterize exp
-     *
-     * @param exp
-     * @return
+     * @param exp expression
+     * @return true or false
      */
     public static Boolean isParameterizeExp(String exp) {
         Boolean flag = false;
@@ -81,9 +76,8 @@ public class RegExpUtil {
 
     /**
      * According to the regular search to meet the requirements
-     *
-     * @param reg
-     * @param str
+     * @param reg regular expression
+     * @param str The character to be found
      * @return
      */
     public static String findString(String reg, String str) {
@@ -105,19 +99,11 @@ public class RegExpUtil {
 
     /**
      * is url
-     *
-     * @param s
-     * @return
+     * @param s url
+     * @return true if url,otherwise false
      */
     public static boolean isUrl(String s) {
-        try {
-            Pattern patt = Pattern.compile(Constant.URL_REGEX);
-            Matcher matcher = patt.matcher(s);
-            return matcher.matches();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+        Matcher matcher = Pattern.compile(Constant.URL_REGEX).matcher(s);
+        return matcher.matches();
     }
 }
