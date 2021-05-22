@@ -102,10 +102,10 @@ public class TestCaseRunner {
                 expProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
                 requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
+                formatRequestFiles(requestEntity);
                 ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
                 List<Map<String, Object>> validateList = testStep.getValidate();
-                MyLog.info("校验数量：{},信息：{}", validateList.size(), validateList);
                 assertChecker.assertList(validateList, responseEntity, testStepConfigVariable);
                 dataExtractor.extractVariables(testStep.getExtract(), responseEntity, testStepConfigVariable);
             }
@@ -120,6 +120,31 @@ public class TestCaseRunner {
         }
 
     }
+
+    /**
+     * @param requestEntity
+     */
+    private void formatRequestFiles(RequestEntity requestEntity) {
+        Object files = requestEntity.getFiles();
+        Map<String, File> fileList = new HashMap<>();
+        if (Objects.nonNull(files) && files instanceof Map) {
+            Map<String, String> fileMaps = (Map<String, String>) files;
+            for (Map.Entry<String, String> fileMap : fileMaps.entrySet()) {
+                String filePath = fileMap.getValue();
+                String fileParameterName = fileMap.getKey();
+                if (Objects.isNull(filePath)) {
+                    String spliceCaseFilePath = searcher.spliceFilePath(filePath, Constant.TEST_CASE_DATA_NAME);
+                    File testCasePath = searcher.quicklySearchFile(spliceCaseFilePath);
+                    fileList.put(fileParameterName, testCasePath);
+                } else {
+                    String exceptionMsg = String.format("Data file %s path  cannot be empty", fileMap.getKey());
+                    throw new DefinedException(exceptionMsg);
+                }
+            }
+        }
+        requestEntity.setFiles(fileList);
+    }
+
     /**
      * extend api model properties value
      *

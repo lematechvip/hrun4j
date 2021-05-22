@@ -19,8 +19,7 @@ public class RequestEntity<T> {
      * 1、query string for request url
      */
     private Map<String,Object> params;
-    /**
-     * TODO: 2021/1/20 可选键值对、字符串（包含变量引用或方法引用字符串），暂定义为键值对
+    /*
      * 1、request body in json format
      * 2、request body in application/x-www-form-urlencoded format
      * 3、request body prepared with function, or reference a variable
@@ -28,15 +27,11 @@ public class RequestEntity<T> {
     private T data;
 
     /**
-     * TODO: 2021/1/20 可选键值对、字符串（包含变量引用或方法引用字符串），暂定义为键值对
      * 1、request body in json format
      * 2、request body prepared with function, or reference a variable
      */
     private Object json;
 
-    /**
-     * TODO: 2021/1/20 可选键值对且变量值为字符串（包含变量引用或方法引用字符串），暂定义为键值对
-     */
     private Map<String, Object> headers;
 
     private Integer connectionRequestTimeout;
@@ -88,6 +83,7 @@ public class RequestEntity<T> {
      * configure verify for current api/teststep
      */
     private Boolean verify;
+
     /**
      * if False, the response content will be immediately downloaded.
      */

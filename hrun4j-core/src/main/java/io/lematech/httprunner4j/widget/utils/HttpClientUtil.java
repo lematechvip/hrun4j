@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.widget.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -22,19 +23,30 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
@@ -63,10 +75,7 @@ public class HttpClientUtil {
     }
 
     public static ResponseEntity doGet(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
-                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
-                .build();
+        CloseableHttpClient httpClient = wrapClient(httpCookieStore);
         String apiUrl = getUrlWithParams(url, requestParams.getParams());
         HttpGetWithEntity httpGet = new HttpGetWithEntity(apiUrl);
         httpGet.setConfig(requestConfig);
@@ -123,10 +132,7 @@ public class HttpClientUtil {
     }
 
     public static ResponseEntity doPost(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
-                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
-                .build();
+        CloseableHttpClient httpClient = wrapClient(httpCookieStore);
         HttpPost httpPost;
         url = getUrlWithParams(url, requestParams.getParams());
         httpPost = new HttpPost(url);
@@ -162,6 +168,38 @@ public class HttpClientUtil {
         }
     }
 
+    private static CloseableHttpClient wrapClient(CookieStore httpCookieStore) {
+        try {
+            HttpClientBuilder httpClientBuilder = HttpClients.custom();
+            if (verify == true) {
+                SSLContext ctx = SSLContext.getInstance("TLS");
+                X509TrustManager tm = new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] arg0,
+                                                   String arg1) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] arg0,
+                                                   String arg1) {
+                    }
+                };
+                ctx.init(null, new TrustManager[]{tm}, null);
+                SSLConnectionSocketFactory ssf = new SSLConnectionSocketFactory(
+                        ctx, NoopHostnameVerifier.INSTANCE);
+                httpClientBuilder.setSSLSocketFactory(ssf);
+            }
+            if (Objects.nonNull(httpCookieStore)) {
+                httpClientBuilder.setDefaultCookieStore(httpCookieStore);
+            }
+            return httpClientBuilder.build();
+        } catch (Exception e) {
+            return HttpClients.createDefault();
+        }
+    }
+
     public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestConfig requestConfig) {
         return doDelete(url, headers, new RequestParameterEntity(), new BasicCookieStore(), requestConfig);
     }
@@ -171,10 +209,7 @@ public class HttpClientUtil {
     }
 
     public static ResponseEntity doDelete(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
-                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
-                .build();
+        CloseableHttpClient httpClient = wrapClient(httpCookieStore);
         url = getUrlWithParams(url, requestParams.getParams());
         HttpDeleteWithEntity httpDelete = new HttpDeleteWithEntity(url);
         httpDelete.setConfig(requestConfig);
@@ -215,10 +250,8 @@ public class HttpClientUtil {
     }
 
     public static ResponseEntity doPut(String url, Map<String, String> headers, RequestParameterEntity requestParams, CookieStore httpCookieStore, RequestConfig requestConfig) {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
-                .setDefaultCookieStore(Optional.ofNullable(httpCookieStore).orElse(httpCookieStore = new BasicCookieStore()))
-                .build();
+        CloseableHttpClient httpClient = wrapClient(httpCookieStore);
+        ;
         HttpPut httpPut;
         url = getUrlWithParams(url, requestParams.getParams());
         httpPut = new HttpPut(url);
@@ -339,12 +372,26 @@ public class HttpClientUtil {
                 Map<String, Object> dataMap = JSONObject.parseObject(JSON.toJSONString(requestParams.getData()), Map.class);
                 HttpEntity entityReq = getUrlEncodedFormEntity(dataMap);
                 request.setEntity(entityReq);
+                return;
             }
         }
+
         if (Objects.nonNull(requestParams.getJson())) {
             HttpEntity httpEntity = new StringEntity(JSON.toJSONString(requestParams.getJson()), ContentType.APPLICATION_JSON);
             request.setEntity(httpEntity);
+            return;
         }
+
+        Map<String, File> files = requestParams.getFiles();
+        if (CollUtil.isNotEmpty(files)) {
+            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            for (Map.Entry<String, File> entry : files.entrySet()) {
+                reqEntity.addPart(entry.getKey(), new FileBody(entry.getValue()));
+            }
+            request.setEntity((HttpEntity) reqEntity);
+            return;
+        }
+
     }
 
     /**
@@ -419,7 +466,7 @@ public class HttpClientUtil {
         StringBuilder sb = new StringBuilder();
         if (MapUtil.isNotEmpty(cookies)) {
             for (String key : cookies.keySet()) {
-                String value = cookies.get(key).toString();
+                String value = cookies.get(key);
                 try {
                     String sVal = URLEncoder.encode(value, Constant.CHARSET_UTF_8);
                     sb.append(key).append("=").append(sVal).append(";");
@@ -432,6 +479,7 @@ public class HttpClientUtil {
         return sb.toString();
     }
 
+    private static boolean verify;
     public static ResponseEntity executeReq(RequestEntity requestEntity) {
         ResponseEntity responseEntity = null;
         String method = requestEntity.getMethod();
@@ -445,6 +493,7 @@ public class HttpClientUtil {
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.cookie"), SmallUtil.emptyIfNull(requestEntity.getCookies())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), SmallUtil.emptyIfNull(requestEntity.getParams())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.json"), SmallUtil.emptyIfNull(requestEntity.getJson())));
+        verify = requestEntity.getVerify();
         if (HttpConstant.GET.equalsIgnoreCase(requestEntity.getMethod())) {
             responseEntity = doGet(url, headers, requestParameterEntity, initRequestConfig(requestEntity));
         } else if (HttpConstant.POST.equalsIgnoreCase(method)) {

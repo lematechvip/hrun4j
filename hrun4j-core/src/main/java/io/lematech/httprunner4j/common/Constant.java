@@ -55,6 +55,11 @@ public class Constant {
     public static final String TEST_CASE_DIRECTORY_NAME = "testcases";
 
     /**
+     * testcase directory name
+     */
+    public static final String TEST_CASE_DATA_NAME = "data";
+
+    /**
      * api define directory name
      */
     public static final String API_DEFINE_DIRECTORY_NAME = "apis";
