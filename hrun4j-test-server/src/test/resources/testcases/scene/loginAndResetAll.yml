@@ -9,6 +9,6 @@ teststeps:
   - name: 登录系统
     api: apis/getSimpleToken
     validate:
-      - equalTo: [statusCode,200]
+      - equalTo: [status_code,200]
   - name: 添加用户
     api: apis/resetAll

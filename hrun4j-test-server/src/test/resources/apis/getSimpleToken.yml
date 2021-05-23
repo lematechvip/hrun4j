@@ -10,7 +10,7 @@ request:
   json:
     sign: ${signGenerate(device_sn,os_platform,app_version)}
 validate:
-  - equalTo: [statusCode,200]
-  - equalTo: [content.code,"00"]
+  - equalTo: [status_code,200]
+  - equalTo: [body.code,"00"]
 extract:
-  token: content.data.token
+  token: body.data.token

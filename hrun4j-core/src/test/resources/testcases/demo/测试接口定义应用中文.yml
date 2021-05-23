@@ -21,19 +21,10 @@ teststeps:
       params:
         a: A
         b: B
-      data:
-        data1: dataV1
-        data2: dataV2
       cookies:
         k1: K1
         k2: K2
       allowRedirects: true
-      files:
-        file1: xxfilek1
-        file2: xxfilek2
-      upload:
-        upload1: xxupload1
-        upload2: xxupload2
       auth:
         auth1: xxauth1
         auth2: xxauth2

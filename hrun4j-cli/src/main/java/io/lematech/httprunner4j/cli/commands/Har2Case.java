@@ -1,11 +1,8 @@
 package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -27,6 +24,7 @@ import io.lematech.httprunner4j.widget.utils.JsonUtil;
 import org.kohsuke.args4j.Option;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -199,10 +197,10 @@ public class Har2Case extends Command {
                 if (JsonUtil.isJson(postContent)) {
                     requestEntity.setJson(JSONObject.parseObject(postContent));
                 } else {
-                    requestEntity.setJson(postContent);
+                    MyLog.warn("Data type is {}, but data value :{} cannot be JSON formatted", CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8, postContent);
                 }
             } else {
-                requestEntity.setJson(postContent);
+                requestEntity.setData(postContent);
             }
             List<HarPostParam> postParams = harPostData.getParams();
             Map<String, Object> postParam = Maps.newHashMap();

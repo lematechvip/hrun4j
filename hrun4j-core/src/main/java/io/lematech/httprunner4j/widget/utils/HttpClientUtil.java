@@ -29,7 +29,6 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -386,9 +385,9 @@ public class HttpClientUtil {
         if (CollUtil.isNotEmpty(files)) {
             MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
             for (Map.Entry<String, File> entry : files.entrySet()) {
-                reqEntity.addPart(entry.getKey(), new FileBody(entry.getValue()));
+                reqEntity.addBinaryBody(entry.getKey(), entry.getValue());
             }
-            request.setEntity((HttpEntity) reqEntity);
+            request.setEntity(reqEntity.build());
             return;
         }
 

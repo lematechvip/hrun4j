@@ -1,6 +1,7 @@
 package io.lematech.httprunner4j.entity.http;
 
 
+import com.alibaba.fastjson.JSONObject;
 import io.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class RequestEntity<T> {
      * 1、request body in json format
      * 2、request body prepared with function, or reference a variable
      */
-    private Object json;
+    private JSONObject json;
 
     private Map<String, Object> headers;
 
@@ -82,7 +83,7 @@ public class RequestEntity<T> {
     /**
      * configure verify for current api/teststep
      */
-    private Boolean verify;
+    private Boolean verify = false;
 
     /**
      * if False, the response content will be immediately downloaded.

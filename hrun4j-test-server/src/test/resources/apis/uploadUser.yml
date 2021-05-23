@@ -1,0 +1,15 @@
+name: 添加用户信息接口定义
+base_url: http://127.0.0.1:8000
+request:
+  url: /api/users/upload-image
+  method: POST
+  headers:
+    device_sn: ${device_sn}
+    token: ${token}
+  files:
+    file1: uploadFile1.txt
+    file2: uploadFile2.txt
+setup_hooks:
+  ${hook(addUser_api_define_setup_hooks)}
+teardown_hooks:
+  ${hook(addUser_api_define_teardown_hooks)}

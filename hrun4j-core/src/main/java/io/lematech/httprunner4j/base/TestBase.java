@@ -43,6 +43,7 @@ public class TestBase {
         } catch (DefinedException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             String exceptionMsg = String.format("Abnormal testng data loading occurs, and the reason for the exception is as follows: %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

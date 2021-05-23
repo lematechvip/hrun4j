@@ -7,12 +7,13 @@ import com.google.common.collect.Maps;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.processor.DataExtractor;
+import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.entity.testcase.Comparator;
-import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.widget.i18n.I18NFactory;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.hamcrest.Matcher;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

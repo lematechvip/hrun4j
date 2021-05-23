@@ -14,9 +14,6 @@ teststeps:
       params:
         a: A
         b: B
-      data:
-        data1: dataV1
-        data2: dataV2
       cookies:
         k1: K1
         k2: K2
@@ -26,16 +23,13 @@ teststeps:
       json:
         sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
       files:
-        file1: xxfilek1
-        file2: xxfilek2
-      upload:
-        upload1: xxupload1
-        upload2: xxupload2
+        file1: uploadFile2.txt
+        file2: uploadFile2.txt
       allowRedirects: true
       auth:
         auth1: xxauth1
         auth2: xxauth2
-      verify: false
+      verify: true
       stream: false
     variables:
       - aaa: bbb

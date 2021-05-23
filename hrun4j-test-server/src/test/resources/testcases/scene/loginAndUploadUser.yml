@@ -13,8 +13,8 @@ teststeps:
     validate:
       - equalTo: [status_code,200]
   - name: 添加用户
-    api: apis/addUser
+    api: apis/uploadUser
     validate:
       - equalTo: [status_code,200]
       - equalTo: [body.code,"00"]
-      - equalTo: [body.message,"用户创建成功！"]
+      - equalTo: [body.message,"文件上传成功！"]

@@ -42,12 +42,8 @@
       "k2": "apiK2"
     },
     "files": {
-      "file1": "filek1",
-      "file2": "filek2"
-    },
-    "upload": {
-      "upload1": "upload1",
-      "upload2": "upload2"
+      "file1": "uploadFile1.txt",
+      "file2": "uploadFile2.txt"
     },
     "auth": [
       {
@@ -66,19 +62,19 @@
   "validate": [
     {
       "equalTo": [
-        "statusCode",
+        "status_code",
         200
       ]
     },
     {
       "equalTo": [
-        "content.code",
+        "body.code",
         "00"
       ]
     },
     {
       "equalTo": [
-        "content.message",
+        "body.message",
         "ok！"
       ]
     }

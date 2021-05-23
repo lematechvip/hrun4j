@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.core.loader.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,9 +51,13 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         T result;
         String testDataName = file.getName();
         try {
-            if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)) {
+            String extName = FileUtil.extName(testDataName);
+            if (!StrUtil.isEmpty(extName)) {
+                this.extName = extName;
+            }
+            if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(this.extName)) {
                 result = (T) mapper.readValue(new FileInputStream(file), clazz);
-            } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
+            } else if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(this.extName)) {
                 JSONObject jsonObject = yaml.load(new FileInputStream(file));
                 result = (T) jsonObject.toJavaObject(clazz);
             } else {
@@ -64,7 +69,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
                 throw new DefinedException(exceptionMsg);
             }
         } catch (IOException e) {
-            String exceptionMsg = String.format("Error in file %s.%s serialization,Exception Information: %s", testDataName, extName, e.getMessage());
+            String exceptionMsg = String.format("Error in file %s.%s serialization,Exception Information: %s", testDataName, this.extName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return result;

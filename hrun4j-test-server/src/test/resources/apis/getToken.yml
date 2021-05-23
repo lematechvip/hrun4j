@@ -30,11 +30,8 @@ request:
     k1: apiK1
     k2: apiK2
   files:
-    file1: filek1
-    file2: filek2
-  upload:
-    upload1: upload1
-    upload2: upload2
+    file1: uploadFile1.txt
+    file2: uploadFile1.txt
   auth:
     - auth1: auth1
     - auth2: auth2
@@ -43,6 +40,6 @@ request:
   json:
     sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
 validate:
-  - equalTo: [statusCode,200]
-  - equalTo: [content.code,"00"]
-  - equalTo: [content.message,"ok！"]
+  - equalTo: [status_code,200]
+  - equalTo: [body.code,"00"]
+  - equalTo: [body.message,"ok！"]

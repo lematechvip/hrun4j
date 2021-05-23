@@ -41,12 +41,8 @@
         },
         "allowRedirects": true,
         "files": {
-          "file1": "xxfilek1",
-          "file2": "xxfilek2"
-        },
-        "upload": {
-          "upload1": "xxupload1",
-          "upload2": "xxupload2"
+          "file1": "uploadFile2.txt",
+          "file2": "uploadFile2.txt"
         },
         "auth": {
           "auth1": "xxauth1",

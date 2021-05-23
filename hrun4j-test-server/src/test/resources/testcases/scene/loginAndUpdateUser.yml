@@ -11,10 +11,10 @@ teststeps:
   - name: 登录系统
     api: apis/getSimpleToken
     validate:
-      - equalTo: [statusCode,200]
+      - equalTo: [status_code,200]
   - name: 更新用户信息
     api: apis/updateUser
     validate:
-      - equalTo: [statusCode,200]
-      - equalTo: [content.code,"09"]
-      - equalTo: [content.message,"用户：1 不存在"]
+      - equalTo: [status_code,200]
+      - equalTo: [body.code,"09"]
+      - equalTo: [body.message,"用户：1 不存在"]

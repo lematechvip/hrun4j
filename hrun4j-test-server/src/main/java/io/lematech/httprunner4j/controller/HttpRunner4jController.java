@@ -10,8 +10,10 @@ import io.lematech.httprunner4j.service.UserService;
 import io.lematech.httprunner4j.vo.TokenVO;
 import io.lematech.httprunner4j.vo.UserVO;
 import io.lematech.httprunner4j.vo.base.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Objects;
@@ -26,6 +28,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class HttpRunner4jController {
     @Autowired
     private TokenService tokenServiceImpl;
@@ -44,6 +47,7 @@ public class HttpRunner4jController {
                       @RequestHeader(value = "app_version", required = false) String appVersion,
                       @RequestBody TokenVO tokenVO) {
         String expectSign = tokenServiceImpl.generateToken(deviceSN, osPlatform, appVersion);
+        log.info("sign: {}", expectSign);
         boolean validateResult = tokenServiceImpl.validateToken(tokenVO.getSign(), expectSign);
         if (!validateResult) {
             return R.fail(CommonBusinessCode.Authorization_FAILED_EXCEPTION);
@@ -108,5 +112,12 @@ public class HttpRunner4jController {
     public R resetAll() {
         userServiceImpl.deleteUsers();
         return R.ok();
+    }
+
+    @PostMapping(value = "/users/upload-image")
+    @ValidateRequest(headerNames = {"device_sn", "token"})
+    public R imageCheck2(MultipartFile file1, MultipartFile file2) {
+        log.info("文件名1：{},文件名2：{}", file1.getOriginalFilename(), file2.getOriginalFilename());
+        return R.ok("文件上传成功！");
     }
 }

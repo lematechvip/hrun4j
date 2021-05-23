@@ -283,16 +283,6 @@
         "stream": {
           "description": "if False, the response content will be immediately downloaded.",
           "type": "boolean"
-        },
-        "upload": {
-          "description": "upload files",
-          "type": "object",
-          "examples": [
-            {
-              "file": "data/file_to_upload",
-              "md5": "123"
-            }
-          ]
         }
       },
       "required": [

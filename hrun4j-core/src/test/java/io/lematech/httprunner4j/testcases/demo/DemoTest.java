@@ -6,7 +6,6 @@ import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 /**
@@ -169,4 +168,5 @@ public class DemoTest extends TestBase {
     public void testDataAssociatedProviderDemo(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
+
 }

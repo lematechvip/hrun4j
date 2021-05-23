@@ -12,20 +12,20 @@ import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
-import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import lombok.Data;
+import io.lematech.httprunner4j.widget.utils.RegExpUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
+@Slf4j
 public class ExpProcessor<T> {
     private Map<String, Object> currentVariable = new HashMap<>();
     private Map<String, Object> configVars = new HashMap<>();
@@ -92,22 +92,17 @@ public class ExpProcessor<T> {
         if (RegExpUtil.isExp(exp)) {
             String handleExp = new String(exp.getBytes());
             try {
-                List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION_FLAG, exp);
+                List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION, exp);
                 String matchExp = matchList.get(0);
-                if (matchList.size() == 1 && exp.equals(matchExp)) {
-                    String resultExp = RegExpUtil.findString(Constant.REGEX_EXPRESSION, exp);
-                    Object result = BuiltInAviatorEvaluator.execute(resultExp, currentVariable);
-                    return result;
+                if (matchList.size() == 1) {
+                    String onlyExp = String.format("${%s}", matchExp);
+                    if (exp.equals(onlyExp)) {
+                        return BuiltInAviatorEvaluator.execute(matchExp, currentVariable);
+                    } else {
+                        exp = getExpString(exp, matchList);
+                    }
                 } else {
-                    List<String> matchedList = new ArrayList<>();
-                    for (String subExp : matchList) {
-                        Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
-                        String handleResult = String.valueOf(result);
-                        matchedList.add(handleResult);
-                    }
-                    for (String matched : matchedList) {
-                        exp = exp.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, matched);
-                    }
+                    exp = getExpString(exp, matchList);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -115,6 +110,19 @@ public class ExpProcessor<T> {
                 throw new DefinedException(exceptionMsg);
             }
             MyLog.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", handleExp, exp, currentVariable);
+        }
+        return exp;
+    }
+
+    private String getExpString(String exp, List<String> matchList) {
+        List<String> matchedList = new ArrayList<>();
+        for (String subExp : matchList) {
+            Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
+            String handleResult = String.valueOf(result);
+            matchedList.add(handleResult);
+        }
+        for (String matched : matchedList) {
+            exp = exp.replaceFirst(Constant.REGEX_EXPRESSION_REPLACE, matched);
         }
         return exp;
     }
@@ -199,6 +207,8 @@ public class ExpProcessor<T> {
                     Method setMethod = object.getClass().getMethod("set" + methodName, JSONObject.class);
                     JSONObject jsonObject = JSON.parseObject((String) dynHandleContainsExpObject((T) JSON.toJSONString(fieldValue)), JSONObject.class);
                     setMethod.invoke(object, jsonObject);
+                } else {
+                    log.debug("Current Type {} Data Not Processed", attributeClass);
                 }
             } catch (NoSuchMethodException e) {
                 String exceptionMsg = String.format("No such method exception %s", e.getMessage());

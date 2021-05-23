@@ -101,7 +101,7 @@ public class TestCaseRunner {
                 preAndPostProcessor.preProcess(testStep, initializeRequestEntity);
                 expProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
-                requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
+                requestEntity.setUrl(getUrl(config.getBaseUrl().trim(), testStep.getRequest().getUrl().trim()));
                 formatRequestFiles(requestEntity);
                 ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
@@ -113,7 +113,6 @@ public class TestCaseRunner {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
             MyLog.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);
@@ -132,7 +131,7 @@ public class TestCaseRunner {
             for (Map.Entry<String, String> fileMap : fileMaps.entrySet()) {
                 String filePath = fileMap.getValue();
                 String fileParameterName = fileMap.getKey();
-                if (Objects.isNull(filePath)) {
+                if (Objects.nonNull(filePath)) {
                     String spliceCaseFilePath = searcher.spliceFilePath(filePath, Constant.TEST_CASE_DATA_NAME);
                     File testCasePath = searcher.quicklySearchFile(spliceCaseFilePath);
                     fileList.put(fileParameterName, testCasePath);

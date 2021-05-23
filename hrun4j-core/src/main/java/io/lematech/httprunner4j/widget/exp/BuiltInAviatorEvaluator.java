@@ -2,32 +2,25 @@ package io.lematech.httprunner4j.widget.exp;
 
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.csv.CsvData;
 import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvRow;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.util.StrUtil;
 import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
-import com.googlecode.aviator.runtime.type.AviatorJavaType;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 import com.googlecode.aviator.runtime.type.AviatorString;
 import io.lematech.httprunner4j.base.TestBase;
-import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +52,7 @@ public class BuiltInAviatorEvaluator {
         try {
             return AviatorEvaluator.execute(expression, env, false);
         } catch (Exception e) {
-            String exceptionMsg = String.format("execute exp %s occur error: %s", expression, e.getMessage());
+            String exceptionMsg = String.format("Execute exp %s occur error: %s", expression, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
     }

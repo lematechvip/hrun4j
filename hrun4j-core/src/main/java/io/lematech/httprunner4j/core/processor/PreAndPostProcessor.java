@@ -6,7 +6,6 @@ import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.entity.base.BaseModel;
 import io.lematech.httprunner4j.entity.http.RequestEntity;
 import io.lematech.httprunner4j.entity.http.ResponseEntity;
-import io.lematech.httprunner4j.entity.testcase.Config;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.widget.log.MyLog;
 import org.testng.collections.Maps;
@@ -69,10 +68,10 @@ public class PreAndPostProcessor {
         List outputs = transTestStep.getOutput();
         if (!Objects.isNull(outputs)) {
             if (outputs.contains("variables")) {
-                MyLog.info("输出变量[variables]：{}", transTestStep.getVariables());
+                MyLog.info("[variables]：{}", transTestStep.getVariables());
             }
             if (outputs.contains("extract")) {
-                MyLog.info("输出变量[extract]：{}", this.testStepConfigVariable);
+                MyLog.info("[extract]：{}", this.testStepConfigVariable);
             }
         }
     }

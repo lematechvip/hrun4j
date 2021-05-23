@@ -23,8 +23,8 @@ public class Constant {
     public static final String TEST_SUITE_SCHEMA = "/schemas/testsuite.json";
     public static final String REGEX_EXPRESSION = "(?<=\\$\\{).*?(?=})";
     public static final String REGEX_EXPRESSION_FLAG = "(.*)\\$\\{(.*?)\\}(.*)";
+    public static final String REGEX_EXTRACT_EXPRESSION = "(?<=\\$\\{)(.*?)(?=})";
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
-
     public static final String REGEX_PARAMETERIZE_EXPRESSION_FLAG = "(.*)(?<=\\$\\{)P\\((.*)\\)(?=})(.*)";
     public static final String REGEX_PARAMETERIZE_EXPRESSION = "(?<=\\$\\{P\\()(.*?)(?=\\)})";
 

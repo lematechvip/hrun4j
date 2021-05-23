@@ -1,4 +1,4 @@
-package io.lematech.httprunner4j.scene;
+package io.lematech.httprunner4j.testcases.scene;
 
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
@@ -65,5 +65,16 @@ public class SceneTest extends TestBase {
     public void loginAndupdateUser(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
+
+    /**
+     * 上用户头像
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void loginAndUploadUser(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 
 }
