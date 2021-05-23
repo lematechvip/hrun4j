@@ -22,7 +22,7 @@ public final class AllCommands {
      */
     public static List<Command> get() {
         return Arrays.asList(new Version()
-                , new Run(), new ViewHar(), new Har2Case());
+                , new Run(), new ViewHar(), new Har2Case(), new StartProject());
     }
 
     /**

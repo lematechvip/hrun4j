@@ -264,31 +264,6 @@ public class Har2Case extends Command {
         }
     }
 
-    /**
-     * @param str
-     * @return
-     */
-    private static boolean isBase64(String str) {
-        if (str == null || str.trim().length() == 0) {
-            return false;
-        } else {
-            if (str.length() % 4 != 0) {
-                return false;
-            }
-
-            char[] charA = str.toCharArray();
-            for (char c : charA) {
-                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
-                        || c == '+' || c == '/' || c == '=') {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-
     private Map<String, Object> buildValidateMap(String expect, Object actual) {
         List validateMeta = new ArrayList();
         validateMeta.add(expect);
