@@ -64,4 +64,6 @@ public class CliConstants {
      */
     public static final String HAR_REQUEST_HEADER_COOKIE = "Cookie";
 
+    public static final String generatorFile = "generator/ignore.vm";
+
 }

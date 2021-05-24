@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 /**
- * 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- * 公众号：bugstack虫洞栈
- * Create by 小傅哥(fustack)
+ * @author lematech@foxmail.com
+ * @version 1.0.0
  */
 public class GenerationYml extends BaseModule {
 
@@ -24,7 +23,7 @@ public class GenerationYml extends BaseModule {
         );
 
         // 写入文件
-        super.writeFile(file, "yml.ftl", null);
+        super.writeFile(file, "yml.vm", null);
         logger.info("创建配置文件 application.yml {}", file.getPath());
     }
 

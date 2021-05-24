@@ -28,7 +28,7 @@ public class GenerationTest extends BaseModule {
                 "ApiTest.java");
 
         // 写入文件
-        super.writeFile(file, "test.ftl", applicationInfo);
+        super.writeFile(file, "test.vm", applicationInfo);
 
         logger.info("创建测试类 ApiTest.java {}", file.getPath());
     }

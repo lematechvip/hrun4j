@@ -24,16 +24,16 @@ public class GenerationPackageInfo extends BaseModule {
 
         // 写入文件
         super.writeFile(new File(projectsRoot + projectInfo.getArtifactId() + "/src/main/java/" + packagePath + "application/",
-                "package-info.java"), "package-info.ftl", new ApplicationInfo(packageName + ".application"));
+                "package-info.java"), "package-info.vm", new ApplicationInfo(packageName + ".application"));
 
         super.writeFile(new File(projectsRoot + projectInfo.getArtifactId() + "/src/main/java/" + packagePath + "domain/",
-                "package-info.java"), "package-info.ftl", new ApplicationInfo(packageName + ".domain"));
+                "package-info.java"), "package-info.vm", new ApplicationInfo(packageName + ".domain"));
 
         super.writeFile(new File(projectsRoot + projectInfo.getArtifactId() + "/src/main/java/" + packagePath + "infrastructure/",
-                "package-info.java"), "package-info.ftl", new ApplicationInfo(packageName + ".infrastructure"));
+                "package-info.java"), "package-info.vm", new ApplicationInfo(packageName + ".infrastructure"));
 
         super.writeFile(new File(projectsRoot + projectInfo.getArtifactId() + "/src/main/java/" + packagePath + "interfaces/",
-                "package-info.java"), "package-info.ftl", new ApplicationInfo(packageName + ".interfaces"));
+                "package-info.java"), "package-info.vm", new ApplicationInfo(packageName + ".interfaces"));
 
 
         logger.info("创建DDD分层和描述文件 {}", "package-info.java");

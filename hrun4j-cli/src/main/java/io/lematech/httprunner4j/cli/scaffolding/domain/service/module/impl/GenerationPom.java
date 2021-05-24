@@ -22,7 +22,7 @@ public class GenerationPom extends BaseModule {
         );
 
         // 写入文件
-        super.writeFile(file, "pom.ftl", projectInfo);
+        super.writeFile(file, "pom.vm", projectInfo);
 
         logger.info("创建配置文件 pom.xml {}", file.getPath());
     }

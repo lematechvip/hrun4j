@@ -29,7 +29,7 @@ public class GenerationApplication extends BaseModule {
                 applicationInfo.getClassName() + ".java");
 
         // 写入文件
-        super.writeFile(file, "application.ftl", applicationInfo);
+        super.writeFile(file, "application.vm", applicationInfo);
 
         logger.info("创建主入口类 Application.java {}", file.getPath());
     }

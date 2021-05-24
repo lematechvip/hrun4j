@@ -16,6 +16,7 @@ import java.io.StringWriter;
  */
 
 public class TemplateEngine {
+
     private static VelocityEngine velocityEngine;
 
     /**
@@ -23,7 +24,7 @@ public class TemplateEngine {
      *
      * @return velocity engine instance
      */
-    public static synchronized VelocityEngine getInstance() {
+    private static synchronized VelocityEngine getInstance() {
         if (velocityEngine == null) {
             velocityEngine = new VelocityEngine();
             velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");

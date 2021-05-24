@@ -1,9 +1,13 @@
 package io.lematech.httprunner4j.cli.commands;
 
 
+import io.lematech.httprunner4j.cli.CliConstants;
 import io.lematech.httprunner4j.cli.Command;
 import io.lematech.httprunner4j.cli.scaffolding.domain.model.ProjectInfo;
 import io.lematech.httprunner4j.cli.scaffolding.domain.service.ProjectGeneratorImpl;
+import io.lematech.httprunner4j.core.engine.TemplateEngine;
+import io.lematech.httprunner4j.widget.log.MyLog;
+import org.apache.velocity.VelocityContext;
 
 import java.io.PrintWriter;
 
@@ -31,8 +35,13 @@ public class StartProject extends Command {
                 "firstProject",
                 "Demo project for HttpRunner4j"
         );
-        ProjectGeneratorImpl projectGenerator = new ProjectGeneratorImpl();
-        projectGenerator.generator(projectInfo);
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("pkgName", "test");
+
+        String result = TemplateEngine.getTemplateRenderContent(CliConstants.generatorFile, ctx);
+        MyLog.info("涮肉结果：{}", result);
+        //ProjectGeneratorImpl projectGenerator = new ProjectGeneratorImpl();
+        // projectGenerator.generator(projectInfo);
         return 1;
     }
 

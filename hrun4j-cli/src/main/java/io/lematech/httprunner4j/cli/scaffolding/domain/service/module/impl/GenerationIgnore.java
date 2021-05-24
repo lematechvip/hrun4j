@@ -22,7 +22,7 @@ public class GenerationIgnore extends BaseModule {
         );
 
         // 写入文件
-        super.writeFile(file, "ignore.ftl", projectInfo);
+        super.writeFile(file, "ignore.vm", projectInfo);
 
         logger.info("创建配置文件 .gitignore {}", file.getPath());
     }
