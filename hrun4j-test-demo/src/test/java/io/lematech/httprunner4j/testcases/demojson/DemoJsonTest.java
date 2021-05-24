@@ -64,35 +64,6 @@ public class DemoJsonTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
-    /**
-     * 测试变量优先级
-     *
-     * @param testCase
-     */
-    @Test(dataProvider = "dataProvider")
-    public void testApiReferenceDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
-
-    /**
-     * 测试自定义request config 项是否正常运行
-     *
-     * @param testCase
-     */
-    @Test(dataProvider = "dataProvider")
-    public void testDefineRequestConfigDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
-
-    /**
-     * 引用测试用例
-     *
-     * @param testCase
-     */
-    @Test(dataProvider = "dataProvider")
-    public void testTestCaseReferenceDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
 
 
 }

@@ -8,11 +8,11 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>${groupId}</groupId>
-    <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
-    <name>${name}</name>
-    <description>${description}</description>
+    <groupId>${projectInfo.groupId}</groupId>
+    <artifactId>${projectInfo.artifactId}</artifactId>
+    <version>${projectInfo.version}</version>
+    <name>${projectInfo.name}</name>
+    <description>${projectInfo.description}</description>
 
     <properties>
         <java.version>1.8</java.version>

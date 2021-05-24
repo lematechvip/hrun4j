@@ -19,9 +19,6 @@ request:
   params:
     a: apiA
     b: apiB
-  data:
-    data1: apidataV1
-    data2: apidataV2
   connectionRequestTimeout: 15
   connectTimeout: 15
   socketTimeout: 15
@@ -29,12 +26,6 @@ request:
   cookies:
     k1: apiK1
     k2: apiK2
-  files:
-    file1: filek1
-    file2: filek2
-  upload:
-    upload1: upload1
-    upload2: upload2
   auth:
     - auth1: auth1
     - auth2: auth2

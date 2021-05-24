@@ -1,13 +1,13 @@
-package ${packageName};
+package ${application.packageName};
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ${className} {
+public class ${application.className} {
 
 public static void main(String[] args) {
-SpringApplication.run(${className}.class, args);
+SpringApplication.run(${application.className}.class, args);
 }
 
 }

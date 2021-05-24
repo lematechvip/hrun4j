@@ -25,7 +25,7 @@ public class DemoTest extends TestBase {
 
 
     /**
-     *ccc 测试接口定义引用
+     * 测试接口定义引用
      *
      * @param testCase
      */
@@ -149,5 +149,24 @@ public class DemoTest extends TestBase {
     }
 
 
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testDataProviderFromCsvDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testDataAssociatedProviderDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
 
 }

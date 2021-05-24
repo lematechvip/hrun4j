@@ -125,4 +125,35 @@ public class Constant {
      * data extractor jmespath node null value
      */
     public static final String DATA_EXTRACTOR_JMESPATH_NODE_NULL = "null";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_APPLICATION_FILE_PATH = "vm/scaffold/application.vm";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_APPLICATION_YML_FILE_PATH = "vm/scaffold/yml.vm";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH = "vm/scaffold/pom.vm";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH = "vm/scaffold/ignore.vm";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_TEST_FILE_PATH = "vm/scaffold/test.vm";
+
+    /**
+     * Scaffolding formwork
+     */
+    public static final String SCAFFOLD_TEMPLATE_PACKAGE_INFO_FILE_PATH = "vm/scaffold/package-info.vm";
+
 }

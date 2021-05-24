@@ -1,6 +1,6 @@
 package io.lematech.httprunner4j.cli.commands;
 
-import io.lematech.httprunner4j.cli.Command;
+import io.lematech.httprunner4j.cli.handler.Command;
 import io.lematech.httprunner4j.widget.exp.HttpRunner4j;
 
 import java.io.PrintWriter;

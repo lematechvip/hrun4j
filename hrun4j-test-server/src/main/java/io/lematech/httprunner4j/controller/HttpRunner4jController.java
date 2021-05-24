@@ -116,7 +116,7 @@ public class HttpRunner4jController {
 
     @PostMapping(value = "/users/upload-image")
     @ValidateRequest(headerNames = {"device_sn", "token"})
-    public R imageCheck2(MultipartFile file1, MultipartFile file2) {
+    public R imageCheck(MultipartFile file1, MultipartFile file2) {
         log.info("文件名1：{},文件名2：{}", file1.getOriginalFilename(), file2.getOriginalFilename());
         return R.ok("文件上传成功！");
     }

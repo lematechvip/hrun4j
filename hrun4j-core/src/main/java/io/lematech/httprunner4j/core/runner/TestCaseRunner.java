@@ -19,6 +19,7 @@ import io.lematech.httprunner4j.entity.testcase.TestCase;
 import io.lematech.httprunner4j.entity.testcase.TestStep;
 import io.lematech.httprunner4j.core.processor.ExpProcessor;
 import io.lematech.httprunner4j.widget.i18n.I18NFactory;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.HttpClientUtil;
 import io.lematech.httprunner4j.widget.utils.RegExpUtil;
 import io.lematech.httprunner4j.widget.log.MyLog;

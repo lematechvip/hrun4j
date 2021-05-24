@@ -2,6 +2,7 @@ package io.lematech.httprunner4j.widget.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -28,7 +29,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.FormBodyPart;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -44,6 +47,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -366,6 +370,16 @@ public class HttpClientUtil {
     }
 
     private static void setRequestBody(HttpEntityEnclosingRequestBase request, RequestParameterEntity requestParams) {
+        Map<String, File> files = requestParams.getFiles();
+        if (CollUtil.isNotEmpty(files)) {
+            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            for (Map.Entry<String, File> entry : files.entrySet()) {
+                File file = entry.getValue();
+                reqEntity.addBinaryBody(entry.getKey(), file, ContentType.DEFAULT_BINARY, FileUtil.mainName(file));
+            }
+            request.setEntity(reqEntity.build());
+            return;
+        }
         if (Objects.nonNull(requestParams.getData())) {
             if (requestParams.getData() instanceof JSONObject) {
                 Map<String, Object> dataMap = JSONObject.parseObject(JSON.toJSONString(requestParams.getData()), Map.class);
@@ -381,15 +395,6 @@ public class HttpClientUtil {
             return;
         }
 
-        Map<String, File> files = requestParams.getFiles();
-        if (CollUtil.isNotEmpty(files)) {
-            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
-            for (Map.Entry<String, File> entry : files.entrySet()) {
-                reqEntity.addBinaryBody(entry.getKey(), entry.getValue());
-            }
-            request.setEntity(reqEntity.build());
-            return;
-        }
 
     }
 

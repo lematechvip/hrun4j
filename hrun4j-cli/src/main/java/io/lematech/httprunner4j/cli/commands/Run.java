@@ -4,7 +4,7 @@ package io.lematech.httprunner4j.cli.commands;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import io.lematech.httprunner4j.cli.Command;
+import io.lematech.httprunner4j.cli.handler.Command;
 import io.lematech.httprunner4j.cli.testsuite.TestNGEngine;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;

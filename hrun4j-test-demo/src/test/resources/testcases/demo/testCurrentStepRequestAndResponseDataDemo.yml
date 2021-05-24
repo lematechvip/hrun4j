@@ -4,39 +4,6 @@ config:
 teststeps:
   - name: 步骤名称
     api: apis/getToken
-    request:
-      url: /api/get-token
-      method: POST
-      headers:
-        device_sn: 2021032311113
-        os_platform: MacOS
-        app_version: 1.0.0
-      params:
-        a: A
-        b: B
-      data:
-        data1: dataV1
-        data2: dataV2
-      cookies:
-        k1: K1
-        k2: K2
-      connectionRequestTimeout: 1
-      connectTimeout: 1
-      socketTimeout: 1
-      json:
-        sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
-      files:
-        file1: xxfilek1
-        file2: xxfilek2
-      upload:
-        upload1: xxupload1
-        upload2: xxupload2
-      allowRedirects: true
-      auth:
-        auth1: xxauth1
-        auth2: xxauth2
-      verify: false
-      stream: false
     variables:
       - aaa: bbb
     validate:

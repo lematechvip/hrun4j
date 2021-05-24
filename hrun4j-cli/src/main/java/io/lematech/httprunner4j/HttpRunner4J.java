@@ -1,10 +1,11 @@
 package io.lematech.httprunner4j;
 
-import io.lematech.httprunner4j.cli.Command;
-import io.lematech.httprunner4j.cli.CommandHandler;
-import io.lematech.httprunner4j.cli.CommandParser;
+import io.lematech.httprunner4j.cli.handler.Command;
+import io.lematech.httprunner4j.cli.handler.CommandHandler;
+import io.lematech.httprunner4j.cli.handler.CommandParser;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
+
 import java.io.PrintWriter;
 import java.io.Writer;
 

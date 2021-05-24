@@ -1,17 +1,15 @@
 package io.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
-import io.lematech.httprunner4j.cli.CliConstants;
-import io.lematech.httprunner4j.cli.Command;
-import io.lematech.httprunner4j.cli.har.HarUtils;
-import io.lematech.httprunner4j.cli.har.model.Har;
-import io.lematech.httprunner4j.cli.har.model.HarEntry;
-import io.lematech.httprunner4j.cli.har.model.HarPage;
+import io.lematech.httprunner4j.cli.handler.Command;
+import io.lematech.httprunner4j.cli.util.HarUtils;
+import io.lematech.httprunner4j.cli.model.har.Har;
+import io.lematech.httprunner4j.cli.model.har.HarEntry;
+import io.lematech.httprunner4j.cli.model.har.HarPage;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.kohsuke.args4j.Option;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;

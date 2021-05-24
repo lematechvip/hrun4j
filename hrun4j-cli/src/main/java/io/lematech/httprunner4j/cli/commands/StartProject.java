@@ -1,15 +1,26 @@
 package io.lematech.httprunner4j.cli.commands;
 
 
-import io.lematech.httprunner4j.cli.CliConstants;
-import io.lematech.httprunner4j.cli.Command;
-import io.lematech.httprunner4j.cli.scaffolding.domain.model.ProjectInfo;
-import io.lematech.httprunner4j.cli.scaffolding.domain.service.ProjectGeneratorImpl;
-import io.lematech.httprunner4j.core.engine.TemplateEngine;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import io.lematech.httprunner4j.cli.handler.Command;
+import io.lematech.httprunner4j.cli.model.scaffolding.ProjectInfo;
+import io.lematech.httprunner4j.cli.service.IProjectGenerator;
+import io.lematech.httprunner4j.cli.service.impl.ProjectGeneratorImpl;
+import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import org.apache.velocity.VelocityContext;
+import io.lematech.httprunner4j.widget.utils.FilesUtil;
+import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
+import io.lematech.httprunner4j.widget.utils.SmallUtil;
+import org.apache.commons.io.FileUtils;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
+import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lematech@foxmail.com
@@ -23,25 +34,32 @@ public class StartProject extends Command {
 
     @Override
     public String description() {
-        return "Print har2yml command information.";
+        return "Print startproject command information.";
     }
 
-    @Override
-    public int execute(PrintWriter out, PrintWriter err) throws Exception {
-        ProjectInfo projectInfo = new ProjectInfo(
-                "io.lematech.httprunner4j",
-                "firstProject",
-                "1.0.0-SNAPSHOT",
-                "firstProject",
-                "Demo project for HttpRunner4j"
-        );
-        VelocityContext ctx = new VelocityContext();
-        ctx.put("pkgName", "test");
+    @Argument(usage = "Enter project name", metaVar = "<project_name>")
+    String projectName;
 
-        String result = TemplateEngine.getTemplateRenderContent(CliConstants.generatorFile, ctx);
-        MyLog.info("涮肉结果：{}", result);
-        //ProjectGeneratorImpl projectGenerator = new ProjectGeneratorImpl();
-        // projectGenerator.generator(projectInfo);
+    @Option(name = "--group_id", usage = "Specify maven project groupId.")
+    String groupId = "io.lematech.httprunner4j";
+
+    @Option(name = "--version", usage = "Specify maven project version.")
+    String version = "1.0.0-SNAPSHOT";
+
+    @Override
+    public int execute(PrintWriter out, PrintWriter err) {
+        if (StrUtil.isEmpty(projectName)) {
+            MyLog.warn("Please enter a project name");
+            return -1;
+        }
+        JavaIdentifierUtil.isValidJavaFullClassName(groupId);
+        ProjectInfo projectInfo = new ProjectInfo(groupId, projectName
+                , version, projectName, String.format("Demo project for %s", projectName));
+        RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
+        String projectRoot = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory()) + File.separator;
+        MyLog.info("工作区路径：{}", projectRoot);
+        IProjectGenerator projectGenerator = new ProjectGeneratorImpl(projectRoot, projectInfo);
+        projectGenerator.springbootGenerator();
         return 1;
     }
 
