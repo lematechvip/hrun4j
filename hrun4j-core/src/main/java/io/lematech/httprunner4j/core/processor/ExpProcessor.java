@@ -160,6 +160,8 @@ public class ExpProcessor<T> {
                     result.putAll((Map) dynHandleContainsExpObject(obj));
                 }
             }
+        } else if (hookObj instanceof String) {
+            this.handleStringExp(String.valueOf(hookObj));
         }
         return result;
     }

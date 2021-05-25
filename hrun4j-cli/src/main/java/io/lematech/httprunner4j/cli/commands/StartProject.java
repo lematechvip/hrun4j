@@ -10,17 +10,11 @@ import io.lematech.httprunner4j.cli.service.impl.ProjectGeneratorImpl;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
 import io.lematech.httprunner4j.widget.log.MyLog;
-import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import io.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
-import io.lematech.httprunner4j.widget.utils.SmallUtil;
-import org.apache.commons.io.FileUtils;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
-
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author lematech@foxmail.com

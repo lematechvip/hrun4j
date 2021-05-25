@@ -104,7 +104,7 @@ public class DataExtractor {
                 throw new DefinedException(exceptionMsg);
             }
             Object expValue = entry.getValue();
-            String extractValue = (String) handleExpDataExtractor(expValue, responseEntity);
+            Object extractValue = handleExpDataExtractor(expValue, responseEntity);
             if (extractValue.equals(expValue)) {
                 String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rulel", expValue);
                 throw new DefinedException(exceptionMsg);

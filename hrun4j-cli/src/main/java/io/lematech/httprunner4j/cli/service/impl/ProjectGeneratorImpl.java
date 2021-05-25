@@ -124,6 +124,7 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         context.put("application", applicationInfo);
         TemplateEngine.writeToFileByTemplate(Constant.SCAFFOLD_TEMPLATE_TEST_FILE_PATH, file, context);
         MyLog.info("创建测试类 ApiTest.java {} 成功！", file.getPath());
+
     }
 
 
