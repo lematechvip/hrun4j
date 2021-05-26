@@ -20,7 +20,7 @@ public class JavaIdentifierUtil {
      * validate method、classname valid
      * tips：Extension support "-", runtime auto transfer "_"
      *
-     * @param className
+     * @param className The class name
      * @return true or false
      */
     public static boolean isValidJavaIdentifier(String className) {
@@ -39,7 +39,8 @@ public class JavaIdentifierUtil {
 
     /**
      * validate package name or validate package and class
-     * @param fullName
+     *
+     * @param fullName full name
      * @return true or false
      */
     public static boolean isValidJavaFullClassName(String fullName) {

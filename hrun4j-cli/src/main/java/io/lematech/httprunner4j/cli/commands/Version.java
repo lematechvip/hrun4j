@@ -1,7 +1,7 @@
 package io.lematech.httprunner4j.cli.commands;
 
 import io.lematech.httprunner4j.cli.handler.Command;
-import io.lematech.httprunner4j.widget.exp.HttpRunner4j;
+import io.lematech.httprunner4j.widget.exp.BuildInFunctions;
 
 import java.io.PrintWriter;
 
@@ -28,7 +28,7 @@ public class Version extends Command {
      */
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        out.println(HttpRunner4j.VERSION);
+        out.println(BuildInFunctions.VERSION);
         return 0;
     }
 }

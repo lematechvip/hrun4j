@@ -102,7 +102,7 @@ public class TestCaseRunner {
                 preAndPostProcessor.preProcess(testStep, initializeRequestEntity);
                 expProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
-                requestEntity.setUrl(getUrl(config.getBaseUrl().trim(), testStep.getRequest().getUrl().trim()));
+                requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
                 formatRequestFiles(requestEntity);
                 ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
@@ -191,9 +191,9 @@ public class TestCaseRunner {
      */
     private String getUrl(String baseUrl, String requestUrl) {
         if (RegExpUtil.isUrl(requestUrl)) {
-            return requestUrl;
+            return requestUrl.trim();
         }
-        return String.format("%s%s", baseUrl, StrUtil.isEmpty(requestUrl) ? "" : requestUrl);
+        return String.format("%s%s", baseUrl.trim(), StrUtil.isEmpty(requestUrl) ? "" : requestUrl);
     }
 
 

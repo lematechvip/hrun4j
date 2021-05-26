@@ -129,31 +129,31 @@ public class Constant {
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_APPLICATION_FILE_PATH = "vm/scaffold/application.vm";
+    public static final String SCAFFOLD_TEMPLATE_APPLICATION_FILE_PATH = "vm/scaffold/springboot/application.vm";
 
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_APPLICATION_YML_FILE_PATH = "vm/scaffold/yml.vm";
+    public static final String SCAFFOLD_TEMPLATE_APPLICATION_YML_FILE_PATH = "vm/scaffold/springboot/yml.vm";
 
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH = "vm/scaffold/pom.vm";
+    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH = "vm/scaffold/springboot/pom.vm";
 
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH = "vm/scaffold/ignore.vm";
+    public static final String SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH = "vm/scaffold/springboot/ignore.vm";
 
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_TEST_FILE_PATH = "vm/scaffold/test.vm";
+    public static final String SCAFFOLD_TEMPLATE_TEST_FILE_PATH = "vm/scaffold/springboot/test.vm";
 
     /**
      * Scaffolding formwork
      */
-    public static final String SCAFFOLD_TEMPLATE_PACKAGE_INFO_FILE_PATH = "vm/scaffold/package-info.vm";
+    public static final String SCAFFOLD_TEMPLATE_PACKAGE_INFO_FILE_PATH = "vm/scaffold/springboot/package-info.vm";
 
 }

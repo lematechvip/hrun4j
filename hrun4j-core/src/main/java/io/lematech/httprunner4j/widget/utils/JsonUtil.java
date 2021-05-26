@@ -110,7 +110,8 @@ public class JsonUtil {
 
     /**
      * is json
-     * @param jsonStr
+     *
+     * @param jsonStr json string
      * @return true if json
      */
     public static boolean isJson(String jsonStr) {

@@ -47,8 +47,6 @@ public class DataExtractor {
         }
         Object dataExtractorValue;
         String responseStr = JSON.toJSONString(responseEntity);
-
-
         if (RegExpUtil.isExp(expStr)) {
             dataExtractorValue = expProcessor.handleStringExp(expStr);
         } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_REGEX_START) && expStr.endsWith(Constant.DATA_EXTRACTOR_REGEX_END)) {
@@ -58,6 +56,10 @@ public class DataExtractor {
             dataExtractorValue = JsonUtil.getJsonPathResult(expStr, responseStr);
         } else {
             dataExtractorValue = JsonUtil.getJmesPathResult(expStr, responseStr);
+        }
+        if (Objects.isNull(dataExtractorValue)) {
+            String exceptionMsg = String.format("No data was found by the given matching pattern: %s", exp);
+            throw new DefinedException(exceptionMsg);
         }
         return dataExtractorValue;
     }
@@ -106,7 +108,7 @@ public class DataExtractor {
             Object expValue = entry.getValue();
             Object extractValue = handleExpDataExtractor(expValue, responseEntity);
             if (extractValue.equals(expValue)) {
-                String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rulel", expValue);
+                String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rule", expValue);
                 throw new DefinedException(exceptionMsg);
             }
             MyLog.debug("Extract rule %s, the extracted data value:%s", expValue, extractValue);

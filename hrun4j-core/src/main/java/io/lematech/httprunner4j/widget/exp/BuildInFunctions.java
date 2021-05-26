@@ -18,9 +18,10 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Slf4j
-public class HttpRunner4j {
+public class BuildInFunctions {
     public static final String VERSION = "1.0.0";
     public static final String TOKEN_KEY = "httprunner4j";
+
     public static class SignGenerateFunction extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
@@ -32,7 +33,6 @@ public class HttpRunner4j {
             log.info("加密秘钥：{},加密内容：{},生成的签名：{}", TOKEN_KEY, crypContent, sign);
             return new AviatorString(sign);
         }
-
         @Override
         public String getName() {
             return "signGenerate";

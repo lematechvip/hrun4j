@@ -39,13 +39,13 @@ public class BuiltInAviatorEvaluator {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
         AviatorEvaluator.addFunction(new BuiltInFunctionParameterize());
         AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedHookFunction());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionAdd());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionSubtract());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionMultiply());
-        AviatorEvaluator.addFunction(new HttpRunner4j.DefinedFunctionDivide());
-        AviatorEvaluator.addFunction(new HttpRunner4j.SignGenerateFunction());
-        AviatorEvaluator.addFunction(new HttpRunner4j.ReuqestAndResponseHook());
+        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedHookFunction());
+        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionAdd());
+        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionSubtract());
+        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionMultiply());
+        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionDivide());
+        AviatorEvaluator.addFunction(new BuildInFunctions.SignGenerateFunction());
+        AviatorEvaluator.addFunction(new BuildInFunctions.ReuqestAndResponseHook());
     }
 
     public static Object execute(String expression, Map<String, Object> env) {

@@ -75,7 +75,6 @@ public class TemplateEngine {
      * @param templateName template of name
      * @param context      context
      * @param file         write to file
-     * @return The contents of the template after rendering
      */
     public static void writeToFileByTemplate(String templateName, File file, VelocityContext context) {
 

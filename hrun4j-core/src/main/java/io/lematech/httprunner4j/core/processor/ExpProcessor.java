@@ -39,7 +39,8 @@ public class ExpProcessor<T> {
     /**
      * Dynamically handle the object that contains the value of the expression
      *
-     * @param t The generic object
+     * @param t   The generic object
+     * @param <T> The generic type
      * @return The generic object
      */
     public <T> T dynHandleContainsExpObject(T t) {
@@ -171,6 +172,7 @@ public class ExpProcessor<T> {
      * @param testContextVariable The test context variable
      * @param configVars The configuration variables
      * @param testStepVars The test step variables
+     * @param currentVariable The current  variables
      */
     public void setVariablePriority(Map<String, Object> currentVariable, Map<String, Object> testContextVariable, Map<String, Object> configVars, Map<String, Object> testStepVars) {
         handleVariablesExpression(configVars, testStepVars);

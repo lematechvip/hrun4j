@@ -18,6 +18,7 @@ import io.lematech.httprunner4j.widget.log.MyLog;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -69,6 +70,7 @@ public class HttpClientUtil {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
                 .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
+                .setCookieSpec(CookieSpecs.STANDARD)
                 .build();
         return doGet(url, headers, requestParams, requestConfig);
     }
@@ -126,6 +128,7 @@ public class HttpClientUtil {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(HttpConstant.CONNECT_TIME_OUT)
                 .setSocketTimeout(HttpConstant.SOCKET_TIME_OUT)
+                .setCookieSpec(CookieSpecs.STANDARD)
                 .build();
         return doPost(url, headers, requestParams, requestConfig);
     }

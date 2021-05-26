@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.lematechx</groupId>
     <artifactId>hrun4j-core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <name>hrun4j-core</name>
     <url>https://lematech.io</url>
     <properties>
@@ -20,23 +20,6 @@
         <slf4j.version>1.7.7</slf4j.version>
         <logback.version>1.2.3</logback.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>Public Repositories</id>
-            <name>Public Repositories</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.github.java-json-tools</groupId>

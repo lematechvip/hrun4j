@@ -84,8 +84,8 @@ public class Searcher {
     }
 
     /**
-     * @param dataFileType
-     * @param directoryName
+     * @param dataFileType  The data file type
+     * @param directoryName The directory name
      * @return file path of splice
      */
     public String spliceFilePath(String dataFileType, String directoryName) {
