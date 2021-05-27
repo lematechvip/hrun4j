@@ -82,7 +82,7 @@ public class TemplateEngine {
         try {
             template = getInstance().getTemplate(templateName);
         } catch (Exception e) {
-            String exceptionMsg = String.format("There was an exception getting the template %s,Exception Information: ", templateName, e.getMessage());
+            String exceptionMsg = String.format("There was an exception getting the template %s,Exception Information: %s", templateName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
 
@@ -98,7 +98,7 @@ public class TemplateEngine {
             outputStreamWriter.flush();
             outputStreamWriter.close();
         } catch (Exception e) {
-            String exceptionMsg = String.format("An exception occurred writing to template %s the file: %s", templateName, file.getAbsolutePath());
+            String exceptionMsg = String.format("An exception occurred writing to template %s the file: %s,exception information: %s", templateName, file.getAbsolutePath(), e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
     }

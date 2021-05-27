@@ -52,8 +52,8 @@ public class StartProject extends Command {
         RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         String projectRoot = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory()) + File.separator;
         MyLog.info("工作区路径：{}", projectRoot);
-        IProjectGenerator projectGenerator = new ProjectGeneratorImpl(projectRoot, projectInfo);
-        projectGenerator.springbootGenerator();
+        IProjectGenerator projectGenerator = new ProjectGeneratorImpl();
+        projectGenerator.springbootGenerator(projectRoot, projectInfo);
         return 1;
     }
 

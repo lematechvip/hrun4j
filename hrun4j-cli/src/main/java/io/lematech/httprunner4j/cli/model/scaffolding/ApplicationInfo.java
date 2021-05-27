@@ -15,7 +15,4 @@ import lombok.NoArgsConstructor;
 public class ApplicationInfo {
     private String packageName;
     private String className;
-    public ApplicationInfo(String packageName) {
-        this.packageName = packageName;
-    }
 }
