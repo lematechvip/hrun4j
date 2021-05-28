@@ -1,0 +1,7 @@
+name: 查看指定笑话内容
+base_url: https://api.apiopen.top
+request:
+  url: /getSingleJoke
+  method: GET
+  params:
+    sid: ${sid}

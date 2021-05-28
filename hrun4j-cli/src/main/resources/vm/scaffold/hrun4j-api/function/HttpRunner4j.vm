@@ -1,0 +1,32 @@
+package io.lematech.firstproject.testcases;
+
+import com.googlecode.aviator.AviatorEvaluator;
+import io.lematech.firstproject.testcases.functions.JokeFunction;
+import io.lematech.httprunner4j.base.TestBase;
+import io.lematech.httprunner4j.common.Constant;
+import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.widget.log.MyLog;
+import org.testng.annotations.BeforeSuite;
+
+/**
+* Extension function
+* @author lematech@foxmail.com
+* @version 1.0.0
+*/
+public class HttpRunner4j extends TestBase {
+@Override
+@BeforeSuite
+public void beforeSuite(){
+MyLog.info(" Add function to static code block !");
+AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeSetupHook());
+AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeTearDownHook());
+/**
+* 包名，资源路径下查找测试用例前置，默认：io.lematech.httprunner4j
+*/
+RunnerConfig.getInstance().setPkgName("io.lematech.firstproject");
+/**
+* Test case file suffix
+*/
+RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
+}
+}

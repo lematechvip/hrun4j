@@ -19,11 +19,10 @@ public interface IProjectGenerator {
     /**
      * HttpRunner4J CLi dependency generation
      */
-
     void cliGenerator();
 
     /**
      * HttpRunner4J POM dependency generation
      */
-    void pomGenerator();
+    void pomGenerator(String projectRoot, ProjectInfo projectInfo);
 }

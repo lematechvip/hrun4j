@@ -1,0 +1,13 @@
+name: 获取笑话列表
+base_url: https://api.apiopen.top
+request:
+  url: /getJoke
+  method: GET
+  params:
+    page: ${page}
+    count: ${count}
+    type: ${type}
+setup_hooks:
+  ${shFunction(page,count,type)}
+teardown_hooks:
+  ${tdFunction(getJoke)}

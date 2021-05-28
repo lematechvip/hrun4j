@@ -1,8 +1,6 @@
-package io.lematech.httprunner4j.core.engine;
+package io.lematech.httprunner4j.cli.testsuite;
 
-import cn.hutool.core.io.FileUtil;
 import io.lematech.httprunner4j.common.DefinedException;
-import io.lematech.httprunner4j.widget.utils.FilesUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -44,31 +42,40 @@ public class TemplateEngine {
         return velocityEngine;
     }
 
+
     /**
      * render template by context self-defined variables
+     *
      * @param templateName template of name
-     * @param context context
-     * @return The contents of the template after rendering
+     * @param context      context
+     * @param file         write to file
      */
-    public static String getTemplateRenderContent(String templateName, VelocityContext context){
+    public static void writeToFileByTemplate(String templateName, File file, VelocityContext context) {
+
         Template template;
         try {
             template = getInstance().getTemplate(templateName);
         } catch (Exception e) {
-            String exceptionMsg = String.format("There was an exception getting the template %s,Exception Informations: ", templateName, e.getMessage());
+            String exceptionMsg = String.format("There was an exception getting the template %s,Exception Information: %s", templateName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
 
-        StringWriter sw = new StringWriter();
         try {
-            template.merge(context, sw);
+            if (!file.exists()) {
+                if (!file.getParentFile().exists()) {
+                    file.getParentFile().mkdirs();
+                }
+                file.createNewFile();
+            }
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file));
+            template.merge(context, outputStreamWriter);
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
         } catch (Exception e) {
-            String exceptionMsg = String.format("An exception occurred in the rendering engine template %s based on the constructed data,,Exception Informations: %s", templateName, e.getMessage());
+            String exceptionMsg = String.format("An exception occurred writing to template %s the file: %s,exception information: %s", templateName, file.getAbsolutePath(), e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
-        return sw.toString();
     }
-
 
 }
 

@@ -126,34 +126,5 @@ public class Constant {
      */
     public static final String DATA_EXTRACTOR_JMESPATH_NODE_NULL = "null";
 
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_APPLICATION_FILE_PATH = "vm/scaffold/springboot/application.vm";
-
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_APPLICATION_YML_FILE_PATH = "vm/scaffold/springboot/yml.vm";
-
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH = "vm/scaffold/springboot/pom.vm";
-
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH = "vm/scaffold/springboot/ignore.vm";
-
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_TEST_FILE_PATH = "vm/scaffold/springboot/test.vm";
-
-    /**
-     * Scaffolding formwork
-     */
-    public static final String SCAFFOLD_TEMPLATE_PACKAGE_INFO_FILE_PATH = "vm/scaffold/springboot/package-info.vm";
 
 }

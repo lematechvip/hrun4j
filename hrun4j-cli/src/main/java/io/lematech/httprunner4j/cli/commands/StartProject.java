@@ -46,6 +46,7 @@ public class StartProject extends Command {
             MyLog.warn("Please enter a project name");
             return -1;
         }
+
         JavaIdentifierUtil.isValidJavaFullClassName(groupId);
         ProjectInfo projectInfo = new ProjectInfo(groupId, projectName
                 , version, projectName, String.format("Demo project for %s", projectName));
@@ -54,6 +55,7 @@ public class StartProject extends Command {
         MyLog.info("工作区路径：{}", projectRoot);
         IProjectGenerator projectGenerator = new ProjectGeneratorImpl();
         projectGenerator.springbootGenerator(projectRoot, projectInfo);
+
         return 1;
     }
 
