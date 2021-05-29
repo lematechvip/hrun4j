@@ -1,7 +1,7 @@
-package io.lematech.firstproject.testcases;
+package ${application.packageName};
 
 import com.googlecode.aviator.AviatorEvaluator;
-import io.lematech.firstproject.testcases.functions.JokeFunction;
+import ${application.packageName}.functions.JokeFunction;
 import io.lematech.httprunner4j.base.TestBase;
 import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.config.RunnerConfig;
@@ -23,10 +23,11 @@ AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeTearDownHook());
 /**
 * 包名，资源路径下查找测试用例前置，默认：io.lematech.httprunner4j
 */
-RunnerConfig.getInstance().setPkgName("io.lematech.firstproject");
+RunnerConfig.getInstance().setPkgName("${application.packageName}");
 /**
 * Test case file suffix
 */
 RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
 }
 }
+

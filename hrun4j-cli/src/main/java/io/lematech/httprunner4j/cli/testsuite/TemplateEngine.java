@@ -1,5 +1,7 @@
 package io.lematech.httprunner4j.cli.testsuite;
 
+import cn.hutool.core.io.FileUtil;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -54,12 +56,11 @@ public class TemplateEngine {
 
         Template template;
         try {
-            template = getInstance().getTemplate(templateName);
+            template = getInstance().getTemplate(templateName, Constant.CHARSET_UTF_8);
         } catch (Exception e) {
             String exceptionMsg = String.format("There was an exception getting the template %s,Exception Information: %s", templateName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
-
         try {
             if (!file.exists()) {
                 if (!file.getParentFile().exists()) {
@@ -67,8 +68,26 @@ public class TemplateEngine {
                 }
                 file.createNewFile();
             }
+
+            StringWriter sw = new StringWriter();
+            try {
+                template.merge(context, sw);
+            } catch (Exception e) {
+                String exceptionMsg = String.format("An exception occurred in the rendering engine template %s based on the constructed data,,Exception Informations: %s", templateName, e.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
+
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file));
-            template.merge(context, outputStreamWriter);
+            String content = sw.toString();
+            String extName = FileUtil.extName(file);
+            if (Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equals(extName)) {
+                String contentValue = content.replaceAll("\\\\\\{", "{")
+                        .replaceAll("\\\\\\}", "}")
+                        .replaceAll("\\\\\\(", "(")
+                        .replaceAll("\\\\\\)", ")");
+                content = contentValue;
+            }
+            outputStreamWriter.write(content);
             outputStreamWriter.flush();
             outputStreamWriter.close();
         } catch (Exception e) {

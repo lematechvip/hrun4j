@@ -1,18 +1,15 @@
-package io.lematech.firstproject.testcases.joke;
+package ${application.packageName}.testcases.joke;
 
-import io.lematech.firstproject.testcases.HttpRunner4j;
+import ${application.packageName}.HttpRunner4j;
 import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import io.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
 
 /**
- * @author lematech@foxmail.com
- * @version 1.0.0
- * @className JokeTest
- * @description TODO
- * @created 2021/5/25 9:27 上午
- * @publicWechat lematech
- */
+* @author lematech@foxmail.com
+* @version 1.0.0
+* @className JokeTest
+*/
 public class JokeTest extends HttpRunner4j
 {
     /**

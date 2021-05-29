@@ -6,7 +6,12 @@
     </listeners>
     <test name="Maven方式引入测试用例">
         <classes>
-            <class name="io.lematech.firstproject.testcases.joke.JokeTest">
+            <class name="${application.packageName}.testcases.joke.JokeTest">
+                <methods>
+                    <include name="lookTheJokeFromJokeList"/>
+                </methods>
+            </class>
+            <class name="${application.packageName}.testcases.rap2.MockTest">
                 <methods>
                     <include name="lookTheJokeFromJokeList"/>
                 </methods>

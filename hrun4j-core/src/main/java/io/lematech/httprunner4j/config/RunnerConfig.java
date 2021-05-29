@@ -41,7 +41,7 @@ public class RunnerConfig {
     /**
      * supports cli 、api integration
      */
-    private RunMode runMode = RunMode.API;
+    private RunMode runMode = RunMode.POM;
 
     public File getWorkDirectory() {
         return Objects.isNull(this.workDirectory) ? new File(Constant.DOT_PATH) : this.workDirectory;
@@ -94,10 +94,11 @@ public class RunnerConfig {
 
     /**
      * supports cli 、api integration
+     *
      * @author lematech@foxmail.com
      * @version 1.0.0
      */
     public enum RunMode {
-        CLI, API, PLATFORM
+        CLI, POM, PLATFORM
     }
 }

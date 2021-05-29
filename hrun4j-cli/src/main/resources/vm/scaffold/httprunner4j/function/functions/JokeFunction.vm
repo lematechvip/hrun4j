@@ -1,4 +1,4 @@
-package io.lematech.firstproject.testcases.functions;
+package ${application.packageName}.functions;
 
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
@@ -11,20 +11,15 @@ import java.util.Map;
 /**
 * @author lematech@foxmail.com
 * @version 1.0.0
-* @className JokeFunction
-* @description TODO
-* @created 2021/5/25 10:04 上午
-* @publicWechat lematech
 */
 public class JokeFunction {
-
 /**
 * Custom function, set the function name will be implemented in the call supplement function
 */
 public static class JokeSetupHook extends AbstractFunction {
 @Override
 public AviatorObject call(Map
-<String, Object> env, AviatorObject page, AviatorObject count,AviatorObject type) {
+<String, Object> env, AviatorObject page) {
 MyLog.info("正在执行：{}方法，方法参数：page={},count={},type={}",this.getName(), page,count,type);
 String typeValue = FunctionUtils.getStringValue(type, env);
 Number pageValue = FunctionUtils.getNumberValue(page, env);

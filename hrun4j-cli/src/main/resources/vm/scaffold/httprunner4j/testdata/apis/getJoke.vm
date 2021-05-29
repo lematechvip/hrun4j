@@ -8,6 +8,6 @@ request:
     count: ${count}
     type: ${type}
 setup_hooks:
-  ${shFunction(page,count,type)}
+$\{shFunction\(page,count,type\)\}
 teardown_hooks:
-  ${tdFunction(getJoke)}
+$\{tdFunction\(getJoke\)\}

@@ -60,7 +60,7 @@ public class Searcher {
             } else {
                 searchFile = new File(workDirectory, FilesUtil.filePathDecode(filePath));
             }
-        } else if (runMode == RunnerConfig.RunMode.API) {
+        } else if (runMode == RunnerConfig.RunMode.POM) {
             if (!filePath.startsWith(File.separator)) {
                 filePath = File.separator + filePath;
             }

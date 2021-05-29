@@ -95,8 +95,36 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
     }
 
     @Override
-    public void cliGenerator() {
+    public void cliGenerator(String projectRoot, String projectName) {
+        VelocityContext context = new VelocityContext();
 
+        String ignoreFile = String.format("%s%s/.gitignore", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_API, ignoreFile, context);
+        MyLog.info("创建配置文件 .gitignore {} 成功！", FileUtil.normalize(ignoreFile));
+
+        String getJokeApiYmlFile = String.format("%s%s/apis/getJoke.yml", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API, getJokeApiYmlFile, context);
+        MyLog.info("创建getJoke.yml {} 成功！", FileUtil.normalize(getJokeApiYmlFile));
+
+        String getSingleJokeApiYmlFile = String.format("%s%s/apis/getSingleJoke.yml", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API, getSingleJokeApiYmlFile, context);
+        MyLog.info("创建getSingleJoke {} 成功！", FileUtil.normalize(getSingleJokeApiYmlFile));
+
+        String getJokeTestCaseYmlFile = String.format("%s%s/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
+        MyLog.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
+
+        String mockTestCaseYmlFile = String.format("%s%s/testcases/rap2/rap2Mock.yml", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API, mockTestCaseYmlFile, context);
+        MyLog.info("创建rap2Mock.yml {} 成功！", FileUtil.normalize(mockTestCaseYmlFile));
+
+        String readmeFile = String.format("%s%s/ReadMe.md", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_CLI, readmeFile, context);
+        MyLog.info("创建配置文件 ReadMe.md {} 成功！", FileUtil.normalize(readmeFile));
+
+        String testDataFile = String.format("%s%s/data", projectRoot, projectName);
+        new File(testDataFile).mkdir();
+        MyLog.info("脚手架工程初始化成功！");
     }
 
     @Override
@@ -104,7 +132,6 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         String packageName = generatePackageName(projectInfo);
         String packagePath = packageName.replace(Constant.DOT_PATH, File.separator);
         ApplicationInfo applicationInfo = getApplicationInfo(projectInfo);
-        String className = applicationInfo.getClassName();
         String artifactId = projectInfo.getArtifactId();
         VelocityContext context = new VelocityContext();
         context.put("application", applicationInfo);
@@ -115,32 +142,58 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         MyLog.info("创建配置文件 pom.xml {} 成功！！", FileUtil.normalize(pomPath));
 
         String ignoreFile = String.format("%s%s/.gitignore", projectRoot, artifactId);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API, ignoreFile, context);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_API, ignoreFile, context);
         MyLog.info("创建配置文件 .gitignore {} 成功！", FileUtil.normalize(ignoreFile));
 
-        String readmeFile = String.format("%s%s/readme.vm", projectRoot, artifactId);
+        String readmeFile = String.format("%s%s/ReadMe.md", projectRoot, artifactId);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API, readmeFile, context);
         MyLog.info("创建配置文件 ReadMe.md {} 成功！", FileUtil.normalize(readmeFile));
+
+        String testSuiteFile = String.format("%s%s/src/test/java/resources/testsuite/testsuite.xml", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API, testSuiteFile, context);
+        MyLog.info("创建测试集testsuite.xml {} 成功！", FileUtil.normalize(testSuiteFile));
+
+        String testSuiteJokeFile = String.format("%s%s/src/test/java/resources/testsuite/testsuite_joke.xml", projectRoot, artifactId);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_JOKE_FILE_PATH_FOR_API, testSuiteJokeFile, context);
+        MyLog.info("创建测试集testsuite_joke.xml {} 成功！", FileUtil.normalize(testSuiteJokeFile));
+
 
         String httpRunner4jFile = String.format("%s%s/src/main/java/%s/HttpRunner4j.java", projectRoot, artifactId, packagePath);
         applicationInfo.setPackageName(String.format("%s", packageName));
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API, httpRunner4jFile, context);
 
 
-        String functionFile = String.format("%s%s/src/main/java/%s/functions/JokeFunction.java", projectRoot, artifactId, packagePath);
-        applicationInfo.setPackageName(String.format("%s.functions", packageName));
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API, functionFile, context);
-
-
-        String jokeTestFile = String.format("%s%s/src/test/java/%s/%s/JokeTest.java", projectRoot, artifactId, packagePath, "joke");
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API, jokeTestFile, context);
+        String jokeTestFile = String.format("%s%s/src/test/java/%s/testcases/joke/JokeTest.java", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API, jokeTestFile, context);
         MyLog.info("创建测试类 JokeTest.java {} 成功！", FileUtil.normalize(jokeTestFile));
 
-        String mockTestFile = String.format("%s%s/src/test/java/%s/%s/MockTest.java", projectRoot, artifactId, packagePath, "rap2");
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API, mockTestFile, context);
+        String mockTestFile = String.format("%s%s/src/test/java/%s/testcases/rap2/MockTest.java", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API, mockTestFile, context);
         MyLog.info("创建测试类 MockTest.java {} 成功！", FileUtil.normalize(mockTestFile));
 
 
+        String getJokeApiYmlFile = String.format("%s%s/src/test/java/resources/apis/getJoke.yml", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API, getJokeApiYmlFile, context);
+        MyLog.info("创建getJoke.yml {} 成功！", FileUtil.normalize(getJokeApiYmlFile));
+
+        String getSingleJokeApiYmlFile = String.format("%s%s/src/test/java/resources/apis/getSingleJoke.yml", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API, getSingleJokeApiYmlFile, context);
+        MyLog.info("创建getSingleJoke {} 成功！", FileUtil.normalize(getSingleJokeApiYmlFile));
+
+        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
+        MyLog.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
+
+        String mockTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/rap2/rap2Mock.yml", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API, mockTestCaseYmlFile, context);
+        MyLog.info("创建rap2Mock.yml {} 成功！", FileUtil.normalize(mockTestCaseYmlFile));
+
+        String functionFile = String.format("%s%s/src/main/java/%s/functions/JokeFunction.java", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FUNCTION_FILE_PATH_FOR_API, functionFile, context);
+
+        String testDataFile = String.format("%s%s/src/test/java/resources/data", projectRoot, artifactId, packagePath);
+        new File(testDataFile).mkdir();
+        MyLog.info("脚手架工程初始化成功！");
     }
 
     private ApplicationInfo getApplicationInfo(ProjectInfo projectInfo) {

@@ -109,7 +109,7 @@ public class BuiltInAviatorEvaluator {
             String workDirPath;
             RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
             File cvsFilePath = null;
-            if (runMode == RunnerConfig.RunMode.API) {
+            if (runMode == RunnerConfig.RunMode.POM) {
                 workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
                 cvsFilePath = new File(workDirPath, csvFilePathValue);
                 if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
