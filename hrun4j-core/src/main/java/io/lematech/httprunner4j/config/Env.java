@@ -1,8 +1,8 @@
 package io.lematech.httprunner4j.config;
 
 import io.lematech.httprunner4j.common.Constant;
-import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.core.loader.Searcher;
+import io.lematech.httprunner4j.widget.log.MyLog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class Env {
                 envMap.putAll((Map) properties);
             } catch (Exception e) {
                 String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
-                throw new DefinedException(exceptionMsg);
+                MyLog.warn(exceptionMsg);
             }
         }
     }

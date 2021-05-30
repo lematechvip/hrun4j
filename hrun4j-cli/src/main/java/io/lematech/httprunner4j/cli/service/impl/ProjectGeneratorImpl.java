@@ -122,6 +122,10 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_CLI, readmeFile, context);
         MyLog.info("创建配置文件 ReadMe.md {} 成功！", FileUtil.normalize(readmeFile));
 
+        String testSuiteFile = String.format("%s%s/testsuite/testsuite.yml", projectRoot, projectName);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_CLI, testSuiteFile, context);
+        MyLog.info("创建测试用例集 testsuite.yml {} 成功！", FileUtil.normalize(testSuiteFile));
+
         String testDataFile = String.format("%s%s/data", projectRoot, projectName);
         new File(testDataFile).mkdir();
         MyLog.info("脚手架工程初始化成功！");
@@ -180,7 +184,7 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API, getSingleJokeApiYmlFile, context);
         MyLog.info("创建getSingleJoke {} 成功！", FileUtil.normalize(getSingleJokeApiYmlFile));
 
-        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, artifactId, packagePath);
+        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.vm", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
         MyLog.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
 

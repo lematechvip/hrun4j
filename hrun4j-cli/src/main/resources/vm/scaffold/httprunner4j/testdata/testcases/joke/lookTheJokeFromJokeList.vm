@@ -7,7 +7,7 @@ count: "${2+2}"
 type: video
 teststeps:
 - name: 获取笑话列表
-api: apis/getJoke.vm
+api: apis/getJoke.yml
 validate:
 - equalTo: [status_code,200]
 - equalTo: [body.code,200]

@@ -162,6 +162,13 @@ public class CliConstants {
      */
     public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testsuite/testsuite.vm";
 
+
+    /**
+     * Scaffolding formwork for springboot
+     */
+    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/testsuite/testsuite_cli.vm";
+
+
     /**
      * Scaffolding formwork for springboot
      */
