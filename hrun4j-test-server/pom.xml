@@ -14,6 +14,7 @@
         <mysql.version>8.0.18</mysql.version>
         <fastjson.version>1.2.72</fastjson.version>
         <druid.version>1.1.17</druid.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencyManagement>
