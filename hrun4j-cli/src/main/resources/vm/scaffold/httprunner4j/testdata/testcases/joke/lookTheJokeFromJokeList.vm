@@ -13,17 +13,16 @@ validate:
 - equalTo: [body.code,200]
 - equalTo: [body.message,"成功!"]
 extract:
-sid: body.result[0].sid
+- sid: body.result[0].sid
 output:
 - variables
 - extract
 setup_hooks:
-- $\{add\(1,2\)\}
 - $\{shFunction\(page,count,type\)\}
 teardown_hooks:
-$\{tdFunction\("This is a joke!"\)\}
+- $\{tdFunction\("This is a joke!"\)\}
 - name: 查看指定笑话内容
-api: apis/getSingleJoke.vm
+api: apis/getJoke.yml
 validate:
 - equalTo: [status_code,200]
 - equalTo: [body.code,200]

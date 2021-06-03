@@ -126,5 +126,6 @@ public class Constant {
      */
     public static final String DATA_EXTRACTOR_JMESPATH_NODE_NULL = "null";
 
+    public static final String BEANSHELL_EXTNAME = "bsh";
 
 }

@@ -19,6 +19,5 @@ public class MockTest extends HttpRunner4j {
 @Test(dataProvider = "dataProvider")
 public void rap2Mock(TestCase testCase) {
 TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
-
+}
 }

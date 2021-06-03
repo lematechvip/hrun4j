@@ -1,6 +1,8 @@
 package io.lematech.httprunner4j.widget.exp;
 
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.csv.CsvData;
 import cn.hutool.core.text.csv.CsvReader;
@@ -13,14 +15,20 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 import com.googlecode.aviator.runtime.type.AviatorString;
 import io.lematech.httprunner4j.base.TestBase;
+import io.lematech.httprunner4j.common.Constant;
 import io.lematech.httprunner4j.common.DefinedException;
 import io.lematech.httprunner4j.config.Env;
 import io.lematech.httprunner4j.config.RunnerConfig;
+import io.lematech.httprunner4j.entity.http.RequestEntity;
+import io.lematech.httprunner4j.entity.http.ResponseEntity;
 import io.lematech.httprunner4j.widget.log.MyLog;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.PortableInterceptor.Interceptor;
 import org.testng.collections.Maps;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +47,9 @@ public class BuiltInAviatorEvaluator {
         AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
         AviatorEvaluator.addFunction(new BuiltInFunctionParameterize());
         AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
+        AviatorEvaluator.addFunction(new BuiltInFunctionBeanShell());
+
+
         AviatorEvaluator.addFunction(new BuildInFunctions.DefinedHookFunction());
         AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionAdd());
         AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionSubtract());
@@ -52,7 +63,7 @@ public class BuiltInAviatorEvaluator {
         try {
             return AviatorEvaluator.execute(expression, env, false);
         } catch (Exception e) {
-            String exceptionMsg = String.format("Execute exp %s occur error: %s", expression, e.getMessage());
+            String exceptionMsg = String.format("Execute exp %s occur error: %s", expression, e.getLocalizedMessage());
             throw new DefinedException(exceptionMsg);
         }
     }
@@ -95,6 +106,83 @@ public class BuiltInAviatorEvaluator {
     }
 
     /**
+     * built-in $BSH
+     */
+    public static class BuiltInFunctionBeanShell extends AbstractFunction {
+
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject bshFilePathObj) {
+            Object bshFile = bshFilePathObj.getValue(env);
+            if (Objects.isNull(bshFile) || StrUtil.isEmpty(bshFile.toString())) {
+                String exceptionMsg = String.format("The bsh file path cannot be empty");
+                throw new DefinedException(exceptionMsg);
+            }
+            String bshFilePathValue = bshFile.toString();
+            if (!Constant.BEANSHELL_EXTNAME.equalsIgnoreCase(FileUtil.extName(bshFilePathValue))) {
+                String exceptionMsg = String.format("BeanShell scripts must have a.bsh suffix");
+                throw new DefinedException(exceptionMsg);
+            }
+
+            String workDirPath;
+            RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
+            File bshFilePath = null;
+            if (runMode == RunnerConfig.RunMode.POM) {
+                workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
+                bshFilePath = new File(workDirPath, bshFilePathValue);
+                if (!bshFilePath.exists() || !bshFilePath.isFile()) {
+                    String exceptionMsg = String.format("The bsh file %s does not exist,Note that in API mode, absolute paths are not allowed, only class paths can be used"
+                            , FileUtil.getAbsolutePath(bshFilePath));
+                    throw new DefinedException(exceptionMsg);
+                }
+            } else if (runMode == RunnerConfig.RunMode.CLI) {
+                workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+                if (!FileUtil.isAbsolutePath(bshFilePathValue)) {
+                    bshFilePath = new File(workDirPath, bshFilePathValue);
+                    if (!bshFilePath.exists() || !bshFilePath.isFile()) {
+                        String exceptionMsg = String.format("The bsh file %s does not exist"
+                                , FileUtil.getAbsolutePath(bshFilePath));
+                        throw new DefinedException(exceptionMsg);
+                    }
+                } else {
+                    bshFilePath = new File(bshFilePathValue);
+                    if (!bshFilePath.exists() || !bshFilePath.isFile()) {
+                        String exceptionMsg = String.format("The bsh file %s does not exist"
+                                , FileUtil.getAbsolutePath(bshFilePath));
+                        throw new DefinedException(exceptionMsg);
+                    }
+                }
+            }
+            Interpreter interpreter = new Interpreter();
+            Object result;
+            try {
+                RequestEntity requestEntity = (RequestEntity) env.get(Constant.REQUEST_VARIABLE_NAME);
+                interpreter.set(Constant.REQUEST_VARIABLE_NAME, requestEntity);
+                ResponseEntity responseEntity = (ResponseEntity) env.get(Constant.RESPONSE_VARIABLE_NAME);
+                interpreter.set(Constant.RESPONSE_VARIABLE_NAME, responseEntity);
+                interpreter.set("$ENV", env);
+                env.remove(Constant.RESPONSE_VARIABLE_NAME);
+                env.remove(Constant.REQUEST_VARIABLE_NAME);
+                result = interpreter.source(FileUtil.getAbsolutePath(bshFilePath));
+            } catch (IOException e) {
+                String exceptionMsg = String.format("The bsh file %s does not exist"
+                        , FileUtil.getAbsolutePath(bshFilePath));
+                throw new DefinedException(exceptionMsg);
+            } catch (EvalError evalError) {
+                evalError.printStackTrace();
+                String exceptionMsg = String.format("The BeanShell script executes an exception. Exception information: %s"
+                        , evalError.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
+            return AviatorRuntimeJavaType.valueOf(result);
+        }
+
+        @Override
+        public String getName() {
+            return "BSH";
+        }
+    }
+
+    /**
      * built-in $P
      */
     public static class BuiltInFunctionParameterize extends AbstractFunction {
@@ -108,35 +196,35 @@ public class BuiltInAviatorEvaluator {
             String csvFilePathValue = csvFile.toString();
             String workDirPath;
             RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
-            File cvsFilePath = null;
+            File csvFilePath = null;
             if (runMode == RunnerConfig.RunMode.POM) {
                 workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
-                cvsFilePath = new File(workDirPath, csvFilePathValue);
-                if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
-                    String exceptionMsg = String.format("The CVS file %s does not exist,Note that in API mode, absolute paths are not allowed, only class paths can be used"
-                            , FileUtil.getAbsolutePath(cvsFilePath));
+                csvFilePath = new File(workDirPath, csvFilePathValue);
+                if (!csvFilePath.exists() || !csvFilePath.isFile()) {
+                    String exceptionMsg = String.format("The csv file %s does not exist,Note that in API mode, absolute paths are not allowed, only class paths can be used"
+                            , FileUtil.getAbsolutePath(csvFilePath));
                     throw new DefinedException(exceptionMsg);
                 }
             } else if (runMode == RunnerConfig.RunMode.CLI) {
                 workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
                 if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
-                    cvsFilePath = new File(workDirPath, csvFilePathValue);
-                    if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
-                        String exceptionMsg = String.format("The CVS file %s does not exist"
-                                , FileUtil.getAbsolutePath(cvsFilePath));
+                    csvFilePath = new File(workDirPath, csvFilePathValue);
+                    if (!csvFilePath.exists() || !csvFilePath.isFile()) {
+                        String exceptionMsg = String.format("The csv file %s does not exist"
+                                , FileUtil.getAbsolutePath(csvFilePath));
                         throw new DefinedException(exceptionMsg);
                     }
                 } else {
-                    cvsFilePath = new File(csvFilePathValue);
-                    if (!cvsFilePath.exists() || !cvsFilePath.isFile()) {
-                        String exceptionMsg = String.format("The CVS file %s does not exist"
-                                , FileUtil.getAbsolutePath(cvsFilePath));
+                    csvFilePath = new File(csvFilePathValue);
+                    if (!csvFilePath.exists() || !csvFilePath.isFile()) {
+                        String exceptionMsg = String.format("The csv file %s does not exist"
+                                , FileUtil.getAbsolutePath(csvFilePath));
                         throw new DefinedException(exceptionMsg);
                     }
                 }
             }
             CsvReader reader = CsvUtil.getReader();
-            CsvData data = reader.read(cvsFilePath, Charset.defaultCharset());
+            CsvData data = reader.read(csvFilePath, Charset.defaultCharset());
             List<CsvRow> rows = data.getRows();
             List<Map<String, Object>> csvParameters = new ArrayList<>();
             Map<Integer, String> parameterNameIndexMap = Maps.newHashMap();

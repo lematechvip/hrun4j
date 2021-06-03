@@ -1,5 +1,6 @@
 package io.lematech.httprunner4j.core.processor;
 
+import bsh.Interpreter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;

@@ -4,13 +4,12 @@ variables: {}
 teststeps:
 - name: Request api:/app/mock/284017/example/1621933777612
 request:
-headers:
 method: GET
 url: http://rap2api.taobao.org/app/mock/284017/example/1621933777612
 verify: false
 validate:
 - eq:
-          - status_code
-          - 200
-  - name: 引用测试用例
-    testcase: testcases/joke/lookTheJokeFromJokeList
+- status_code
+- 200
+- name: 引用测试用例
+testcase: testcases/joke/lookTheJokeFromJokeList

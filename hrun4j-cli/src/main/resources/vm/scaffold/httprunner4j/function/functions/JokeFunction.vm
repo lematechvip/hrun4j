@@ -19,7 +19,7 @@ public class JokeFunction {
 public static class JokeSetupHook extends AbstractFunction {
 @Override
 public AviatorObject call(Map
-<String, Object> env, AviatorObject page) {
+<String, Object> env, AviatorObject page, AviatorObject type, AviatorObject count) {
 MyLog.info("正在执行：{}方法，方法参数：page={},count={},type={}",this.getName(), page,count,type);
 String typeValue = FunctionUtils.getStringValue(type, env);
 Number pageValue = FunctionUtils.getNumberValue(page, env);

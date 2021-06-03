@@ -180,11 +180,7 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API, getJokeApiYmlFile, context);
         MyLog.info("创建getJoke.yml {} 成功！", FileUtil.normalize(getJokeApiYmlFile));
 
-        String getSingleJokeApiYmlFile = String.format("%s%s/src/test/java/resources/apis/getSingleJoke.yml", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API, getSingleJokeApiYmlFile, context);
-        MyLog.info("创建getSingleJoke {} 成功！", FileUtil.normalize(getSingleJokeApiYmlFile));
-
-        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.vm", projectRoot, artifactId, packagePath);
+        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
         MyLog.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
 

@@ -99,12 +99,14 @@ public class TestCaseRunner {
                 if (Objects.isNull(initializeRequestEntity)) {
                     continue;
                 }
+                testStepConfigVariable.put(Constant.REQUEST_VARIABLE_NAME, initializeRequestEntity);
                 preAndPostProcessor.preProcess(testStep, initializeRequestEntity);
                 expProcessor.setVariablePriority(testStepConfigVariable, testContextVariable, configVariables, (Map) testStep.getVariables());
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
                 requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
                 formatRequestFiles(requestEntity);
                 ResponseEntity responseEntity = HttpClientUtil.executeReq(requestEntity);
+                testStepConfigVariable.put(Constant.RESPONSE_VARIABLE_NAME, initializeRequestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
                 List<Map<String, Object>> validateList = testStep.getValidate();
                 assertChecker.assertList(validateList, responseEntity, testStepConfigVariable);
@@ -114,7 +116,6 @@ public class TestCaseRunner {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
             MyLog.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);

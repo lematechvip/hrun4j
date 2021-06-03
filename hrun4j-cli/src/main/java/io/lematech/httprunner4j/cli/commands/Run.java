@@ -57,7 +57,7 @@ public class Run extends Command {
     @Option(name = "--pkg_name", usage = "Specify the project package name.")
     String pkgName;
 
-    @Option(name = "--testjar", usage = "Specifies a jar file that contains aviator exp implemenets.")
+    @Option(name = "--bsh", usage = "Specify HttpRunner4j.bsh as the project path, not the current path.")
     File testJar;
 
     @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
