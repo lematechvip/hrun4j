@@ -58,7 +58,7 @@ public class Run extends Command {
     String pkgName;
 
     @Option(name = "--bsh", usage = "Specify HttpRunner4j.bsh as the project path, not the current path.")
-    File testJar;
+    File rootBsh;
 
     @Option(name = "--i18n", usage = "Internationalization support,support us/cn.")
     String i18n = Constant.I18N_CN;
@@ -223,15 +223,15 @@ public class Run extends Command {
      */
     private void validateOrSetParams() {
 
-        if (Objects.isNull(testJar)) {
+        if (Objects.isNull(rootBsh)) {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
-            if (!testJar.exists() || !testJar.isFile() || !Constant.TEST_JAR_END_SUFFIX.endsWith(FileUtil.extName(testJar))) {
-                String exceptionMsg = String.format("The TestJar file %s does not exist or the suffix does not end in `.jar`"
-                        , FileUtil.getAbsolutePath(testJar));
+            if (!rootBsh.exists() || !rootBsh.isFile() || !Constant.BEANSHELL_BSH_END_SUFFIX.endsWith(FileUtil.extName(rootBsh))) {
+                String exceptionMsg = String.format("The rootBsh file %s does not exist or the suffix does not end in `.jar`"
+                        , FileUtil.getAbsolutePath(rootBsh));
                 throw new DefinedException(exceptionMsg);
             }
-            File workFile = testJar.getParentFile();
+            File workFile = rootBsh.getParentFile();
             String workDirPath = FileUtil.getAbsolutePath(workFile);
             Properties property = System.getProperties();
             property.setProperty("user.dir", workDirPath);
