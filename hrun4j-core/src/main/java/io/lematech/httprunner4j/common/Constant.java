@@ -100,6 +100,11 @@ public class Constant {
     public static final String TEST_JAR_END_SUFFIX = "jar";
 
     /**
+     * beanshell suffix
+     */
+    public static final String BEANSHELL_BSH_END_SUFFIX = "bsh";
+
+    /**
      * data extractor jsonpath start
      */
     public static final String DATA_EXTRACTOR_JSONPATH_START = "$.";

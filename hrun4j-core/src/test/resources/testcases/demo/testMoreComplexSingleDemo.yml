@@ -30,7 +30,14 @@ teststeps:
         total2: ${total2}
         configVariable1: ${configVariable1}
       json:
-        sign: eeb00001855491a62e72e340de54db74eaf2cb43
+        - firstName: ${firstName}
+          lastName: ${lastName}
+          password: ${password}
+          userStatus: ${userStatus}
+          phone: ${phone}
+          id: ${id}
+          email: ${email}
+          username: ${username}
     validate:
       - equalTo: [status_code, 200]
       - "check": "status_code"
