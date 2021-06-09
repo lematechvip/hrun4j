@@ -32,7 +32,7 @@ teststeps:
         auth1: xxauth1
         auth2: xxauth2
       verify: false
-      stream: false
+      stream: true
     variables:
       - aaa: bbb
     validate:

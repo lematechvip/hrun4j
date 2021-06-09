@@ -1,13 +1,16 @@
 {
   "config": {
     "name": "复杂操作案例之获取Token信息",
-    "base_url": "http://127.0.0.1:8000"
+    "base_url": "http://127.0.0.1:8000",
+    "variables": {
+      "variable_exp": "${1+2}"
+    }
   },
   "teststeps": [
     {
       "name": "步骤名称",
       "setup_hooks": [
-        "${hook(xteststep_setup_hooks1)}",
+        "${1+2}",
         "${hook(xteststep_setup_hooks2)}",
         "${hook(xteststep_setup_hooks3)}",
         "${hook(xteststep_setup_hooks4)}",
@@ -19,16 +22,53 @@
         }
       ],
       "api": "apis/getToken",
+      "request": {
+        "url": "/api/get-token",
+        "method": "POST",
+        "headers": {
+          "device_sn": 2021032311113,
+          "os_platform": "MacOS",
+          "app_version": "1.0.0"
+        },
+        "params": {
+          "a": "${variable_exp}",
+          "b": "B"
+        },
+        "cookies": {
+          "k1": "K1",
+          "k2": "K2"
+        },
+        "allowRedirects": true,
+        "auth": {
+          "auth1": "xxauth1",
+          "auth2": "xxauth2"
+        },
+        "stream": true,
+        "json": {
+          "sign": "8d21d6fa4d84fb1b21212913ca76280bf8241f06"
+        }
+      },
       "variables": [
         {
-          "aaa": "bbb"
+          "test_step_variable_exp": "${2+2}"
         }
       ],
       "validate": [
         {
-          "equalTo": [
-            "status_code",
-            200
+          "check": "headers.Content-Type",
+          "comparator": "equalTo",
+          "expect": "application/json;charset=UTF-8"
+        },
+        {
+          "eq": [
+            "a",
+            "a"
+          ]
+        },
+        {
+          "eq": [
+            1.1,
+            1.1
           ]
         },
         {
@@ -37,21 +77,16 @@
           "expect": 200
         },
         {
-          "check": "body.code",
-          "comparator": "equalTo",
-          "expect": "00"
-        },
-        {
           "check": "body.message",
           "comparator": "equalTo",
           "expect": "ok！"
         }
       ],
       "teardown_hooks": [
-        "${hook(xteststep_teardown_hooks1)}",
-        "${hook(xteststep_teardown_hooks2)}",
-        "${hook(xteststep_teardown_hooks3)}",
-        "${hook(xteststep_teardown_hooks4)}",
+        "${hook(test_step_variable_exp)}",
+        "${hook(test_step_variable_exp)}",
+        "${hook(test_step_variable_exp)}",
+        "${hook(test_step_variable_exp)}",
         {
           "total1": "${add(1, 5)}"
         },

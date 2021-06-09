@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>httprunner4j</artifactId>
-        <groupId>io.lematech</groupId>
+        <groupId>vip.lematech</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.github.lematechx</groupId>
+    <groupId>vip.lematech</groupId>
     <artifactId>hrun4j-core</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.0</version>
     <name>hrun4j-core</name>
     <url>https://lematech.io</url>
     <properties>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.23</version>
+            <version>1.26</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -98,16 +98,7 @@
             <artifactId>aviator</artifactId>
             <version>5.2.5</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>4.3</version>
-        </dependency>
+
         <dependency>
             <groupId>io.burt</groupId>
             <artifactId>jmespath-jackson</artifactId>
@@ -176,7 +167,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.lematech.httprunner4j.HttpRunner4J</mainClass>
+                            <mainClass>HttpRunner4J</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,16 +1,14 @@
 package ${application.packageName}.testcases.rap2;
 
 import ${application.packageName}.HttpRunner4j;
-import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
-import io.lematech.httprunner4j.entity.testcase.TestCase;
+import TestCaseExecutorEngine;
+import TestCase;
 import org.testng.annotations.Test;
 
 /**
 * @author lematech@foxmail.com
 * @version 1.0.0
-* @className MockTest
 */
-
 public class MockTest extends HttpRunner4j {
 /**
 *

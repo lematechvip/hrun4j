@@ -26,7 +26,6 @@ request:
   cookies:
     k1: apiK1
     k2: apiK2
-  verify: true
   stream: true
   json:
     sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06

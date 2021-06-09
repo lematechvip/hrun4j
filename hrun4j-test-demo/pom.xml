@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>httprunner4j</artifactId>
-        <groupId>io.lematech</groupId>
+        <groupId>vip.lematech</groupId>
         <version>1.0.0</version>
     </parent>
-    <groupId>io.lematech</groupId>
+    <groupId>vip.lematech</groupId>
     <artifactId>hrun4j-test-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>hrun4j-test-demo</name>
@@ -22,9 +22,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.lematechx</groupId>
+            <groupId>vip.lematech</groupId>
             <artifactId>hrun4j-core</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

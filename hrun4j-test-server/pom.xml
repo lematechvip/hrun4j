@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>httprunner4j</artifactId>
-        <groupId>io.lematech</groupId>
+        <groupId>vip.lematech</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -47,9 +47,9 @@
             <version>1.18.12</version>
         </dependency>
         <dependency>
-            <groupId>io.github.lematechx</groupId>
+            <groupId>vip.lematech</groupId>
             <artifactId>hrun4j-core</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -61,7 +61,7 @@
                 <version>2.1.6.RELEASE</version>
                 <configuration>
                     <fork>true</fork>
-                    <mainClass>io.lematech.httprunner4j.DemoApplication</mainClass>
+                    <mainClass>vip.lematech.httprunner4j.DemoApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

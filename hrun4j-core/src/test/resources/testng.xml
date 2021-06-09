@@ -9,9 +9,6 @@
         <classes>
             <class name="DemoTest">
                 <methods>
-                    <exclude name="na">
-
-                    </exclude>
                 </methods>
             </class>
             <class name="DemoJsonTest">

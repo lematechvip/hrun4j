@@ -264,12 +264,10 @@
             }
           },
           "required": [
-            "hostname"
+            "hostname",
+            "port"
           ],
           "examples": [
-            {
-              "hostname": "lematech.io"
-            },
             {
               "hostname": "10.10.10.10",
               "port": 8080

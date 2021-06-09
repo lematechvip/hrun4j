@@ -1,8 +1,8 @@
 package ${application.packageName}.testcases.joke;
 
 import ${application.packageName}.HttpRunner4j;
-import io.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
-import io.lematech.httprunner4j.entity.testcase.TestCase;
+import TestCaseExecutorEngine;
+import TestCase;
 import org.testng.annotations.Test;
 
 /**
@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 */
 public class JokeTest extends HttpRunner4j
 {
-    /**
+/**
      *
      * @param testCase
      */
