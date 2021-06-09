@@ -14,20 +14,20 @@ import org.testng.annotations.BeforeSuite;
 * @version 1.0.0
 */
 public class HttpRunner4j extends TestBase {
-@Override
-@BeforeSuite
-public void beforeSuite(){
-MyLog.info(" Add function to static code block !");
-AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeSetupHook());
-AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeTearDownHook());
-/**
-* 包名，资源路径下查找测试用例前置，默认：io.lematech.httprunner4j
-*/
-RunnerConfig.getInstance().setPkgName("${application.packageName}");
-/**
-* Test case file suffix
-*/
-RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
-}
+    @Override
+    @BeforeSuite
+    public void beforeSuite(){
+        MyLog.info(" Add function to static code block !");
+        AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeSetupHook());
+        AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeTearDownHook());
+        /**
+        * 包名，资源路径下查找测试用例前置，默认：vip.lematech.httprunner4j
+        */
+        RunnerConfig.getInstance().setPkgName("${application.packageName}");
+        /**
+        * Test case file suffix
+        */
+        RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
+    }
 }
 

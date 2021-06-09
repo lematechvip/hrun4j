@@ -1,11 +1,11 @@
 name: 获取笑话列表
 base_url: http://rap2api.taobao.org
 variables:
-mockId: 1621933777612
+  mockId: 1621933777612
 request:
-url: /app/mock/284017/example/${mockId}
-method: GET
+  url: /app/mock/284017/example/${mockId}
+  method: GET
 setup_hooks:
-- $\{shFunction\(page,count,type\)\}
+  - $\{shFunction\(page,count,type\)\}
 teardown_hooks:
-- $\{tdFunction\(getJoke\)\}
+  - $\{tdFunction\(getJoke\)\}

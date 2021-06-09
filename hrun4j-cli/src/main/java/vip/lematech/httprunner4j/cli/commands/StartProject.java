@@ -34,7 +34,7 @@ public class StartProject extends Command {
     String projectName;
 
     @Option(name = "--group_id", usage = "Specify maven project groupId.")
-    String groupId = "io.lematech.httprunner4j";
+    String groupId = "vip.lematech.httprunner4j";
 
     @Option(name = "--version", usage = "Specify maven project version.")
     String version = "1.0.0-SNAPSHOT";
