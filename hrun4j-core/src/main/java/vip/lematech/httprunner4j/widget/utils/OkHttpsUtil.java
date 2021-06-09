@@ -107,6 +107,7 @@ public class OkHttpsUtil {
                         builder.readTimeout(socketTimeout, TimeUnit.SECONDS);
                     }
                     builder.followRedirects(requestEntity.getAllowRedirects());
+
                     try {
                         Map<String, Object> proxy = requestEntity.getProxy();
                         if (!Objects.isNull(proxy)) {
@@ -146,10 +147,19 @@ public class OkHttpsUtil {
         }
         Object requestBody = requestEntity.getData();
         if (Objects.nonNull(requestBody)) {
-            if (requestBody instanceof JSONObject) {
-                syncHttpTask.bodyType(OkHttps.JSON);
+            if (requestBody instanceof Map) {
+                syncHttpTask.addBodyPara((Map) requestBody);
+            } else if (requestBody instanceof String) {
+                String requestParam = (String) requestBody;
+                syncHttpTask.bodyType(OkHttps.FORM);
+                String[] reqParamsMap = requestParam.split("&");
+                for (String reqParam : reqParamsMap) {
+                    String[] reqParamMapValue = reqParam.split("=");
+                    if (reqParamMapValue.length == 2) {
+                        syncHttpTask.addBodyPara(reqParamMapValue[0], reqParamMapValue[1]);
+                    }
+                }
             }
-            syncHttpTask.setBodyPara(requestBody);
         }
         Object fileObj = requestEntity.getFiles();
         Boolean streamObj = requestEntity.getStream();
