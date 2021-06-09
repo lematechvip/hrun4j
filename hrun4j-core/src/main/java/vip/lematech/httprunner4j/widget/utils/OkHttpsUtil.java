@@ -34,7 +34,6 @@ public class OkHttpsUtil {
         if (val == null) {
             return "null";
         }
-        ;
         String newValue = val.replace("\n", "");
         for (int i = 0, length = newValue.length(); i < length; i++) {
             char c = newValue.charAt(i);
