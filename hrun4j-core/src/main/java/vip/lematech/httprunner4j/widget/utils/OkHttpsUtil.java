@@ -138,11 +138,17 @@ public class OkHttpsUtil {
             }
             syncHttpTask.addHeader(headers);
         }
-        JSONObject json = requestEntity.getJson();
-        if (!Objects.isNull(json)) {
-            MyLog.info(String.format(I18NFactory.getLocaleMessage("request.json"), SmallUtil.emptyIfNull(requestEntity.getJson())));
-            syncHttpTask.bodyType(OkHttps.JSON);
-            syncHttpTask.setBodyPara(json);
+        Object jsonObj = requestEntity.getJson();
+        if (!Objects.isNull(jsonObj)) {
+            try{
+                JSONObject jsonData = JSONObject.parseObject(JSONObject.toJSONString(jsonObj));
+                MyLog.info(String.format(I18NFactory.getLocaleMessage("request.json"), SmallUtil.emptyIfNull(requestEntity.getJson())));
+                syncHttpTask.bodyType(OkHttps.JSON);
+                syncHttpTask.setBodyPara(jsonData);
+            }catch (Exception e){
+                String exceptionMsg = String.format("JSON formatting exception, cause of exception: %s",e.getMessage());
+                throw new DefinedException(exceptionMsg);
+            }
         }
         Object requestBody = requestEntity.getData();
         if (Objects.nonNull(requestBody)) {

@@ -24,6 +24,7 @@ import java.util.Objects;
 /**
  * Data loading implementation class, support file loading
  *
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
@@ -107,6 +108,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
+            e.printStackTrace();
             String exceptionMsg = String.format("An exception occurred in the loading %s file. Exception information:%s", testDataName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

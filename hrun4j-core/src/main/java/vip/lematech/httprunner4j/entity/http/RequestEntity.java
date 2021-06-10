@@ -8,6 +8,7 @@ import lombok.Data;
 import java.util.Map;
 
 /**
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
@@ -31,7 +32,7 @@ public class RequestEntity<T> {
      * 1、request body in json format
      * 2、request body prepared with function, or reference a variable
      */
-    private JSONObject json;
+    private T json;
 
     private Map<String, Object> headers;
 

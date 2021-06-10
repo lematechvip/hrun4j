@@ -6,6 +6,7 @@ import vip.lematech.httprunner4j.widget.log.MyLog;
 /**
  * throw defined exception
  *
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
  */

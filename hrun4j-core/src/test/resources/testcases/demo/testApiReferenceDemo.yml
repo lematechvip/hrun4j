@@ -32,7 +32,14 @@ teststeps:
         auth2: xxauth2
       stream: true
       json:
-        sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
+        - firstName: '${firstName}'
+          lastName: '${lastName}'
+          password: '${password}'
+          userStatus: '${userStatus}'
+          phone: '${phone}'
+          id: '${id}'
+          email: '${email}'
+          username: '${username}'
     variables:
       - test_step_variable_exp: "${2+2}"
     validate:
