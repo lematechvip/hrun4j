@@ -169,4 +169,15 @@ public class DemoTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+
+    /**
+     * 测试文件下载
+     * @param testCase
+     *
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testFileDownloadDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 }

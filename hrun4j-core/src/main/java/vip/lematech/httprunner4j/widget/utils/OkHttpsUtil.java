@@ -3,6 +3,7 @@ package vip.lematech.httprunner4j.widget.utils;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ejlchina.okhttps.HTTP;
 import com.ejlchina.okhttps.HttpResult;
 import com.ejlchina.okhttps.OkHttps;
 import com.ejlchina.okhttps.internal.SyncHttpTask;
@@ -11,7 +12,6 @@ import com.google.common.collect.Maps;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.entity.http.HttpConstant;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 import vip.lematech.httprunner4j.widget.i18n.I18NFactory;
@@ -91,36 +91,7 @@ public class OkHttpsUtil {
         Map<String, String> headers = handleHeadersCookie(requestEntity);
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.url"), url));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("request.method"), method));
-        SyncHttpTask syncHttpTask = OkHttps.newBuilder()
-                .config((OkHttpClient.Builder builder) -> {
-                    Integer connectionRequestTimeout = requestEntity.getConnectionRequestTimeout();
-                    if (!Objects.isNull(connectionRequestTimeout)) {
-                        builder.connectTimeout(connectionRequestTimeout, TimeUnit.SECONDS);
-                    }
-                    Integer connectTimeout = requestEntity.getConnectTimeout();
-                    if (!Objects.isNull(connectTimeout)) {
-                        builder.writeTimeout(connectTimeout, TimeUnit.SECONDS);
-                    }
-                    Integer socketTimeout = requestEntity.getSocketTimeout();
-                    if (!Objects.isNull(socketTimeout)) {
-                        builder.readTimeout(socketTimeout, TimeUnit.SECONDS);
-                    }
-                    builder.followRedirects(requestEntity.getAllowRedirects());
-
-                    try {
-                        Map<String, Object> proxy = requestEntity.getProxy();
-                        if (!Objects.isNull(proxy)) {
-                            String hostname = (String) proxy.get("hostname");
-                            Object port = proxy.get("port");
-                            int portNumber = Integer.parseInt(String.valueOf(port));
-                            InetSocketAddress inetSocketAddress = InetSocketAddress.createUnresolved(hostname, portNumber);
-                            builder.proxy(new Proxy(Proxy.Type.HTTP, inetSocketAddress));
-                        }
-                    } catch (Exception e) {
-                        String exceptionMsg = String.format("proxy %s info error，please check it", requestEntity.getProxy());
-                        throw new DefinedException(exceptionMsg);
-                    }
-                }).build().sync(url);
+        SyncHttpTask syncHttpTask = getSyncHttpTask(requestEntity, url);
         Map<String, Object> urlPara = requestEntity.getParams();
         if (MapUtil.isNotEmpty(urlPara)) {
             MyLog.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), urlPara));
@@ -156,14 +127,7 @@ public class OkHttpsUtil {
                 syncHttpTask.addBodyPara((Map) requestBody);
             } else if (requestBody instanceof String) {
                 String requestParam = (String) requestBody;
-                syncHttpTask.bodyType(OkHttps.FORM);
-                String[] reqParamsMap = requestParam.split("&");
-                for (String reqParam : reqParamsMap) {
-                    String[] reqParamMapValue = reqParam.split("=");
-                    if (reqParamMapValue.length == 2) {
-                        syncHttpTask.addBodyPara(reqParamMapValue[0], reqParamMapValue[1]);
-                    }
-                }
+                syncHttpTask.setBodyPara(requestParam);
             }
         }
         Object fileObj = requestEntity.getFiles();
@@ -177,21 +141,20 @@ public class OkHttpsUtil {
                     syncHttpTask.addFilePara(fileName, file);
                 }
             }
-
         }
         HttpResult httpResult = null;
         long startTime = System.currentTimeMillis();
-        if (HttpConstant.GET.equalsIgnoreCase(method)) {
+        if (HTTP.GET.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.get();
-        } else if (HttpConstant.POST.equalsIgnoreCase(method)) {
+        } else if (HTTP.POST.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.post();
-        } else if (HttpConstant.DELETE.equalsIgnoreCase(method)) {
+        } else if (HTTP.DELETE.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.delete();
-        } else if (HttpConstant.PUT.equalsIgnoreCase(method)) {
+        } else if (HTTP.PUT.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.put();
-        } else if (HttpConstant.HEAD.equalsIgnoreCase(method)) {
+        } else if (HTTP.HEAD.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.head();
-        } else if (HttpConstant.PATCH.equalsIgnoreCase(method)) {
+        } else if (HTTP.PATCH.equalsIgnoreCase(method)) {
             httpResult = syncHttpTask.patch();
         }
         long endTime = System.currentTimeMillis();
@@ -207,6 +170,38 @@ public class OkHttpsUtil {
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));
         return responseEntity;
+    }
+
+    private static SyncHttpTask getSyncHttpTask(RequestEntity requestEntity, String url) {
+        return OkHttps.newBuilder()
+                .config((OkHttpClient.Builder builder) -> {
+                    try {
+                        Integer connectionRequestTimeout = requestEntity.getConnectionRequestTimeout();
+                        if (!Objects.isNull(connectionRequestTimeout)) {
+                            builder.connectTimeout(connectionRequestTimeout, TimeUnit.SECONDS);
+                        }
+                        Integer connectTimeout = requestEntity.getConnectTimeout();
+                        if (!Objects.isNull(connectTimeout)) {
+                            builder.writeTimeout(connectTimeout, TimeUnit.SECONDS);
+                        }
+                        Integer socketTimeout = requestEntity.getSocketTimeout();
+                        if (!Objects.isNull(socketTimeout)) {
+                            builder.readTimeout(socketTimeout, TimeUnit.SECONDS);
+                        }
+                        builder.followRedirects(requestEntity.getAllowRedirects());
+                        Map<String, Object> proxy = requestEntity.getProxy();
+                        if (!Objects.isNull(proxy)) {
+                            String hostname = (String) proxy.get("hostname");
+                            Object port = proxy.get("port");
+                            int portNumber = Integer.parseInt(String.valueOf(port));
+                            InetSocketAddress inetSocketAddress = InetSocketAddress.createUnresolved(hostname, portNumber);
+                            builder.proxy(new Proxy(Proxy.Type.HTTP, inetSocketAddress));
+                        }
+                    } catch (Exception e) {
+                        String exceptionMsg = String.format("An exception occurred during initialization of the OkHttps configuration. Exception message: %s", e.getMessage());
+                        throw new DefinedException(exceptionMsg);
+                    }
+                }).build().sync(url);
     }
 
     private static ResponseEntity wrapperResponseEntity(HttpResult httpResult
@@ -226,8 +221,12 @@ public class OkHttpsUtil {
             responseEntity.setHeaders(headersMap);
             HttpResult.Body body = httpResult.getBody();
             if (!stream) {
-                body.toFolder(RunnerConfig.getInstance().getWorkDirectory())
-                        .start();
+                String workDir = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
+                body.toFolder(workDir)
+                .setOnSuccess((File file) -> {
+                    MyLog.info("文件下载完毕，存储路径：{}",workDir);
+                })
+                .start();
             } else {
                 String responseContent = body.toString();
                 if (JsonUtil.isJson(responseContent)) {
