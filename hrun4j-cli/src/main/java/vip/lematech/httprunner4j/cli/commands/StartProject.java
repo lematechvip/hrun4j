@@ -40,7 +40,7 @@ public class StartProject extends Command {
     String version = "1.0.0-SNAPSHOT";
 
     @Option(name = "--type", usage = "Project type, default is httprunner4j POM type, support CLI/SRPINGBOOT ")
-    String type = CliConstants.HTTPRUNNER4J_API_TYPE;
+    String type = CliConstants.HTTPRUNNER4J_POM_TYPE;
 
     @Override
     public int execute(PrintWriter out, PrintWriter err) {

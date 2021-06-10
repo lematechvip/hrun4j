@@ -70,7 +70,7 @@ public class SchemaValidator {
                         errorInfo.append(message);
                     }
                 }
-                String exceptionMsg = String.format("Class: %s,object: %s,JSON data validation failed because:: %s,", clz.getSimpleName(), JSON.toJSON(obj), errorInfo.toString());
+                String exceptionMsg = String.format("The format of data %s does not meet the requirements. Reasons: %s,", jsonFormatSchema, errorInfo.toString());
                 return exceptionMsg;
             }
         } catch (IOException | ProcessingException ioException) {

@@ -43,11 +43,11 @@ public class NGDataProvider {
      * @return The data provider
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
-        TestCase testCase;
+        TestCase testCase = null;
         if (RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.CLI) {
             String namespace = getNamespace(pkgName, testCaseName);
             testCase = NamespaceMap.getDataObject(String.format("%s:%s", RunnerConfig.RunMode.CLI, namespace));
-        } else {
+        } else if(RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.POM){
             File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
             String extName = RunnerConfig.getInstance().getTestCaseExtName();
             testCase = TestDataLoaderFactory.getLoader(extName)

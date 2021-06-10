@@ -126,12 +126,12 @@ public class OkHttpsUtil {
             if (requestBody instanceof Map) {
                 syncHttpTask.addBodyPara((Map) requestBody);
             } else if (requestBody instanceof String) {
+                syncHttpTask.bodyType(OkHttps.JSON);
                 String requestParam = (String) requestBody;
                 syncHttpTask.setBodyPara(requestParam);
             }
         }
         Object fileObj = requestEntity.getFiles();
-        Boolean streamObj = requestEntity.getStream();
         if (Objects.nonNull(fileObj)) {
             if (fileObj instanceof Map) {
                 Map<String, File> files = (Map) fileObj;
@@ -162,6 +162,7 @@ public class OkHttpsUtil {
         if (Objects.isNull(httpResult)) {
             throw new DefinedException("The interface response information cannot be empty!");
         }
+        Boolean streamObj = requestEntity.getStream();
         ResponseEntity responseEntity = wrapperResponseEntity(httpResult, streamObj, elapsedTime);
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
         MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getBody())));

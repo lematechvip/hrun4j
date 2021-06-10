@@ -13,7 +13,7 @@ teststeps:
     validate:
       - equalTo: [status_code,200]
   - name: 更新用户信息
-    api: apis/updateUser
+    api: apis/user/updateUser
     validate:
       - equalTo: [status_code,200]
       - equalTo: [body.code,"09"]

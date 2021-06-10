@@ -179,4 +179,16 @@ public class DemoTest extends TestBase {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+
+    /**
+     * 测试beanshell脚本执行
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void post(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
 }

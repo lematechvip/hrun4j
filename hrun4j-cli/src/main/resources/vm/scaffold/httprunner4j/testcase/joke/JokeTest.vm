@@ -1,8 +1,8 @@
 package ${application.packageName}.testcases.joke;
 
 import ${application.packageName}.HttpRunner4j;
-import TestCaseExecutorEngine;
-import TestCase;
+import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
+import vip.lematech.httprunner4j.testproject.HttpRunner4j;
 import org.testng.annotations.Test;
 
 /**

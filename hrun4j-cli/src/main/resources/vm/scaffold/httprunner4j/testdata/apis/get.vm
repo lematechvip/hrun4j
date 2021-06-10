@@ -1,0 +1,9 @@
+name: GET Request
+base_url: https://postman-echo.com
+request:
+  url: /get?foo1=${foo1}&foo2=${foo2}
+  method: GET
+setup_hooks:
+  - $\{shFunction\(page,count,type\)\}
+teardown_hooks:
+  - $\{tdFunction\(getJoke\)\}

@@ -1,5 +1,6 @@
 package vip.lematech.httprunner4j.testcases.scene;
 
+import vip.lematech.httprunner4j.HttpRunner4j;
 import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
@@ -9,11 +10,8 @@ import org.testng.annotations.Test;
  * @author lematech@foxmail.com
  * @version 1.0.0
  * @className SceneTest
- * @description TODO
- * @created 2021/3/30 10:11 上午
- * @publicWechat lematech
  */
-public class SceneTest extends TestBase {
+public class SceneTest extends HttpRunner4j {
 
     /**
      * 重置系统
@@ -62,7 +60,7 @@ public class SceneTest extends TestBase {
      * @param testCase
      */
     @Test(dataProvider = "dataProvider")
-    public void loginAndupdateUser(TestCase testCase) {
+    public void loginAndUpdateUser(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 

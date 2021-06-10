@@ -1,6 +1,6 @@
 package vip.lematech.httprunner4j.testcases.demo;
 
-import vip.lematech.httprunner4j.base.TestBase;
+import vip.lematech.httprunner4j.HttpRunner4j;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
  * @created 2021/3/23 10:58 上午
  * @publicWechat lematech
  */
-public class DemoTest extends TestBase {
+public class DemoTest extends HttpRunner4j {
 
     @BeforeClass
     public void configRunner() {

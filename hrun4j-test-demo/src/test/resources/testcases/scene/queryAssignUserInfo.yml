@@ -11,4 +11,4 @@ teststeps:
   - name: 登录并添加用户信息
     testcase: scene/loginAndAddUser
   - name: 查询用户信息
-    api: apis/queryUser
+    api: apis/user/queryUser

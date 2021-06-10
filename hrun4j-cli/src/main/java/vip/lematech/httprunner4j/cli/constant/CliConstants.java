@@ -173,7 +173,7 @@ public class CliConstants {
     /**
      * api mode
      */
-    public static final String HTTPRUNNER4J_API_TYPE = "POM";
+    public static final String HTTPRUNNER4J_POM_TYPE = "POM";
 
     /**
      * command line mode

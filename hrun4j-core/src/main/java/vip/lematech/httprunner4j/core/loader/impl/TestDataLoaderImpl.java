@@ -95,8 +95,8 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
             } else {
                 if (clazz == TestCase.class) {
                     ApiModel apiModel = (ApiModel) fileSerialization2Object(fileName, ApiModel.class);
-                    String validateInfo = SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
-                    if (StrUtil.isEmpty(validateInfo)) {
+                    validateResult = SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
+                    if (StrUtil.isEmpty(validateResult)) {
                         return (T) objectConverter.apiModel2TestCase(apiModel);
                     } else {
                         throw new DefinedException(validateResult);
@@ -108,7 +108,6 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("An exception occurred in the loading %s file. Exception information:%s", testDataName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

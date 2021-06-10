@@ -11,4 +11,4 @@ teststeps:
     validate:
       - equalTo: [status_code,200]
   - name: 添加用户
-    api: apis/resetAll
+    api: apis/user/resetAll
