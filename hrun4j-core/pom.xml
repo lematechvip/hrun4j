@@ -156,6 +156,18 @@
             <artifactId>compiler</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.23</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- swagger 解析 -->
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>2.0.24</version>
+        </dependency>
 
     </dependencies>
     <build>
