@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.exp;
+package vip.lematech.httprunner4j.core.processor;
 
 
 import bsh.EvalError;
@@ -21,7 +21,7 @@ import vip.lematech.httprunner4j.config.Env;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -47,15 +47,6 @@ public class BuiltInAviatorEvaluator {
         AviatorEvaluator.addFunction(new BuiltInFunctionParameterize());
         AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
         AviatorEvaluator.addFunction(new BuiltInFunctionBeanShell());
-
-
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedHookFunction());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionAdd());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionSubtract());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionMultiply());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionDivide());
-        AviatorEvaluator.addFunction(new BuildInFunctions.SignGenerateFunction());
-        AviatorEvaluator.addFunction(new BuildInFunctions.ReuqestAndResponseHook());
     }
 
     public static Object execute(String expression, Map<String, Object> env) {
@@ -74,10 +65,9 @@ public class BuiltInAviatorEvaluator {
         @Override
         public AviatorObject call() {
             String output = "Hello,HttpRunner!!!";
-            MyLog.info(output);
+            LogHelper.info(output);
             return new AviatorString(output);
         }
-
         @Override
         public String getName() {
             return "helloWorld";
@@ -108,7 +98,6 @@ public class BuiltInAviatorEvaluator {
      * built-in $BSH
      */
     public static class BuiltInFunctionBeanShell extends AbstractFunction {
-
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject bshFilePathObj) {
             Object bshFile = bshFilePathObj.getValue(env);
@@ -121,7 +110,6 @@ public class BuiltInAviatorEvaluator {
                 String exceptionMsg = String.format("BeanShell scripts must have a.bsh suffix");
                 throw new DefinedException(exceptionMsg);
             }
-
             String workDirPath;
             RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
             File bshFilePath = null;
@@ -174,7 +162,6 @@ public class BuiltInAviatorEvaluator {
             }
             return AviatorRuntimeJavaType.valueOf(result);
         }
-
         @Override
         public String getName() {
             return "BSH";
@@ -245,7 +232,6 @@ public class BuiltInAviatorEvaluator {
             }
             return AviatorRuntimeJavaType.valueOf(csvParameters);
         }
-
         @Override
         public String getName() {
             return "P";

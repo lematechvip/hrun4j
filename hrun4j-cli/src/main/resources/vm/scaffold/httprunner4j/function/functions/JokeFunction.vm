@@ -4,7 +4,7 @@ import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import java.util.Map;
 
 /**

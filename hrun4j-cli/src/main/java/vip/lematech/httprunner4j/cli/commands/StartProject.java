@@ -10,8 +10,8 @@ import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
 import vip.lematech.httprunner4j.cli.service.impl.ProjectGeneratorImpl;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
@@ -45,24 +45,24 @@ public class StartProject extends Command {
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         if (StrUtil.isEmpty(projectName)) {
-            MyLog.warn("Please enter a project name");
+            LogHelper.warn("Please enter a project name");
             return -1;
         }
-        JavaIdentifierUtil.isValidJavaFullClassName(groupId);
+        JavaIdentifierHelper.isValidJavaFullClassName(groupId);
         ProjectInfo projectInfo = new ProjectInfo(groupId, projectName
                 , version, projectName, String.format("Demo project for %s", projectName));
         RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         String projectRoot = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory()) + File.separator;
-        MyLog.info("工作区路径：{}", projectRoot);
+        LogHelper.info("工作区路径：{}", projectRoot);
         IProjectGenerator projectGenerator = new ProjectGeneratorImpl();
         if (CliConstants.SRPINGBOOT_PROJECT_TYPE.equalsIgnoreCase(type)) {
-            MyLog.info("正在初始化SpringBoot项目信息");
+            LogHelper.info("正在初始化SpringBoot项目信息");
             projectGenerator.springbootGenerator(projectRoot, projectInfo);
         } else if (CliConstants.HTTPRUNNER4J_CLI_TYPE.equalsIgnoreCase(type)) {
-            MyLog.info("正在初始化HttpRunner Cli项目信息");
+            LogHelper.info("正在初始化HttpRunner Cli项目信息");
             projectGenerator.cliGenerator(projectRoot, projectName);
         } else {
-            MyLog.info("正在初始化HttpRunner POM项目信息");
+            LogHelper.info("正在初始化HttpRunner POM项目信息");
             projectGenerator.pomGenerator(projectRoot, projectInfo);
         }
         return 1;

@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,7 +13,7 @@ import vip.lematech.httprunner4j.common.DefinedException;
  * @version 1.0.0
  */
 
-public class JavaIdentifierUtil {
+public class JavaIdentifierHelper {
 
     /**
      * validate method、classname valid

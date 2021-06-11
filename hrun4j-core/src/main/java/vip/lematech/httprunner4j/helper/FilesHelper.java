@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 
 import cn.hutool.core.util.StrUtil;
@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
-public class FilesUtil {
+public class FilesHelper {
 
     /**
      * file path decode,support zh
@@ -51,15 +51,15 @@ public class FilesUtil {
             dirPath = dirPath.replaceFirst(File.separator, "");
         }
         if (dirPath.endsWith(File.separator)) {
-            dirPath = SmallUtil.replaceLast(dirPath, File.separator, "");
+            dirPath = LittleHelper.replaceLast(dirPath, File.separator, "");
         }
         if (dirPath.contains(File.separator)) {
             dirPath = dirPath.replaceAll(File.separator, Constant.DOT_PATH);
         }
         pkgName.append(dirPath);
         String packageName = pkgName.toString();
-        if (!JavaIdentifierUtil.isValidJavaFullClassName(packageName)) {
-            throw new DefinedException(JavaIdentifierUtil.validateIdentifierName(packageName));
+        if (!JavaIdentifierHelper.isValidJavaFullClassName(packageName)) {
+            throw new DefinedException(JavaIdentifierHelper.validateIdentifierName(packageName));
         }
         return packageName;
     }

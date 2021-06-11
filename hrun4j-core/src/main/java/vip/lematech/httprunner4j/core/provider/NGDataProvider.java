@@ -9,9 +9,9 @@ import vip.lematech.httprunner4j.core.loader.Searcher;
 import vip.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
 import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
-import vip.lematech.httprunner4j.widget.utils.SmallUtil;
+import vip.lematech.httprunner4j.helper.FilesHelper;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
+import vip.lematech.httprunner4j.helper.LittleHelper;
 import org.testng.collections.Maps;
 
 import java.io.File;
@@ -71,12 +71,12 @@ public class NGDataProvider {
      */
     private String caseFilePath(String pkgName, String testCaseName) {
         if (pkgName.startsWith(definePackageName)) {
-            pkgName = FilesUtil.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
+            pkgName = FilesHelper.pkgPath2DirPath(pkgName.replaceFirst(definePackageName, ""));
             if (pkgName.startsWith(Constant.UNDERLINE)) {
                 pkgName = pkgName.replaceFirst(Constant.UNDERLINE, Constant.DOT_PATH);
             }
         } else {
-            pkgName = FilesUtil.pkgPath2DirPath(pkgName);
+            pkgName = FilesHelper.pkgPath2DirPath(pkgName);
         }
         return pkgName + File.separator + testCaseName;
     }
@@ -101,9 +101,9 @@ public class NGDataProvider {
                 pkgName = pkgName.replaceFirst(Constant.DOT_PATH, "");
             }
         } else {
-            pkgName = FilesUtil.pkgPath2DirPath(pkgName);
+            pkgName = FilesHelper.pkgPath2DirPath(pkgName);
         }
-        namespace.append(JavaIdentifierUtil.formatFilePath(pkgName));
+        namespace.append(JavaIdentifierHelper.formatFilePath(pkgName));
         namespace.append(Constant.UNDERLINE);
         namespace.append(testCaseName);
         return namespace.toString();
@@ -131,7 +131,7 @@ public class NGDataProvider {
             Map resultVariables = Maps.newHashMap();
             resultVariables.putAll((Map) configVariables);
             resultVariables.putAll(MapUtil.isEmpty(parameterVariables) ? Maps.newHashMap() : parameterVariables);
-            TestCase copyTestCase = (TestCase) SmallUtil.objectDeepCopy(testCase, TestCase.class);
+            TestCase copyTestCase = (TestCase) LittleHelper.objectDeepCopy(testCase, TestCase.class);
             Config config = copyTestCase.getConfig();
             config.setVariables(resultVariables);
             config.setParameters(parameterVariables);

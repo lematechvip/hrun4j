@@ -7,7 +7,7 @@ import vip.lematech.httprunner4j.cli.util.HarUtils;
 import vip.lematech.httprunner4j.cli.model.har.Har;
 import vip.lematech.httprunner4j.cli.model.har.HarEntry;
 import vip.lematech.httprunner4j.cli.model.har.HarPage;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -56,13 +56,13 @@ public class ViewHar extends Command {
 			har = HarUtils.read(harFilePath);
 		} catch (Exception e) {
 			String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFilePath), e.getMessage());
-			MyLog.error(exceptionMsg);
+			LogHelper.error(exceptionMsg);
 			return 1;
 		}
 
 		if (Objects.isNull(har.getLog()) || CollectionUtil.isEmpty(har.getLog().getPages())) {
 			String exceptionMsg = String.format("HAR file %s has no pages!", FileUtil.getAbsolutePath(harFilePath));
-			MyLog.error(exceptionMsg);
+			LogHelper.error(exceptionMsg);
 			return 1;
 		}
 		HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
@@ -72,13 +72,13 @@ public class ViewHar extends Command {
 	}
 
 	private void viewInConsole(List<HarPage> harPages) {
-		MyLog.info("Httprunner4j start displaying: ");
-		MyLog.info("Number of pages viewed: " + harPages.size());
+		LogHelper.info("Httprunner4j start displaying: ");
+		LogHelper.info("Number of pages viewed: " + harPages.size());
 		for (HarPage page : harPages) {
-			MyLog.info(page.toString());
-			MyLog.info("Output the calls for this page: ");
+			LogHelper.info(page.toString());
+			LogHelper.info("Output the calls for this page: ");
 			for (HarEntry entry : page.getEntries()) {
-				MyLog.info("\t" + entry);
+				LogHelper.info("\t" + entry);
 			}
 		}
 	}

@@ -1,8 +1,7 @@
-package vip.lematech.httprunner4j.widget.log;
+package vip.lematech.httprunner4j.helper;
 
 
 import cn.hutool.core.text.StrFormatter;
-import vip.lematech.httprunner4j.widget.utils.SmallUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.Reporter;
 
@@ -14,7 +13,7 @@ import org.testng.Reporter;
  * @version 1.0.0
  */
 @Slf4j
-public class MyLog {
+public class LogHelper {
     /**
      * format output
      *
@@ -28,7 +27,7 @@ public class MyLog {
 
     public static void info(String logStr, Object... args) {
         log.info(formatInfo(logStr, args));
-        Reporter.log("[" + SmallUtil.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
+        Reporter.log("[" + LittleHelper.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
     }
 
     /**
@@ -39,7 +38,7 @@ public class MyLog {
      */
     public static void error(String logStr, Object... args) {
         log.error(formatInfo(logStr, args));
-        Reporter.log("[" + SmallUtil.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
+        Reporter.log("[" + LittleHelper.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
     }
 
     public static void debug(String logStr, Object... args) {
@@ -48,6 +47,6 @@ public class MyLog {
 
     public static void warn(String logStr, Object... args) {
         log.warn(formatInfo(logStr, args));
-        Reporter.log("[" + SmallUtil.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
+        Reporter.log("[" + LittleHelper.getSimpleDateFormat() + "] " + formatInfo(logStr, args));
     }
 }

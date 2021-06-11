@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
@@ -14,8 +14,7 @@ import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.widget.i18n.I18NFactory;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -29,7 +28,13 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class OkHttpsUtil {
+/**
+ * website http://lematech.vip/
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ */
+
+public class OkHttpsHelper {
     private static String getValueEncoded(String val) {
         if (val == null) {
             return "null";
@@ -89,18 +94,18 @@ public class OkHttpsUtil {
         String method = requestEntity.getMethod();
         String url = requestEntity.getUrl();
         Map<String, String> headers = handleHeadersCookie(requestEntity);
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.url"), url));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("request.method"), method));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.url"), url));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.method"), method));
         SyncHttpTask syncHttpTask = getSyncHttpTask(requestEntity, url);
         Map<String, Object> urlPara = requestEntity.getParams();
         if (MapUtil.isNotEmpty(urlPara)) {
-            MyLog.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), urlPara));
+            LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), urlPara));
             syncHttpTask.addUrlPara(urlPara);
         }
         if (MapUtil.isNotEmpty(headers)) {
-            MyLog.info(String.format(I18NFactory.getLocaleMessage("request.header"), headers));
+            LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.header"), headers));
             if (headers.containsKey("Cookie")) {
-                MyLog.info(String.format(I18NFactory.getLocaleMessage("request.cookie"), SmallUtil.emptyIfNull(requestEntity.getCookies())));
+                LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.cookie"), LittleHelper.emptyIfNull(requestEntity.getCookies())));
             }
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 String key = entry.getKey();
@@ -113,7 +118,7 @@ public class OkHttpsUtil {
         if (!Objects.isNull(jsonObj)) {
             try{
                 JSONObject jsonData = JSONObject.parseObject(JSONObject.toJSONString(jsonObj));
-                MyLog.info(String.format(I18NFactory.getLocaleMessage("request.json"), SmallUtil.emptyIfNull(requestEntity.getJson())));
+                LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.json"), LittleHelper.emptyIfNull(requestEntity.getJson())));
                 syncHttpTask.bodyType(OkHttps.JSON);
                 syncHttpTask.setBodyPara(jsonData);
             }catch (Exception e){
@@ -164,12 +169,12 @@ public class OkHttpsUtil {
         }
         Boolean streamObj = requestEntity.getStream();
         ResponseEntity responseEntity = wrapperResponseEntity(httpResult, streamObj, elapsedTime);
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), SmallUtil.emptyIfNull(responseEntity.getStatusCode())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.body"), SmallUtil.emptyIfNull(responseEntity.getBody())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.content.length"), SmallUtil.emptyIfNull(responseEntity.getContentLength())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.time"), SmallUtil.emptyIfNull(responseEntity.getTime())));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.header"), SmallUtil.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
-        MyLog.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), SmallUtil.emptyIfNull(responseEntity.getCookies())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), LittleHelper.emptyIfNull(responseEntity.getStatusCode())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.body"), LittleHelper.emptyIfNull(responseEntity.getBody())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.content.length"), LittleHelper.emptyIfNull(responseEntity.getContentLength())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.time"), LittleHelper.emptyIfNull(responseEntity.getTime())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.header"), LittleHelper.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), LittleHelper.emptyIfNull(responseEntity.getCookies())));
         return responseEntity;
     }
 
@@ -225,12 +230,12 @@ public class OkHttpsUtil {
                 String workDir = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
                 body.toFolder(workDir)
                 .setOnSuccess((File file) -> {
-                    MyLog.info("文件下载完毕，存储路径：{}",workDir);
+                    LogHelper.info("文件下载完毕，存储路径：{}",workDir);
                 })
                 .start();
             } else {
                 String responseContent = body.toString();
-                if (JsonUtil.isJson(responseContent)) {
+                if (JsonHelper.isJson(responseContent)) {
                     responseEntity.setBody(JSON.parseObject(responseContent));
                 } else {
                     responseEntity.setBody(responseContent);

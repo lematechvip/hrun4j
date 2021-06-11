@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.itranswarp.compiler.JavaStringCompiler;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.collections.Maps;
 
 import java.io.BufferedReader;
@@ -50,10 +50,10 @@ public class HotLoader {
         String pkgClassName = String.format("%s.%s",pkgName,className);
         Class<?> clazz ;
         try {
-            MyLog.debug("initializing class[{}] ", pkgClassName);
+            LogHelper.debug("initializing class[{}] ", pkgClassName);
             Map<String, byte[]> results = getInstance().compile(javaFileName, replaceSource);
             clazz = compiler.loadClass(pkgClassName, results);
-            MyLog.debug("hot load class[{}] finished", pkgClassName);
+            LogHelper.debug("hot load class[{}] finished", pkgClassName);
             hotLoaderClasses.add(clazz);
         } catch (IOException e) {
             String exceptionMsg = String.format("compile %s occur exception: ",javaFileName,e.getMessage());
@@ -91,7 +91,7 @@ public class HotLoader {
                 javaMetaInfo.put("className",className);
                 javaMetaInfo.put("source",getJavaFileContent(javaFile));
                 javaMetaInfos.add(javaMetaInfo);
-                MyLog.debug("package name is {}, class name is {}", pkgName, className);
+                LogHelper.debug("package name is {}, class name is {}", pkgName, className);
             }else{
                 traverseSrcJava(rootPath,javaFile,javaMetaInfos);
             }
@@ -147,14 +147,14 @@ public class HotLoader {
      */
     private static String replaceSourceParameters(String pkgName,String className,String source){
         String replaceSource = source;
-        MyLog.debug("init source info : {}", source);
+        LogHelper.debug("init source info : {}", source);
         if(source.contains("$pkgName")){
             replaceSource = source.replace("$pkgName",pkgName);
         }
         if(source.contains("$className")){
             replaceSource = replaceSource.replace("className",className);
         }
-        MyLog.debug("replace source parameters info : {}", replaceSource);
+        LogHelper.debug("replace source parameters info : {}", replaceSource);
         return replaceSource;
     }
 }

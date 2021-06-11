@@ -7,7 +7,7 @@ import vip.lematech.httprunner4j.entity.base.BaseModel;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 import vip.lematech.httprunner4j.entity.testcase.TestStep;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.collections.Maps;
 
 import java.util.List;
@@ -69,10 +69,10 @@ public class PreAndPostProcessor {
         List outputs = transTestStep.getOutput();
         if (!Objects.isNull(outputs)) {
             if (outputs.contains("variables")) {
-                MyLog.info("[variables]：{}", transTestStep.getVariables());
+                LogHelper.info("[variables]：{}", transTestStep.getVariables());
             }
             if (outputs.contains("extract")) {
-                MyLog.info("[extract]：{}", this.testStepConfigVariable);
+                LogHelper.info("[extract]：{}", this.testStepConfigVariable);
             }
         }
     }

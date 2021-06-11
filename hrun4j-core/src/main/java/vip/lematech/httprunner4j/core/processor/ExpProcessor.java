@@ -11,9 +11,8 @@ import vip.lematech.httprunner4j.core.converter.ObjectConverter;
 import vip.lematech.httprunner4j.entity.base.BaseModel;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.testcase.Config;
-import vip.lematech.httprunner4j.widget.exp.BuiltInAviatorEvaluator;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.RegExpUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.RegExpHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -55,13 +54,13 @@ public class ExpProcessor<T> {
             for (Map.Entry<String, Object> entry : instance.entrySet()) {
                 String key = entry.getKey();
                 String value = String.valueOf(entry.getValue());
-                if (!RegExpUtil.isExp(value)) {
+                if (!RegExpHelper.isExp(value)) {
                     result.put(key, value);
                     continue;
                 }
                 Object handledValue = handleStringExp(value);
                 result.put(key, handledValue);
-                MyLog.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", value, handledValue, currentVariable);
+                LogHelper.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", value, handledValue, currentVariable);
             }
             return (T)result;
         }else if (t instanceof String) {
@@ -91,10 +90,10 @@ public class ExpProcessor<T> {
      * @return result of the expression
      */
     public Object handleStringExp(String exp) {
-        if (RegExpUtil.isExp(exp)) {
+        if (RegExpHelper.isExp(exp)) {
             String handleExp = new String(exp.getBytes());
             try {
-                List<String> matchList = RegExpUtil.find(Constant.REGEX_EXPRESSION, exp);
+                List<String> matchList = RegExpHelper.find(Constant.REGEX_EXPRESSION, exp);
                 String matchExp = matchList.get(0);
                 if (matchList.size() == 1) {
                     String onlyExp = String.format("${%s}", matchExp);
@@ -111,7 +110,7 @@ public class ExpProcessor<T> {
                 String exceptionMsg = String.format("Handle expression %s handles exception, exception information: %s", exp, e.getMessage());
                 throw new DefinedException(exceptionMsg);
             }
-            MyLog.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", handleExp, exp, currentVariable);
+            LogHelper.debug("Expression before handle: {}, after handle: {},Current environment variable: {}", handleExp, exp, currentVariable);
         }
         return exp;
     }

@@ -10,8 +10,8 @@ import vip.lematech.httprunner4j.core.processor.DataExtractor;
 import vip.lematech.httprunner4j.core.processor.ExpProcessor;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 import vip.lematech.httprunner4j.entity.testcase.Comparator;
-import vip.lematech.httprunner4j.widget.i18n.I18NFactory;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.InvocationTargetException;
@@ -104,7 +104,7 @@ public class AssertChecker {
         }
         Object exp = comparator.getCheck();
         Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity);
-        MyLog.debug("Expression: {}, The extracted value is : {}", exp, actual);
+        LogHelper.debug("Expression: {}, The extracted value is : {}", exp, actual);
         String assertKeyInfo = String.format("%s%s%s%s%s%s%s", I18NFactory.getLocaleMessage("assert.check.point"), exp
                 , I18NFactory.getLocaleMessage("assert.expect.value"), comparator.getExpect()
                 , I18NFactory.getLocaleMessage("assert.actual.value"), actual
@@ -114,7 +114,7 @@ public class AssertChecker {
             Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
             method.invoke(null, actual
                     , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), comparator.getExpect()));
-            MyLog.info(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.pass"));
+            LogHelper.info(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.pass"));
         } catch (ClassNotFoundException e) {
             String exceptionMsg = String.format("Class not found exception %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
@@ -125,7 +125,7 @@ public class AssertChecker {
             String exceptionMsg = String.format("Illegal access exception %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
         } catch (InvocationTargetException targetException) {
-            MyLog.error(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.fail"));
+            LogHelper.error(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.fail"));
             throw new AssertionError(targetException.getCause());
         } catch (Exception e) {
             String exceptionMsg = String.format("Unknown exception occurs in the process of verifying data. Exception information: %s", e.getMessage());

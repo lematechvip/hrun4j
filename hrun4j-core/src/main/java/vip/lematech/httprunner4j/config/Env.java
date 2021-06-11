@@ -2,7 +2,7 @@ package vip.lematech.httprunner4j.config;
 
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.core.loader.Searcher;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +39,7 @@ public class Env {
                 envMap.putAll((Map) properties);
             } catch (Exception e) {
                 String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
-                MyLog.warn(exceptionMsg);
+                LogHelper.warn(exceptionMsg);
             }
         }
     }

@@ -11,9 +11,9 @@ import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.core.engine.TemplateEngine;
 import vip.lematech.httprunner4j.core.loader.HotLoader;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.FilesHelper;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import lombok.Data;
 import org.apache.velocity.VelocityContext;
 import org.testng.ITestListener;
@@ -81,7 +81,7 @@ public class TestNGEngine {
         List<String> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
         testCasePkgGroup = fileList2TestClass(testCasePaths);
         if (MapUtil.isEmpty(testCasePkgGroup)) {
-            MyLog.warn("No valid test cases were found on the current path: {}", testCasePaths);
+            LogHelper.warn("No valid test cases were found on the current path: {}", testCasePaths);
         }
         addTestClasses();
         runNG();
@@ -106,10 +106,10 @@ public class TestNGEngine {
             ctx.put("className", className);
             ctx.put("methodList", methodNameList);
             String templateRenderContent = TemplateEngine.getTemplateRenderContent(Constant.TEST_TEMPLATE_FILE_PATH, ctx);
-            MyLog.debug("Render Template Engine Content:{}", templateRenderContent);
+            LogHelper.debug("Render Template Engine Content:{}", templateRenderContent);
             Class<?> clazz = HotLoader.hotLoadClass(pkgName, className, templateRenderContent);
             classes.add(clazz);
-            MyLog.debug("Class full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
+            LogHelper.debug("Class full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
         }
         Class[] execClass = classes.toArray(new Class[0]);
         getInstance().setTestClasses(execClass);
@@ -127,7 +127,7 @@ public class TestNGEngine {
                 || Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
             String fileMainName = FileNameUtil.mainName(file.getName());
             String fileCanonicalPath = FileUtil.getAbsolutePath(file);
-            if (!JavaIdentifierUtil.isValidJavaIdentifier(fileMainName)) {
+            if (!JavaIdentifierHelper.isValidJavaIdentifier(fileMainName)) {
                 String exceptionMsg = String.format("File name:%s  does not match Java identifier(No special characters are allowed. The first character must be '$',' _ ', 'letter'. No special characters such as' - ', 'space', '/' are allowed), in the path: ", fileCanonicalPath);
                 throw new DefinedException(exceptionMsg);
             }
@@ -142,8 +142,8 @@ public class TestNGEngine {
             } else {
                 filePath = fileParentCanonicalPath;
             }
-            String transferPackageName = FilesUtil.dirPath2pkgName(filePath);
-            String validatePackageInfo = JavaIdentifierUtil.validateIdentifierName(transferPackageName);
+            String transferPackageName = FilesHelper.dirPath2pkgName(filePath);
+            String validatePackageInfo = JavaIdentifierHelper.validateIdentifierName(transferPackageName);
             if (!StrUtil.isEmpty(validatePackageInfo)) {
                 throw new DefinedException(validatePackageInfo);
             }
@@ -153,7 +153,7 @@ public class TestNGEngine {
             String testClassName = StrUtil.upperFirst(StrUtil.toCamelCase(String.format("%sTest", folderName)));
             pkgTestClassMetaInfo.append(Constant.DOT_PATH).append(testClassName);
             String fullTestClassName = pkgTestClassMetaInfo.toString();
-            MyLog.debug("Complete class package name:{}, filename: {},method name: {}", fullTestClassName, testClassName, fileMainName);
+            LogHelper.debug("Complete class package name:{}, filename: {},method name: {}", fullTestClassName, testClassName, fileMainName);
             if (fileTestClassMap.containsKey(fullTestClassName)) {
                 Set<String> testClassList = fileTestClassMap.get(fullTestClassName);
                 testClassList.add(fileMainName);
@@ -163,7 +163,7 @@ public class TestNGEngine {
                 fileTestClassMap.put(fullTestClassName, testClassList);
             }
         } else {
-            MyLog.debug("Current file {}.{} format support, only support YML or JSON file suffix", file.getPath(), file.getName());
+            LogHelper.debug("Current file {}.{} format support, only support YML or JSON file suffix", file.getPath(), file.getName());
         }
     }
 
@@ -203,7 +203,7 @@ public class TestNGEngine {
             if (filePathFlag) {
                 file = new File(RunnerConfig.getInstance().getWorkDirectory().getPath(), file.getPath());
             }
-            FilesUtil.checkFileExists(file);
+            FilesHelper.checkFileExists(file);
             fileTraverse(file, fileTestClassMap);
         }
 

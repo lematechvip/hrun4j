@@ -4,9 +4,9 @@ import com.googlecode.aviator.AviatorEvaluator;
 import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.testproject.functions.JokeFunction;
 import org.testng.annotations.BeforeSuite;
-import vip.lematech.httprunner4j.widget.log.MyLog;
 
 /**
  * Extension function
@@ -19,7 +19,7 @@ public class HttpRunner4j extends TestBase {
     @Override
     @BeforeSuite
     public void beforeSuite() {
-        MyLog.info(" Add function to static code block !");
+        LogHelper.info(" Add function to static code block !");
         AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeSetupHook());
         AviatorEvaluator.getInstance().addFunction(new JokeFunction.JokeTearDownHook());
         /**

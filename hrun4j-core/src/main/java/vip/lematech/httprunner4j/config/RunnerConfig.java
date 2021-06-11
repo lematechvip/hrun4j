@@ -3,7 +3,7 @@ package vip.lematech.httprunner4j.config;
 import cn.hutool.core.util.StrUtil;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import lombok.Data;
 
 import java.io.File;
@@ -77,7 +77,7 @@ public class RunnerConfig {
      * @param pkgName package name
      */
     public void setPkgName(String pkgName) {
-        if (!JavaIdentifierUtil.isValidJavaFullClassName(pkgName)) {
+        if (!JavaIdentifierHelper.isValidJavaFullClassName(pkgName)) {
             String exceptionMsg = String.format("The package name %s is invalid", pkgName);
             throw new DefinedException(exceptionMsg);
         }

@@ -18,10 +18,10 @@ import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestSuite;
 import vip.lematech.httprunner4j.entity.testcase.TestSuiteCase;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
-import vip.lematech.httprunner4j.widget.utils.SmallUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.FilesHelper;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
+import vip.lematech.httprunner4j.helper.LittleHelper;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -69,22 +69,22 @@ public class Run extends Command {
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
-        MyLog.info("Run mode: {}", RunnerConfig.RunMode.CLI);
+        LogHelper.info("Run mode: {}", RunnerConfig.RunMode.CLI);
         if (Objects.nonNull(testSuitePath) && Objects.nonNull(testCasePaths)) {
             String exceptionMsg = String.format("It is not allowed to specify both testSuitePath and testCasePaths option values");
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
             return 1;
         }
 
         if (Objects.isNull(testSuitePath) && Objects.isNull(testCasePaths)) {
             String exceptionMsg = String.format("You must specify either testSuitePath or testCasePaths");
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
             return 1;
         }
 
         validateOrSetParams();
         String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
-        MyLog.info("The workspace path：{}", workDirPath);
+        LogHelper.info("The workspace path：{}", workDirPath);
         initEnvPath(workDirPath);
         TestSuite testSuite = new TestSuite();
         searcher = new Searcher();
@@ -100,7 +100,7 @@ public class Run extends Command {
                 if (!dataFile.exists()) {
                     String exceptionMsg = String.format("The test case file %s does not exist"
                             , FileUtil.getAbsolutePath(dataFile));
-                    MyLog.error(exceptionMsg);
+                    LogHelper.error(exceptionMsg);
                     throw new DefinedException(exceptionMsg);
                 }
                 fileTraverse(dataFile, dataFilesSet);
@@ -118,13 +118,13 @@ public class Run extends Command {
             }
             testSuite.setTestCases(testSuiteCases);
         } else {
-            FilesUtil.checkFileExists(testSuitePath);
+            FilesHelper.checkFileExists(testSuitePath);
             String testSuiteExtName = FileUtil.extName(testSuitePath);
             testSuite = TestDataLoaderFactory.getLoader(testSuiteExtName)
                     .load(testSuitePath, TestSuite.class);
             if (Objects.isNull(testSuite)) {
                 String exceptionMsg = String.format("TestSuite file %s is invalid, load data is empty, please check", FileUtil.getAbsolutePath(testSuitePath));
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
             }
         }
         Config testSuiteConfig = testSuite.getConfig();
@@ -133,11 +133,11 @@ public class Run extends Command {
             String caseRelativePath = testSuiteCase.getCaseRelativePath();
             testCaseMapFiles.add(caseRelativePath);
             String extName = FileUtil.extName(caseRelativePath);
-            String namespace = JavaIdentifierUtil.formatFilePath(caseRelativePath);
+            String namespace = JavaIdentifierHelper.formatFilePath(caseRelativePath);
             if (!StrUtil.isEmpty(extName)) {
-                namespace = JavaIdentifierUtil.formatFilePath(SmallUtil.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
+                namespace = JavaIdentifierHelper.formatFilePath(LittleHelper.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
             }
-            MyLog.info("namespace:{}", namespace);
+            LogHelper.info("namespace:{}", namespace);
             File dataFile = searcher.quicklySearchFile(caseRelativePath);
             TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                     .load(dataFile, TestCase.class);
@@ -148,13 +148,13 @@ public class Run extends Command {
             Map environment = Env.getEnvMap();
             if (environment.containsKey(namespace)) {
                 String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
-                MyLog.warn(exceptionMsg);
+                LogHelper.warn(exceptionMsg);
             }
             NamespaceMap.setDataObject(String.format("%s:%s", RunnerConfig.RunMode.CLI, namespace), testCase);
         }
         if (testCaseMapFiles.size() == 0) {
             String exceptionMsg = String.format("The test case path cannot be empty");
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
             return 1;
         }
         RunnerConfig.getInstance().setTestCasePaths(testCaseMapFiles);
@@ -199,7 +199,7 @@ public class Run extends Command {
             if (!dotEnvPath.exists() || !dotEnvPath.isFile()) {
                 String exceptionMsg = String.format("The .env file %s does not exist"
                         , FileUtil.getAbsolutePath(dotEnvPath));
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 throw new DefinedException(exceptionMsg);
             }
             if (!FileUtil.isAbsolutePath(dotEnvPath.getPath())) {
@@ -213,7 +213,7 @@ public class Run extends Command {
             if (!dotFilePath.exists() || !dotFilePath.isFile()) {
                 String exceptionMsg = String.format("The .env file %s does not exist"
                         , FileUtil.getAbsolutePath(dotFilePath));
-                MyLog.warn(exceptionMsg);
+                LogHelper.warn(exceptionMsg);
             }
             RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
         }

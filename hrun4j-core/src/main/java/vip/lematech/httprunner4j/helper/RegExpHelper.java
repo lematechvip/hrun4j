@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 import cn.hutool.core.util.StrUtil;
 import vip.lematech.httprunner4j.common.Constant;
@@ -16,8 +16,7 @@ import java.util.regex.Pattern;
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
-
-public class RegExpUtil {
+public class RegExpHelper {
 
     /**
      * is exp

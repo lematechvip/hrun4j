@@ -18,10 +18,10 @@ import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestStep;
 import vip.lematech.httprunner4j.core.processor.ExpProcessor;
-import vip.lematech.httprunner4j.widget.i18n.I18NFactory;
-import vip.lematech.httprunner4j.widget.utils.OkHttpsUtil;
-import vip.lematech.httprunner4j.widget.utils.RegExpUtil;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.OkHttpsHelper;
+import vip.lematech.httprunner4j.helper.RegExpHelper;
 import org.testng.collections.Maps;
 
 import java.io.File;
@@ -93,7 +93,7 @@ public class TestCaseRunner {
             for (int index = 0; index < testSteps.size(); index++) {
                 Map<String, Object> testStepConfigVariable = Maps.newHashMap();
                 preAndPostProcessor.setTestStepConfigVariable(testStepConfigVariable);
-                MyLog.info(I18NFactory.getLocaleMessage("runner.current.step") + " : {}", testSteps.get(index).getName());
+                LogHelper.info(I18NFactory.getLocaleMessage("runner.current.step") + " : {}", testSteps.get(index).getName());
                 Map configVariables = Objects.isNull(config) ? Maps.newHashMap() : (Map) config.getVariables();
                 TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), configVariables);
                 RequestEntity initializeRequestEntity = testStep.getRequest();
@@ -106,7 +106,7 @@ public class TestCaseRunner {
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
                 requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
                 formatRequestFiles(requestEntity);
-                ResponseEntity responseEntity = OkHttpsUtil.executeReq(requestEntity);
+                ResponseEntity responseEntity = OkHttpsHelper.executeReq(requestEntity);
                 testStepConfigVariable.put(Constant.RESPONSE_VARIABLE_NAME, initializeRequestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
                 List<Map<String, Object>> validateList = testStep.getValidate();
@@ -119,7 +119,7 @@ public class TestCaseRunner {
         } catch (Exception e) {
             e.printStackTrace();
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
-            MyLog.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
+            LogHelper.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);
         }
 
@@ -169,7 +169,7 @@ public class TestCaseRunner {
             if (referenceCaseVariables instanceof Map) {
                 tcConfig.setVariables(objectConverter.mapExtendsKeyValue(variables, (Map) referenceCaseVariables));
             } else {
-                MyLog.warn("Reference test case {}, configuration variable type is not Map type", testcase);
+                LogHelper.warn("Reference test case {}, configuration variable type is not Map type", testcase);
             }
             this.execute(testCase);
         }
@@ -179,7 +179,7 @@ public class TestCaseRunner {
             File apiFilePath = searcher.quicklySearchFile(spliceApiFilePath);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
             TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(testStep, objectConverter.apiModel2TestStep(apiModel));
-            MyLog.debug("Interface documentation information:{}, Test steps:{}, After merging:{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(extendTestStep));
+            LogHelper.debug("Interface documentation information:{}, Test steps:{}, After merging:{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(extendTestStep));
             return extendTestStep;
         }
         return testStep;
@@ -193,7 +193,7 @@ public class TestCaseRunner {
      * @return
      */
     private String getUrl(String baseUrl, String requestUrl) {
-        if (RegExpUtil.isUrl(requestUrl)) {
+        if (RegExpHelper.isUrl(requestUrl)) {
             return requestUrl.trim();
         }
         return String.format("%s%s", baseUrl.trim(), StrUtil.isEmpty(requestUrl) ? "" : requestUrl);

@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.i18n;
+package vip.lematech.httprunner4j.config.i18n;
 
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;

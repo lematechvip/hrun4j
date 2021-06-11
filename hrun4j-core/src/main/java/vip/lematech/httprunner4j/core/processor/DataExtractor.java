@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSON;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.JsonUtil;
-import vip.lematech.httprunner4j.widget.utils.RegExpUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.JsonHelper;
+import vip.lematech.httprunner4j.helper.RegExpHelper;
 
 import java.util.*;
 
@@ -47,15 +47,15 @@ public class DataExtractor {
         }
         Object dataExtractorValue;
         String responseStr = JSON.toJSONString(responseEntity);
-        if (RegExpUtil.isExp(expStr)) {
+        if (RegExpHelper.isExp(expStr)) {
             dataExtractorValue = expProcessor.handleStringExp(expStr);
         } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_REGEX_START) && expStr.endsWith(Constant.DATA_EXTRACTOR_REGEX_END)) {
             String expression = expStr.substring(1, expStr.length() - 1);
-            dataExtractorValue = RegExpUtil.findString(expression, responseStr);
+            dataExtractorValue = RegExpHelper.findString(expression, responseStr);
         } else if (expStr.startsWith(Constant.DATA_EXTRACTOR_JSONPATH_START)) {
-            dataExtractorValue = JsonUtil.getJsonPathResult(expStr, responseStr);
+            dataExtractorValue = JsonHelper.getJsonPathResult(expStr, responseStr);
         } else {
-            dataExtractorValue = JsonUtil.getJmesPathResult(expStr, responseStr);
+            dataExtractorValue = JsonHelper.getJmesPathResult(expStr, responseStr);
         }
         if (Objects.isNull(dataExtractorValue)) {
             String exceptionMsg = String.format("No data was found by the given matching pattern: %s", exp);
@@ -76,7 +76,7 @@ public class DataExtractor {
             return;
         }
         Class clz = extracts.getClass();
-        MyLog.debug("Data extractor type : {}", clz);
+        LogHelper.debug("Data extractor type : {}", clz);
         if (clz == ArrayList.class) {
             List<Map<String, String>> extractList = (List<Map<String, String>>) extracts;
             for (Map extractMap : extractList) {
@@ -111,7 +111,7 @@ public class DataExtractor {
                 String exceptionMsg = String.format("By extracting the data that the rule %s does not match to the rule", expValue);
                 throw new DefinedException(exceptionMsg);
             }
-            MyLog.debug("Extract rule %s, the extracted data value:%s", expValue, extractValue);
+            LogHelper.debug("Extract rule %s, the extracted data value:%s", expValue, extractValue);
             testContextVariable.put(key, extractValue);
         }
 

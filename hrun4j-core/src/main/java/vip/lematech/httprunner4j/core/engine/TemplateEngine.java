@@ -17,7 +17,6 @@ import java.io.StringWriter;
  */
 
 public class TemplateEngine {
-
     private static VelocityEngine velocityEngine;
 
     /**

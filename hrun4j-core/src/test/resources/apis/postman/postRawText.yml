@@ -1,7 +1,0 @@
-name: Postman Echo POST Raw Text Request
-base_url: https://postman-echo.com
-request:
-  url: /post
-  method: POST
-  headers:
-  data: "This is expected to be sent back as part of response body."

@@ -6,7 +6,7 @@ import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.functions.MyFunction;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 
 /**
  * Extension function
@@ -19,9 +19,10 @@ public class HttpRunner4j extends TestBase {
     @Override
     @BeforeSuite
     public void beforeSuite() {
-        MyLog.info(" Add function to static code block !");
-        AviatorEvaluator.getInstance().addFunction(new MyFunction.SetupHookFunction());
-        AviatorEvaluator.getInstance().addFunction(new MyFunction.TearDownHookFunction());
+        LogHelper.info(" Add function to static code block !");
+        AviatorEvaluator.addFunction(new MyFunction.SetupHookFunction());
+        AviatorEvaluator.addFunction(new MyFunction.TearDownHookFunction());
+        AviatorEvaluator.addFunction(new MyFunction.SignGenerateFunction());
         /**
          * 包名，资源路径下查找测试用例前置，默认：vip.lematech.httprunner4j
          */

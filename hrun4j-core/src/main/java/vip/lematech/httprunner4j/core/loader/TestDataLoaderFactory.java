@@ -5,7 +5,7 @@ import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.core.loader.impl.TestDataLoaderImpl;
 import vip.lematech.httprunner4j.core.loader.service.ITestDataLoader;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 
 
 /**
@@ -24,7 +24,7 @@ public class TestDataLoaderFactory {
      */
     public synchronized static ITestDataLoader getLoader(String extName) {
         if (StrUtil.isEmpty(extName)) {
-            MyLog.debug("Set the use case load format to YML by default");
+            LogHelper.debug("Set the use case load format to YML by default");
             return new TestDataLoaderImpl(extName);
         }
         if (extName.equalsIgnoreCase(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME)

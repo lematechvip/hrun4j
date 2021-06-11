@@ -8,8 +8,8 @@ import com.google.common.collect.Maps;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.core.processor.ExpProcessor;
-import vip.lematech.httprunner4j.widget.utils.JsonUtil;
-import vip.lematech.httprunner4j.widget.utils.RegExpUtil;
+import vip.lematech.httprunner4j.helper.JsonHelper;
+import vip.lematech.httprunner4j.helper.RegExpHelper;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class DataConstructor {
             return parameters;
         }
         String paramsStr = JSON.toJSONString(parameterObj);
-        if (!JsonUtil.isJson(paramsStr)) {
+        if (!JsonHelper.isJson(paramsStr)) {
             String exceptionMsg = String.format("The parameters data %s json format is incorrect", paramsStr);
             throw new DefinedException(exceptionMsg);
         } else {
@@ -100,7 +100,7 @@ public class DataConstructor {
             int size = lineMetaArray.size();
             if (size == 1 && lineMetaArray.get(0) instanceof String) {
                 String expValue = (String) lineMetaArray.get(0);
-                if (RegExpUtil.isExp(expValue)) {
+                if (RegExpHelper.isExp(expValue)) {
                     Object handleResult = handleParameterizeExp(expValue);
                     List<Map<String, Object>> csvParameters = (List<Map<String, Object>>) handleResult;
                     for (Map<String, Object> objectMap : csvParameters) {
@@ -117,7 +117,7 @@ public class DataConstructor {
                 }
             }
             dimValue.add(parameterMutiValues);
-        } else if (parameterValue instanceof String && RegExpUtil.isExp((String) parameterValue)) {
+        } else if (parameterValue instanceof String && RegExpHelper.isExp((String) parameterValue)) {
             Object handleResult = handleParameterizeExp((String) parameterValue);
             List<Map<String, Object>> csvParameters = (List<Map<String, Object>>) handleResult;
             List<Object> parameterMutiValues = new ArrayList<>();
@@ -140,8 +140,8 @@ public class DataConstructor {
     private Object handleParameterizeExp(String parameterValue) {
         String expValue = parameterValue;
         Object handleResult;
-        if (RegExpUtil.isParameterizeExp(expValue)) {
-            String filePathValue = RegExpUtil.findString(Constant.REGEX_PARAMETERIZE_EXPRESSION, expValue);
+        if (RegExpHelper.isParameterizeExp(expValue)) {
+            String filePathValue = RegExpHelper.findString(Constant.REGEX_PARAMETERIZE_EXPRESSION, expValue);
             Map environment = Maps.newHashMap();
             environment.put(Constant.CSV_FILE_PATH_KEY, filePathValue);
             String aliasFileExp = String.format("${P(%s)}", Constant.CSV_FILE_PATH_KEY);
@@ -182,7 +182,7 @@ public class DataConstructor {
                     parameters.add(oneGroupValue);
                 }
             }
-        } else if (paramValues instanceof String && RegExpUtil.isExp((String) paramValues)) {
+        } else if (paramValues instanceof String && RegExpHelper.isExp((String) paramValues)) {
             Object handleResult = handleParameterizeExp((String) paramValues);
             return (List<Map<String, Object>>) handleResult;
         } else {

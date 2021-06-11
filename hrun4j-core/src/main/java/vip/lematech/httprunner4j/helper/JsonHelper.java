@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,9 +9,11 @@ import com.jayway.jsonpath.JsonPath;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
+import net.minidev.json.JSONUtil;
+import net.sf.json.util.JSONUtils;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +26,7 @@ import java.util.Objects;
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
-public class JsonUtil {
+public class JsonHelper {
     private static JmesPath<JsonNode> jmespath = new JacksonRuntime();
 
     /**
@@ -136,7 +138,7 @@ public class JsonUtil {
             }
             out.close();
         } catch (IOException e) {
-            MyLog.info("JSON write file exception, exception information: %s", e.getMessage());
+            LogHelper.info("JSON write file exception, exception information: %s", e.getMessage());
         }
     }
 }

@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.widget.utils;
+package vip.lematech.httprunner4j.helper;
 
 
 
@@ -16,8 +16,7 @@ import java.util.Objects;
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
-public class SmallUtil<T> {
-
+public class LittleHelper<T> {
 
     /**
      * Replace the last qualified character according to the regular

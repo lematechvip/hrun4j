@@ -1,8 +1,7 @@
 package vip.lematech.httprunner4j.entity.http;
 
 
-import com.alibaba.fastjson.JSONObject;
-import vip.lematech.httprunner4j.widget.utils.SmallUtil;
+import vip.lematech.httprunner4j.helper.LittleHelper;
 import lombok.Data;
 
 import java.util.Map;
@@ -39,15 +38,15 @@ public class RequestEntity<T> {
     private Integer connectionRequestTimeout;
 
     public Integer getConnectionRequestTimeout() {
-        return SmallUtil.s2ms(this.connectionRequestTimeout);
+        return LittleHelper.s2ms(this.connectionRequestTimeout);
     }
 
     public Integer getConnectTimeout() {
-        return SmallUtil.s2ms(this.connectTimeout);
+        return LittleHelper.s2ms(this.connectTimeout);
     }
 
     public Integer getSocketTimeout() {
-        return SmallUtil.s2ms(this.socketTimeout);
+        return LittleHelper.s2ms(this.socketTimeout);
     }
 
     private Integer connectTimeout;

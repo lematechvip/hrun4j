@@ -11,7 +11,7 @@ import vip.lematech.httprunner4j.entity.testcase.ApiModel;
 import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestStep;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.collections.Maps;
 
 import java.lang.reflect.Field;
@@ -91,7 +91,7 @@ public class ObjectConverter {
                 String subMethodName = subAttributeName.substring(0, 1).toUpperCase() + subAttributeName.substring(1);
                 if (methodName.equals(subMethodName) && subAttributeClass == attributeClass) {
                     Object subFieldValue = getFieldValueByName(subFields[subIndex].getName(), targetObj);
-                    MyLog.debug("Parent Type：{},Parent Value：{},Parent Method Name：{},Child Type：{},Child Value：{},Child Method Name：{}", attributeClass, fieldValue, methodName, subAttributeClass, subFieldValue, subMethodName);
+                    LogHelper.debug("Parent Type：{},Parent Value：{},Parent Method Name：{},Child Type：{},Child Value：{},Child Method Name：{}", attributeClass, fieldValue, methodName, subAttributeClass, subFieldValue, subMethodName);
                     if (Objects.isNull(subFieldValue)) {
                         subFieldValueIsNullAssignment(targetObj, subAttributeClass, methodName, fieldValue);
                     } else {

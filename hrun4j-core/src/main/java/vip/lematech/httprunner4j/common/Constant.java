@@ -96,11 +96,6 @@ public class Constant {
     public static final String DATA_EXTRACTOR_REGEX_END = "$";
 
     /**
-     * data extractor regex end
-     */
-    public static final String TEST_JAR_END_SUFFIX = "jar";
-
-    /**
      * beanshell suffix
      */
     public static final String BEANSHELL_BSH_END_SUFFIX = "bsh";

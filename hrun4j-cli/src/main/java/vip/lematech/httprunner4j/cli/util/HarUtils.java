@@ -33,8 +33,8 @@ import vip.lematech.httprunner4j.cli.model.har.HarLog;
 import vip.lematech.httprunner4j.cli.model.har.HarPage;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.FilesHelper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -75,7 +75,7 @@ public class HarUtils {
 	 *             file
 	 */
 	public static Har read(File file) throws JsonSyntaxException, IOException {
-		FilesUtil.checkFileExists(file);
+		FilesHelper.checkFileExists(file);
 		return GsonUtils.getGson().fromJson(FileUtils.readFileToString(file, Constant.CHARSET_UTF_8), Har.class);
 	}
 
@@ -130,14 +130,14 @@ public class HarUtils {
 		List<HarPage> harPages = har.getLog().getPages();
 		List<HarEntry> harEntries = har.getLog().getEntries();
 		if (Objects.isNull(har.getLog())) {
-			MyLog.warn("HAR file invalid");
+			LogHelper.warn("HAR file invalid");
 			return;
 		}
 
 		boolean isRestfulApi = false;
 		if (CollectionUtil.isEmpty(harPages)) {
 			if (CollectionUtil.isEmpty(harEntries)) {
-				MyLog.warn("No page found");
+				LogHelper.warn("No page found");
 				return;
 			}
 			isRestfulApi = true;
@@ -154,7 +154,7 @@ public class HarUtils {
 		}
 
 		if (CollectionUtil.isEmpty(harEntries)) {
-			MyLog.warn("No har entry - initialize empty list");
+			LogHelper.warn("No har entry - initialize empty list");
 			for (HarPage page : har.getLog().getPages()) {
 				page.setEntries(new ArrayList<>());
 			}

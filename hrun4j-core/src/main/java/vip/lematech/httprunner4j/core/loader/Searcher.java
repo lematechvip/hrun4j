@@ -6,8 +6,8 @@ import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.FilesHelper;
 import lombok.Data;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class Searcher {
             if (FileUtil.isAbsolutePath(filePath)) {
                 searchFile = new File(filePath);
             } else {
-                searchFile = new File(workDirectory, FilesUtil.filePathDecode(filePath));
+                searchFile = new File(workDirectory, FilesHelper.filePathDecode(filePath));
             }
         } else if (runMode == RunnerConfig.RunMode.POM) {
             if (!filePath.startsWith(File.separator)) {
@@ -70,7 +70,7 @@ public class Searcher {
                 String exceptionMsg = String.format("The file %s was not found under the resources", filePath);
                 throw new DefinedException(exceptionMsg);
             }
-            searchFile = new File(FilesUtil.filePathDecode(url.getPath()));
+            searchFile = new File(FilesHelper.filePathDecode(url.getPath()));
         }
         if (Objects.isNull(searchFile)) {
             String exceptionMsg = String.format("File %s is not exist", filePath);
@@ -80,7 +80,7 @@ public class Searcher {
             String exceptionMsg = String.format("The file %s was not found in the current path %s", searchFile.getName(), FileUtil.getAbsolutePath(searchFile.getParentFile()));
             throw new DefinedException(exceptionMsg);
         }
-        MyLog.debug("Run mode: {}, Test case path {}", runMode, FileUtil.getAbsolutePath(searchFile));
+        LogHelper.debug("Run mode: {}, Test case path {}", runMode, FileUtil.getAbsolutePath(searchFile));
         return searchFile;
     }
 

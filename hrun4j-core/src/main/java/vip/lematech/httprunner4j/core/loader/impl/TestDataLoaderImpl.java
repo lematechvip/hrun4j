@@ -11,7 +11,7 @@ import vip.lematech.httprunner4j.core.loader.service.ITestDataLoader;
 import vip.lematech.httprunner4j.core.validator.SchemaValidator;
 import vip.lematech.httprunner4j.entity.testcase.ApiModel;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
+import vip.lematech.httprunner4j.helper.FilesHelper;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -70,7 +70,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
                 throw new DefinedException(exceptionMsg);
             }
         } catch (IOException e) {
-            String exceptionMsg = String.format("Error in file %s serialization,Exception Information: %s", testDataName, this.extName, e.getMessage());
+            String exceptionMsg = String.format("Error in file %s.%s serialization,Exception Information: %s", testDataName, this.extName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return result;
@@ -85,7 +85,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     @Override
     public T load(File fileName, Class clazz) {
         T testData;
-        FilesUtil.checkFileExists(fileName);
+        FilesHelper.checkFileExists(fileName);
         String testDataName = fileName.getName();
         try {
             testData = fileSerialization2Object(fileName, clazz);

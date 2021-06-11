@@ -3,7 +3,7 @@ package vip.lematech.httprunner4j.base;
 import cn.hutool.core.io.FileUtil;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.core.provider.NGDataProvider;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -21,19 +21,19 @@ public class TestBase {
     private String testCaseName;
     @BeforeSuite
     public void beforeSuite(){
-        MyLog.info("[========================================]@beforeSuite()");
+        LogHelper.info("[========================================]@beforeSuite()");
     }
     @BeforeMethod
     public void setUp() {
-        MyLog.info("[====================" + this.testCaseName + "====================]@START");
+        LogHelper.info("[====================" + this.testCaseName + "====================]@START");
     }
     @AfterMethod
     public void tearDown() {
-        MyLog.info("[====================" + this.testCaseName + "====================]@END");
+        LogHelper.info("[====================" + this.testCaseName + "====================]@END");
     }
     @AfterSuite
     public void afterSuite(){
-        MyLog.info("[========================================]@afterSuite()");
+        LogHelper.info("[========================================]@afterSuite()");
     }
     @DataProvider
     public Object[][] dataProvider(Method method) {
@@ -45,7 +45,6 @@ public class TestBase {
         } catch (DefinedException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("Abnormal testng data loading occurs, and the reason for the exception is as follows: %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

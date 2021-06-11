@@ -6,14 +6,11 @@ import java.io.File;
 
 /**
  * Data loading define class, support file loading
- *
  * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
-
 public interface ITestDataLoader {
-
 
     /**
      * file load
@@ -24,5 +21,4 @@ public interface ITestDataLoader {
      * @return The specified object
      */
     <T> T load(File fileName, Class<T> clazz);
-
 }

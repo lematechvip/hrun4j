@@ -17,10 +17,10 @@ import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestStep;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
-import vip.lematech.httprunner4j.widget.utils.JavaIdentifierUtil;
-import vip.lematech.httprunner4j.widget.utils.JsonUtil;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.helper.FilesHelper;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
+import vip.lematech.httprunner4j.helper.JsonHelper;
 import org.kohsuke.args4j.Option;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -69,23 +69,23 @@ public class Har2Case extends Command {
 
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        FilesUtil.checkFileExists(harFile);
-        if (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) || !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format)) {
+        FilesHelper.checkFileExists(harFile);
+        if (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) && !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format)) {
             String exceptionMsg = String.format("Specifies the generation format %s exception. Only - 2Y or - 2J format is supported,default set 2y", format);
-            MyLog.warn(exceptionMsg);
+            LogHelper.warn(exceptionMsg);
         }
-        MyLog.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
+        LogHelper.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
         Har har;
         try {
             har = HarUtils.read(harFile);
         } catch (Exception e) {
             String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFile), e.getMessage());
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
             return 1;
         }
         if (Objects.isNull(har.getLog())) {
             String exceptionMsg = String.format("HAR file %s has no pages!", FileUtil.getAbsolutePath(harFile));
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
             return 1;
         }
         String workDirPath;
@@ -95,7 +95,7 @@ public class Har2Case extends Command {
             if (!generateCaseDirectory.exists() || !generateCaseDirectory.isDirectory()) {
                 String exceptionMsg = String.format("The case directory %s does not exist"
                         , FileUtil.getAbsolutePath(generateCaseDirectory));
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
             workDirPath = FileUtil.getAbsolutePath(generateCaseDirectory);
@@ -108,19 +108,19 @@ public class Har2Case extends Command {
         config.setVerify(false);
         List<TestStep> testSteps = new ArrayList<>();
         List<HarPage> harPages = har.getLog().getPages();
-        MyLog.info("Number of pages viewed: " + harPages.size());
+        LogHelper.info("Number of pages viewed: " + harPages.size());
         for (int index = 0; index < harPages.size(); index++) {
             HarPage page = harPages.get(index);
-            MyLog.info(page.toString());
-            MyLog.info("Output the calls for this page: ");
+            LogHelper.info(page.toString());
+            LogHelper.info("Output the calls for this page: ");
             for (HarEntry entry : page.getEntries()) {
-                MyLog.info("\t" + entry);
+                LogHelper.info("\t" + entry);
                 testSteps.add(buildTestStep(entry));
             }
             testCase.setConfig(config);
             testCase.setTestSteps(testSteps);
             try {
-                String caseFileName = JavaIdentifierUtil.formatFilePath(FileUtil.mainName(harFile));
+                String caseFileName = JavaIdentifierHelper.formatFilePath(FileUtil.mainName(harFile));
                 if (harPages.size() > 1) {
                     caseFileName = String.format("%s_%s", caseFileName, index + 1);
                 }
@@ -134,14 +134,14 @@ public class Har2Case extends Command {
                     yaml.dump(data, new FileWriter(jsonFile));
                 } else {
                     jsonFile = new File(workDirPath, String.format("%s.%s", caseFileName, "json"));
-                    JsonUtil.jsonWriteToFile(jsonFile, data);
+                    JsonHelper.jsonWriteToFile(jsonFile, data);
                 }
-                MyLog.info("Generated successfully! File path:{}", FileUtil.getAbsolutePath(jsonFile));
+                LogHelper.info("Generated successfully! File path:{}", FileUtil.getAbsolutePath(jsonFile));
                 return 0;
             } catch (IOException ioException) {
                 ioException.printStackTrace();
                 String exceptionMsg = String.format("Exception occurs when generating test cases. Exception information: %s", ioException.getMessage());
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
         }
@@ -194,10 +194,10 @@ public class Har2Case extends Command {
             String postContent = harPostData.getText();
             String mimeType = harPostData.getMimeType();
             if (CliConstants.APPLICATION_JSON_MIME_TYPE.equalsIgnoreCase(mimeType) || CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8.equalsIgnoreCase(mimeType)) {
-                if (JsonUtil.isJson(postContent)) {
+                if (JsonHelper.isJson(postContent)) {
                     requestEntity.setJson(JSONObject.parseObject(postContent));
                 } else {
-                    MyLog.warn("Data type is {}, but data value :{} cannot be JSON formatted", CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8, postContent);
+                    LogHelper.warn("Data type is {}, but data value :{} cannot be JSON formatted", CliConstants.APPLICATION_JSON_MIME_TYPE_UTF_8, postContent);
                 }
             } else {
                 requestEntity.setData(postContent);
@@ -247,7 +247,7 @@ public class Har2Case extends Command {
             if (CliConstants.APPLICATION_ENCODING_BASE64.equalsIgnoreCase(encoding)) {
                 content = Base64.decodeStr(content);
             }
-            if (JsonUtil.isJson(content)) {
+            if (JsonHelper.isJson(content)) {
                 JSONObject jsonContent = JSONObject.parseObject(content);
                 List<String> defaultItems = new ArrayList<>();
                 defaultItems.add("code");
@@ -259,7 +259,7 @@ public class Har2Case extends Command {
                     }
                 }
             } else {
-                MyLog.warn("MIME type returned is application/json, but response content {} cannot be JSON", content);
+                LogHelper.warn("MIME type returned is application/json, but response content {} cannot be JSON", content);
             }
         }
     }

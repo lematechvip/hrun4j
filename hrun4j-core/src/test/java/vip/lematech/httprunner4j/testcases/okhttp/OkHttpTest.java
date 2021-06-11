@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ejlchina.okhttps.HttpResult;
 import com.ejlchina.okhttps.OkHttps;
 import com.google.common.collect.Maps;
-import vip.lematech.httprunner4j.widget.log.MyLog;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -30,11 +30,11 @@ public class OkHttpTest {
                 .charset(Charset.defaultCharset())
                 .addBodyPara("sign", "8d21d6fa4d84fb1b21212913ca76280bf8241f06")
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         String body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         JSONObject jsonObject = JSONObject.parseObject(body);
         JSONObject dataObject = (JSONObject) jsonObject.get("data");
         Assert.assertNotNull(dataObject);
@@ -55,11 +55,11 @@ public class OkHttpTest {
                 .addBodyPara("name", "lematech")
                 .addBodyPara("password", "qweqwe123")
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         String body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         JSONObject jsonObject = JSONObject.parseObject(body);
         Object code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -80,11 +80,11 @@ public class OkHttpTest {
                 .addBodyPara("name", "lematech")
                 .addBodyPara("password", "qweqwe123")
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         String body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         JSONObject jsonObject = JSONObject.parseObject(body);
         Object code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -94,11 +94,11 @@ public class OkHttpTest {
                 .charset(Charset.defaultCharset())
                 .addPathPara("uid", uid)
                 .get();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         jsonObject = JSONObject.parseObject(body);
         code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -119,11 +119,11 @@ public class OkHttpTest {
                 .addBodyPara("name", "lematech")
                 .addBodyPara("password", "qweqwe123")
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         String body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         JSONObject jsonObject = JSONObject.parseObject(body);
         Object code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -134,11 +134,11 @@ public class OkHttpTest {
                 .addPathPara("uid", uid)
                 .addBodyPara("password", "123456")
                 .put();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         jsonObject = JSONObject.parseObject(body);
         code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -158,11 +158,11 @@ public class OkHttpTest {
                 .addBodyPara("name", "lematech")
                 .addBodyPara("password", "qweqwe123")
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         String body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         JSONObject jsonObject = JSONObject.parseObject(body);
         Object code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
@@ -171,11 +171,11 @@ public class OkHttpTest {
                 .addFilePara("file1", new File("/Users/Leaf/Documents/05-Ark/lema/httprunner/httprunner4j/hrun4j-test-server/src/main/resources/application.yml"))
                 .addFilePara("file2", new File("/Users/Leaf/Documents/05-Ark/lema/httprunner/httprunner4j/hrun4j-test-server/src/main/resources/application-dev.yml"))
                 .post();
-        MyLog.info("响应状态码：{}", httpResult.getStatus());
-        MyLog.info("响应头：{}", httpResult.getHeaders());
-        MyLog.info("响应内容长度：{}", httpResult.getContentLength());
+        LogHelper.info("响应状态码：{}", httpResult.getStatus());
+        LogHelper.info("响应头：{}", httpResult.getHeaders());
+        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
         body = httpResult.getBody().toString();
-        MyLog.info("响应信息：{}", body);
+        LogHelper.info("响应信息：{}", body);
         jsonObject = JSONObject.parseObject(body);
         code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
