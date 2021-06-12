@@ -122,6 +122,12 @@ public class ObjectConverter {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, List.class);
                 ((List) subFieldValue).addAll((List) fieldValue);
                 setMethod.invoke(targetObj, subFieldValue);
+            } else if (subAttributeClass == Integer.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Integer.class);
+                setMethod.invoke(targetObj, fieldValue);
+            } else if (subAttributeClass == Double.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Double.class);
+                setMethod.invoke(targetObj, fieldValue);
             } else if (subAttributeClass == JSONObject.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, JSONObject.class);
                 setMethod.invoke(targetObj, subFieldValue);
@@ -130,14 +136,8 @@ public class ObjectConverter {
                 RequestEntity targetRequestEntity = (RequestEntity) objectsExtendsPropertyValue(subFieldValue, fieldValue);
                 setMethod.invoke(targetObj, targetRequestEntity);
             } else if (subAttributeClass == Object.class) {
-                if (subFieldValue instanceof Map && fieldValue instanceof Map) {
-                    Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                    setMethod.invoke(targetObj, mapExtendsKeyValue((Map) fieldValue, (Map) subFieldValue));
-                } else if (subFieldValue instanceof List && fieldValue instanceof List) {
-                    Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                    ((List) subFieldValue).addAll((List) fieldValue);
-                    setMethod.invoke(targetObj, subFieldValue);
-                }
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
+                setMethod.invoke(targetObj, fieldValue);
             }
         } catch (NoSuchMethodException e) {
             String exceptionMsg = String.format("No such method exception %s", e.getMessage());
@@ -177,6 +177,12 @@ public class ObjectConverter {
             } else if (subAttributeClass == Map.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, Map.class);
                 setMethod.invoke(targetObj, fieldValue);
+            } else if (subAttributeClass == Integer.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Integer.class);
+                setMethod.invoke(targetObj, fieldValue);
+            } else if (subAttributeClass == Double.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Double.class);
+                setMethod.invoke(targetObj, fieldValue);
             } else if (subAttributeClass == Boolean.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, Boolean.class);
                 setMethod.invoke(targetObj, fieldValue);
@@ -184,13 +190,8 @@ public class ObjectConverter {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, RequestEntity.class);
                 setMethod.invoke(targetObj, fieldValue);
             } else if (subAttributeClass == Object.class) {
-                if (fieldValue instanceof Map) {
-                    Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                    setMethod.invoke(targetObj, fieldValue);
-                } else if (fieldValue instanceof List) {
-                    Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                    setMethod.invoke(targetObj, fieldValue);
-                }
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
+                setMethod.invoke(targetObj, fieldValue);
             }
         } catch (NoSuchMethodException e) {
             String exceptionMsg = String.format("No such method exception %s", e.getMessage());

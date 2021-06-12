@@ -61,6 +61,51 @@
                 }
               ]
             },
+            "request": {
+              "description": "define api request directly",
+              "$ref": "resource:/schemas/common.json#/definitions/request"
+            },
+            "validate": {
+              "$ref": "resource:/schemas/common.json#/definitions/validate"
+            },
+            "setup_hooks": {
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
+            },
+            "teardown_hooks": {
+              "$ref": "resource:/schemas/common.json#/definitions/hook"
+            }
+          },
+          "required": [
+            "name",
+            "api",
+            "request"
+          ]
+        },
+        {
+          "properties": {
+            "name": {
+              "$ref": "resource:/schemas/common.json#/definitions/name"
+            },
+            "api": {
+              "description": "api reference, value is api file relative path",
+              "type": "string"
+            },
+            "variables": {
+              "$ref": "resource:/schemas/common.json#/definitions/variables"
+            },
+            "extract": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "$ref": "resource:/schemas/common.json#/definitions/extract"
+                }
+              ]
+            },
             "validate": {
               "$ref": "resource:/schemas/common.json#/definitions/validate"
             },

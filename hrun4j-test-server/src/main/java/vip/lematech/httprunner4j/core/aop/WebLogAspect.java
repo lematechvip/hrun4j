@@ -1,12 +1,12 @@
 package vip.lematech.httprunner4j.core.aop;
 
 import com.google.gson.Gson;
-import vip.lematech.httprunner4j.core.util.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+import vip.lematech.httprunner4j.core.helper.ApplicationContextHelper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 @Slf4j
 public class WebLogAspect {
-    @Pointcut("execution(public * io.lematech.httprunner4j.controller.*.*(..))")
+    @Pointcut("execution(public * vip.lematech.httprunner4j.controller.*.*(..))")
     public void webLog() {
 
     }
@@ -27,7 +27,7 @@ public class WebLogAspect {
      */
     @Before("webLog()")
     public void deBefore(JoinPoint joinPoint) {
-        HttpServletRequest request = ApplicationContextUtil.getHttpServletRequest();
+        HttpServletRequest request = ApplicationContextHelper.getHttpServletRequest();
         log.info("========================================== 请求调用开始 ==========================================");
         log.info("请求地址: {}", request.getRequestURL().toString());
         log.info("请求方法: {}", request.getMethod());

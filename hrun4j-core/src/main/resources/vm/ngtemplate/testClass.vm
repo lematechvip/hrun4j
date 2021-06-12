@@ -1,8 +1,8 @@
 package $pkgName;
 
-import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
-import vip.lematech.httprunner4j.entity.testcase.TestCase;
-import vip.lematech.httprunner4j.base.TestBase;
+import TestCaseExecutorEngine;
+import TestCase;
+import TestBase;
 import org.testng.annotations.Test;
 
 public class $className extends TestBase {

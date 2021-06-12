@@ -2,10 +2,10 @@ package vip.lematech.httprunner4j.cli.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import vip.lematech.httprunner4j.cli.constant.CliConstants;
+import vip.lematech.httprunner4j.cli.testsuite.TemplateEngine;
 import vip.lematech.httprunner4j.cli.model.scaffolding.ApplicationInfo;
 import vip.lematech.httprunner4j.cli.model.scaffolding.ProjectInfo;
 import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
-import vip.lematech.httprunner4j.cli.testsuite.TemplateEngine;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.helper.LogHelper;

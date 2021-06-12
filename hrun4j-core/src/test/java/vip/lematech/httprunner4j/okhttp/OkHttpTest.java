@@ -1,4 +1,4 @@
-package vip.lematech.httprunner4j.testcases.okhttp;
+package vip.lematech.httprunner4j.okhttp;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;

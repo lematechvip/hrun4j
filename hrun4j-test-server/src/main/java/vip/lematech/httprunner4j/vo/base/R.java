@@ -1,8 +1,8 @@
 package vip.lematech.httprunner4j.vo.base;
 
+import lombok.*;
 import vip.lematech.httprunner4j.core.enums.BusinessCode;
 import vip.lematech.httprunner4j.core.enums.CommonBusinessCode;
-import lombok.*;
 
 import java.io.Serializable;
 

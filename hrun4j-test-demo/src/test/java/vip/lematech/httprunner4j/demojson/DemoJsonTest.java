@@ -1,10 +1,9 @@
-package vip.lematech.httprunner4j.testcases.demojson;
+package vip.lematech.httprunner4j.demojson;
 
 import vip.lematech.httprunner4j.HttpRunner4j;
-import vip.lematech.httprunner4j.base.TestBase;
-import vip.lematech.httprunner4j.common.Constant;
-import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
+import vip.lematech.httprunner4j.testcases.common.Constant;
+import vip.lematech.httprunner4j.testcases.config.RunnerConfig;
+import vip.lematech.httprunner4j.testcases.core.engine.TestCaseExecutorEngine;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

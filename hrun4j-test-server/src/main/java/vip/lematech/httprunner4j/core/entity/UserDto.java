@@ -1,6 +1,5 @@
-package vip.lematech.httprunner4j.core;
+package vip.lematech.httprunner4j.core.entity;
 
-import vip.lematech.httprunner4j.core.entity.User;
 import lombok.Data;
 
 /**

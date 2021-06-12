@@ -1,11 +1,11 @@
-package vip.lematech.httprunner4j.core.util;
+package vip.lematech.httprunner4j.core.helper;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ApplicationContextUtil {
+public class ApplicationContextHelper {
     public static HttpServletRequest getHttpServletRequest() {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (servletRequestAttributes == null) {

@@ -1,13 +1,10 @@
 package vip.lematech.httprunner4j.functions;
 
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
 import vip.lematech.httprunner4j.helper.LogHelper;
-
 import java.util.Map;
 
 /**
@@ -16,7 +13,7 @@ import java.util.Map;
 */
 
 public class MyFunction {
-    public static final String TOKEN_KEY = "httprunner4j";
+
     /**
     * Custom function, set the function name will be implemented in the call supplement function
     */
@@ -53,20 +50,5 @@ public class MyFunction {
         }
     }
 
-    public static class SignGenerateFunction extends AbstractFunction {
-        @Override
-        public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
-            String sign;
-            StringBuffer content = new StringBuffer();
-            content.append(arg1.getValue(env)).append(arg2.getValue(env)).append(arg3.getValue(env));
-            String crypContent = content.toString();
-            sign = SecureUtil.hmac(HmacAlgorithm.HmacSHA1, TOKEN_KEY).digestHex(crypContent);
-            LogHelper.info("加密秘钥：{},加密内容：{},生成的签名：{}", TOKEN_KEY, crypContent, sign);
-            return new AviatorString(sign);
-        }
-        @Override
-        public String getName() {
-            return "signGenerate";
-        }
-    }
+
 }

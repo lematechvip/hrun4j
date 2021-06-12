@@ -1,7 +1,9 @@
 package vip.lematech.httprunner4j.entity.http;
 
 
-import vip.lematech.httprunner4j.helper.LittleHelper;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
@@ -12,6 +14,9 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestEntity<T> {
     private String method;
     private String url;
@@ -35,23 +40,11 @@ public class RequestEntity<T> {
 
     private Map<String, Object> headers;
 
-    private Integer connectionRequestTimeout;
-
-    public Integer getConnectionRequestTimeout() {
-        return LittleHelper.s2ms(this.connectionRequestTimeout);
-    }
-
-    public Integer getConnectTimeout() {
-        return LittleHelper.s2ms(this.connectTimeout);
-    }
-
-    public Integer getSocketTimeout() {
-        return LittleHelper.s2ms(this.socketTimeout);
-    }
-
     private Integer connectTimeout;
 
-    private Integer socketTimeout;
+    private Integer writeTimeout;
+
+    private Integer readTimeout;
 
     /**
      * Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True

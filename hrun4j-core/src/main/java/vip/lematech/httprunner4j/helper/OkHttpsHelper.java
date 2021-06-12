@@ -12,9 +12,9 @@ import com.google.common.collect.Maps;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -182,17 +182,17 @@ public class OkHttpsHelper {
         return OkHttps.newBuilder()
                 .config((OkHttpClient.Builder builder) -> {
                     try {
-                        Integer connectionRequestTimeout = requestEntity.getConnectionRequestTimeout();
-                        if (!Objects.isNull(connectionRequestTimeout)) {
-                            builder.connectTimeout(connectionRequestTimeout, TimeUnit.SECONDS);
-                        }
                         Integer connectTimeout = requestEntity.getConnectTimeout();
                         if (!Objects.isNull(connectTimeout)) {
-                            builder.writeTimeout(connectTimeout, TimeUnit.SECONDS);
+                            builder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
                         }
-                        Integer socketTimeout = requestEntity.getSocketTimeout();
-                        if (!Objects.isNull(socketTimeout)) {
-                            builder.readTimeout(socketTimeout, TimeUnit.SECONDS);
+                        Integer writeTimeout = requestEntity.getWriteTimeout();
+                        if (!Objects.isNull(writeTimeout)) {
+                            builder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+                        }
+                        Integer readTimeout = requestEntity.getReadTimeout();
+                        if (!Objects.isNull(readTimeout)) {
+                            builder.readTimeout(readTimeout, TimeUnit.SECONDS);
                         }
                         builder.followRedirects(requestEntity.getAllowRedirects());
                         Map<String, Object> proxy = requestEntity.getProxy();
