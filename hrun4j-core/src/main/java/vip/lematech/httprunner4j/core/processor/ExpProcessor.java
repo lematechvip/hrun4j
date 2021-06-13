@@ -217,7 +217,6 @@ public class ExpProcessor<T> {
                     JSONObject jsonObject = JSON.parseObject((String) dynHandleContainsExpObject((T) JSON.toJSONString(fieldValue)), JSONObject.class);
                     setMethod.invoke(object, jsonObject);
                 }else {
-                    LogHelper.info("对象类型：{}",attributeClass.getClass());
                     log.debug("Current Type {} Data Not Processed", attributeClass);
                 }
             } catch (NoSuchMethodException e) {

@@ -4,7 +4,7 @@ package vip.lematech.httprunner4j.cli.commands;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import vip.lematech.httprunner4j.cli.testsuite.TestNGEngine;
+import vip.lematech.httprunner4j.cli.TestNGEngine;
 import vip.lematech.httprunner4j.config.Env;
 import vip.lematech.httprunner4j.config.NamespaceMap;
 import vip.lematech.httprunner4j.config.RunnerConfig;
@@ -137,7 +137,7 @@ public class Run extends Command {
             if (!StrUtil.isEmpty(extName)) {
                 namespace = JavaIdentifierHelper.formatFilePath(LittleHelper.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
             }
-            LogHelper.info("namespace:{}", namespace);
+            LogHelper.debug("namespace:{}", namespace);
             File dataFile = searcher.quicklySearchFile(caseRelativePath);
             TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                     .load(dataFile, TestCase.class);

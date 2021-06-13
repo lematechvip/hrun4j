@@ -13,6 +13,8 @@ import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 
 
@@ -96,39 +98,11 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
 
     @Override
     public void cliGenerator(String projectRoot, String projectName) {
-        VelocityContext context = new VelocityContext();
-
-        String ignoreFile = String.format("%s%s/.gitignore", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_API, ignoreFile, context);
-        LogHelper.info("创建配置文件 .gitignore {} 成功！", FileUtil.normalize(ignoreFile));
-
-        String getJokeApiYmlFile = String.format("%s%s/apis/getJoke.yml", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API, getJokeApiYmlFile, context);
-        LogHelper.info("创建getJoke.yml {} 成功！", FileUtil.normalize(getJokeApiYmlFile));
-
-        String getSingleJokeApiYmlFile = String.format("%s%s/apis/getSingleJoke.yml", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API, getSingleJokeApiYmlFile, context);
-        LogHelper.info("创建getSingleJoke {} 成功！", FileUtil.normalize(getSingleJokeApiYmlFile));
-
-        String getJokeTestCaseYmlFile = String.format("%s%s/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
-        LogHelper.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
-
-        String mockTestCaseYmlFile = String.format("%s%s/testcases/rap2/rap2Mock.yml", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API, mockTestCaseYmlFile, context);
-        LogHelper.info("创建rap2Mock.yml {} 成功！", FileUtil.normalize(mockTestCaseYmlFile));
-
-        String readmeFile = String.format("%s%s/ReadMe.md", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_CLI, readmeFile, context);
-        LogHelper.info("创建配置文件 ReadMe.md {} 成功！", FileUtil.normalize(readmeFile));
-
-        String testSuiteFile = String.format("%s%s/testsuite/testsuite.yml", projectRoot, projectName);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_CLI, testSuiteFile, context);
-        LogHelper.info("创建测试用例集 testsuite.yml {} 成功！", FileUtil.normalize(testSuiteFile));
-
-        String testDataFile = String.format("%s%s/data", projectRoot, projectName);
-        new File(testDataFile).mkdir();
-        LogHelper.info("脚手架工程初始化成功！");
+        File sourceFile = new File(this.getClass().getClassLoader().getResource("vm/scaffold/httprunner4j/cli").getFile());
+        String targetPath = new File(projectRoot,projectName).getAbsolutePath();
+        File targetFile = FileUtil.mkdir(targetPath);
+        FileUtil.copyContent(sourceFile,targetFile,true);
+        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",targetFile.getAbsolutePath());
     }
 
     @Override

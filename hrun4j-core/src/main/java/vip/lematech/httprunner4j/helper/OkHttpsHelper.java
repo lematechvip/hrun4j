@@ -37,14 +37,14 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpsHelper {
     private static String getValueEncoded(String val) {
         if (val == null) {
-            return "null";
+            return null;
         }
         String newValue = val.replace("\n", "");
         for (int i = 0, length = newValue.length(); i < length; i++) {
             char c = newValue.charAt(i);
             if (c <= '\u001f' || c >= '\u007f') {
                 try {
-                    return URLEncoder.encode(newValue, "UTF-8");
+                    return URLEncoder.encode(newValue, Constant.CHARSET_UTF_8);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

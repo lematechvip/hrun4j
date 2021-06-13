@@ -68,87 +68,87 @@ public class ObjectConverter {
     /**
      * objects extends property values
      *
-     * @param targetObj target object
-     * @param sourceObj source object
+     * @param baseObj Extended object
+     * @param extendedObj Base object
      * @return The object after processing
      */
-    public Object objectsExtendsPropertyValue(Object targetObj, Object sourceObj) {
-        if(Objects.isNull(targetObj) || Objects.isNull(sourceObj)){
+    public Object objectsExtendsPropertyValue(Object baseObj,Object extendedObj) {
+        if(Objects.isNull(baseObj) || Objects.isNull(extendedObj)){
             throw new DefinedException("The source and target objects cannot be null");
         }
-        if(targetObj.getClass() != sourceObj.getClass()){
+        if(baseObj.getClass() != extendedObj.getClass()){
             throw new DefinedException("The source object and the target object must belong to the same class");
         }
-        Field[] fields = getObjectAllFields(sourceObj);
+        Field[] fields = getObjectAllFields(extendedObj);
         int fieldLength = fields.length;
         for (int index = 0; index < fieldLength; index++) {
             String attributeName = fields[index].getName();
             Class attributeClass = fields[index].getType();
             String methodName = attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
-            Object fieldValue = getFieldValueByName(fields[index].getName(), sourceObj);
+            Object fieldValue = getFieldValueByName(fields[index].getName(), extendedObj);
             if (Objects.isNull(fieldValue)) {
                 continue;
             }
-            Field[] subFields = getObjectAllFields(targetObj);
+            Field[] subFields = getObjectAllFields(baseObj);
             int subFieldLength = subFields.length;
             for (int subIndex = 0; subIndex < subFieldLength; subIndex++) {
                 String subAttributeName = subFields[subIndex].getName();
                 Class subAttributeClass = subFields[subIndex].getType();
                 String subMethodName = subAttributeName.substring(0, 1).toUpperCase() + subAttributeName.substring(1);
                 if (methodName.equals(subMethodName) && subAttributeClass == attributeClass) {
-                    Object subFieldValue = getFieldValueByName(subFields[subIndex].getName(), targetObj);
+                    Object subFieldValue = getFieldValueByName(subFields[subIndex].getName(), baseObj);
                     LogHelper.debug("Parent Type：{},Parent Value：{},Parent Method Name：{},Child Type：{},Child Value：{},Child Method Name：{}", attributeClass, fieldValue, methodName, subAttributeClass, subFieldValue, subMethodName);
                     if (Objects.isNull(subFieldValue)) {
-                        subFieldValueIsNullAssignment(targetObj, subAttributeClass, methodName, fieldValue);
+                        subFieldValueIsNullAssignment(baseObj, subAttributeClass, methodName, fieldValue);
                     } else {
-                        subFieldValueIsNotNullAssignment(targetObj, subAttributeClass, methodName, fieldValue, subFieldValue);
+                        subFieldValueIsNotNullAssignment(baseObj, subAttributeClass, methodName, fieldValue, subFieldValue);
                     }
                     break;
                 }
             }
         }
-        return targetObj;
+        return baseObj;
     }
 
 
     /**
      * Assigns a value to an attribute whose child object is null
      *
-     * @param targetObj
+     * @param baseObj
      * @param subAttributeClass
      * @param methodName
      * @param fieldValue
      */
-    private void subFieldValueIsNotNullAssignment(Object targetObj, Class subAttributeClass, String methodName, Object fieldValue, Object subFieldValue) {
+    private void subFieldValueIsNotNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue, Object subFieldValue) {
         try {
             if (subAttributeClass == Map.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Map.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Map.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == String.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, String.class);
-                setMethod.invoke(targetObj, String.valueOf(fieldValue));
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, String.class);
+                setMethod.invoke(baseObj, String.valueOf(fieldValue));
             }else if (subAttributeClass == List.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, List.class);
-                setMethod.invoke(targetObj, subFieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, List.class);
+                setMethod.invoke(baseObj, subFieldValue);
             } else if (subAttributeClass == Integer.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Integer.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Integer.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Double.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Double.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Double.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == JSONObject.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, JSONObject.class);
-                setMethod.invoke(targetObj, subFieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, JSONObject.class);
+                setMethod.invoke(baseObj, subFieldValue);
             } else if (subAttributeClass == Boolean.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Boolean.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Boolean.class);
+                setMethod.invoke(baseObj, fieldValue);
             }else if (subAttributeClass == RequestEntity.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, RequestEntity.class);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, RequestEntity.class);
                 RequestEntity targetRequestEntity = (RequestEntity) objectsExtendsPropertyValue(subFieldValue, fieldValue);
-                setMethod.invoke(targetObj, targetRequestEntity);
+                setMethod.invoke(baseObj, targetRequestEntity);
             } else if (subAttributeClass == Object.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Object.class);
+                setMethod.invoke(baseObj, fieldValue);
             }
         } catch (NoSuchMethodException e) {
             String exceptionMsg = String.format("No such method exception %s", e.getMessage());
@@ -169,40 +169,40 @@ public class ObjectConverter {
     /**
      * Assigns a value to an attribute whose child object is null
      *
-     * @param targetObj
+     * @param baseObj
      * @param subAttributeClass
      * @param methodName
      * @param fieldValue
      */
-    private void subFieldValueIsNullAssignment(Object targetObj, Class subAttributeClass, String methodName, Object fieldValue) {
+    private void subFieldValueIsNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue) {
         try {
             if (subAttributeClass == String.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, String.class);
-                setMethod.invoke(targetObj, String.valueOf(fieldValue));
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, String.class);
+                setMethod.invoke(baseObj, String.valueOf(fieldValue));
             } else if (subAttributeClass == JSONObject.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, JSONObject.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, JSONObject.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == List.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, List.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, List.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Map.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Map.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Map.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Integer.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Integer.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Integer.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Double.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Double.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Double.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Boolean.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Boolean.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Boolean.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == RequestEntity.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, RequestEntity.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, RequestEntity.class);
+                setMethod.invoke(baseObj, fieldValue);
             } else if (subAttributeClass == Object.class) {
-                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Object.class);
-                setMethod.invoke(targetObj, fieldValue);
+                Method setMethod = baseObj.getClass().getMethod("set" + methodName, Object.class);
+                setMethod.invoke(baseObj, fieldValue);
             }
         } catch (NoSuchMethodException e) {
             String exceptionMsg = String.format("No such method exception %s", e.getMessage());

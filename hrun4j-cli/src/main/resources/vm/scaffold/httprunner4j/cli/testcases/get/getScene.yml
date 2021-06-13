@@ -22,7 +22,7 @@ teststeps:
       - equalTo: [$.body.args.website,http://lematech.vip]
       - equalTo: ["^website\":\"(.*?)\"$", website":"http://lematech.vip"]
   - name: Reference Api
-    api: apis/postman/get.yml
+    api: apis/get.yml
     variables:
       author: lematechvip
     validate:

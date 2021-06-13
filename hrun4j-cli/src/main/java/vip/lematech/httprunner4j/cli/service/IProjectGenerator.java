@@ -18,6 +18,9 @@ public interface IProjectGenerator {
 
     /**
      * HttpRunner4J CLi dependency generation
+     *
+     * @param projectRoot
+     * @param projectName
      */
     void cliGenerator(String projectRoot, String projectName);
 
