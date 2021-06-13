@@ -201,6 +201,7 @@ public class ExpProcessor<T> {
                 if (StrUtil.isEmptyIfStr(fieldValue)) {
                     continue;
                 }
+
                 if (attributeClass == String.class) {
                     Method setMethod = object.getClass().getMethod("set" + methodName, String.class);
                     setMethod.invoke(object, dynHandleContainsExpObject((T) fieldValue));
@@ -211,7 +212,12 @@ public class ExpProcessor<T> {
                     Method setMethod = object.getClass().getMethod("set" + methodName, JSONObject.class);
                     JSONObject jsonObject = JSON.parseObject((String) dynHandleContainsExpObject((T) JSON.toJSONString(fieldValue)), JSONObject.class);
                     setMethod.invoke(object, jsonObject);
-                } else {
+                } else if (object.getClass() == RequestEntity.class && methodName.equals("Json")) {
+                    Method setMethod = object.getClass().getMethod("set" + methodName, Object.class);
+                    JSONObject jsonObject = JSON.parseObject((String) dynHandleContainsExpObject((T) JSON.toJSONString(fieldValue)), JSONObject.class);
+                    setMethod.invoke(object, jsonObject);
+                }else {
+                    LogHelper.info("对象类型：{}",attributeClass.getClass());
                     log.debug("Current Type {} Data Not Processed", attributeClass);
                 }
             } catch (NoSuchMethodException e) {

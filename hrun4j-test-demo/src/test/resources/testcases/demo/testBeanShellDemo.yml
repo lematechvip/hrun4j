@@ -13,6 +13,7 @@ teststeps:
         os_platform: MacOS
         app_version: 1.0.0
         bsh_result: ${result}
+        test: "${helloWorld()}"
       json:
         sign: eeb00001855491a62e72e340de54db74eaf2cb43
     validate:

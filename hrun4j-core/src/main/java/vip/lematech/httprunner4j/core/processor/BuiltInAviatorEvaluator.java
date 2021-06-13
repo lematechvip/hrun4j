@@ -63,7 +63,7 @@ public class BuiltInAviatorEvaluator {
      */
     public static class BuiltInFunctionHelloWorld extends AbstractFunction {
         @Override
-        public AviatorObject call() {
+        public AviatorObject call(Map<String, Object> env) {
             String output = "Hello,HttpRunner!!!";
             LogHelper.info(output);
             return new AviatorString(output);
