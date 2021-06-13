@@ -6,11 +6,11 @@
     </listeners>
     <test name="httprunner4j">
         <classes>
-            <class name="vip.lematech.httprunner4j.scene.SceneTest">
+            <class name="vip.lematech.httprunner4j.testcases.scene.SceneTest">
             </class>
-            <class name="vip.lematech.httprunner4j.demo.DemoTest">
+            <class name="vip.lematech.httprunner4j.testcases.demo.DemoTest">
             </class>
-            <class name="vip.lematech.httprunner4j.demojson.DemoJsonTest">
+            <class name="vip.lematech.httprunner4j.testcases.demojson.DemoJsonTest">
             </class>
         </classes>
     </test>

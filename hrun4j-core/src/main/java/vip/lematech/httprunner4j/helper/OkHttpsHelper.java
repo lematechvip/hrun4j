@@ -9,11 +9,11 @@ import com.ejlchina.okhttps.OkHttps;
 import com.ejlchina.okhttps.internal.SyncHttpTask;
 
 import com.google.common.collect.Maps;
+import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.config.i18n.I18NFactory;
-import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 
 import okhttp3.Headers;

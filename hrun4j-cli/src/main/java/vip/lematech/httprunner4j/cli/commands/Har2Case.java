@@ -11,7 +11,7 @@ import com.sangupta.jerry.util.UriUtils;
 import vip.lematech.httprunner4j.cli.constant.CliConstants;
 import vip.lematech.httprunner4j.cli.util.HarUtils;
 import vip.lematech.httprunner4j.cli.handler.Command;
-import vip.lematech.httprunner4j.cli.model.har.*;
+import vip.lematech.httprunner4j.model.har.*;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.testcase.Config;

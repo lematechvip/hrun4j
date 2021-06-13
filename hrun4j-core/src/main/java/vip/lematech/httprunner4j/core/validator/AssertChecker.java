@@ -7,11 +7,11 @@ import com.google.common.collect.Maps;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.i18n.I18NFactory;
-import vip.lematech.httprunner4j.core.processor.DataExtractor;
-import vip.lematech.httprunner4j.core.processor.ExpProcessor;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 import vip.lematech.httprunner4j.entity.testcase.Comparator;
 import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.core.processor.DataExtractor;
+import vip.lematech.httprunner4j.core.processor.ExpProcessor;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.InvocationTargetException;

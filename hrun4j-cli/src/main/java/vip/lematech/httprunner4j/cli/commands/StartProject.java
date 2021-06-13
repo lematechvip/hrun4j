@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import vip.lematech.httprunner4j.cli.constant.CliConstants;
 import vip.lematech.httprunner4j.cli.service.impl.ProjectGeneratorImpl;
 import vip.lematech.httprunner4j.cli.handler.Command;
-import vip.lematech.httprunner4j.cli.model.scaffolding.ProjectInfo;
+import vip.lematech.httprunner4j.model.scaffolding.ProjectInfo;
 import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;

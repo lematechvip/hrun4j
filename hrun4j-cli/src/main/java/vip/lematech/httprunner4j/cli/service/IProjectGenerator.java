@@ -1,6 +1,6 @@
 package vip.lematech.httprunner4j.cli.service;
 
-import vip.lematech.httprunner4j.cli.model.scaffolding.ProjectInfo;
+import vip.lematech.httprunner4j.model.scaffolding.ProjectInfo;
 
 /**
  * @author lematech@foxmail.com

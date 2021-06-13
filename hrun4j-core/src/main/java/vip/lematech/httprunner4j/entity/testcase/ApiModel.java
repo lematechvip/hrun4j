@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import vip.lematech.httprunner4j.entity.base.BaseModel;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
+import vip.lematech.httprunner4j.entity.base.BaseModel;
 import lombok.Data;
 
 import java.util.List;

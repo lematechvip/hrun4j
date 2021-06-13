@@ -22,9 +22,8 @@ import java.util.Map;
  */
 
 public class BuildInFunctions {
-
     public static final String TOKEN_KEY = "httprunner4j";
-    public static class ReuqestAndResponseHook extends AbstractFunction {
+    public static class RequestAndResponseHook extends AbstractFunction {
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
             LogHelper.info("当前请求详细信息：{}", env.get("$REQUEST"));

@@ -98,7 +98,7 @@ public class ExpProcessor<T> {
                 if (matchList.size() == 1) {
                     String onlyExp = String.format("${%s}", matchExp);
                     if (exp.equals(onlyExp)) {
-                        return vip.lematech.httprunner4j.core.processor.BuiltInAviatorEvaluator.execute(matchExp, currentVariable);
+                        return BuiltInAviatorEvaluator.execute(matchExp, currentVariable);
                     } else {
                         exp = getExpString(exp, matchList);
                     }
@@ -118,7 +118,7 @@ public class ExpProcessor<T> {
     private String getExpString(String exp, List<String> matchList) {
         List<String> matchedList = new ArrayList<>();
         for (String subExp : matchList) {
-            Object result = vip.lematech.httprunner4j.core.processor.BuiltInAviatorEvaluator.execute(subExp, currentVariable);
+            Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
             String handleResult = String.valueOf(result);
             matchedList.add(handleResult);
         }
@@ -246,7 +246,7 @@ public class ExpProcessor<T> {
             List tempList = (List) obj;
             for (Object elementObj : tempList) {
                 if (elementObj instanceof String) {
-                    Object executeResult = vip.lematech.httprunner4j.core.processor.BuiltInAviatorEvaluator.execute(String.valueOf(obj), this.currentVariable);
+                    Object executeResult = BuiltInAviatorEvaluator.execute(String.valueOf(obj), this.currentVariable);
                     if (executeResult instanceof Map) {
                         result.putAll((Map) executeResult);
                     }

@@ -1,8 +1,8 @@
 package vip.lematech.httprunner4j.config;
 
-import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.core.loader.Searcher;
 import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.common.Constant;
 
 import java.io.File;
 import java.io.FileInputStream;

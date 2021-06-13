@@ -64,25 +64,25 @@ public class ObjectConverterTest {
                 .stream(true)
                 .url("sourceUrl")
                 .writeTimeout(20)
-                .readTimeout(20)
                 .headers(sourceMap)
                 .build();
-        TestStep testStep = new TestStep();
-        testStep.setRequest(sourceRequestEntity);
-        testStep.setName("Name---------");
-        testStep.setSetupHooks("testSetupHook");
-        testStep.setTeardownHooks("teardownHooks");
-        ApiModel apiResultModel = (ApiModel)objectConverter.objectsExtendsPropertyValue(targetModel,testStep);
-        LogHelper.info(JSON.toJSONString(apiResultModel));
-        Assert.assertEquals(apiResultModel.getName(),testStep.getName());
-        Assert.assertEquals(apiResultModel.getName(),targetModel.getName());
-        Assert.assertEquals(apiResultModel.getRequest().getReadTimeout(),targetModel.getRequest().getReadTimeout());
-        Assert.assertEquals(apiResultModel.getRequest().getWriteTimeout(),targetModel.getRequest().getWriteTimeout());
-        Assert.assertEquals(apiResultModel.getRequest().getConnectTimeout(),testStep.getRequest().getConnectTimeout());
-        Assert.assertEquals(apiResultModel.getExtract(),targetModel.getExtract());
-        Assert.assertEquals(apiResultModel.getValidate(),targetModel.getValidate());
-
-        Assert.assertEquals(apiResultModel.getTeardownHooks(),testStep.getTeardownHooks());
-        Assert.assertEquals(apiResultModel.getSetupHooks(),testStep.getSetupHooks());
+        TestStep sourceTestStep = new TestStep();
+        sourceTestStep.setRequest(sourceRequestEntity);
+        sourceTestStep.setName("Name---------");
+        sourceTestStep.setSetupHooks("testSetupHook");
+        sourceTestStep.setTeardownHooks("teardownHooks");
+        LogHelper.info("源对象：{}",JSON.toJSONString(sourceTestStep));
+        TestStep targetStep = objectConverter.apiModel2TestStep(targetModel);
+        LogHelper.info("目标：{}",JSON.toJSONString(targetStep));
+        TestStep apiResultModel = (TestStep)objectConverter.objectsExtendsPropertyValue(targetStep,sourceTestStep);
+        LogHelper.info("结果：{}",JSON.toJSONString(apiResultModel));
+        Assert.assertEquals(apiResultModel.getName(),sourceTestStep.getName());
+        Assert.assertEquals(apiResultModel.getRequest().getReadTimeout(), targetStep.getRequest().getReadTimeout());
+        Assert.assertEquals(apiResultModel.getRequest().getWriteTimeout(),sourceTestStep.getRequest().getWriteTimeout());
+        Assert.assertEquals(apiResultModel.getRequest().getConnectTimeout(),sourceTestStep.getRequest().getConnectTimeout());
+        Assert.assertEquals(apiResultModel.getExtract(),targetStep.getExtract());
+        Assert.assertEquals(apiResultModel.getValidate(),targetStep.getValidate());
+        Assert.assertEquals(apiResultModel.getTeardownHooks(),sourceTestStep.getTeardownHooks());
+        Assert.assertEquals(apiResultModel.getSetupHooks(),sourceTestStep.getSetupHooks());
     }
 }

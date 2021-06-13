@@ -73,6 +73,12 @@ public class ObjectConverter {
      * @return The object after processing
      */
     public Object objectsExtendsPropertyValue(Object targetObj, Object sourceObj) {
+        if(Objects.isNull(targetObj) || Objects.isNull(sourceObj)){
+            throw new DefinedException("The source and target objects cannot be null");
+        }
+        if(targetObj.getClass() != sourceObj.getClass()){
+            throw new DefinedException("The source object and the target object must belong to the same class");
+        }
         Field[] fields = getObjectAllFields(sourceObj);
         int fieldLength = fields.length;
         for (int index = 0; index < fieldLength; index++) {
@@ -117,10 +123,12 @@ public class ObjectConverter {
         try {
             if (subAttributeClass == Map.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, Map.class);
-                setMethod.invoke(targetObj, mapExtendsKeyValue((Map) fieldValue, (Map) subFieldValue));
-            } else if (subAttributeClass == List.class) {
+                setMethod.invoke(targetObj, fieldValue);
+            } else if (subAttributeClass == String.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, String.class);
+                setMethod.invoke(targetObj, String.valueOf(fieldValue));
+            }else if (subAttributeClass == List.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, List.class);
-                ((List) subFieldValue).addAll((List) fieldValue);
                 setMethod.invoke(targetObj, subFieldValue);
             } else if (subAttributeClass == Integer.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, Integer.class);
@@ -131,7 +139,10 @@ public class ObjectConverter {
             } else if (subAttributeClass == JSONObject.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, JSONObject.class);
                 setMethod.invoke(targetObj, subFieldValue);
-            } else if (subAttributeClass == RequestEntity.class) {
+            } else if (subAttributeClass == Boolean.class) {
+                Method setMethod = targetObj.getClass().getMethod("set" + methodName, Boolean.class);
+                setMethod.invoke(targetObj, fieldValue);
+            }else if (subAttributeClass == RequestEntity.class) {
                 Method setMethod = targetObj.getClass().getMethod("set" + methodName, RequestEntity.class);
                 RequestEntity targetRequestEntity = (RequestEntity) objectsExtendsPropertyValue(subFieldValue, fieldValue);
                 setMethod.invoke(targetObj, targetRequestEntity);

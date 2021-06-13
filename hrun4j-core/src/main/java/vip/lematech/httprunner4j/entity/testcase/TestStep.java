@@ -1,8 +1,8 @@
 package vip.lematech.httprunner4j.entity.testcase;
 
 import lombok.*;
-import vip.lematech.httprunner4j.entity.base.BaseModel;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
+import vip.lematech.httprunner4j.entity.base.BaseModel;
 
 import java.util.List;
 import java.util.Map;
