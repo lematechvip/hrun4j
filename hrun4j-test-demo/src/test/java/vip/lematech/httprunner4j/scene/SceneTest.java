@@ -1,7 +1,7 @@
 package vip.lematech.httprunner4j.scene;
 
 import vip.lematech.httprunner4j.HttpRunner4j;
-import vip.lematech.httprunner4j.testcases.core.engine.TestCaseExecutorEngine;
+import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
 
