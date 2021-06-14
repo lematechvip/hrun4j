@@ -117,7 +117,6 @@ public class TestCaseRunner {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
             LogHelper.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);

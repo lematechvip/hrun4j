@@ -35,6 +35,13 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class OkHttpsHelper {
+
+    /**
+     * Prevent request headers from containing special characters
+     *
+     * @param val
+     * @return
+     */
     private static String getValueEncoded(String val) {
         if (val == null) {
             return null;
@@ -90,6 +97,11 @@ public class OkHttpsHelper {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param requestEntity
+     * @return
+     */
     public static ResponseEntity executeReq(RequestEntity requestEntity) {
         String method = requestEntity.getMethod();
         String url = requestEntity.getUrl();
@@ -97,6 +109,46 @@ public class OkHttpsHelper {
         LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.url"), url));
         LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.method"), method));
         SyncHttpTask syncHttpTask = getSyncHttpTask(requestEntity, url);
+        initRequestParameter(requestEntity, headers, syncHttpTask);
+        HttpResult httpResult = null;
+        long startTime = System.currentTimeMillis();
+        if (HTTP.GET.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.get();
+        } else if (HTTP.POST.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.post();
+        } else if (HTTP.DELETE.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.delete();
+        } else if (HTTP.PUT.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.put();
+        } else if (HTTP.HEAD.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.head();
+        } else if (HTTP.PATCH.equalsIgnoreCase(method)) {
+            httpResult = syncHttpTask.patch();
+        }
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        if (Objects.isNull(httpResult)) {
+            throw new DefinedException("The interface response information cannot be empty!");
+        }
+        Boolean streamObj = requestEntity.getStream();
+        ResponseEntity responseEntity = wrapperResponseEntity(httpResult, streamObj, elapsedTime);
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), LittleHelper.emptyIfNull(responseEntity.getStatusCode())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.body"), LittleHelper.emptyIfNull(responseEntity.getBody())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.content.length"), LittleHelper.emptyIfNull(responseEntity.getContentLength())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.time"), LittleHelper.emptyIfNull(responseEntity.getTime())));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.header"), LittleHelper.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
+        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), LittleHelper.emptyIfNull(responseEntity.getCookies())));
+        return responseEntity;
+    }
+
+    /**
+     * Initialize the request parameters
+     *
+     * @param requestEntity
+     * @param headers
+     * @param syncHttpTask
+     */
+    private static void initRequestParameter(RequestEntity requestEntity, Map<String, String> headers, SyncHttpTask syncHttpTask) {
         Map<String, Object> urlPara = requestEntity.getParams();
         if (MapUtil.isNotEmpty(urlPara)) {
             LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.parameter"), urlPara));
@@ -147,37 +199,14 @@ public class OkHttpsHelper {
                 }
             }
         }
-        HttpResult httpResult = null;
-        long startTime = System.currentTimeMillis();
-        if (HTTP.GET.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.get();
-        } else if (HTTP.POST.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.post();
-        } else if (HTTP.DELETE.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.delete();
-        } else if (HTTP.PUT.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.put();
-        } else if (HTTP.HEAD.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.head();
-        } else if (HTTP.PATCH.equalsIgnoreCase(method)) {
-            httpResult = syncHttpTask.patch();
-        }
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        if (Objects.isNull(httpResult)) {
-            throw new DefinedException("The interface response information cannot be empty!");
-        }
-        Boolean streamObj = requestEntity.getStream();
-        ResponseEntity responseEntity = wrapperResponseEntity(httpResult, streamObj, elapsedTime);
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), LittleHelper.emptyIfNull(responseEntity.getStatusCode())));
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.body"), LittleHelper.emptyIfNull(responseEntity.getBody())));
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.content.length"), LittleHelper.emptyIfNull(responseEntity.getContentLength())));
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.time"), LittleHelper.emptyIfNull(responseEntity.getTime())));
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.header"), LittleHelper.emptyIfNull(JSON.toJSONString(responseEntity.getHeaders()))));
-        LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.cookie"), LittleHelper.emptyIfNull(responseEntity.getCookies())));
-        return responseEntity;
     }
 
+    /**
+     *
+     * @param requestEntity
+     * @param url
+     * @return
+     */
     private static SyncHttpTask getSyncHttpTask(RequestEntity requestEntity, String url) {
         return OkHttps.newBuilder()
                 .config((OkHttpClient.Builder builder) -> {
@@ -210,6 +239,13 @@ public class OkHttpsHelper {
                 }).build().sync(url);
     }
 
+    /**
+     *
+     * @param httpResult
+     * @param stream
+     * @param elapsedTime
+     * @return
+     */
     private static ResponseEntity wrapperResponseEntity(HttpResult httpResult
             , boolean stream, long elapsedTime) {
         ResponseEntity responseEntity = new ResponseEntity();

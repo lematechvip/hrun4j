@@ -35,12 +35,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * The <code>har2case</code> command.
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Har2Yml
- * @description The <code>har2case</code> command.
- * @created 2021/4/18 7:53 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 public class Har2Case extends Command {
 

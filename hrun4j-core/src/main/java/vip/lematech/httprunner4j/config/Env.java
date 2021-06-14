@@ -55,10 +55,12 @@ public class Env {
                 if(FileUtil.exist(searchFile)){
                     properties.load(new FileInputStream(searchFile));
                     envMap.putAll((Map) properties);
+                }else{
+                    String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
+                    LogHelper.warn(exceptionMsg);
                 }
             } catch (Exception e) {
-                String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
-                LogHelper.warn(exceptionMsg);
+                LogHelper.error("An error occurred loading the.env file");
             }
         }
 

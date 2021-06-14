@@ -13,8 +13,6 @@ import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Arrays;
 
 
@@ -114,60 +112,41 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         VelocityContext context = new VelocityContext();
         context.put("application", applicationInfo);
         context.put("projectInfo", projectInfo);
-
         String pomPath = String.format("%s%s/pom.xml", projectRoot, projectInfo.getArtifactId());
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_POM_FILE_PATH_FOR_API, pomPath, context);
         LogHelper.info("创建配置文件 pom.xml {} 成功！！", FileUtil.normalize(pomPath));
-
-        String ignoreFile = String.format("%s%s/.gitignore", projectRoot, artifactId);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_API, ignoreFile, context);
-        LogHelper.info("创建配置文件 .gitignore {} 成功！", FileUtil.normalize(ignoreFile));
-
-        String readmeFile = String.format("%s%s/ReadMe.md", projectRoot, artifactId);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API, readmeFile, context);
-        LogHelper.info("创建配置文件 ReadMe.md {} 成功！", FileUtil.normalize(readmeFile));
-
-        String testSuiteFile = String.format("%s%s/src/test/java/resources/testsuite/testsuite.xml", projectRoot, artifactId, packagePath);
+        String testSuiteFile = String.format("%s%s/src/test/resources/testsuite/testsuite.xml", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API, testSuiteFile, context);
         LogHelper.info("创建测试集testsuite.xml {} 成功！", FileUtil.normalize(testSuiteFile));
-
-        String testSuiteJokeFile = String.format("%s%s/src/test/java/resources/testsuite/testsuite_joke.xml", projectRoot, artifactId);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_JOKE_FILE_PATH_FOR_API, testSuiteJokeFile, context);
-        LogHelper.info("创建测试集testsuite_joke.xml {} 成功！", FileUtil.normalize(testSuiteJokeFile));
-
-
+        String testSuiteJokeFile = String.format("%s%s/src/test/resources/testsuite/testsuite_all.xml", projectRoot, artifactId);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_ALL_FILE_PATH_FOR_API, testSuiteJokeFile, context);
+        LogHelper.info("创建测试集testsuite_all.xml {} 成功！", FileUtil.normalize(testSuiteJokeFile));
         String httpRunner4jFile = String.format("%s%s/src/main/java/%s/HttpRunner4j.java", projectRoot, artifactId, packagePath);
         applicationInfo.setPackageName(String.format("%s", packageName));
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API, httpRunner4jFile, context);
-
-
-        String jokeTestFile = String.format("%s%s/src/test/java/%s/testcases/joke/JokeTest.java", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API, jokeTestFile, context);
-        LogHelper.info("创建测试类 JokeTest.java {} 成功！", FileUtil.normalize(jokeTestFile));
-
-        String mockTestFile = String.format("%s%s/src/test/java/%s/testcases/rap2/MockTest.java", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API, mockTestFile, context);
-        LogHelper.info("创建测试类 MockTest.java {} 成功！", FileUtil.normalize(mockTestFile));
-
-
-        String getJokeApiYmlFile = String.format("%s%s/src/test/java/resources/apis/getJoke.yml", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API, getJokeApiYmlFile, context);
-        LogHelper.info("创建getJoke.yml {} 成功！", FileUtil.normalize(getJokeApiYmlFile));
-
-        String getJokeTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/joke/lookTheJokeFromJokeList.yml", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API, getJokeTestCaseYmlFile, context);
-        LogHelper.info("创建lookTheJokeFromJokeList.yml {} 成功！", FileUtil.normalize(getJokeTestCaseYmlFile));
-
-        String mockTestCaseYmlFile = String.format("%s%s/src/test/java/resources/testcases/rap2/rap2Mock.yml", projectRoot, artifactId, packagePath);
-        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API, mockTestCaseYmlFile, context);
-        LogHelper.info("创建rap2Mock.yml {} 成功！", FileUtil.normalize(mockTestCaseYmlFile));
-
-        String functionFile = String.format("%s%s/src/main/java/%s/functions/JokeFunction.java", projectRoot, artifactId, packagePath);
+        String functionFile = String.format("%s%s/src/main/java/%s/functions/MyFunction.java", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FUNCTION_FILE_PATH_FOR_API, functionFile, context);
+        String getTestFile = String.format("%s%s/src/test/java/%s/testcases/get/GetTest.java", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API, getTestFile, context);
+        LogHelper.info("创建测试类 GetTest.vm {} 成功！", FileUtil.normalize(getTestFile));
+        String postTestFile = String.format("%s%s/src/test/java/%s/testcases/post/PostTest.java", projectRoot, artifactId, packagePath);
+        writeToFile(CliConstants.SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API, postTestFile, context);
+        LogHelper.info("创建测试类 PostTest.vm {} 成功！", FileUtil.normalize(postTestFile));
+        String resourcePath = "vm/scaffold/httprunner4j/pom/resources";
+        String targetResourcePath = String.format("%s%s/src/test/resources/", projectRoot, artifactId);
+        File targetFile = fileCopy(resourcePath, targetResourcePath);
+        String metaInfoPath = "vm/scaffold/httprunner4j/pom/meta-info";
+        String rootPath = String.format("%s%s", projectRoot, artifactId);
+        File metaFile = fileCopy(metaInfoPath, rootPath);
+        LogHelper.info("初始化.gitignore、readMe.md成功！ 文件路径：{}",metaFile.getAbsolutePath());
+        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",targetFile.getAbsolutePath());
+    }
 
-        String testDataFile = String.format("%s%s/src/test/java/resources/data", projectRoot, artifactId, packagePath);
-        new File(testDataFile).mkdir();
-        LogHelper.info("脚手架工程初始化成功！");
+    private File fileCopy(String sourcePath,String targetPath) {
+        File sourceFile = new File(this.getClass().getClassLoader().getResource(sourcePath).getFile());
+        File targetFile = FileUtil.mkdir(new File(targetPath).getAbsolutePath());
+        FileUtil.copyContent(sourceFile,targetFile,true);
+        return targetFile;
     }
 
     private ApplicationInfo getApplicationInfo(ProjectInfo projectInfo) {

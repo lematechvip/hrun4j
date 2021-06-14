@@ -15,13 +15,6 @@ teststeps:
     request:
       url: /get?website=${website}&project=${project}&author=${author}&page={page}
       method: GET
-    validate:
-      - equalTo: [status_code,200]
-      - equalTo: [headers.Content-Type,application/json; charset=utf-8]
-      - equalTo: [body.args.website,http://lematech.vip]
-      - equalTo: ["${author}", lematech]
-      - equalTo: [$.body.args.website,http://lematech.vip]
-      - equalTo: ["^website\":\"(.*?)\"$", website":"http://lematech.vip"]
     extract:
       - website: body.args.website
     output:
@@ -29,9 +22,17 @@ teststeps:
       - extract
     teardown_hooks:
       - ${tdFunction("This is a joke!")}
+    validate:
+      - equalTo: [status_code,200]
+      - equalTo: [headers.Content-Type,application/json; charset=utf-8]
+      - equalTo: [body.args.website,http://lematech.vip]
+      - equalTo: ["${author}", lematech]
+      - equalTo: [$.body.args.website,http://lematech.vip]
+      - equalTo: ["^website\":\"(.*?)\"$", website":"http://lematech.vip"]
   - name: Reference Api
     api: apis/get.yml
     variables:
-      author: ${website}
+      author: lematechvip
+      website: ${website}
     validate:
       - equalTo: [status_code,200]

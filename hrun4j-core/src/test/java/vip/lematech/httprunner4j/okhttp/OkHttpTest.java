@@ -129,7 +129,7 @@ public class OkHttpTest {
         Assert.assertEquals(code, "00");
         httpResult = OkHttps.sync(BASE_URL + "/api/user/{uid}")
                 .addHeader(header)
-                .bodyType(OkHttps.FORM_DATA)
+                .bodyType(OkHttps.JSON)
                 .charset(Charset.defaultCharset())
                 .addPathPara("uid", uid)
                 .addBodyPara("password", "123456")
@@ -143,43 +143,5 @@ public class OkHttpTest {
         code = jsonObject.get("code");
         Assert.assertEquals(code, "00");
     }
-
-    @Test
-    public void uploadFile() {
-        HashMap header = Maps.newHashMap();
-        header.put("device_sn", "2021032311113");
-        header.put("token", TOKEN);
-        int uid = RandomUtil.randomInt();
-        HttpResult httpResult = OkHttps.sync(BASE_URL + "/api/user/{uid}")
-                .addHeader(header)
-                .bodyType(OkHttps.JSON)
-                .charset(Charset.defaultCharset())
-                .addPathPara("uid", uid)
-                .addBodyPara("name", "lematech")
-                .addBodyPara("password", "qweqwe123")
-                .post();
-        LogHelper.info("响应状态码：{}", httpResult.getStatus());
-        LogHelper.info("响应头：{}", httpResult.getHeaders());
-        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
-        String body = httpResult.getBody().toString();
-        LogHelper.info("响应信息：{}", body);
-        JSONObject jsonObject = JSONObject.parseObject(body);
-        Object code = jsonObject.get("code");
-        Assert.assertEquals(code, "00");
-        httpResult = OkHttps.sync(BASE_URL + "/api/users/upload-image")
-                .addHeader(header)
-                .addFilePara("file1", new File("/Users/Leaf/Documents/05-Ark/lema/httprunner/httprunner4j/hrun4j-test-server/src/main/resources/application.yml"))
-                .addFilePara("file2", new File("/Users/Leaf/Documents/05-Ark/lema/httprunner/httprunner4j/hrun4j-test-server/src/main/resources/application-dev.yml"))
-                .post();
-        LogHelper.info("响应状态码：{}", httpResult.getStatus());
-        LogHelper.info("响应头：{}", httpResult.getHeaders());
-        LogHelper.info("响应内容长度：{}", httpResult.getContentLength());
-        body = httpResult.getBody().toString();
-        LogHelper.info("响应信息：{}", body);
-        jsonObject = JSONObject.parseObject(body);
-        code = jsonObject.get("code");
-        Assert.assertEquals(code, "00");
-    }
-
 
 }

@@ -6,12 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * List of all available commands.
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className AllCommands
- * @description List of all available commands.
- * @created 2021/4/18 5:38 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 public final class AllCommands {
     private AllCommands() {
