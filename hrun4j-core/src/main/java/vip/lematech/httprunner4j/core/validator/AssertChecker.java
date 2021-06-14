@@ -6,12 +6,12 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.core.processor.DataExtractor;
-import vip.lematech.httprunner4j.core.processor.ExpProcessor;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 import vip.lematech.httprunner4j.entity.testcase.Comparator;
-import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.core.processor.DataExtractor;
+import vip.lematech.httprunner4j.core.processor.ExpProcessor;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.InvocationTargetException;
@@ -94,7 +94,7 @@ public class AssertChecker {
      */
     public void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
-        Comparator comparator = buildComparator(objectMap);
+        vip.lematech.httprunner4j.entity.testcase.Comparator comparator = buildComparator(objectMap);
         String comparatorName = comparator.getComparator();
         if (StrUtil.isEmpty(comparatorName)) {
             throw new DefinedException("The validation method name cannot be empty");
@@ -139,8 +139,8 @@ public class AssertChecker {
      * @param objectMap Comparison object Meta
      * @return
      */
-    private Comparator buildComparator(Map<String, Object> objectMap) {
-        Comparator comparator = new Comparator();
+    private vip.lematech.httprunner4j.entity.testcase.Comparator buildComparator(Map<String, Object> objectMap) {
+        vip.lematech.httprunner4j.entity.testcase.Comparator comparator = new vip.lematech.httprunner4j.entity.testcase.Comparator();
         if (objectMap.containsKey(Constant.ASSERT_CHECK) && objectMap.containsKey(Constant.ASSERT_EXPECT)) {
             comparator = JSON.parseObject(JSON.toJSONString(objectMap), Comparator.class);
         } else {

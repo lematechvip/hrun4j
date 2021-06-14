@@ -1,11 +1,11 @@
 package vip.lematech.httprunner4j.core.aop;
 
 import cn.hutool.core.util.StrUtil;
-import vip.lematech.httprunner4j.core.annotation.ValidateRequest;
 import vip.lematech.httprunner4j.core.enums.CommonBusinessCode;
 import vip.lematech.httprunner4j.core.exception.PlatformException;
-import vip.lematech.httprunner4j.core.util.ApplicationContextUtil;
+import vip.lematech.httprunner4j.core.helper.ApplicationContextHelper;
 import vip.lematech.httprunner4j.service.TokenService;
+import vip.lematech.httprunner4j.core.annotation.ValidateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -37,7 +37,7 @@ public class RequestValidateAspect {
 
     @Before("@annotation(validateRequest)")
     public void doBefore(ValidateRequest validateRequest) {
-        HttpServletRequest request = ApplicationContextUtil.getHttpServletRequest();
+        HttpServletRequest request = ApplicationContextHelper.getHttpServletRequest();
         if (Objects.isNull(request)) {
             log.info("without request,skip");
             return;

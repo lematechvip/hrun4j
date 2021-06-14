@@ -1,10 +1,11 @@
 package vip.lematech.httprunner4j.entity.http;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import vip.lematech.httprunner4j.helper.LittleHelper;
-
 import java.util.Map;
 
 /**
@@ -13,6 +14,9 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestEntity<T> {
     @JSONField(ordinal = 2)
     private String method;
@@ -23,7 +27,7 @@ public class RequestEntity<T> {
      * 1、query string for request url
      */
     @JSONField(ordinal = 4)
-    private Map<String, Object> params;
+    private Map<String,Object> params;
     /**
      * 1、request body in json format
      * 2、request body in application/x-www-form-urlencoded format
@@ -43,31 +47,20 @@ public class RequestEntity<T> {
     private Map<String, Object> headers;
 
     @JSONField(ordinal = 8)
-    private Integer connectionRequestTimeout;
-
-    public Integer getConnectionRequestTimeout() {
-        return LittleHelper.s2ms(this.connectionRequestTimeout);
-    }
-
-    public Integer getConnectTimeout() {
-        return LittleHelper.s2ms(this.connectTimeout);
-    }
-
-    public Integer getSocketTimeout() {
-        return LittleHelper.s2ms(this.socketTimeout);
-    }
-
-    @JSONField(ordinal = 9)
     private Integer connectTimeout;
-
-    @JSONField(ordinal = 10)
-    private Integer socketTimeout;
 
     /**
      * Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True
      */
+
     @JSONField(ordinal = 11)
     private Boolean allowRedirects = true;
+    @JSONField(ordinal = 9)
+    private Integer writeTimeout;
+
+    @JSONField(ordinal = 10)
+    private Integer readTimeout;
+
 
     /**
      * request cookies

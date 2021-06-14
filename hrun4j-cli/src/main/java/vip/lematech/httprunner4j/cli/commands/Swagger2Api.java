@@ -27,9 +27,9 @@ import vip.lematech.httprunner4j.cli.handler.Command;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.testcase.ApiModel;
-import vip.lematech.httprunner4j.widget.log.MyLog;
-import vip.lematech.httprunner4j.widget.utils.FilesUtil;
-import vip.lematech.httprunner4j.widget.utils.JsonUtil;
+import vip.lematech.httprunner4j.helper.FilesHelper;
+import vip.lematech.httprunner4j.helper.JsonHelper;
+import vip.lematech.httprunner4j.helper.LogHelper;
 
 import java.io.*;
 import java.util.*;
@@ -62,9 +62,9 @@ public class Swagger2Api extends Command {
     public int execute(PrintWriter out, PrintWriter err) {
         if (!CliConstants.GENERATE_JSON_FORMAT.equalsIgnoreCase(format) && !CliConstants.GENERATE_YML_FORMAT.equalsIgnoreCase(format)) {
             String exceptionMsg = String.format("Specifies the generation format %s exception. Only - 2Y or - 2J format is supported,default set 2y", format);
-            MyLog.warn(exceptionMsg);
+            LogHelper.warn(exceptionMsg);
         }
-        MyLog.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
+        LogHelper.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
 
         String target;
         if (Objects.isNull(generateCaseDirectory)) {
@@ -73,7 +73,7 @@ public class Swagger2Api extends Command {
             if (!generateCaseDirectory.exists() || !generateCaseDirectory.isDirectory()) {
                 String exceptionMsg = String.format("The case directory %s does not exist"
                         , FileUtil.getAbsolutePath(generateCaseDirectory));
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
             target = FileUtil.getAbsolutePath(generateCaseDirectory);
@@ -90,18 +90,18 @@ public class Swagger2Api extends Command {
                 swagger = new SwaggerParser().read(pathOrUrl);
             } catch (Exception e) {
                 String exceptionMsg = String.format("Error reading swagger url:%s,Exception information:%s", pathOrUrl, e.getMessage());
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
         } else {
             try {
                 File f1 = new File(pathOrUrl);
-                FilesUtil.checkFileExists(f1);
+                FilesHelper.checkFileExists(f1);
                 String content = JSON.toJSONString(yaml.load(new FileInputStream(f1)));
                 swagger = new SwaggerParser().readWithInfo(content).getSwagger();
             } catch (FileNotFoundException e) {
                 String exceptionMsg = String.format("Error reading swagger file:%s,Exception information:%s", FileUtil.getAbsolutePath(pathOrUrl), e.getMessage());
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
         }
@@ -118,7 +118,7 @@ public class Swagger2Api extends Command {
                     result = new OpenAPIParser().readLocation(pathOrUrl, null, null);
                 } else {
                     File f1 = new File(pathOrUrl);
-                    FilesUtil.checkFileExists(f1);
+                    FilesHelper.checkFileExists(f1);
                     String content = JSON.toJSONString(yaml.load(new FileInputStream(f1)));
                     result = new OpenAPIParser().readContents(content, null, null);
                 }
@@ -127,7 +127,7 @@ public class Swagger2Api extends Command {
                 }
             } catch (FileNotFoundException e) {
                 String exceptionMsg = String.format("Error reading swagger file:%s,Exception information:%s", FileUtil.getAbsolutePath(pathOrUrl), e.getMessage());
-                MyLog.error(exceptionMsg);
+                LogHelper.error(exceptionMsg);
                 return 1;
             }
         }
@@ -177,13 +177,13 @@ public class Swagger2Api extends Command {
                 jsonFile = new File(path, String.format("%s.%s", api.getName(), "json"));
                 File fileParent = jsonFile.getParentFile();
                 FileUtil.mkdir(fileParent);
-                JsonUtil.jsonWriteToFile(jsonFile, data);
+                JsonHelper.jsonWriteToFile(jsonFile, data);
             }
-            MyLog.info("Generated successfully! File path:{}", FileUtil.getAbsolutePath(jsonFile));
+            LogHelper.info("Generated successfully! File path:{}", FileUtil.getAbsolutePath(jsonFile));
         } catch (IOException e) {
             e.printStackTrace();
             String exceptionMsg = String.format("Exception occurs when generating test cases. Exception information: %s", e.getMessage());
-            MyLog.error(exceptionMsg);
+            LogHelper.error(exceptionMsg);
         }
     }
 

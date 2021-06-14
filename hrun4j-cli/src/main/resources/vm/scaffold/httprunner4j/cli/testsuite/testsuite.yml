@@ -1,0 +1,10 @@
+config:
+  name: 测试用例集配置
+  base_url: https://api.apiopen.top
+  parameters:
+    varA: "${P(data/csvFile.csv)}"
+testcases:
+- name: Postman Echo GET Request
+  testcase: testcases/get/getScene.yml
+- name: Postman Echo postFormData And postRawText Request
+  testcase: testcases/post/postScene.yml

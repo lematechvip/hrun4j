@@ -24,9 +24,9 @@ teststeps:
       cookies:
         k1: K1
         k2: K2
-      connectionRequestTimeout: 1
-      connectTimeout: 1
-      socketTimeout: 1
+      connectionTimeout: 15
+      writeTimeout: 15
+      readTimeout: 15
       allowRedirects: true
       auth:
         auth1: xxauth1

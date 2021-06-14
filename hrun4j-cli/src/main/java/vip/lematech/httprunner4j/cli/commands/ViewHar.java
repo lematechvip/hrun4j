@@ -2,11 +2,11 @@ package vip.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import vip.lematech.httprunner4j.cli.handler.Command;
 import vip.lematech.httprunner4j.cli.util.HarUtils;
-import vip.lematech.httprunner4j.cli.model.har.Har;
-import vip.lematech.httprunner4j.cli.model.har.HarEntry;
-import vip.lematech.httprunner4j.cli.model.har.HarPage;
+import vip.lematech.httprunner4j.model.har.Har;
+import vip.lematech.httprunner4j.model.har.HarEntry;
+import vip.lematech.httprunner4j.model.har.HarPage;
+import vip.lematech.httprunner4j.cli.handler.Command;
 import vip.lematech.httprunner4j.helper.LogHelper;
 import org.kohsuke.args4j.Option;
 

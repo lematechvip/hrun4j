@@ -1,10 +1,10 @@
 package vip.lematech.httprunner4j.testcases.demo;
 
 import vip.lematech.httprunner4j.HttpRunner4j;
-import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
+import vip.lematech.httprunner4j.common.Constant;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -169,15 +169,25 @@ public class DemoTest extends HttpRunner4j {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testBeanShellDemo(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
 
     /**
      * 测试文件下载
      * @param testCase
      *
      */
-    @Test(dataProvider = "dataProvider")
+    /*@Test(dataProvider = "dataProvider")
     public void testFileDownloadDemo(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
-    }
+    }*/
 
 }

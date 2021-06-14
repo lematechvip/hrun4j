@@ -1,5 +1,6 @@
 package vip.lematech.httprunner4j.core.exception;
 
+
 import vip.lematech.httprunner4j.core.enums.BusinessCode;
 
 public class PlatformException extends RuntimeException {

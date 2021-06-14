@@ -94,81 +94,41 @@ public class CliConstants {
     /**
      * Scaffolding formwork for hrun4j-pom
      */
-    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/meta-info/pom.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-pom
-     */
-    public static final String SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/meta-info/ignore.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-cli
-     */
-    public static final String SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/meta-info/readme_cli.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-pom
-     */
-    public static final String SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/meta-info/readme_pom.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-pom
-     */
-    public static final String SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/function/HttpRunner4j.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-pom
-     */
-    public static final String SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FUNCTION_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/function/functions/JokeFunction.vm";
+    public static final String SCAFFOLD_TEMPLATE_POM_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/pom.vm";
 
 
     /**
      * Scaffolding formwork for hrun4j-pom
      */
-    public static final String SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testcase/joke/JokeTest.vm";
+    public static final String SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/function/HttpRunner4j.vm";
 
     /**
      * Scaffolding formwork for hrun4j-pom
      */
-    public static final String SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testcase/rap2/MockTest.vm";
+    public static final String SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FUNCTION_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/function/functions/MyFunction.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testcase/get/GetTest.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testcase/post/PostTest.vm";
+
+    /**
+     * Scaffolding formwork for springboot
+     */
+    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testsuite/testsuite.vm";
+
 
 
     /**
      * Scaffolding formwork for springboot
      */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testdata/apis/getJoke.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testdata/apis/getSingleJoke.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testdata/testcases/joke/lookTheJokeFromJokeList.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testdata/testcases/rap2/rap2Mock.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testsuite/testsuite.vm";
-
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/testsuite/testsuite_cli.vm";
-
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/testsuite/testsuite_joke.vm";
+    public static final String SCAFFOLD_TEMPLATE_TESTSUITE_ALL_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testsuite/testsuite_all.vm";
 
     /**
      * api mode

@@ -1,8 +1,8 @@
 package vip.lematech.httprunner4j.base;
 
 import cn.hutool.core.io.FileUtil;
-import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.core.provider.NGDataProvider;
+import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.helper.LogHelper;
 import org.testng.annotations.*;
 

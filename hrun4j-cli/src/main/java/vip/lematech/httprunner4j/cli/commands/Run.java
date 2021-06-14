@@ -4,10 +4,7 @@ package vip.lematech.httprunner4j.cli.commands;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import vip.lematech.httprunner4j.cli.handler.Command;
-import vip.lematech.httprunner4j.cli.testsuite.TestNGEngine;
-import vip.lematech.httprunner4j.common.Constant;
-import vip.lematech.httprunner4j.common.DefinedException;
+import vip.lematech.httprunner4j.cli.TestNGEngine;
 import vip.lematech.httprunner4j.config.Env;
 import vip.lematech.httprunner4j.config.NamespaceMap;
 import vip.lematech.httprunner4j.config.RunnerConfig;
@@ -18,10 +15,13 @@ import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestSuite;
 import vip.lematech.httprunner4j.entity.testcase.TestSuiteCase;
-import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.helper.FilesHelper;
 import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import vip.lematech.httprunner4j.helper.LittleHelper;
+import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.cli.handler.Command;
+import vip.lematech.httprunner4j.common.Constant;
+import vip.lematech.httprunner4j.common.DefinedException;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -137,7 +137,7 @@ public class Run extends Command {
             if (!StrUtil.isEmpty(extName)) {
                 namespace = JavaIdentifierHelper.formatFilePath(LittleHelper.replaceLast(caseRelativePath, Constant.DOT_PATH + extName, ""));
             }
-            LogHelper.info("namespace:{}", namespace);
+            LogHelper.debug("namespace:{}", namespace);
             File dataFile = searcher.quicklySearchFile(caseRelativePath);
             TestCase testCase = TestDataLoaderFactory.getLoader(extName)
                     .load(dataFile, TestCase.class);

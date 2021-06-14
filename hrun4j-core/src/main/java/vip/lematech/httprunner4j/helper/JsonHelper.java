@@ -9,11 +9,8 @@ import com.jayway.jsonpath.JsonPath;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import net.minidev.json.JSONUtil;
-import net.sf.json.util.JSONUtils;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.helper.LogHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;

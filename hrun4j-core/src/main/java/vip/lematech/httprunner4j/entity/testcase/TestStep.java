@@ -1,9 +1,8 @@
 package vip.lematech.httprunner4j.entity.testcase;
 
-import vip.lematech.httprunner4j.entity.base.BaseModel;
+import lombok.*;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import vip.lematech.httprunner4j.entity.base.BaseModel;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,9 @@ import java.util.Map;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TestStep<T> extends BaseModel{
 
     private String name;

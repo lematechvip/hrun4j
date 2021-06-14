@@ -1,7 +1,6 @@
 package vip.lematech.httprunner4j.cli.commands;
 
 import vip.lematech.httprunner4j.cli.handler.Command;
-import vip.lematech.httprunner4j.helper.exp.BuildInFunctions;
 
 import java.io.PrintWriter;
 
@@ -14,6 +13,7 @@ import java.io.PrintWriter;
  * @publicWechat lematech
  */
 public class Version extends Command {
+    public static final String VERSION = "1.0.0";
     @Override
     public String description() {
         return "Print httprunner4j version information.";
@@ -28,7 +28,7 @@ public class Version extends Command {
      */
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        out.println(BuildInFunctions.VERSION);
+        out.println(VERSION);
         return 0;
     }
 }

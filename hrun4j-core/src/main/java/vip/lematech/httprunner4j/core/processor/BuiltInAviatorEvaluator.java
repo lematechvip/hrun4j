@@ -15,13 +15,13 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 import com.googlecode.aviator.runtime.type.AviatorString;
 import vip.lematech.httprunner4j.base.TestBase;
+import vip.lematech.httprunner4j.entity.http.RequestEntity;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.Env;
 import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.helper.LogHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.collections.Maps;
 
@@ -63,7 +63,7 @@ public class BuiltInAviatorEvaluator {
      */
     public static class BuiltInFunctionHelloWorld extends AbstractFunction {
         @Override
-        public AviatorObject call() {
+        public AviatorObject call(Map<String, Object> env) {
             String output = "Hello,HttpRunner!!!";
             LogHelper.info(output);
             return new AviatorString(output);

@@ -29,9 +29,9 @@
       "a": "apiA",
       "b": "apiB"
     },
-    "connectionRequestTimeout": 15,
     "connectTimeout": 15,
-    "socketTimeout": 15,
+    "writeTimeout": 15,
+    "readTimeout": 15,
     "allowRedirects": false,
     "cookies": {
       "k1": "apiK1",

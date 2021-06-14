@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSON;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
-import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.helper.JsonHelper;
+import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.helper.RegExpHelper;
 
 import java.util.*;

@@ -2,10 +2,12 @@ package vip.lematech.httprunner4j.entity.testcase;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import vip.lematech.httprunner4j.entity.base.BaseModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import vip.lematech.httprunner4j.entity.http.RequestEntity;
-
+import vip.lematech.httprunner4j.entity.base.BaseModel;
+import lombok.Data;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,9 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiModel<T> extends BaseModel {
     @JsonProperty(value = "name")
     @JSONField(ordinal = 1)
@@ -38,4 +43,5 @@ public class ApiModel<T> extends BaseModel {
     private RequestEntity request;
     @JSONField(ordinal = 4)
     private T extract;
+
 }

@@ -1,9 +1,9 @@
 package vip.lematech.httprunner4j.config;
 
 import cn.hutool.core.util.StrUtil;
+import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
-import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
 import lombok.Data;
 
 import java.io.File;

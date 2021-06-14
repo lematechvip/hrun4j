@@ -1,7 +1,6 @@
 package vip.lematech.httprunner4j.testcases.scene;
 
 import vip.lematech.httprunner4j.HttpRunner4j;
-import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
@@ -9,7 +8,6 @@ import org.testng.annotations.Test;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className SceneTest
  */
 public class SceneTest extends HttpRunner4j {
 

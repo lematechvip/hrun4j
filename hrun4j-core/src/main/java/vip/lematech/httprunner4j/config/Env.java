@@ -1,13 +1,19 @@
 package vip.lematech.httprunner4j.config;
 
-import vip.lematech.httprunner4j.common.Constant;
+import cn.hutool.core.io.FileUtil;
+import vip.lematech.httprunner4j.base.TestBase;
+import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.core.loader.Searcher;
+import vip.lematech.httprunner4j.helper.FilesHelper;
 import vip.lematech.httprunner4j.helper.LogHelper;
+import vip.lematech.httprunner4j.common.Constant;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 
@@ -34,15 +40,33 @@ public class Env {
             Properties properties = new Properties();
             try {
                 String envFilePath = (runMode == RunnerConfig.RunMode.POM) ? Constant.ENV_FILE_NAME : RunnerConfig.getInstance().getDotEnvPath();
-                File envFile = new Searcher().quicklySearchFile(envFilePath);
-                properties.load(new FileInputStream(envFile));
-                envMap.putAll((Map) properties);
+                File searchFile = null;
+                if (runMode == RunnerConfig.RunMode.CLI) {
+                    if (FileUtil.isAbsolutePath(envFilePath)) {
+                        searchFile = new File(envFilePath);
+                    } else {
+                        searchFile = new File(RunnerConfig.getInstance().getWorkDirectory()
+                                , FilesHelper.filePathDecode(envFilePath));
+                    }
+                } else if (runMode == RunnerConfig.RunMode.POM) {
+                    URL url = Thread.currentThread().getContextClassLoader().getResource(envFilePath);
+                    searchFile = new File(FilesHelper.filePathDecode(url.getPath()));
+                }
+                if(FileUtil.exist(searchFile)){
+                    properties.load(new FileInputStream(searchFile));
+                    envMap.putAll((Map) properties);
+                }else{
+                    String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
+                    LogHelper.warn(exceptionMsg);
+                }
             } catch (Exception e) {
-                String exceptionMsg = Constant.ENV_FILE_NAME + " is not exist";
-                LogHelper.warn(exceptionMsg);
+                e.printStackTrace();
+                LogHelper.error("An error occurred loading the.env file");
             }
         }
+
     }
+
 
     public static void setEnv(String key, Object value) {
         if (envMap == null) {

@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
+import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 import vip.lematech.httprunner4j.core.converter.ObjectConverter;
 import vip.lematech.httprunner4j.core.loader.Searcher;
 import vip.lematech.httprunner4j.core.loader.TestDataLoaderFactory;
@@ -18,7 +19,6 @@ import vip.lematech.httprunner4j.entity.testcase.Config;
 import vip.lematech.httprunner4j.entity.testcase.TestCase;
 import vip.lematech.httprunner4j.entity.testcase.TestStep;
 import vip.lematech.httprunner4j.core.processor.ExpProcessor;
-import vip.lematech.httprunner4j.config.i18n.I18NFactory;
 import vip.lematech.httprunner4j.helper.LogHelper;
 import vip.lematech.httprunner4j.helper.OkHttpsHelper;
 import vip.lematech.httprunner4j.helper.RegExpHelper;
@@ -93,7 +93,7 @@ public class TestCaseRunner {
             for (int index = 0; index < testSteps.size(); index++) {
                 Map<String, Object> testStepConfigVariable = Maps.newHashMap();
                 preAndPostProcessor.setTestStepConfigVariable(testStepConfigVariable);
-                LogHelper.info(I18NFactory.getLocaleMessage("runner.current.step") + " : {}", testSteps.get(index).getName());
+                LogHelper.info(String.format(I18NFactory.getLocaleMessage("runner.current.step"),  testSteps.get(index).getName()));
                 Map configVariables = Objects.isNull(config) ? Maps.newHashMap() : (Map) config.getVariables();
                 TestStep testStep = referenceApiModelOrTestCase(testSteps.get(index), configVariables);
                 RequestEntity initializeRequestEntity = testStep.getRequest();
@@ -117,7 +117,6 @@ public class TestCaseRunner {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
-            e.printStackTrace();
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
             LogHelper.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);
@@ -178,8 +177,9 @@ public class TestCaseRunner {
             String spliceApiFilePath = searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
             File apiFilePath = searcher.quicklySearchFile(spliceApiFilePath);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
-            TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(testStep, objectConverter.apiModel2TestStep(apiModel));
+            TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(objectConverter.apiModel2TestStep(apiModel),testStep);
             LogHelper.debug("Interface documentation information:{}, Test steps:{}, After merging:{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(extendTestStep));
+
             return extendTestStep;
         }
         return testStep;

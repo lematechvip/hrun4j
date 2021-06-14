@@ -1,6 +1,6 @@
 package vip.lematech.httprunner4j.cli.service;
 
-import vip.lematech.httprunner4j.cli.model.scaffolding.ProjectInfo;
+import vip.lematech.httprunner4j.model.scaffolding.ProjectInfo;
 
 /**
  * @author lematech@foxmail.com
@@ -18,6 +18,9 @@ public interface IProjectGenerator {
 
     /**
      * HttpRunner4J CLi dependency generation
+     *
+     * @param projectRoot
+     * @param projectName
      */
     void cliGenerator(String projectRoot, String projectName);
 
