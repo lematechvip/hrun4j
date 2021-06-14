@@ -49,7 +49,7 @@ public class Env {
                                 , FilesHelper.filePathDecode(envFilePath));
                     }
                 } else if (runMode == RunnerConfig.RunMode.POM) {
-                    URL url = TestBase.class.getResource(envFilePath);
+                    URL url = Thread.currentThread().getContextClassLoader().getResource(envFilePath);
                     searchFile = new File(FilesHelper.filePathDecode(url.getPath()));
                 }
                 if(FileUtil.exist(searchFile)){
@@ -60,6 +60,7 @@ public class Env {
                     LogHelper.warn(exceptionMsg);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 LogHelper.error("An error occurred loading the.env file");
             }
         }

@@ -100,11 +100,6 @@ public class CliConstants {
     /**
      * Scaffolding formwork for hrun4j-pom
      */
-    public static final String SCAFFOLD_TEMPLATE_README_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/cli/meta-info/readme_pom.vm";
-
-    /**
-     * Scaffolding formwork for hrun4j-pom
-     */
     public static final String SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/function/HttpRunner4j.vm";
 
     /**
@@ -122,27 +117,6 @@ public class CliConstants {
      * Scaffolding formwork for hrun4j-pom
      */
     public static final String SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testcase/post/PostTest.vm";
-
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/apis/getJoke.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_APIS_GET_SINGLE_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/apis/getSingleJoke.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_JOKE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/testdata/testcases/joke/lookTheJokeFromJokeList.vm";
-
-    /**
-     * Scaffolding formwork for springboot
-     */
-    public static final String SCAFFOLD_TEMPLATE_TESTDATA_TESTCASE_APIS_RAP2_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/testdata/testcases/rap2/rap2Mock.vm";
 
     /**
      * Scaffolding formwork for springboot
