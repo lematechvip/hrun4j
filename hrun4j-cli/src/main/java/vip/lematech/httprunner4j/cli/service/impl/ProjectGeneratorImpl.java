@@ -1,8 +1,11 @@
 package vip.lematech.httprunner4j.cli.service.impl;
 
 import cn.hutool.core.io.FileUtil;
+import com.google.common.collect.Maps;
+import sun.java2d.pipe.hw.ContextCapabilities;
 import vip.lematech.httprunner4j.cli.constant.CliConstants;
 import vip.lematech.httprunner4j.cli.testsuite.TemplateEngine;
+import vip.lematech.httprunner4j.cli.util.FileHelper;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.helper.JavaIdentifierHelper;
@@ -12,8 +15,9 @@ import vip.lematech.httprunner4j.model.scaffolding.ProjectInfo;
 import vip.lematech.httprunner4j.cli.service.IProjectGenerator;
 import org.apache.velocity.VelocityContext;
 
-import java.io.File;
+import java.io.*;
 import java.util.Arrays;
+import java.util.Map;
 
 
 /**
@@ -36,23 +40,18 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         context.put("application", applicationInfo);
         context.put("projectInfo", projectInfo);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_APPLICATION_FILE_PATH_FOR_SPRINGBOOT, filePath, context);
-        LogHelper.info("创建主入口类 Application.java {} 成功！", FileUtil.normalize(filePath));
 
         String ymlPath = String.format("%s%s/src/main/resources/application.yml", projectRoot, artifactId);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_APPLICATION_YML_FILE_PATH_FOR_SPRINGBOOT, ymlPath, context);
-        LogHelper.info("创建配置文件 application.yml {} 成功！", FileUtil.normalize(ymlPath));
 
         String pomPath = String.format("%s%s/pom.xml", projectRoot, projectInfo.getArtifactId());
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_POM_FILE_PATH_FOR_SPRINGBOOT, pomPath, context);
-        LogHelper.info("创建配置文件 pom.xml {} 成功！！", FileUtil.normalize(pomPath));
 
         String testFile = String.format("%s%s/src/test/java/%s%sApiTest.java", projectRoot, artifactId, packagePath, File.separator);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TEST_FILE_PATH_FOR_SPRINGBOOT, testFile, context);
-        LogHelper.info("创建测试类 ApiTest.java {} 成功！", FileUtil.normalize(testFile));
 
         String ignoreFile = String.format("%s%s%s%s", projectRoot, artifactId, File.separator, ".gitignore");
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_IGNORE_FILE_PATH_FOR_SPRINGBOOT, ignoreFile, context);
-        LogHelper.info("创建配置文件 .gitignore {} 成功！", FileUtil.normalize(ignoreFile));
 
         String applicationPath = String.format("%s%s/src/main/java/%s/controller/package-info.java", projectRoot, artifactId, packagePath);
         applicationInfo.setPackageName(String.format("%s.controller", packageName));
@@ -76,8 +75,14 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
     private void writeToFile(String templateName, String filePath, VelocityContext context) {
         File file = new File(filePath);
         TemplateEngine.writeToFileByTemplate(templateName, file, context);
+        LogHelper.info("创建  {} 文件成功！", FileUtil.normalize(file.getAbsolutePath()));
     }
 
+    private void writeToFile(String templateName, String filePath) {
+        File file = new File(filePath);
+        TemplateEngine.writeToFileByTemplate(templateName, file, new VelocityContext());
+        LogHelper.info("创建  {} 文件成功！", FileUtil.normalize(file.getAbsolutePath()));
+    }
     /**
      * 生成包名
      *
@@ -95,12 +100,41 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
     }
 
     @Override
-    public void cliGenerator(String projectRoot, String projectName) {
-        File sourceFile = new File(this.getClass().getClassLoader().getResource("vm/scaffold/httprunner4j/cli").getFile());
-        String targetPath = new File(projectRoot,projectName).getAbsolutePath();
-        File targetFile = FileUtil.mkdir(targetPath);
-        FileUtil.copyContent(sourceFile,targetFile,true);
-        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",targetFile.getAbsolutePath());
+    public void cliGenerator(String projectRoot, String artifactId) {
+        Map<String,String> templateToFileMap = Maps.newHashMap();
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_GET_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/apis/get.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_FORM_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/apis/postFormData.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_RAW_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/apis/postRawText.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_BSH_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/bsh/test.bsh"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_DATA_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/data/csvFile.csv"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_GET_GETSCENE_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/testcases/get/getScene.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_POST_POSTSCENE_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/testcases/post/postScene.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_HR_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/HttpRunner4j.bsh"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_ENV_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/.env"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_IGNORE_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/.gitignore"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_README_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/readMe.md"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_TESTSUITE_FILE_PATH_FOR_CLI
+                ,String.format("%s%s%s", projectRoot, artifactId,"/testsuite/testsuite.yml"));
+
+        for(Map.Entry<String,String> entry : templateToFileMap.entrySet()){
+            String template = entry.getKey();
+            String writePath = entry.getValue();
+            writeToFile(template,writePath);
+        }
+        String projectPath = String.format("%s%s", projectRoot, artifactId);
+        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",projectPath);
+
     }
 
     @Override
@@ -114,13 +148,10 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         context.put("projectInfo", projectInfo);
         String pomPath = String.format("%s%s/pom.xml", projectRoot, projectInfo.getArtifactId());
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_POM_FILE_PATH_FOR_API, pomPath, context);
-        LogHelper.info("创建配置文件 pom.xml {} 成功！！", FileUtil.normalize(pomPath));
         String testSuiteFile = String.format("%s%s/src/test/resources/testsuite/testsuite.xml", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API, testSuiteFile, context);
-        LogHelper.info("创建测试集testsuite.xml {} 成功！", FileUtil.normalize(testSuiteFile));
         String testSuiteJokeFile = String.format("%s%s/src/test/resources/testsuite/testsuite_all.xml", projectRoot, artifactId);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_TESTSUITE_ALL_FILE_PATH_FOR_API, testSuiteJokeFile, context);
-        LogHelper.info("创建测试集testsuite_all.xml {} 成功！", FileUtil.normalize(testSuiteJokeFile));
         String httpRunner4jFile = String.format("%s%s/src/main/java/%s/HttpRunner4j.java", projectRoot, artifactId, packagePath);
         applicationInfo.setPackageName(String.format("%s", packageName));
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FILE_PATH_FOR_API, httpRunner4jFile, context);
@@ -128,26 +159,40 @@ public class ProjectGeneratorImpl implements IProjectGenerator {
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_HTTPRUNNER4J_FUNCTION_FILE_PATH_FOR_API, functionFile, context);
         String getTestFile = String.format("%s%s/src/test/java/%s/testcases/get/GetTest.java", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_JOKE_TEST_FILE_PATH_FOR_API, getTestFile, context);
-        LogHelper.info("创建测试类 GetTest.vm {} 成功！", FileUtil.normalize(getTestFile));
         String postTestFile = String.format("%s%s/src/test/java/%s/testcases/post/PostTest.java", projectRoot, artifactId, packagePath);
         writeToFile(CliConstants.SCAFFOLD_TEMPLATE_RAP2_TEST_FILE_PATH_FOR_API, postTestFile, context);
-        LogHelper.info("创建测试类 PostTest.vm {} 成功！", FileUtil.normalize(postTestFile));
-        String resourcePath = "vm/scaffold/httprunner4j/pom/resources";
-        String targetResourcePath = String.format("%s%s/src/test/resources/", projectRoot, artifactId);
-        File targetFile = fileCopy(resourcePath, targetResourcePath);
-        String metaInfoPath = "vm/scaffold/httprunner4j/pom/meta-info";
-        String rootPath = String.format("%s%s", projectRoot, artifactId);
-        File metaFile = fileCopy(metaInfoPath, rootPath);
-        LogHelper.info("初始化.gitignore、readMe.md成功！ 文件路径：{}",metaFile.getAbsolutePath());
-        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",targetFile.getAbsolutePath());
+        Map<String,String> templateToFileMap = Maps.newHashMap();
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_GET_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/apis/get.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_FORM_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/apis/postFormData.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_RAW_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/apis/postRawText.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_DATA_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/data/csvFile.csv"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_GET_GETSCENE_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/testcases/get/getScene.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_POST_POSTSCENE_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/testcases/post/postScene.yml"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_HR_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/HttpRunner4j.bsh"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_ENV_FILE_PATH_FOR_API
+                ,String.format("%s%s/src/test/resources/%s", projectRoot, artifactId,"/.env"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_IGNORE_FILE_PATH_FOR_API
+                ,String.format("%s%s%s", projectRoot, artifactId,"/.gitignore"));
+        templateToFileMap.put(CliConstants.SCAFFOLD_TEMPLATE_RESOURCES_README_FILE_PATH_FOR_API
+                ,String.format("%s%s%s", projectRoot, artifactId,"/readMe.md"));
+        for(Map.Entry<String,String> entry : templateToFileMap.entrySet()){
+            String template = entry.getKey();
+            String writePath = entry.getValue();
+            writeToFile(template,writePath);
+        }
+        String projectPath = String.format("%s%s", projectRoot, artifactId);
+        LogHelper.info("脚手架工程初始化成功！ 工程路径：{}",projectPath);
+
     }
 
-    private File fileCopy(String sourcePath,String targetPath) {
-        File sourceFile = new File(this.getClass().getClassLoader().getResource(sourcePath).getFile());
-        File targetFile = FileUtil.mkdir(new File(targetPath).getAbsolutePath());
-        FileUtil.copyContent(sourceFile,targetFile,true);
-        return targetFile;
-    }
+
 
     private ApplicationInfo getApplicationInfo(ProjectInfo projectInfo) {
         String[] split = projectInfo.getArtifactId().split("-");

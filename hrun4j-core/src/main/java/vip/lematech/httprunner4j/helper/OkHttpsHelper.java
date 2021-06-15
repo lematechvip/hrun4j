@@ -71,7 +71,7 @@ public class OkHttpsHelper {
             headers = Maps.newConcurrentMap();
         }
         if (!Objects.isNull(cookies)) {
-            headers.put("Cookie", getCookiesWithParams(cookies));
+            headers.put(Constant.HEADER_COOKIE, getCookiesWithParams(cookies));
         }
         return headers;
     }
@@ -156,7 +156,7 @@ public class OkHttpsHelper {
         }
         if (MapUtil.isNotEmpty(headers)) {
             LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.header"), headers));
-            if (headers.containsKey("Cookie")) {
+            if (headers.containsKey(Constant.HEADER_COOKIE)) {
                 LogHelper.info(String.format(I18NFactory.getLocaleMessage("request.cookie"), LittleHelper.emptyIfNull(requestEntity.getCookies())));
             }
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -264,7 +264,7 @@ public class OkHttpsHelper {
             HttpResult.Body body = httpResult.getBody();
             if (!stream) {
                 String workDir = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
-                body.toFolder(workDir)
+                body.stepRate(0.1).toFolder(workDir)
                 .setOnSuccess((File file) -> {
                     LogHelper.info("文件下载完毕，存储路径：{}",workDir);
                 })

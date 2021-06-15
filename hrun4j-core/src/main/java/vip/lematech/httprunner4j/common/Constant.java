@@ -129,4 +129,6 @@ public class Constant {
 
     public static final String BEANSHELL_EXTNAME = "bsh";
 
+    public static final String HEADER_COOKIE = "Cookie";
+
 }

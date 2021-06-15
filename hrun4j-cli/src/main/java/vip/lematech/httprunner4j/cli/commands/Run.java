@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class Run extends Command {
 
-    @Option(name = "--testcase_paths", usage = "list of testcase path to execute", metaVar = "<testcase_paths>")
+    @Option(name = "--testcase_path", usage = "list of testcase path to execute", metaVar = "<testcase_path>")
     List<String> testCasePaths;
 
     @Override

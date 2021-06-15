@@ -130,6 +130,125 @@ public class CliConstants {
      */
     public static final String SCAFFOLD_TEMPLATE_TESTSUITE_ALL_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testsuite/testsuite_all.vm";
 
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_GET_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/apis/get.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_FORM_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/apis/postFormData.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_RAW_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/apis/postRawText.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_DATA_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/data/csvFile.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_GET_GETSCENE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/testcases/get/getScene.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_POST_POSTSCENE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/testcases/post/postScene.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_HR_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/resources/HttpRunner4j.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_IGNORE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/meta-info/gitignore.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_README_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/meta-info/readMe.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-pom
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_ENV_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/meta-info/env.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_GET_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/apis/get.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_FORM_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/apis/postFormData.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_APIS_POST_RAW_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/apis/postRawText.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_DATA_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/data/csvFile.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_BSH_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/bsh/test.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_GET_GETSCENE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/testcases/get/getScene.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_TESTCASES_POST_POSTSCENE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/testcases/post/postScene.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_HR_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/HttpRunner4j.vm";
+
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_IGNORE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/gitignore.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_README_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/readMe.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_TESTSUITE_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/testsuite/testsuite.vm";
+
+    /**
+     * Scaffolding formwork for hrun4j-cli
+     */
+    public static final String SCAFFOLD_TEMPLATE_RESOURCES_ENV_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/env.vm";
+
+
+
     /**
      * api mode
      */
