@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.26</version>
+            <version>[1.26,)</version>
             <scope>compile</scope>
         </dependency>
 
@@ -79,7 +79,6 @@
             <artifactId>aviator</artifactId>
             <version>5.2.5</version>
         </dependency>
-
         <dependency>
             <groupId>io.burt</groupId>
             <artifactId>jmespath-jackson</artifactId>
