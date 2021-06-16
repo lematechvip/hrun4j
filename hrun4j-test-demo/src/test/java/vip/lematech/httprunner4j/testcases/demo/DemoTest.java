@@ -186,9 +186,9 @@ public class DemoTest extends HttpRunner4j {
      * @param testCase
      *
      */
-    /*@Test(dataProvider = "dataProvider")
+    @Test(dataProvider = "dataProvider")
     public void testFileDownloadDemo(TestCase testCase) {
         TestCaseExecutorEngine.getInstance().execute(testCase);
-    }*/
+    }
 
 }

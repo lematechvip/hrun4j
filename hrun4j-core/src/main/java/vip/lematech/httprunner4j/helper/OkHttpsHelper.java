@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -282,27 +283,34 @@ public class OkHttpsHelper {
                 if (workDir.endsWith(Constant.DOT_PATH)) {
                     workDir = LittleHelper.replaceLast(workDir, Constant.DOT_PATH, "");
                 }
+                CountDownLatch latch = new CountDownLatch(1);
                 String finalWorkDir = workDir;
-               body.stepRate(0.1)
-                        .setOnProcess((process -> {
-                            LogHelper.info(I18NFactory.getLocaleMessage("file.download.process"));
-                            long totalBytes = process.getTotalBytes();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
-                            long doneBytes = process.getDoneBytes();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
-                            double rate = process.getRate();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate * 100));
-                            boolean isDone = process.isDone();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
-                        }))
-                        .toFolder(workDir)
-                        .setOnFailure((Download.Failure failure) -> {
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.failure"),failure.getException().getMessage()));
-                        })
-                        .setOnSuccess((File file) -> {
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.success"),FileUtil.normalize(finalWorkDir)));
-                        })
-                        .start();
+                body.stepRate(0.1)
+                    .setOnProcess((process -> {
+                        LogHelper.info(I18NFactory.getLocaleMessage("file.download.process"));
+                        long totalBytes = process.getTotalBytes();
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
+                        long doneBytes = process.getDoneBytes();
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
+                        double rate = process.getRate();
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate * 100));
+                        boolean isDone = process.isDone();
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
+                    }))
+                    .toFolder(workDir)
+                    .setOnFailure((Download.Failure failure) -> {
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.failure"),failure.getException().getMessage()));
+                    })
+                    .setOnSuccess((File file) -> {
+                        LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.success"),FileUtil.normalize(finalWorkDir)));
+                        latch.countDown();
+                    })
+                    .start();
+                   try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                       LogHelper.error("Download interrupt exception");
+                    }
             } else {
                 String responseContent = body.toString();
                 if (JsonHelper.isJson(responseContent)) {
