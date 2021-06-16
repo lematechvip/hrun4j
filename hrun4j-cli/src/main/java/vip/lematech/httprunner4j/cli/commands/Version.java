@@ -5,12 +5,10 @@ import vip.lematech.httprunner4j.cli.handler.Command;
 import java.io.PrintWriter;
 
 /**
+ * The <code>version</code> command.
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Version
- * @description The <code>version</code> command.
- * @created 2021/4/18 5:40 下午
- * @publicWechat lematech
  */
 public class Version extends Command {
     public static final String VERSION = "1.0.0";
@@ -24,7 +22,7 @@ public class Version extends Command {
      *
      * @param out std out
      * @param err std err
-     * @return
+     * @return Command line execution results
      */
     @Override
     public int execute(PrintWriter out, PrintWriter err) {

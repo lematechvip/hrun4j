@@ -24,11 +24,8 @@ import lombok.Data;
 
 /**
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarPageTiming
- * @description Page loading time
- * @created 2021/5/2 8:35 下午
- * @publicWeematech
  */
 
 @Data

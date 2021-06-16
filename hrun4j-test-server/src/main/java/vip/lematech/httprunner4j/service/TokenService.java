@@ -4,44 +4,41 @@ package vip.lematech.httprunner4j.service;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TokenService
- * @description TODO
- * @created 2021/3/2 8:08 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 public interface TokenService {
     /**
      * 生成签名
      *
-     * @param deviceSN
-     * @param osPlatform
-     * @param appVersion
-     * @return
+     * @param deviceSN deviceSN
+     * @param osPlatform osPlatform
+     * @param appVersion appVersion
+     * @return token value
      */
     String generateToken(String deviceSN, String osPlatform, String appVersion);
 
     /**
      * 验签
      *
-     * @param actaulToken
-     * @param expectToken
-     * @return
+     * @param actualToken actualToken
+     * @param expectToken expectToken
+     * @return 验证token通过或不通过
      */
-    boolean validateToken(String actaulToken, String expectToken);
+    boolean validateToken(String actualToken, String expectToken);
 
     /**
      * 建立token和devicesn映射关系并存储
      *
-     * @param deviceSN
-     * @param token
+     * @param deviceSN deviceSN
+     * @param token token
      */
     void storyToken(String deviceSN, String token);
 
     /**
      * 根据devicesn提取token
      *
-     * @param deviceSN
-     * @return
+     * @param deviceSN deviceSN
+     * @return token
      */
     String queryToken(String deviceSN);
 

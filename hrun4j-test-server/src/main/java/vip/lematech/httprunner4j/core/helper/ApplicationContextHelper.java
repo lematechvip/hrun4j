@@ -4,7 +4,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * website http://lematech.vip/
+ */
 public class ApplicationContextHelper {
     public static HttpServletRequest getHttpServletRequest() {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

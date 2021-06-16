@@ -5,10 +5,7 @@ import lombok.Data;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className UserDto
- * @description TODO
- * @created 2021/3/3 2:39 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @Data
 public class UserDto {

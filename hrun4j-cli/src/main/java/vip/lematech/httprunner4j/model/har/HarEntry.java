@@ -25,12 +25,10 @@ import lombok.Data;
 import java.util.Objects;
 
 /**
+ * An array containing all requests, each item of the array is an object composed of the data of a request, sorted according to StartedDateTime
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarEntry
- * @description An array containing all requests, each item of the array is an object composed of the data of a request, sorted according to StartedDateTime
- * @created 2021/5/2 8:35 下午
- * @publicWechat lematech
  */
 
 @Data

@@ -9,7 +9,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.sangupta.jerry.util.UriUtils;
 import vip.lematech.httprunner4j.cli.constant.CliConstants;
-import vip.lematech.httprunner4j.cli.util.HarUtils;
+import vip.lematech.httprunner4j.cli.helper.HarHelper;
 import vip.lematech.httprunner4j.cli.handler.Command;
 import vip.lematech.httprunner4j.model.har.*;
 import vip.lematech.httprunner4j.common.Constant;
@@ -76,7 +76,7 @@ public class Har2Case extends Command {
         LogHelper.info("Start generating test cases,testcase format:{}", Objects.isNull(format) ? CliConstants.GENERATE_YML_FORMAT : format);
         Har har;
         try {
-            har = HarUtils.read(harFile);
+            har = HarHelper.read(harFile);
         } catch (Exception e) {
             String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFile), e.getMessage());
             LogHelper.error(exceptionMsg);
@@ -99,7 +99,7 @@ public class Har2Case extends Command {
             }
             workDirPath = FileUtil.getAbsolutePath(generateCaseDirectory);
         }
-        HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
+        HarHelper.connectReferences(har, filterSuffix, filterUriByKeywords);
         TestCase testCase = new TestCase();
         Config config = new Config();
         config.setName("Testcase Description");

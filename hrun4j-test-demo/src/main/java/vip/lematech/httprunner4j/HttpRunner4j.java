@@ -1,5 +1,6 @@
 package vip.lematech.httprunner4j;
 
+
 import com.googlecode.aviator.AviatorEvaluator;
 import org.testng.annotations.BeforeSuite;
 import vip.lematech.httprunner4j.functions.MyFunction;
@@ -39,6 +40,7 @@ public class HttpRunner4j extends TestBase {
         /**
          * Test case file suffix
          */
+        RunnerConfig.getInstance().setI18n(Constant.I18N_US);
         RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
     }
 }

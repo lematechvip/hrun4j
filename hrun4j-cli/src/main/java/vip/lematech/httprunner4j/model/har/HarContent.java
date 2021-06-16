@@ -23,11 +23,8 @@ import lombok.Data;
 
 /**
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarContent
- * @description Details of the response body
- * @created 2021/5/2 8:35 下午
- * @publicWechat lematech
  */
 
 @Data

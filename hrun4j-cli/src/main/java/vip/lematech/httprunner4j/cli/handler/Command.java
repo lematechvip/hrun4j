@@ -1,12 +1,9 @@
 package vip.lematech.httprunner4j.cli.handler;
 
 /**
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Command
- * @description TODO
- * @created 2021/4/18 2:44 下午
- * @publicWechat lematech
  */
 
 import org.kohsuke.args4j.Option;

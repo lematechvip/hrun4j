@@ -29,12 +29,10 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
+ * The <code>run</code> command.
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className The <code>run</code> command.
- * @description TODO
- * @created 2021/4/18 7:49 下午
- * @publicWechat lematech
  */
 public class Run extends Command {
 

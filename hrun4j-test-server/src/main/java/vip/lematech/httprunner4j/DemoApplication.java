@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
+ * website http://lematech.vip/
  */
 @SpringBootApplication
 public class DemoApplication {

@@ -6,7 +6,7 @@
     <parent>
         <artifactId>httprunner4j</artifactId>
         <groupId>vip.lematech</groupId>
-        <version>1.0.0</version>
+        <version>0.0.1</version>
     </parent>
     <groupId>vip.lematech</groupId>
     <artifactId>hrun4j-test-demo</artifactId>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>vip.lematech</groupId>
             <artifactId>hrun4j-core</artifactId>
-            <version>1.0.0</version>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 

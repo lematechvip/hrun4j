@@ -1,9 +1,10 @@
 package vip.lematech.httprunner4j.core.enums;
 
 /**
- * @author lematech
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * website http://lematech.vip/
  */
-
 public enum CommonBusinessCode implements BusinessCode {
     /**
      * 公共领域

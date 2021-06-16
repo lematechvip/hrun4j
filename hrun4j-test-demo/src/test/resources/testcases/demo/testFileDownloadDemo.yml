@@ -4,7 +4,7 @@ config:
 teststeps:
   - name: 测试文件下载
     request:
-      url: /weixin/mac/xWeChatMac.dmg
+      url: /weixin/mac/WeChatMac.dmg
       method: GET
       stream: false
     validate:

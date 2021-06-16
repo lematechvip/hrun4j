@@ -2,7 +2,7 @@ package vip.lematech.httprunner4j.cli.commands;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import vip.lematech.httprunner4j.cli.util.HarUtils;
+import vip.lematech.httprunner4j.cli.helper.HarHelper;
 import vip.lematech.httprunner4j.model.har.Har;
 import vip.lematech.httprunner4j.model.har.HarEntry;
 import vip.lematech.httprunner4j.model.har.HarPage;
@@ -17,12 +17,10 @@ import java.util.Objects;
 
 
 /**
+ * The <code>viewhar</code> command.
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Version
- * @description The <code>viewhar</code> command.
- * @created 2021/4/18 5:40 下午
- * @publicWechat lematech
  */
 
 public class ViewHar extends Command {
@@ -46,14 +44,14 @@ public class ViewHar extends Command {
 	 *
 	 * @param out std out
 	 * @param err std err
-	 * @return
+	 * @return Command line execution results
 	 */
 	@Override
 	public int execute(PrintWriter out, PrintWriter err) {
 		File harFilePath = new File(this.file);
 		Har har;
 		try {
-			har = HarUtils.read(harFilePath);
+			har = HarHelper.read(harFilePath);
 		} catch (Exception e) {
 			String exceptionMsg = String.format("Error reading HAR file:%s,Exception information:%s", FileUtil.getAbsolutePath(harFilePath), e.getMessage());
 			LogHelper.error(exceptionMsg);
@@ -65,7 +63,7 @@ public class ViewHar extends Command {
 			LogHelper.error(exceptionMsg);
 			return 1;
 		}
-		HarUtils.connectReferences(har, filterSuffix, filterUriByKeywords);
+		HarHelper.connectReferences(har, filterSuffix, filterUriByKeywords);
 		List<HarPage> harPages = har.getLog().getPages();
 		viewInConsole(harPages);
 		return 0;

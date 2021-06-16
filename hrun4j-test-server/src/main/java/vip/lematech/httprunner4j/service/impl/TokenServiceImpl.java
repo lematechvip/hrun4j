@@ -15,10 +15,7 @@ import java.util.Map;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TokenServiceImpl
- * @description TODO
- * @created 2021/3/2 8:10 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @Service("TokenServiceImpl")
 @Slf4j

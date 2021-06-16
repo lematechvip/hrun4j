@@ -36,8 +36,8 @@ public class R<T> implements Serializable {
     /**
      * 业务处理异常,自定义业务响应码及响应提示信息
      *
-     * @param businessCode
-     * @return
+     * @param businessCode 业务码
+     * @return 响应数
      */
     public static R fail(BusinessCode businessCode) {
         return new R(businessCode);
@@ -46,7 +46,7 @@ public class R<T> implements Serializable {
     /**
      * 业务处理异常，系统错误
      *
-     * @return
+     * @return 响应数据
      */
     public static R fail() {
         return new R(CommonBusinessCode.SYS_ERROR_EXCEPTION);
@@ -55,8 +55,8 @@ public class R<T> implements Serializable {
     /**
      * 业务处理异常，按指定异常信息提示
      *
-     * @param message
-     * @return
+     * @param message 提升信息
+     * @return 响应数据
      */
     public static R fail(String message) {
         R restResponseResult = fail();
@@ -67,9 +67,9 @@ public class R<T> implements Serializable {
     /**
      * 响应成功，返回响应数据
      *
-     * @param data
-     * @param <T>
-     * @return
+     * @param data 响应数据
+     * @param <T> 所属类型
+     * @return 响应结果
      */
     public static <T> R<T> ok(T data) {
         R restResponseResult = ok();
@@ -79,8 +79,8 @@ public class R<T> implements Serializable {
 
     /**
      * 自定义响应提示信息
-     *
-     * @return
+     * @param message message
+     * @return 响应数据
      */
     public static R ok(String message) {
         R restResponseResult = ok();
@@ -91,7 +91,7 @@ public class R<T> implements Serializable {
     /**
      * 响应成功，不返回响应数据
      *
-     * @return
+     * @return 响应数据
      */
     public static R ok() {
         return new R(CommonBusinessCode.SUCCESS);

@@ -22,12 +22,10 @@ package vip.lematech.httprunner4j.model.har;
 import lombok.Data;
 
 /**
+ * HAR file creator and version information
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarCreator
- * @description HAR file creator and version information
- * @created 2021/5/2 8:35 下午
- * @publicWechat lematech
  */
 
 @Data

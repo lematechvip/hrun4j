@@ -10,12 +10,10 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 /**
+ * Entry point for all command line operations.
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HttpRunner4J
- * @description Entry point for all command line operations.
- * @created 2021/4/18 5:38 下午
- * @publicWechat lematech
  */
 
 public class HttpRunner4J extends Command {

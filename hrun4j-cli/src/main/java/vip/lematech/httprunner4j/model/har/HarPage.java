@@ -25,11 +25,8 @@ import java.util.List;
 
 /**
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarPage
- * @description Page Page Information
- * @created 2021/5/2 8:35 下午
- * @publicWeematech
  */
 
 @Data

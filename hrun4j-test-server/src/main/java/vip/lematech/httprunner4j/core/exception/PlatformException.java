@@ -3,6 +3,11 @@ package vip.lematech.httprunner4j.core.exception;
 
 import vip.lematech.httprunner4j.core.enums.BusinessCode;
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * website http://lematech.vip/
+ */
 public class PlatformException extends RuntimeException {
     public String getMsg() {
         return msg;

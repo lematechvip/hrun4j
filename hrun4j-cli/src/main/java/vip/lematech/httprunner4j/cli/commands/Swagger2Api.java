@@ -35,9 +35,10 @@ import java.io.*;
 import java.util.*;
 
 /**
+ * The <code>swagger2Api</code> command.
  * @author: chenfanghang
- * @date: 2021/6/1
- * @description:
+ * website http://lematech.vip/
+ * @version 1.0.0
  */
 public class Swagger2Api extends Command {
 

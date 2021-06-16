@@ -21,12 +21,11 @@ package vip.lematech.httprunner4j.model.har;
 
 
 /**
+ *
+ * The time between sending a request and receiving a response is measured in milliseconds
  * @author sangupta/lematech@foxmail.com
+ * website http://lematech.vip/
  * @version 1.0.0
- * @className HarTiming
- * @description The time between sending a request and receiving a response is measured in milliseconds
- * @created 2021/5/2 8:35 下午
- * @publicWeematech
  */
 public class HarTiming {
 

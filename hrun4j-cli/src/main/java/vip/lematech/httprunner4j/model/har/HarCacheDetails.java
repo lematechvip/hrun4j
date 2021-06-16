@@ -22,12 +22,9 @@ package vip.lematech.httprunner4j.model.har;
 import lombok.Data;
 
 /**
+ * A detailed list of buffer information
  * @author sangupta/lematech@foxmail.com
  * @version 1.0.0
- * @className HarCacheDetails
- * @description A detailed list of buffer information
- * @created 2021/5/2 8:35 下午
- * @publicWechat lematech
  */
 
 @Data

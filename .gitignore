@@ -12,7 +12,7 @@ pom.xml.versionsBackup
 target
 *.iml
 # Package Files #
-
+*.dmg
 .gitee
 .gitignore
 *.war

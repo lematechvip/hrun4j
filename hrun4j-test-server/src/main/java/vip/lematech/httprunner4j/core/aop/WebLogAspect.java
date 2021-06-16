@@ -10,6 +10,12 @@ import vip.lematech.httprunner4j.core.helper.ApplicationContextHelper;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author lematech@foxmail.com
+ * @version 1.0.0
+ * website http://lematech.vip/
+ */
+
 @Component
 @Aspect
 @Slf4j
@@ -22,8 +28,7 @@ public class WebLogAspect {
     /**
      * 在切入点之前
      *
-     * @param joinPoint
-     * @throws Throwable
+     * @param joinPoint 切入点
      */
     @Before("webLog()")
     public void deBefore(JoinPoint joinPoint) {

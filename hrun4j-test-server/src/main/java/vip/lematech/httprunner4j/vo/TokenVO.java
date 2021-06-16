@@ -6,10 +6,7 @@ import lombok.Data;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TokenVO
- * @description TODO
- * @created 2021/3/2 8:05 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @Data
 public class TokenVO {

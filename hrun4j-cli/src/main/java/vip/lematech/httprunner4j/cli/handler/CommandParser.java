@@ -3,13 +3,10 @@ package vip.lematech.httprunner4j.cli.handler;
 import org.kohsuke.args4j.CmdLineParser;
 
 /**
+ * Parser which remembers the parsed command to have additional context
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className CammandParser
- * @description Parser which remembers the parsed command to have additional context
- * information to produce help output.
- * @created 2021/4/18 2:50 下午
- * @publicWechat lematech
  */
 public class CommandParser extends CmdLineParser {
     private final Command command;
@@ -17,7 +14,7 @@ public class CommandParser extends CmdLineParser {
     /**
      * init command object
      *
-     * @param command
+     * @param command command
      */
     public CommandParser(final Command command) {
         super(command);
@@ -27,7 +24,7 @@ public class CommandParser extends CmdLineParser {
     /**
      * get command object
      *
-     * @return
+     * @return Command object
      */
     public Command getCommand() {
         return command;

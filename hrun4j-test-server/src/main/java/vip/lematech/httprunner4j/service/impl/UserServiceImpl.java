@@ -14,10 +14,7 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className UserServiceImpl
- * @description TODO
- * @created 2021/3/3 2:08 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @Service
 public class UserServiceImpl implements UserService {

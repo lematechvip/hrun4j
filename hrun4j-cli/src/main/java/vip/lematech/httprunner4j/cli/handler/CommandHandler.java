@@ -12,20 +12,17 @@ import org.kohsuke.args4j.spi.Setter;
 import java.util.AbstractList;
 
 /**
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className CommandHandler
- * @description TODO
- * @created 2021/4/18 5:36 下午
- * @publicWechat lematech
  */
 public class CommandHandler extends OptionHandler {
     /**
      * This constructor is required by the args4j framework.
      *
-     * @param parser
-     * @param option
-     * @param setter
+     * @param parser Command Parser
+     * @param option Option defined
+     * @param setter Setter
      */
     public CommandHandler(final CmdLineParser parser, final OptionDef option,
                           final Setter<Object> setter) {
@@ -37,9 +34,9 @@ public class CommandHandler extends OptionHandler {
     }
 
     /**
-     * @param params
-     * @return
-     * @throws CmdLineException
+     * @param params  Command line arguments
+     * @return Command line execution results
+     * @throws CmdLineException command line exception
      */
     @Override
     public int parseArguments(Parameters params) throws CmdLineException {

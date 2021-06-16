@@ -19,12 +19,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * Httprunner4j 使用入门案例
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className HttpRunner4jController
- * @description Httprunner4j 使用入门案例
- * @created 2021/3/2 1:57 下午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @RestController
 @RequestMapping("/api")

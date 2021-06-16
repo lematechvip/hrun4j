@@ -25,12 +25,9 @@ import java.util.*;
 
 
 /**
+ * website http://lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className TestCaseExecutorEngine
- * @description testnge engine
- * @created 2021/4/6 11:30 下午
- * @publicWechat lematech
  */
 
 @Data
@@ -60,8 +57,8 @@ public class TestNGEngine {
 
     /**
      * self-defined add listener
-     * @param testListenerList
-     * @return
+     * @param testListenerList testListenerList
+     * @return TestNG
      */
     public static TestNG addListener(List<ITestListener> testListenerList) {
         getInstance();
@@ -189,8 +186,8 @@ public class TestNGEngine {
 
 
     /**
-     * @param listFile
-     * @return
+     * @param listFile directories file list
+     * @return file to map
      */
     public static Map<String, Set<String>> fileList2TestClass(List<String> listFile) {
         Map<String, Set<String>> fileTestClassMap = Maps.newHashMap();

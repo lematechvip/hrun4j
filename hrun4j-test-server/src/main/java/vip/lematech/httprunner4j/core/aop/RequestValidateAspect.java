@@ -18,10 +18,7 @@ import java.util.Objects;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.0
- * @className RequestValidateAspect
- * @description TODO
- * @created 2021/3/3 11:36 上午
- * @publicWechat lematech
+ * website http://lematech.vip/
  */
 @Slf4j
 @Aspect

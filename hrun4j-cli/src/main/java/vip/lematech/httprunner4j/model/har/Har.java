@@ -22,19 +22,16 @@ package vip.lematech.httprunner4j.model.har;
 import lombok.Data;
 
 /**
- * @author sangupta/lematech@foxmail.com
+ * Top level model object for the HAR file
+ * website http://lematech.vip/
+ * @author lematech@foxmail.com
  * @version 1.0.0
- * @className Har
- * @description Top level model object for the HAR file
- * @created 2021/5/2 8:35 下午
- * @publicWechat lematech
  */
 
 @Data
 public class Har {
 
 	private HarLog log;
-
 	@Override
 	public String toString() {
 		return "Har [log=" + log + "]";

@@ -1,35 +1,39 @@
 package vip.lematech.httprunner4j.helper;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ejlchina.okhttps.Download;
 import com.ejlchina.okhttps.HTTP;
 import com.ejlchina.okhttps.HttpResult;
 import com.ejlchina.okhttps.OkHttps;
 import com.ejlchina.okhttps.internal.SyncHttpTask;
-
 import com.google.common.collect.Maps;
-import vip.lematech.httprunner4j.entity.http.RequestEntity;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.common.DefinedException;
 import vip.lematech.httprunner4j.config.RunnerConfig;
 import vip.lematech.httprunner4j.config.i18n.I18NFactory;
+import vip.lematech.httprunner4j.entity.http.RequestEntity;
 import vip.lematech.httprunner4j.entity.http.ResponseEntity;
 
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-
 import java.io.File;
-
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * website http://lematech.vip/
+ *
  * @author lematech@foxmail.com
  * @version 1.0.0
  */
@@ -98,7 +102,6 @@ public class OkHttpsHelper {
     }
 
     /**
-     *
      * @param requestEntity
      * @return
      */
@@ -197,12 +200,25 @@ public class OkHttpsHelper {
                     String fileName = entry.getKey();
                     syncHttpTask.addFilePara(fileName, file);
                 }
+                syncHttpTask.stepRate(0.1)
+                        .setOnProcess((process -> {
+                            LogHelper.info(I18NFactory.getLocaleMessage("file.upload.process"));
+                            long totalBytes = process.getTotalBytes();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
+                            long doneBytes = process.getDoneBytes();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
+                            double rate = process.getRate();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate));
+                            boolean isDone = process.isDone();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
+                            
+                        }));
             }
+
         }
     }
 
     /**
-     *
      * @param requestEntity
      * @param url
      * @return
@@ -240,7 +256,6 @@ public class OkHttpsHelper {
     }
 
     /**
-     *
      * @param httpResult
      * @param stream
      * @param elapsedTime
@@ -264,11 +279,30 @@ public class OkHttpsHelper {
             HttpResult.Body body = httpResult.getBody();
             if (!stream) {
                 String workDir = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
-                body.stepRate(0.1).toFolder(workDir)
-                .setOnSuccess((File file) -> {
-                    LogHelper.info("文件下载完毕，存储路径：{}",workDir);
-                })
-                .start();
+                if (workDir.endsWith(Constant.DOT_PATH)) {
+                    workDir = LittleHelper.replaceLast(workDir, Constant.DOT_PATH, "");
+                }
+                String finalWorkDir = workDir;
+               body.stepRate(0.1)
+                        .setOnProcess((process -> {
+                            LogHelper.info(I18NFactory.getLocaleMessage("file.download.process"));
+                            long totalBytes = process.getTotalBytes();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
+                            long doneBytes = process.getDoneBytes();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
+                            double rate = process.getRate();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate * 100));
+                            boolean isDone = process.isDone();
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
+                        }))
+                        .toFolder(workDir)
+                        .setOnFailure((Download.Failure failure) -> {
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.failure"),failure.getException().getMessage()));
+                        })
+                        .setOnSuccess((File file) -> {
+                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.success"),FileUtil.normalize(finalWorkDir)));
+                        })
+                        .start();
             } else {
                 String responseContent = body.toString();
                 if (JsonHelper.isJson(responseContent)) {
