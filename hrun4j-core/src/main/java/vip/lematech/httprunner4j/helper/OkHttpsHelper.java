@@ -202,18 +202,17 @@ public class OkHttpsHelper {
                     syncHttpTask.addFilePara(fileName, file);
                 }
                 syncHttpTask.stepRate(0.1)
-                        .setOnProcess((process -> {
-                            LogHelper.info(I18NFactory.getLocaleMessage("file.upload.process"));
-                            long totalBytes = process.getTotalBytes();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
-                            long doneBytes = process.getDoneBytes();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
-                            double rate = process.getRate();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate));
-                            boolean isDone = process.isDone();
-                            LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
-                            
-                        }));
+                .setOnProcess((process -> {
+                    LogHelper.info(I18NFactory.getLocaleMessage("file.upload.process"));
+                    long totalBytes = process.getTotalBytes();
+                    LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.total.bytes"),totalBytes));
+                    long doneBytes = process.getDoneBytes();
+                    LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.bytes"),doneBytes));
+                    double rate = process.getRate();
+                    LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.done.rate"),rate));
+                    boolean isDone = process.isDone();
+                    LogHelper.info(String.format(I18NFactory.getLocaleMessage("file.is.done"),isDone));
+                }));
             }
 
         }
@@ -309,7 +308,8 @@ public class OkHttpsHelper {
                    try {
                         latch.await();
                     } catch (InterruptedException e) {
-                       LogHelper.error("Download interrupt exception");
+                       String exception = "Download interrupt exception";
+                       throw new DefinedException(exception);
                     }
             } else {
                 String responseContent = body.toString();
