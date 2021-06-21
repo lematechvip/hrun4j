@@ -20,11 +20,7 @@
         <logback.version>1.2.3</logback.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.ejlchina</groupId>
-            <artifactId>okhttps</artifactId>
-            <version>3.0.2</version>
-        </dependency>
+
         <dependency>
             <groupId>com.ejlchina</groupId>
             <artifactId>okhttps-fastjson</artifactId>
@@ -43,7 +39,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>[1.26,)</version>
+            <version>1.6</version>
             <scope>compile</scope>
         </dependency>
 
@@ -56,6 +52,17 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.5</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.beanshell</groupId>
+                    <artifactId>bsh</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -67,11 +74,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.75</version>
         </dependency>
 
         <dependency>
@@ -99,6 +101,16 @@
             <artifactId>json-lib</artifactId>
             <version>2.4</version>
             <classifier>jdk15</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
@@ -109,6 +121,12 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>2.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.uncommons</groupId>
