@@ -28,7 +28,7 @@ public class Constant {
     public static final String REGEX_EXPRESSION_REPLACE = "\\$\\{.*?}";
     public static final String REGEX_PARAMETERIZE_EXPRESSION_FLAG = "(.*)(?<=\\$\\{)P\\((.*)\\)(?=})(.*)";
     public static final String REGEX_PARAMETERIZE_EXPRESSION = "(?<=\\$\\{P\\()(.*?)(?=\\)})";
-
+    public static final String REGEX_POSTMAN_REPLACE_EXPRESSION = "\\{\\{.*?\\}\\}";
     public static final String DOT_PATH = ".";
 
     public static final String DOT_ESCAPE_PATH = "\\.";
