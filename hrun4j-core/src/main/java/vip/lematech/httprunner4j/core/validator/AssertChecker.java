@@ -139,8 +139,8 @@ public class AssertChecker {
      * @param objectMap Comparison object Meta
      * @return
      */
-    private vip.lematech.httprunner4j.entity.testcase.Comparator buildComparator(Map<String, Object> objectMap) {
-        vip.lematech.httprunner4j.entity.testcase.Comparator comparator = new vip.lematech.httprunner4j.entity.testcase.Comparator();
+    private Comparator buildComparator(Map<String, Object> objectMap) {
+       Comparator comparator = new Comparator();
         if (objectMap.containsKey(Constant.ASSERT_CHECK) && objectMap.containsKey(Constant.ASSERT_EXPECT)) {
             comparator = JSON.parseObject(JSON.toJSONString(objectMap), Comparator.class);
         } else {
