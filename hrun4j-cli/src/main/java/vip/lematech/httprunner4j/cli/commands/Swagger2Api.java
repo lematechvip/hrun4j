@@ -36,23 +36,21 @@ import java.util.*;
 
 /**
  * The <code>swagger2Api</code> command.
+ *
+ * @version 1.0.0
  * @author: chenfanghang
  * website http://lematech.vip/
- * @version 1.0.0
  */
 public class Swagger2Api extends Command {
 
-    @Option(name = "--file", usage = "Specify the HAR file path.", required = true)
+    @Option(name = "--file", usage = "Specify the Swagger file path or url", required = true)
     String source;
 
-    @Option(name = "--format", usage = "Generate use case format, support 2y/2j.")
+    @Option(name = "--format", usage = "Generate use api format, support 2y/2j.")
     String format = CliConstants.GENERATE_YML_FORMAT;
 
-    @Option(name = "--case_dir", usage = "Specifies the path  of the generated use case.")
+    @Option(name = "--dir", usage = "Specifies the path of the generated use api.")
     File generateCaseDirectory;
-
-    @Option(name = "--gen_mode", usage = "Specified generation mode, full/easy mode.")
-    String generationMode = CliConstants.GENERATE_MODE_EASY;
 
     @Override
     public String description() {
@@ -273,9 +271,9 @@ public class Swagger2Api extends Command {
         FormParameter parameters = (FormParameter) parameter;
         JSONObject f = (JSONObject) form;
         if (StringUtils.equals(parameters.getType(), "file")) {
-            headers.put("Content-Type", "multipart/form-data");
+            headers.put(CliConstants.GENERATE_MODE_EASY_CONTENT_TYPE_META, CliConstants.MULTIPART_FORM_DATA);
         } else {
-            headers.put("Content-Type", "application/x-www-form-urlencoded");
+            headers.put(CliConstants.GENERATE_MODE_EASY_CONTENT_TYPE_META, CliConstants.APPLICATION_X_WWW_FORM_URLENCODED);
         }
         f.put(parameters.getName(), parseValue(parameters.getName()));
     }
