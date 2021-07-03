@@ -2,6 +2,7 @@ package vip.lematech.httprunner4j.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.google.common.collect.Maps;
+import io.swagger.annotations.Api;
 import vip.lematech.httprunner4j.core.annotation.ValidateRequest;
 import vip.lematech.httprunner4j.core.entity.User;
 import vip.lematech.httprunner4j.core.enums.CommonBusinessCode;

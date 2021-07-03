@@ -194,7 +194,7 @@ public class OkHttpsHelper {
         }
         Object fileObj = requestEntity.getFiles();
         if (Objects.nonNull(fileObj)) {
-            if (fileObj instanceof Map) {
+            if (fileObj instanceof Map&&((Map<?, ?>) fileObj).size()>0) {
                 Map<String, File> files = (Map) fileObj;
                 for (Map.Entry<String, File> entry : files.entrySet()) {
                     File file = entry.getValue();

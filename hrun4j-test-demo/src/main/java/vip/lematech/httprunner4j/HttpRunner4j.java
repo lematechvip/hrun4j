@@ -7,7 +7,6 @@ import vip.lematech.httprunner4j.functions.MyFunction;
 import vip.lematech.httprunner4j.base.TestBase;
 import vip.lematech.httprunner4j.common.Constant;
 import vip.lematech.httprunner4j.config.RunnerConfig;
-import vip.lematech.httprunner4j.functions.BuildInFunctions;
 import vip.lematech.httprunner4j.helper.LogHelper;
 
 /**
@@ -24,14 +23,14 @@ public class HttpRunner4j extends TestBase {
         LogHelper.info(" Add function to static code block !");
         AviatorEvaluator.addFunction(new MyFunction.SetupHookFunction());
         AviatorEvaluator.addFunction(new MyFunction.TearDownHookFunction());
-        AviatorEvaluator.addFunction(new BuildInFunctions.SignGenerateFunction());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionAdd());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionDivide());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionMultiply());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionDivide());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedFunctionSubtract());
-        AviatorEvaluator.addFunction(new BuildInFunctions.RequestAndResponseHook());
-        AviatorEvaluator.addFunction(new BuildInFunctions.DefinedHookFunction());
+        AviatorEvaluator.addFunction(new MyFunction.SignGenerateFunction());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedFunctionAdd());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedFunctionDivide());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedFunctionMultiply());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedFunctionDivide());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedFunctionSubtract());
+        AviatorEvaluator.addFunction(new MyFunction.RequestAndResponseHook());
+        AviatorEvaluator.addFunction(new MyFunction.DefinedHookFunction());
 
         /**
          * 包名，资源路径下查找测试用例前置，默认：vip.lematech.httprunner4j

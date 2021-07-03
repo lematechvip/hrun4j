@@ -144,4 +144,9 @@ public class OkHttpTest {
         Assert.assertEquals(code, "00");
     }
 
+    @Test
+    public void testArchitectureMockCall(){
+
+    }
+
 }

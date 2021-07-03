@@ -6,7 +6,7 @@
     <groupId>vip.lematech</groupId>
     <artifactId>httprunner4j</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>httprunner4j</name>
     <url>https://github.com/lematechvip/httprunner4j</url>
     <description>Httprunner4j is a one-stop interface testing solution that supports HTTP (s) protocol testing
@@ -114,7 +114,7 @@
     </profiles>
     <modules>
         <module>hrun4j-core</module>
-        <module>hrun4j-plugins</module>
+        <module>hrun4j-plugin</module>
         <module>hrun4j-api</module>
         <module>hrun4j-cli</module>
         <module>hrun4j-test-server</module>

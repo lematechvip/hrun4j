@@ -19,6 +19,9 @@ public class ObjectConverterTest {
     private ObjectConverter objectConverter = new ObjectConverter();
     @Test
     public void testObjectPropertiesExtends(){
+
+        LogHelper.info("输出日志：{}",UUID.randomUUID(),toString());
+
         HashMap<String, Object> targetMap = new HashMap<>();
         targetMap.put("key","target");
         List<Map<String, Object>> targetList = new ArrayList<>();

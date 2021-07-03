@@ -5,11 +5,11 @@
     <parent>
         <artifactId>httprunner4j</artifactId>
         <groupId>vip.lematech</groupId>
-        <version>0.0.1</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hrun4j-plugins</artifactId>
+    <artifactId>hrun4j-plugin</artifactId>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

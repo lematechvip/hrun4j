@@ -72,14 +72,14 @@
           "name": "call demo_testcase with data 1",
           "testcase": "path/to/demo_testcase.yml",
           "variables": {
-            "device_sn": "$device_sn"
+            "device_sn": "${device_sn}"
           }
         },
         {
           "name": "call demo_testcase with data 2",
           "testcase": "path/to/demo_testcase.yml",
           "variables": {
-            "device_sn": "$device_sn"
+            "device_sn": "${device_sn}"
           }
         }
       ]

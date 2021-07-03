@@ -157,6 +157,7 @@ public class TestCaseRunner {
     private TestStep referenceApiModelOrTestCase(TestStep testStep, Map variables) {
         String testcase = testStep.getTestcase();
         if (!StrUtil.isEmpty(testcase)) {
+
             String spliceCaseFilePath = searcher.spliceFilePath(testcase, Constant.TEST_CASE_DIRECTORY_NAME);
             File testCasePath = searcher.quicklySearchFile(spliceCaseFilePath);
             /**
