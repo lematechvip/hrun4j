@@ -21,7 +21,7 @@ public final class AllCommands {
      */
     public static List<Command> get() {
         return Arrays.asList(new Version()
-                , new Run(), new ViewHar(), new Har2Case(), new Swagger2Api()
+                , new Run(), new ViewHar(), new Har2Case(), new Swagger2Api(), new Postman2Case()
                 , new StartProject());
     }
 

@@ -51,6 +51,10 @@ public class CliConstants {
      */
     public static final String APPLICATION_JSON_MIME_TYPE_UTF_8 = "application/json;charset=UTF-8";
 
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+
+    public static final String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+
     /**
      * generate mode of easy,to content-type meta element
      */
@@ -123,7 +127,6 @@ public class CliConstants {
      * Scaffolding formwork for springboot
      */
     public static final String SCAFFOLD_TEMPLATE_TESTSUITE_FILE_PATH_FOR_API = "vm/scaffold/httprunner4j/pom/template/testsuite/testsuite.vm";
-
 
 
     /**
@@ -247,7 +250,6 @@ public class CliConstants {
      * Scaffolding formwork for hrun4j-cli
      */
     public static final String SCAFFOLD_TEMPLATE_RESOURCES_ENV_FILE_PATH_FOR_CLI = "vm/scaffold/httprunner4j/cli/env.vm";
-
 
 
     /**
