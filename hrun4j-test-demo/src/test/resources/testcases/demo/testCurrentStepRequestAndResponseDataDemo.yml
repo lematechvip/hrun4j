@@ -4,8 +4,6 @@ config:
 teststeps:
   - name: 步骤名称
     api: apis/getToken
-    variables:
-      - aaa: bbb
     validate:
       - equalTo: [status_code, 200]
       - "check": "status_code"

@@ -5,15 +5,19 @@ config:
     expectCode: "00"
 teststeps:
   - name: 步骤名称
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311118
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
       json:
-        sign: eeb00001855491a62e72e340de54db74eaf2cb43
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - equalTo: [status_code, 200]
       - equalTo: [body.message, "ok！"]

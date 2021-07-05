@@ -1,0 +1,19 @@
+config:
+  baseUrl: https://postman-echo
+  name: Postman Echo DELETE
+  verify: false
+teststeps:
+- name: Postman Echo DELETE
+  request:
+    url: /delete
+    method: DELETE
+    headers:
+      Content-Type: application/json
+    json:
+      method: DELETE
+    allowRedirects: true
+    stream: true
+  validate:
+  - eq:
+    - status_code
+    - 200

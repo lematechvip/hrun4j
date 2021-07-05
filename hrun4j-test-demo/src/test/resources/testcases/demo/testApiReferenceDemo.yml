@@ -13,13 +13,18 @@ teststeps:
       - total1: '${add(1, 5)}'
       - total2: '${add(3, 5)}'
     api: apis/getToken
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
+      test_step_variable_exp: "${2+2}"
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311113
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
       params:
         a: ${variable_exp}
         b: B
@@ -32,9 +37,7 @@ teststeps:
         auth2: xxauth2
       stream: true
       json:
-        sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
-    variables:
-      - test_step_variable_exp: "${2+2}"
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - "check": "headers.Content-Type"
         "comparator": "equalTo"

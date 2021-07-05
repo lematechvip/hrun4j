@@ -6,7 +6,7 @@ teststeps:
     api: apis/postman/postFormData.yml
     variables:
       website: http://lematech.vip
-      project: httprunner4j
+      project: hrun4j
       author: lematech
     validate:
       - equalTo: [status_code,200]

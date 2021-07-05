@@ -27,7 +27,7 @@ hs_err_pid*
 /hrun4j-core/test-output/
 /test-output/
 !/logs/
-/hrun4j-core/src/test/resources/test-output/httprunner4j/
+/hrun4j-core/src/test/resources/test-output/hrun4j/
 /resources/
 /hrun4j-core/src/test/resources/test-output/
 !/pom.xml.versionsBackup

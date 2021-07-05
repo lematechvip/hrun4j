@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-    <contextName>httprunner4j</contextName>
+    <contextName>hrun4j</contextName>
     <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n"/>
-<!--    <property name="pattern.color" value=" %highlight(httprunner4j:) %highlight(%msg) %n"/>-->
+<!--    <property name="pattern.color" value=" %highlight(hrun4j:) %highlight(%msg) %n"/>-->
     <property name="pattern.color" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %green(%logger{50}) - %highlight(%msg) %n"/>
     <property name="log.home" value="logs"/>
-    <property name="app.name" value="httprunner4j"/>
+    <property name="app.name" value="hrun4j"/>
 
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

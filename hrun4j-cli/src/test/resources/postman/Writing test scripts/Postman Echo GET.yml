@@ -1,0 +1,15 @@
+config:
+  baseUrl: https://postman-echo
+  name: Postman Echo GET
+  verify: false
+teststeps:
+- name: Postman Echo GET
+  request:
+    url: /get
+    method: GET
+    allowRedirects: true
+    stream: true
+  validate:
+  - eq:
+    - status_code
+    - 200

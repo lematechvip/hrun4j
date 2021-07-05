@@ -3,7 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>httprunner4j</artifactId>
+        <artifactId>hrun4j</artifactId>
         <groupId>vip.lematech</groupId>
         <version>1.0.0</version>
     </parent>
@@ -170,7 +170,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>HttpRunner4J</mainClass>
+                            <mainClass>Hrun4j</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

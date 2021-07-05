@@ -1,17 +1,17 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="httprunner4j" parallel="false">
+<suite name="hrun4j" parallel="false">
 
     <listeners>
         <listener class-name="org.uncommons.reportng.HTMLReporter"/>
         <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
     </listeners>
-    <test name="httprunner4j">
+    <test name="hrun4j">
         <classes>
-            <class name="vip.lematech.httprunner4j.testcases.demo.DemoTest">
+            <class name="vip.lematech.hrun4j.testcases.demo.DemoTest">
                 <methods>
                 </methods>
             </class>
-            <class name="vip.lematech.httprunner4j.testcases.demojson.DemoJsonTest">
+            <class name="vip.lematech.hrun4j.testcases.demojson.DemoJsonTest">
             </class>
         </classes>
     </test>

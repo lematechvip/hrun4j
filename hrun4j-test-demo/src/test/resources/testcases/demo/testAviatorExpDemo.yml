@@ -8,19 +8,23 @@ teststeps:
       - total2: "${string.length('hello')}"
       - total3: "string.contains(/\"test/\",string.substring('hello',1,2))"
       - total4: "${string.substring('hello',1,2)}"
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311118
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
         total1: ${total1}
         total2: ${total2}
         total3: ${total3}
         total4: ${total4}
       json:
-        sign: eeb00001855491a62e72e340de54db74eaf2cb43
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - equalTo: [status_code,200]
       - equalTo: [body.code,"00"]

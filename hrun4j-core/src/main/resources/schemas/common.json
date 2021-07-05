@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "description": "common json schema definitions for httprunner4j api/testcase",
+  "description": "common json schema definitions for hrun4j api/testcase",
   "definitions": {
     "name": {
       "description": "used as api/teststep/testcase identification",

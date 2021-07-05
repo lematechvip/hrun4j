@@ -1,5 +1,5 @@
 
-# 关于HttpRunner4j
+# 关于hrun4j
 
 <p align="center">
   <a href="https://www.lematech.vip/">
@@ -7,10 +7,10 @@
 </p>
 
 <h1 align="center">
-  <a href="https://www.lematech.vip/" target="_blank">HttpRunner4J</a>
+  <a href="https://www.lematech.vip/" target="_blank">hrun4j</a>
 </h1>
 
->HttpRunner4j是由`乐马技术`推出的开源一站式接口测试解决方案，它不仅仅只是一个Java版的httprunner，现阶段规划解决方案包括四部分：
+>Hrun4j是由`乐马技术`推出的开源一站式接口测试解决方案，它不仅仅只是一个Java版的httprunner，现阶段规划解决方案包括四部分：
 
 1. `hrun4j-core`：框架核心，提供完整的运行机制、数据驱动、多种表达式引擎、多种数据检查机制及测试报告生成（√）
 2. `hrun4j-plugin`：Intellij Idea插件，赋能研发，插件式集成至IDEA，提供智能补全、快速填充及在线调试运行功能（实现中）
@@ -21,7 +21,7 @@
 
 ##✨ 核心特性
 
-1. 支持以`CLI`和`POM`模式集成HttpRunner4j能力，如以`POM`模式集成，可以无缝融入Spring生态链
+1. 支持以`CLI`和`POM`模式集成`hrun4j`能力，如以`POM`模式集成，可以无缝融入Spring生态链
 2. 集成纯粹且优雅的`Okhttps`，即使是复杂场景（比如上传/下载进度控制），它都能轻松搞定
 3. 借助`TestNG`实现YML或JSON格式数据驱动、测试用例组织与执行
 4. 借助`ReportNG`，生成优雅详细的测试报告

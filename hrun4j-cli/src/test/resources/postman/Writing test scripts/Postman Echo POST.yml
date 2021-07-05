@@ -1,0 +1,19 @@
+config:
+  baseUrl: https://postman-echo
+  name: Postman Echo POST
+  verify: false
+teststeps:
+- name: Postman Echo POST
+  request:
+    url: /post
+    method: POST
+    headers:
+      Content-Type: application/json
+    json:
+      method: POST
+    allowRedirects: true
+    stream: true
+  validate:
+  - eq:
+    - status_code
+    - 200

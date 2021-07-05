@@ -1,0 +1,19 @@
+config:
+  baseUrl: https://postman-echo
+  name: Postman Echo PUT
+  verify: false
+teststeps:
+- name: Postman Echo PUT
+  request:
+    url: /put
+    method: PUT
+    headers:
+      Content-Type: application/json
+    json:
+      method: PUT
+    allowRedirects: true
+    stream: true
+  validate:
+  - eq:
+    - status_code
+    - 200

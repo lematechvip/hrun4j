@@ -1,13 +1,14 @@
 config:
   name: 测试文件下载
-  base_url: https://dldir1.qq.com
+  base_url: https://cdn.lematech.vip
 teststeps:
   - name: 测试文件下载
     request:
-      url: /weixin/mac/WeChatMac.dmg
+      url: /gongzhonghao.jpg
       method: GET
       stream: false
     validate:
       - eq:
           - status_code
           - 200
+

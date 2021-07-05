@@ -15,9 +15,9 @@ teststeps:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311113
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
       params:
         a: A
         b: B
@@ -31,9 +31,7 @@ teststeps:
       verify: false
       stream: true
       json:
-        sign: 8d21d6fa4d84fb1b21212913ca76280bf8241f06
-    variables:
-      - aaa: bbb
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - equalTo: [status_code, 200]
       - "check": "status_code"

@@ -11,17 +11,19 @@ config:
 teststeps:
   - name: step 1
     variables:              # step variables
-      varA: "step1A"
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311118
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
         variablePriority: /${varA}/${varB}/${varC} # varA="step1A", varB="paramB1", varC="configC"
       json:
-        sign: eeb00001855491a62e72e340de54db74eaf2cb43
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     extract:                # extracted variables
       varA: body.code   # suppose varA="extractVarA"
       varB: body.message   # suppose varB="extractVarB"
@@ -35,16 +37,19 @@ teststeps:
   - name: step 2
     variables:              # step variables
       varA: "step2A"
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311118
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
         variablePriority: /${varA}/${varB}/${varC} # varA="step2A", varB="extractVarB", varC="configC"
       json:
-        sign: eeb00001855491a62e72e340de54db74eaf2cb43
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - equalTo: [status_code,200]
       - equalTo: [body.code,"00"]

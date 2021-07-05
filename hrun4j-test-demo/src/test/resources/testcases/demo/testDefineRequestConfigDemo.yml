@@ -11,13 +11,17 @@ teststeps:
       - total1: '${add(1, 5)}'
       - total2: '${add(3, 5)}'
     api: apis/getToken
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.0
     request:
       url: /api/get-token
       method: POST
       headers:
-        device_sn: 2021032311113
-        os_platform: MacOS
-        app_version: 1.0.0
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
       params:
         a: A
         b: B
@@ -33,8 +37,8 @@ teststeps:
         auth2: xxauth2
       verify: false
       stream: true
-    variables:
-      - aaa: bbb
+      json:
+         sign: ${signGenerate(device_sn,os_platform,app_version)}
     validate:
       - equalTo: [status_code, 200]
       - "check": "status_code"

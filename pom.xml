@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>vip.lematech</groupId>
-    <artifactId>httprunner4j</artifactId>
+    <artifactId>hrun4j</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
-    <name>httprunner4j</name>
-    <url>https://github.com/lematechvip/httprunner4j</url>
-    <description>Httprunner4j is a one-stop interface testing solution that supports HTTP (s) protocol testing
+    <name>hrun4j</name>
+    <url>https://github.com/lematechvip/hrun4j</url>
+    <description>hrun4j is a one-stop interface testing solution that supports HTTP (s) protocol testing
     </description>
     <licenses>
         <license>
@@ -18,8 +18,8 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/lematechvip/httprunner4j</url>
-        <connection>https://github.com/lematechvip/httprunner4j.git</connection>
+        <url>https://github.com/lematechvip/hrun4j</url>
+        <connection>https://github.com/lematechvip/hrun4j.git</connection>
     </scm>
     <properties>
         <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
