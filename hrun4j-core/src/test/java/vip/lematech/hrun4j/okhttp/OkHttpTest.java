@@ -22,7 +22,7 @@ public class OkHttpTest {
         HashMap header = Maps.newHashMap();
         header.put("device_sn", "2021032311113");
         header.put("os_platform", "MacOS");
-        header.put("app_version", "1.0.0");
+        header.put("app_version", "1.0.1");
         HttpResult httpResult = OkHttps.sync(BASE_URL + "/api/get-token")
                 .addHeader(header)
                 .bodyType(OkHttps.JSON)

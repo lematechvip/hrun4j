@@ -25,7 +25,7 @@ package vip.lematech.hrun4j.model.har;
  * The time between sending a request and receiving a response is measured in milliseconds
  * @author sangupta/lematech@foxmail.com
  * website http://lematech.vip/
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class HarTiming {
 

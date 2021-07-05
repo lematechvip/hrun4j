@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * website http://lematech.vip/
  * @author chenfanghang
- * @version 1.0.0
+ * @version 1.0.1
  */
 @Data
 public class PostmanCollectionInfo {

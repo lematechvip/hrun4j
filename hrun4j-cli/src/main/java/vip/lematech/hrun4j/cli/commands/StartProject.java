@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 /**
  * website http://lematech.vip/
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  * The <code>startproject</code> command.
  */
 public class StartProject extends Command {
@@ -38,7 +38,7 @@ public class StartProject extends Command {
     String groupId = "vip.lematech.hrun4j";
 
     @Option(name = "--version", usage = "Specify maven project version.")
-    String version = "1.0.0-SNAPSHOT";
+    String version = "1.0.1-SNAPSHOT";
 
     @Option(name = "--type", usage = "Project type, default is hrun4j POM type, support CLI/SRPINGBOOT ")
     String type = CliConstants.HRUN4J_POM_TYPE;

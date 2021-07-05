@@ -6,7 +6,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 /**
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  * website http://lematech.vip/
  */
 public class ApplicationContextHelper {

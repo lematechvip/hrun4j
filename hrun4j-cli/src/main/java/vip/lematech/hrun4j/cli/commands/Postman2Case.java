@@ -37,7 +37,7 @@ import static vip.lematech.hrun4j.helper.RegExpHelper.find;
  * The <code>postman2Case</code> command.
  * @author: chenfanghang
  * website http://lematech.vip/
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class Postman2Case extends Command {
 

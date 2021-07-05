@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  * website http://lematech.vip/
  */
 
@@ -36,7 +36,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("测试管理平台接口使用文档")
                 .description("Restful接口信息")
-                .version("1.0.0")
+                .version("1.0.1")
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0")
                 .contact(contact)

@@ -3,7 +3,7 @@ package vip.lematech.hrun4j.model.postman;
 /**
  * website http://lematech.vip/
  * @author chenfanghang
- * @version 1.0.0
+ * @version 1.0.1
  */
 public enum PostmanRequestBodyModeEnum {
 

@@ -13,7 +13,7 @@ teststeps:
       varA: "step1A"
       device_sn: 2021032311118
       os_platform: MacOS
-      app_version: 1.0.0
+      app_version: 1.0.1
     request:
       url: /api/get-token
       method: POST
@@ -39,7 +39,7 @@ teststeps:
       varA: "step2A"
       device_sn: 2021032311118
       os_platform: MacOS
-      app_version: 1.0.0
+      app_version: 1.0.1
     request:
       url: /api/get-token
       method: POST

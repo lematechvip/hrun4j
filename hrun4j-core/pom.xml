@@ -5,12 +5,12 @@
     <parent>
         <artifactId>hrun4j</artifactId>
         <groupId>vip.lematech</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>vip.lematech</groupId>
     <artifactId>hrun4j-core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>hrun4j-core</name>
     <url>https://lematech.vip</url>
     <properties>

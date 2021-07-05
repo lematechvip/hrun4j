@@ -4,7 +4,7 @@ config:
   variables:
     device_sn: 2021032311113
     os_platform: MacOS
-    app_version: 1.0.0
+    app_version: 1.0.1
 teststeps:
   - name: 登录系统
     api: apis/getSimpleToken

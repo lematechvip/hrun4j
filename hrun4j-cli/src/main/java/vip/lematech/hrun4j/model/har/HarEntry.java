@@ -28,7 +28,7 @@ import java.util.Objects;
  * An array containing all requests, each item of the array is an object composed of the data of a request, sorted according to StartedDateTime
  * @author sangupta/lematech@foxmail.com
  * website http://lematech.vip/
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 @Data

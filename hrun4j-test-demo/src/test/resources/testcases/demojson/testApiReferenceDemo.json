@@ -25,7 +25,7 @@
       "variables": {
         "device_sn": 2021032311118,
         "os_platform": "MacOS",
-        "app_version": "1.0.0",
+        "app_version": "1.0.1",
         "test_step_variable_exp": "${2+2}"
       },
       "request": {

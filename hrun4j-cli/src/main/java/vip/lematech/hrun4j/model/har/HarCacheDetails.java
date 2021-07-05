@@ -24,7 +24,7 @@ import lombok.Data;
 /**
  * A detailed list of buffer information
  * @author sangupta/lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 @Data

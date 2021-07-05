@@ -9,7 +9,7 @@ import java.util.List;
  * List of all available commands.
  *
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  * website http://lematech.vip/
  */
 public final class AllCommands {

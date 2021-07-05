@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * website http://lematech.vip/
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 public class ProjectGeneratorImpl implements IProjectGenerator {

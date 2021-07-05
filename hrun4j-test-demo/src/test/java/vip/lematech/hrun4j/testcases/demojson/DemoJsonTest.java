@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author lematech@foxmail.com
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class DemoJsonTest extends Hrun4j {
     @BeforeClass
