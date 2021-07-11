@@ -1,5 +1,7 @@
 # 关于hrun4j
 
+
+
 <p align="center">
   <a href="https://www.lematech.vip/">
     <img width="200" src="https://cdn.lematech.vip/lematech_logo.png"></a>
@@ -9,7 +11,10 @@
   <a href="https://www.lematech.vip/" target="_blank">hrun4j</a>
 </h1>
 
+[![TesterHome](https://img.shields.io/badge/TTF-TesterHome-2955C5.svg)](https://testerhome.com/github_statistics)
+
 >`hrun4j`是由`乐马技术`推出的开源一站式接口测试解决方案，它不仅仅只是一个Java版的httprunner，现阶段规划解决方案包括四部分：
+
 
 1. `hrun4j-core`：框架核心，提供完整的运行机制、数据驱动、多种表达式引擎、多种数据检查机制及测试报告生成（√）
 2. `hrun4j-plugin`：Intellij Idea插件，赋能研发，插件式集成至IDEA，提供智能补全、快速填充及在线调试运行功能（实现中）
@@ -41,6 +46,7 @@
 参考`快速上手`篇
 
 ## 链接
+
 
 ### 乐马技术
 
