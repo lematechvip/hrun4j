@@ -114,7 +114,6 @@
     </profiles>
     <modules>
         <module>hrun4j-core</module>
-        <module>hrun4j-plugin</module>
         <module>hrun4j-api</module>
         <module>hrun4j-cli</module>
         <module>hrun4j-test-server</module>

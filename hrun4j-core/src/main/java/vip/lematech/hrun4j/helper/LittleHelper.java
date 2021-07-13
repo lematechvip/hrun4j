@@ -82,4 +82,8 @@ public class LittleHelper<T> {
         }
         return copyObj;
     }
+
+    public static boolean isWindows() {
+        return System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1;
+    }
 }

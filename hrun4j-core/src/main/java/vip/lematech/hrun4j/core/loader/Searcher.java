@@ -6,6 +6,7 @@ import vip.lematech.hrun4j.common.Constant;
 import vip.lematech.hrun4j.common.DefinedException;
 import vip.lematech.hrun4j.config.RunnerConfig;
 import vip.lematech.hrun4j.helper.FilesHelper;
+import vip.lematech.hrun4j.helper.LittleHelper;
 import vip.lematech.hrun4j.helper.LogHelper;
 import vip.lematech.hrun4j.base.TestBase;
 import lombok.Data;
@@ -65,7 +66,12 @@ public class Searcher {
             if (!filePath.startsWith(File.separator)) {
                 filePath = File.separator + filePath;
             }
-            URL url = TestBase.class.getResource(filePath);
+            URL url;
+            if (LittleHelper.isWindows()) {
+                url = this.getClass().getClassLoader().getResource(filePath);
+            } else {
+                url = TestBase.class.getResource(filePath);
+            }
             if (Objects.isNull(url)) {
                 String exceptionMsg = String.format("The file %s was not found under the resources", filePath);
                 throw new DefinedException(exceptionMsg);
@@ -90,8 +96,8 @@ public class Searcher {
      * @return file path of splice
      */
     public String spliceFilePath(String dataFileType, String directoryName) {
-        if (!dataFileType.startsWith(directoryName + File.separator) &&
-                !dataFileType.startsWith(File.separator + directoryName + File.separator)) {
+        if (!dataFileType.startsWith(FileUtil.normalize(directoryName + File.separator)) &&
+                !dataFileType.startsWith(FileUtil.normalize(File.separator + directoryName + File.separator))) {
             dataFileType = directoryName + File.separator + dataFileType;
         }
         if (FileUtil.isAbsolutePath(dataFileType)) {
