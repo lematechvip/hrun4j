@@ -6,11 +6,9 @@
     <artifactId>${projectInfo.artifactId}</artifactId>
     <version>${projectInfo.version}</version>
     <name>${projectInfo.name}</name>
-    <description>本工程由hrun4j脚手架工具生成，该工程以POM方式集成hrun4j能力</description>
+    <description>hrun4j pom scaffolding</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
