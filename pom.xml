@@ -6,7 +6,7 @@
     <groupId>vip.lematech</groupId>
     <artifactId>hrun4j</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>hrun4j</name>
     <url>https://github.com/lematechvip/hrun4j</url>
     <description>hrun4j is a one-stop interface testing solution that supports HTTP (s) protocol testing
