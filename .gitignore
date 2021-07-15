@@ -32,3 +32,4 @@ hs_err_pid*
 /hrun4j-core/src/test/resources/test-output/
 !/pom.xml.versionsBackup
 /hrun4j-test-demo/test-output/
+dist

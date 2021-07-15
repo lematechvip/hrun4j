@@ -7,9 +7,11 @@ import vip.lematech.hrun4j.common.Constant;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 
@@ -38,6 +40,9 @@ public class Env {
                 String envFilePath = (runMode == RunnerConfig.RunMode.POM) ? Constant.ENV_FILE_NAME : RunnerConfig.getInstance().getDotEnvPath();
                 File searchFile = null;
                 if (runMode == RunnerConfig.RunMode.CLI) {
+                    if(Objects.isNull(envFilePath)){
+                        return ;
+                    }
                     if (FileUtil.isAbsolutePath(envFilePath)) {
                         searchFile = new File(envFilePath);
                     } else {
@@ -48,7 +53,7 @@ public class Env {
                     URL url = Thread.currentThread().getContextClassLoader().getResource(envFilePath);
                     searchFile = new File(FilesHelper.filePathDecode(url.getPath()));
                 }
-                if(FileUtil.exist(searchFile)){
+                if(!searchFile.isDirectory()&&FileUtil.exist(searchFile)){
                     properties.load(new FileInputStream(searchFile));
                     envMap.putAll((Map) properties);
                 }else{

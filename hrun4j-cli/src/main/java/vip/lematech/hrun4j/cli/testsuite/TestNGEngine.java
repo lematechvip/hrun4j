@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import vip.lematech.hrun4j.helper.FilesHelper;
 import vip.lematech.hrun4j.helper.JavaIdentifierHelper;
+import vip.lematech.hrun4j.helper.LittleHelper;
 import vip.lematech.hrun4j.helper.LogHelper;
 import vip.lematech.hrun4j.core.engine.TemplateEngine;
 import vip.lematech.hrun4j.core.loader.HotLoader;
@@ -134,6 +135,7 @@ public class TestNGEngine {
             if (filePathFlag) {
                 pkgName.append("_");
                 String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+                workDirPath =  LittleHelper.escapeRegexTransfer(workDirPath);
                 filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
             } else {
                 filePath = fileParentCanonicalPath;

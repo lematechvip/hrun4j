@@ -2,8 +2,10 @@ package vip.lematech.hrun4j.helper;
 
 
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import vip.lematech.hrun4j.common.Constant;
 import vip.lematech.hrun4j.common.DefinedException;
 
 import java.io.IOException;
@@ -83,7 +85,32 @@ public class LittleHelper<T> {
         return copyObj;
     }
 
+    /**
+     * is windows ?
+     * @return
+     */
     public static boolean isWindows() {
         return System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1;
+    }
+
+    /**
+     * escapeRegexTransfer
+     * @param dirPath
+     * @return
+     */
+    public static String escapeRegexTransfer(String dirPath){
+        if(!isWindows()){
+            return dirPath;
+        }
+        char [] pathChars =dirPath.toCharArray();
+        StringBuffer resultStr = new StringBuffer();
+        for(char path : pathChars){
+            if(path == '\\'){
+                resultStr.append("\\\\");
+            }else{
+                resultStr.append(path);
+            }
+        }
+        return resultStr.toString();
     }
 }

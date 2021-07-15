@@ -3,6 +3,7 @@ package vip.lematech.hrun4j.cli.commands;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import vip.lematech.hrun4j.helper.FilesHelper;
 import vip.lematech.hrun4j.helper.JavaIdentifierHelper;
@@ -25,6 +26,7 @@ import vip.lematech.hrun4j.common.DefinedException;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -48,7 +50,7 @@ public class Run extends Command {
     String extName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
 
     @Option(name = "--testsuite_path", usage = "Specify the TestSuite path", metaVar = "<testsuite_path>")
-    File testSuitePath;
+    String testSuitePathValue;
 
     @Option(name = "--dot_env_path", usage = "Specify the path to the.env file")
     File dotEnvPath;
@@ -68,20 +70,29 @@ public class Run extends Command {
     public int execute(PrintWriter out, PrintWriter err) {
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
         LogHelper.info("Run mode: {}", RunnerConfig.RunMode.CLI);
-        if (Objects.nonNull(testSuitePath) && Objects.nonNull(testCasePaths)) {
+
+
+        if (Objects.nonNull(testSuitePathValue) && Objects.nonNull(testCasePaths)) {
             String exceptionMsg = String.format("It is not allowed to specify both testSuitePath and testCasePaths option values");
             LogHelper.error(exceptionMsg);
             return 1;
         }
 
-        if (Objects.isNull(testSuitePath) && Objects.isNull(testCasePaths)) {
+        if (Objects.isNull(testSuitePathValue) && Objects.isNull(testCasePaths)) {
             String exceptionMsg = String.format("You must specify either testSuitePath or testCasePaths");
             LogHelper.error(exceptionMsg);
             return 1;
         }
 
+
+
         validateOrSetParams();
         String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+
+        File testSuitePath = null  ;
+        if(Objects.nonNull(testSuitePathValue)){
+            testSuitePath = new File(workDirPath,testSuitePathValue);
+        }
         LogHelper.info("The workspace path：{}", workDirPath);
         initEnvPath(workDirPath);
         TestSuite testSuite = new TestSuite();
@@ -94,7 +105,7 @@ public class Run extends Command {
             List<TestSuiteCase> testSuiteCases = new ArrayList<>();
             HashSet<String> dataFilesSet = new HashSet();
             for (String dataFilePath : testCasePaths) {
-                File dataFile = new File(dataFilePath);
+                File dataFile = new File(workDirPath,dataFilePath);
                 if (!dataFile.exists()) {
                     String exceptionMsg = String.format("The test case file %s does not exist"
                             , FileUtil.getAbsolutePath(dataFile));
@@ -107,6 +118,7 @@ public class Run extends Command {
                 TestSuiteCase testSuiteCase = new TestSuiteCase();
                 String dataResultFile = null;
                 if (dataFilePath.startsWith(workDirPath)) {
+                    workDirPath = LittleHelper.escapeRegexTransfer(workDirPath);
                     dataResultFile = dataFilePath.replaceFirst(workDirPath, Constant.DOT_PATH);
                 }
                 if (!StrUtil.isEmpty(dataResultFile)) {
@@ -116,7 +128,7 @@ public class Run extends Command {
             }
             testSuite.setTestCases(testSuiteCases);
         } else {
-            FilesHelper.checkFileExists(testSuitePath);
+
             String testSuiteExtName = FileUtil.extName(testSuitePath);
             testSuite = TestDataLoaderFactory.getLoader(testSuiteExtName)
                     .load(testSuitePath, TestSuite.class);
@@ -207,7 +219,7 @@ public class Run extends Command {
                 RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotEnvPath));
             }
         } else {
-            File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
+            File dotFilePath = new File(workDirPath);
             if (!dotFilePath.exists() || !dotFilePath.isFile()) {
                 String exceptionMsg = String.format("The .env file %s does not exist"
                         , FileUtil.getAbsolutePath(dotFilePath));
@@ -226,7 +238,7 @@ public class Run extends Command {
             RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
             if (!rootBsh.exists() || !rootBsh.isFile() || !Constant.BEANSHELL_BSH_END_SUFFIX.endsWith(FileUtil.extName(rootBsh))) {
-                String exceptionMsg = String.format("The rootBsh file %s does not exist or the suffix does not end in `.jar`"
+                String exceptionMsg = String.format("The rootBsh file %s does not exist or the suffix does not end in `.bsh`"
                         , FileUtil.getAbsolutePath(rootBsh));
                 throw new DefinedException(exceptionMsg);
             }

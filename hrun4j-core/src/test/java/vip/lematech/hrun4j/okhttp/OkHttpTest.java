@@ -27,7 +27,7 @@ public class OkHttpTest {
                 .addHeader(header)
                 .bodyType(OkHttps.JSON)
                 .charset(Charset.defaultCharset())
-                .addBodyPara("sign", "594231b6dcf1c0d7970d2d77a5dfe6777518acdb")
+                .addBodyPara("sign", "9a43330baaa4c196345fa2882a82442a44baaa59")
                 .post();
         LogHelper.info("响应状态码：{}", httpResult.getStatus());
         LogHelper.info("响应头：{}", httpResult.getHeaders());

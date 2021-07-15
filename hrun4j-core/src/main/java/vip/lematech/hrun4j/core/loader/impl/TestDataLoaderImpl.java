@@ -70,7 +70,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
                 throw new DefinedException(exceptionMsg);
             }
         } catch (IOException e) {
-            String exceptionMsg = String.format("Error in file %s.%s serialization,Exception Information: %s", testDataName, this.extName, e.getMessage());
+            String exceptionMsg = String.format("Error in file %s serialization,Exception Information: %s", testDataName, this.extName, e.getMessage());
             throw new DefinedException(exceptionMsg);
         }
         return result;

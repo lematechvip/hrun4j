@@ -40,23 +40,30 @@ public class FilesHelper {
      * @return package name
      */
     public static String dirPath2pkgName(String dirPath) {
-        StringBuffer pkgName = new StringBuffer();
+
         if (StrUtil.isEmpty(dirPath)) {
             return "";
         }
-        if (dirPath.startsWith(Constant.DOT_PATH)) {
-            dirPath = dirPath.replaceFirst("\\.", "");
+
+        char[] dirPaths = dirPath.toCharArray();
+        StringBuffer pkgName = new StringBuffer();
+        boolean preDotFlag = true;
+        for(int index =0;index<dirPaths.length;index++){
+            char tmpChar = dirPaths[index];
+            if(tmpChar == '.'){
+                continue;
+            }
+            if(tmpChar == File.separatorChar){
+                if(preDotFlag){
+                    preDotFlag = false;
+                    continue;
+                }
+                pkgName.append(Constant.DOT_PATH);
+            }else{
+                pkgName.append(tmpChar);
+            }
+
         }
-        if (dirPath.startsWith(File.separator)) {
-            dirPath = dirPath.replaceFirst(File.separator, "");
-        }
-        if (dirPath.endsWith(File.separator)) {
-            dirPath = LittleHelper.replaceLast(dirPath, File.separator, "");
-        }
-        if (dirPath.contains(File.separator)) {
-            dirPath = dirPath.replaceAll(File.separator, Constant.DOT_PATH);
-        }
-        pkgName.append(dirPath);
         String packageName = pkgName.toString();
         if (!JavaIdentifierHelper.isValidJavaFullClassName(packageName)) {
             throw new DefinedException(JavaIdentifierHelper.validateIdentifierName(packageName));
