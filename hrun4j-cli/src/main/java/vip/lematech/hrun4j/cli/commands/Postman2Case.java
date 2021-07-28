@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.args4j.Option;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import vip.lematech.hrun4j.model.postman.*;
 import vip.lematech.hrun4j.cli.constant.CliConstants;
 import vip.lematech.hrun4j.cli.handler.Command;
 import vip.lematech.hrun4j.common.Constant;
@@ -115,7 +114,7 @@ public class Postman2Case extends Command {
                 config.setName(item.getName());
                 if (StringUtils.isNotBlank(request.getUrl().getRaw())) {
                     String protocol = request.getUrl().getProtocol();
-                    String host = Optional.ofNullable(request.getUrl().getHost().get(0)).orElse("");
+                    String host = Optional.of(String.join(".", request.getUrl().getHost())).orElse("");
                     String port = StrUtil.isNotEmpty(request.getUrl().getPort()) ? ":" + request.getUrl().getPort() : "";
                     String baseUrl = protocol + "://" + host + port;
                     config.setBaseUrl(baseUrl);
