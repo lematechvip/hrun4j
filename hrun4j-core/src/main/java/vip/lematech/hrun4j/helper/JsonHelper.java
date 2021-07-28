@@ -1,6 +1,6 @@
 package vip.lematech.hrun4j.helper;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -115,13 +115,22 @@ public class JsonHelper {
      * @return true if json
      */
     public static boolean isJson(String jsonStr) {
-        boolean flag = true;
-        try {
-            JSON.parseObject(jsonStr);
-        } catch (Exception e) {
-            flag = false;
+        if (StrUtil.isEmpty(jsonStr)) {
+            return false;
         }
-        return flag;
+        boolean isJsonObject = true;
+        boolean isJsonArray = true;
+        try {
+            JSONObject.parseObject(jsonStr);
+        } catch (Exception e) {
+            isJsonObject = false;
+        }
+        try {
+            JSONObject.parseArray(jsonStr);
+        } catch (Exception e) {
+            isJsonArray = false;
+        }
+        return isJsonObject || isJsonArray;
     }
 
     public static void jsonWriteToFile(File jsonFilePath, Object json) {
