@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.1
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  */
 @Service("TokenServiceImpl")
 @Slf4j

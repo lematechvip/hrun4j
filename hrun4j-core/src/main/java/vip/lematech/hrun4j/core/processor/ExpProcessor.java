@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -201,7 +201,6 @@ public class ExpProcessor<T> {
                 if (StrUtil.isEmptyIfStr(fieldValue)) {
                     continue;
                 }
-
                 if (attributeClass == String.class) {
                     Method setMethod = object.getClass().getMethod("set" + methodName, String.class);
                     setMethod.invoke(object, dynHandleContainsExpObject((T) fieldValue));

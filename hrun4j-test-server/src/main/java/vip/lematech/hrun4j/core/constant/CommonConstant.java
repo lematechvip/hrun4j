@@ -3,7 +3,7 @@ package vip.lematech.hrun4j.core.constant;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.1
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  *
  */
 public class CommonConstant {

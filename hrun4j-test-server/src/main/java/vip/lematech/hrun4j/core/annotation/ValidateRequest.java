@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * @author lematech@foxmail.com
  * @version 1.0.1
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  */
 @Documented
 @Target({ElementType.METHOD, ElementType.TYPE})

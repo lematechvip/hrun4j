@@ -118,5 +118,6 @@
         <module>hrun4j-cli</module>
         <module>hrun4j-test-server</module>
         <module>hrun4j-test-demo</module>
+        <module>lmcov</module>
     </modules>
 </project>

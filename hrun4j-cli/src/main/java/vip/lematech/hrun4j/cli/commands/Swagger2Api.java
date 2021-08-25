@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * The <code>swagger2Api</code> command.
  * @author: chenfanghang
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @version 1.0.1
  */
 public class Swagger2Api extends Command {

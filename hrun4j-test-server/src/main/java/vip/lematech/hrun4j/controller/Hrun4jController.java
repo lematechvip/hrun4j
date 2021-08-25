@@ -22,7 +22,7 @@ import java.util.Objects;
  * hrun4j 使用入门案例
  * @author lematech@foxmail.com
  * @version 1.0.1
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  */
 @RestController
 @RequestMapping("/api")

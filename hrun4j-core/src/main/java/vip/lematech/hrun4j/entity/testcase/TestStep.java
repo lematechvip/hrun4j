@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  *
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -50,12 +50,12 @@ public class TestStep<T> extends BaseModel{
     private List<Map<String,Object>> validate;
 
     /**
-     * 1、http请独有
+     * http request
      */
     private RequestEntity request;
 
     /**
-     * 3、api reference, value is api file relative path
+     * api reference, value is api file relative path
      */
     private String api;
 
@@ -65,7 +65,7 @@ public class TestStep<T> extends BaseModel{
     private String testcase;
 
     /**
-     * 整个用例输出的参数列表，可输出的参数包括公共的 variable 和 extract 的参数
+     * The list of arguments that the entire use case outputs. The arguments that can be output include the common variable and extract arguments
      */
     private List output;
 }

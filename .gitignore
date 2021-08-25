@@ -33,3 +33,5 @@ hs_err_pid*
 !/pom.xml.versionsBackup
 /hrun4j-test-demo/test-output/
 dist
+/jacoco/
+*.exec

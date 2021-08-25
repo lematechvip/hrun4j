@@ -3,7 +3,7 @@ package vip.lematech.hrun4j.cli.service;
 import vip.lematech.hrun4j.model.scaffolding.ProjectInfo;
 
 /**
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */

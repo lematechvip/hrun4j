@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -23,7 +23,6 @@ public class RequestEntity<T> {
     @JSONField(ordinal = 1)
     private String url;
     /**
-     * TODO: 2021/1/20 可选键值对（对象）
      * 1、query string for request url
      */
     @JSONField(ordinal = 4)
@@ -52,7 +51,6 @@ public class RequestEntity<T> {
     /**
      * Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True
      */
-
     @JSONField(ordinal = 11)
     private Boolean allowRedirects = true;
     @JSONField(ordinal = 9)
