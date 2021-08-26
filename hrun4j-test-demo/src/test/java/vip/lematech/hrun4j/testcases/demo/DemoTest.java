@@ -180,6 +180,28 @@ public class DemoTest extends Hrun4j {
         TestCaseExecutorEngine.getInstance().execute(testCase);
     }
 
+    /**
+     * 测试从文件中读取数据
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testJsonSchemaValidateTest(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
+    /**
+     * json data validation
+     *
+     * @param testCase
+     */
+    @Test(dataProvider = "dataProvider")
+    public void testJsonValidateTest(TestCase testCase) {
+        TestCaseExecutorEngine.getInstance().execute(testCase);
+    }
+
+
 
     /**
      * 测试文件下载

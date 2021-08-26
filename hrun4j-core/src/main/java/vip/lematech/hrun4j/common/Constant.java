@@ -131,4 +131,9 @@ public class Constant {
 
     public static final String HEADER_COOKIE = "Cookie";
 
+
+    public static final String JSON_VALIDATE = "jsonValidate";
+    public static final String JSON_SCHEMA_VALIDATE = "jsonSchemaValidate";
+
+
 }

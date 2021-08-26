@@ -3,8 +3,11 @@ package vip.lematech.hrun4j.core.validator;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.enums.EnumUtils;
 import vip.lematech.hrun4j.config.i18n.I18NFactory;
+import vip.lematech.hrun4j.helper.JsonHelper;
 import vip.lematech.hrun4j.helper.LogHelper;
 import vip.lematech.hrun4j.common.Constant;
 import vip.lematech.hrun4j.common.DefinedException;
@@ -86,6 +89,7 @@ public class AssertChecker {
         return (Matcher)obj;
     }
 
+    private static Map<String,String> extendedJsonComparator = new HashMap();
     /**
      *
      * @param objectMap Asserts the properties contained by the object
@@ -95,25 +99,46 @@ public class AssertChecker {
     public void assertObject(Map<String, Object> objectMap, ResponseEntity responseEntity, Map<String, Object> env) {
         Map<String, List> methodAlisaMap = comparatorAlisaMap();
         Comparator comparator = buildComparator(objectMap);
+        Object exp = comparator.getCheck();
         String comparatorName = comparator.getComparator();
         if (StrUtil.isEmpty(comparatorName)) {
             throw new DefinedException("The validation method name cannot be empty");
         }
-        if (!methodAlisaMap.containsKey(comparatorName)) {
-            throw new DefinedException(String.format("Validation methods %s are not currently supported. The list of supported method names is:%s", comparatorName, methodAlisaMap));
-        }
-        Object exp = comparator.getCheck();
+
         Object actual = dataExtractor.handleExpDataExtractor(exp, responseEntity);
+        Object expect = comparator.getExpect();
+        if (!methodAlisaMap.containsKey(comparatorName)) {
+            if(extendedJsonComparator.containsKey(comparatorName)){
+                String realComparator = extendedJsonComparator.get(comparatorName);
+                JsonHelper.BaseResult baseResult = JsonHelper.jsonValidateFactory(realComparator,(JSONObject)JSONObject.toJSON(actual),(JSONObject)JSONObject.toJSON(expect),null);
+                if(baseResult.getWrongNumber() != 0){
+                    String msg = String.format("Json data or schema verification fails, detail reasons：");
+                    ArrayList<JsonHelper.ResultDetail> resultDetails = baseResult.getResultDetail();
+                    for(JsonHelper.ResultDetail resultDetail : resultDetails){
+                        LogHelper.error("On the $.v node: :{},actual value:{},expect value:{}",resultDetail.getPrefix(),resultDetail.getActual(),resultDetail.getExpect(),resultDetail.getMsg());
+                    }
+                    throw new DefinedException(msg);
+                }else{
+                    String msg = String.format("Json data or schema verification success!");
+                    LogHelper.info(msg);
+                }
+                return;
+            }else{
+                String msg = String.format("Validation methods %s are not currently supported. The list of supported method names is:%s", comparatorName, methodAlisaMap);
+                throw new DefinedException(msg);
+            }
+        }
         LogHelper.debug("Expression: {}, The extracted value is : {}", exp, actual);
         String assertKeyInfo = String.format("%s%s%s%s%s%s%s", I18NFactory.getLocaleMessage("assert.check.point"), exp
                 , I18NFactory.getLocaleMessage("assert.expect.value"), comparator.getExpect()
                 , I18NFactory.getLocaleMessage("assert.actual.value"), actual
                 , I18NFactory.getLocaleMessage("assert.check.result"));
+
         try {
             Class<?> clz = Class.forName("org.junit.Assert");
             Method method = clz.getMethod("assertThat", Object.class, Matcher.class);
             method.invoke(null, actual
-                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), comparator.getExpect()));
+                    , buildMatcherObj(comparatorName, methodAlisaMap.get(comparatorName), expect));
             LogHelper.info(assertKeyInfo + I18NFactory.getLocaleMessage("assert.check.result.pass"));
         } catch (ClassNotFoundException e) {
             String exceptionMsg = String.format("Class not found exception %s", e.getMessage());
@@ -259,6 +284,13 @@ public class AssertChecker {
         builtInAlisaMap.put("greaterThan", "gt");
         builtInAlisaMap.put("greaterThanOrEqualTo", "ge");
         builtInAlisaMap.put("not", "ne");
+        /**
+         * Extended JSON format verification
+         */
+        extendedJsonComparator.put("jsonValidate", Constant.JSON_VALIDATE);
+        extendedJsonComparator.put("jv", Constant.JSON_VALIDATE);
+        extendedJsonComparator.put("jsonSchemaValidate", Constant.JSON_SCHEMA_VALIDATE);
+        extendedJsonComparator.put("jsv", Constant.JSON_SCHEMA_VALIDATE);
     }
 
 
