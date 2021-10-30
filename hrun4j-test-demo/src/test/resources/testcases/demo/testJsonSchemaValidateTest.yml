@@ -1,0 +1,131 @@
+config:
+  name: 简易操作案例之获取Token信息
+  base_url: http://127.0.0.1:8000
+teststeps:
+  - name: 步骤名称
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.1
+    request:
+      url: /api/get-token
+      method: POST
+      headers:
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
+      json:
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
+    validate:
+      - eq:
+          - status_code
+          - 200
+      - jsonSchemaValidate: [{
+        "$schema": "http://json-schema.org/draft-07/schema",
+        "description": "hrun4j testsuite schema v2 definition",
+        "type": "object",
+        "definitions": {
+          "testcase": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "$ref": "resource:/schemas/common.json#/definitions/name"
+              },
+              "variables": {
+                "$ref": "resource:/schemas/common.json#/definitions/variables"
+              },
+              "parameters": {
+                "description": "generate cartesian product variables with parameters, each group of variables will be run once",
+                "type": "object"
+              },
+              "testcase": {
+                "description": "testcase reference, value is testcase file relative path",
+                "type": "string"
+              }
+            },
+            "required": [
+                "testcase"
+            ]
+          }
+        },
+        "properties": {
+          "config": {
+            "$ref": "resource:/schemas/common.json#/definitions/config"
+          },
+          "testcases": {
+            "description": "testcase of a testsuite",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "resource:/schemas/testsuite.json#/definitions/testcase"
+            }
+          }
+        },
+        "required": [
+            "config",
+            "testcases"
+        ],
+        "examples": [{
+          "config": {
+            "name": "testsuite name"
+          },
+          "testcases": [{
+            "name": "testcase 1",
+            "testcase": "/path/to/testcase1"
+          },
+            {
+              "name": "testcase 2",
+              "testcase": "/path/to/testcase2"
+            }
+          ]
+        },
+          {
+            "config": {
+              "name": "demo testsuite",
+              "variables": {
+                "device_sn": "XYZ"
+              },
+              "base_url": "http://127.0.0.1:5000"
+            },
+            "testcases": [{
+              "name": "call demo_testcase with data 1",
+              "testcase": "path/to/demo_testcase.yml",
+              "variables": {
+                "device_sn": "${device_sn}"
+              }
+            },
+              {
+                "name": "call demo_testcase with data 2",
+                "testcase": "path/to/demo_testcase.yml",
+                "variables": {
+                  "device_sn": "${device_sn}"
+                }
+              }
+            ]
+          }
+        ]
+      },{
+        "config": {
+          "name": "测试用例集配置",
+          "base_url": "https://api.apiopen.top"
+        },
+        "testcases": [
+          {
+            "name": "Postman Echo GET Request",
+            "testcase": "testcases/postman/get/getScene.yml",
+            "parameters": {
+              "page": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+              ]
+            }
+          },
+          {
+            "name": "Postman Echo postFormData And postRawText Request",
+            "testcase": "testcases/postman/post/postScene.yml"
+          }
+        ]
+      }]

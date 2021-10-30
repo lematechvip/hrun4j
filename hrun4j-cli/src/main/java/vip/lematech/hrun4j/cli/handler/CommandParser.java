@@ -4,7 +4,7 @@ import org.kohsuke.args4j.CmdLineParser;
 
 /**
  * Parser which remembers the parsed command to have additional context
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */

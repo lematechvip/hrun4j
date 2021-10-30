@@ -31,7 +31,7 @@ import java.util.*;
  *
  * Test case execution handler
  *
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -111,6 +111,7 @@ public class TestCaseRunner {
         } catch (DefinedException definedException) {
             throw definedException;
         } catch (Exception e) {
+
             String exceptionMsg = String.format("Unknown exception occurred in test case  execution. Exception information:%s", e.getMessage());
             LogHelper.debug("Unknown exception occurred in test case  execution. Exception information:{}", e.getStackTrace());
             throw new DefinedException(exceptionMsg);

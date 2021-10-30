@@ -3,7 +3,7 @@ package vip.lematech.hrun4j.common;
 /**
  * Constant definition
  *
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -130,5 +130,10 @@ public class Constant {
     public static final String BEANSHELL_EXTNAME = "bsh";
 
     public static final String HEADER_COOKIE = "Cookie";
+
+
+    public static final String JSON_VALIDATE = "jsonValidate";
+    public static final String JSON_SCHEMA_VALIDATE = "jsonSchemaValidate";
+
 
 }

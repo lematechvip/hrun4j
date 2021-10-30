@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * api to testcase converter
  *
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */
@@ -85,6 +85,11 @@ public class ObjectConverter {
             String attributeName = fields[index].getName();
             Class attributeClass = fields[index].getType();
             String methodName = attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
+
+            if (fields[index].isSynthetic()) {
+                continue;
+            }
+
             Object fieldValue = getFieldValueByName(fields[index].getName(), extendedObj);
             if (Objects.isNull(fieldValue)) {
                 continue;
@@ -250,6 +255,7 @@ public class ObjectConverter {
             Object value = method.invoke(obj, new Object[]{});
             return value;
         } catch (Exception e) {
+            e.printStackTrace();
             String exceptionMsg = String.format("Abnormal reflection, abnormal message: %s", e.getMessage());
             throw new DefinedException(exceptionMsg);
         }

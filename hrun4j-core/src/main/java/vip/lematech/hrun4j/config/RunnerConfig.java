@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Initialize the run configuration parameters
  *
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author lematech@foxmail.com
  * @version 1.0.1
  */

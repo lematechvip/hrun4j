@@ -1,0 +1,29 @@
+config:
+  name: 简易操作案例之获取Token信息
+  base_url: http://127.0.0.1:8000
+teststeps:
+  - name: 步骤名称
+    variables:
+      device_sn: 2021032311118
+      os_platform: MacOS
+      app_version: 1.0.1
+    request:
+      url: /api/get-token
+      method: POST
+      headers:
+        device_sn: ${device_sn}
+        os_platform: ${os_platform}
+        app_version: ${app_version}
+      json:
+        sign: ${signGenerate(device_sn,os_platform,app_version)}
+    validate:
+      - eq:
+          - status_code
+          - 200
+      - jsonValidate: [{
+        "k": "a",
+        "v": "b"
+      },{
+        "k": "a",
+        "v": "b"
+      }]

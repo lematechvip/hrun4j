@@ -12,7 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 /**
  * @author lematech@foxmail.com
  * @version 1.0.1
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  */
 @ControllerAdvice
 @ResponseBody

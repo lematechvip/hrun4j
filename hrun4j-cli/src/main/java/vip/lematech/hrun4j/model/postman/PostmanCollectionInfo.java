@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
- * website http://lematech.vip/
+ * website https://www.lematech.vip/
  * @author chenfanghang
  * @version 1.0.1
  */
