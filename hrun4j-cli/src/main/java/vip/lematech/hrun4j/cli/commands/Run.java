@@ -65,7 +65,6 @@ public class Run extends Command {
     String i18n = Constant.I18N_CN;
 
     private Searcher searcher;
-    private ObjectConverter objectConverter = new ObjectConverter();
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
         RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
@@ -153,7 +152,7 @@ public class Run extends Command {
                     .load(dataFile, TestCase.class);
             Config testCaseConfig = testCase.getConfig();
             testCaseConfig.setParameters(null);
-            Config resultConfig = (Config) objectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
+            Config resultConfig = (Config) ObjectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
             testCase.setConfig(resultConfig);
             Map environment = Env.getEnvMap();
             if (environment.containsKey(namespace)) {

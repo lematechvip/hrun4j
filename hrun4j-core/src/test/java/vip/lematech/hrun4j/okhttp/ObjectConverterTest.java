@@ -16,7 +16,6 @@ import java.util.*;
  * @version 1.0.1
  */
 public class ObjectConverterTest {
-    private ObjectConverter objectConverter = new ObjectConverter();
     @Test
     public void testObjectPropertiesExtends(){
 
@@ -75,9 +74,9 @@ public class ObjectConverterTest {
         sourceTestStep.setSetupHooks("testSetupHook");
         sourceTestStep.setTeardownHooks("teardownHooks");
         LogHelper.info("源对象：{}",JSON.toJSONString(sourceTestStep));
-        TestStep targetStep = objectConverter.apiModel2TestStep(targetModel);
+        TestStep targetStep = ObjectConverter.apiModel2TestStep(targetModel);
         LogHelper.info("目标：{}",JSON.toJSONString(targetStep));
-        TestStep apiResultModel = (TestStep)objectConverter.objectsExtendsPropertyValue(targetStep,sourceTestStep);
+        TestStep apiResultModel = (TestStep)ObjectConverter.objectsExtendsPropertyValue(targetStep,sourceTestStep);
         LogHelper.info("结果：{}",JSON.toJSONString(apiResultModel));
         Assert.assertEquals(apiResultModel.getName(),sourceTestStep.getName());
         Assert.assertEquals(apiResultModel.getRequest().getReadTimeout(), targetStep.getRequest().getReadTimeout());

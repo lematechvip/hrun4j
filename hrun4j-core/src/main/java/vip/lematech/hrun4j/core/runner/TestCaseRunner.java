@@ -62,11 +62,6 @@ public class TestCaseRunner {
     private PreAndPostProcessor preAndPostProcessor;
 
     /**
-     * object converter
-     */
-    private ObjectConverter objectConverter;
-
-    /**
      * data extractor
      */
     private DataExtractor dataExtractor;
@@ -77,7 +72,6 @@ public class TestCaseRunner {
         this.searcher = new Searcher();
         this.assertChecker = new AssertChecker(expProcessor);
         this.preAndPostProcessor = new PreAndPostProcessor(expProcessor);
-        this.objectConverter = new ObjectConverter();
         this.dataExtractor = new DataExtractor(expProcessor, testContextVariable);
     }
 
@@ -168,7 +162,7 @@ public class TestCaseRunner {
             Config tcConfig = testCase.getConfig();
             Object referenceCaseVariables = tcConfig.getVariables();
             if (referenceCaseVariables instanceof Map) {
-                tcConfig.setVariables(objectConverter.mapExtendsKeyValue(variables, (Map) referenceCaseVariables));
+                tcConfig.setVariables(ObjectConverter.mapExtendsKeyValue(variables, (Map) referenceCaseVariables));
             } else {
                 LogHelper.warn("Reference test case {}, configuration variable type is not Map type", testcase);
             }
@@ -179,7 +173,7 @@ public class TestCaseRunner {
             String spliceApiFilePath = searcher.spliceFilePath(api, Constant.API_DEFINE_DIRECTORY_NAME);
             File apiFilePath = searcher.quicklySearchFile(spliceApiFilePath);
             ApiModel apiModel = TestDataLoaderFactory.getLoader(FileUtil.extName(apiFilePath)).load(apiFilePath, ApiModel.class);
-            TestStep extendTestStep = (TestStep) objectConverter.objectsExtendsPropertyValue(objectConverter.apiModel2TestStep(apiModel),testStep);
+            TestStep extendTestStep = (TestStep) ObjectConverter.objectsExtendsPropertyValue(ObjectConverter.apiModel2TestStep(apiModel),testStep);
             LogHelper.debug("Interface documentation information:{}, Test steps:{}, After merging:{}", JSON.toJSONString(apiModel), JSON.toJSONString(testStep), JSON.toJSONString(extendTestStep));
 
             return extendTestStep;
