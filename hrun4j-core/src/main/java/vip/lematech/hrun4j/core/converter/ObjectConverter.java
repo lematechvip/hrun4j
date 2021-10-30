@@ -37,7 +37,7 @@ public class ObjectConverter {
      * @param apiModel Interface definition entity
      * @return Test case object
      */
-    public TestCase apiModel2TestCase(ApiModel apiModel) {
+    public static TestCase apiModel2TestCase(ApiModel apiModel) {
         TestCase testCase = new TestCase();
         TestStep testStep = new TestStep();
         Config config = new Config<>();
@@ -56,7 +56,7 @@ public class ObjectConverter {
      * @param apiModel Interface definition entity
      * @return Test step object
      */
-    public TestStep apiModel2TestStep(ApiModel apiModel) {
+    public static TestStep apiModel2TestStep(ApiModel apiModel) {
         TestStep sourceTestStep = new TestStep();
         BeanUtil.copyProperties(apiModel, sourceTestStep);
         RequestEntity requestEntity = sourceTestStep.getRequest();
@@ -72,7 +72,7 @@ public class ObjectConverter {
      * @param extendedObj Base object
      * @return The object after processing
      */
-    public Object objectsExtendsPropertyValue(Object baseObj,Object extendedObj) {
+    public static Object objectsExtendsPropertyValue(Object baseObj,Object extendedObj) {
         if(Objects.isNull(baseObj) || Objects.isNull(extendedObj)){
             throw new DefinedException("The source and target objects cannot be null");
         }
@@ -119,7 +119,7 @@ public class ObjectConverter {
      * @param methodName
      * @param fieldValue
      */
-    private void subFieldValueIsNotNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue, Object subFieldValue) {
+    private static void subFieldValueIsNotNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue, Object subFieldValue) {
         try {
             if (subAttributeClass == Map.class) {
                 Method setMethod = baseObj.getClass().getMethod("set" + methodName, Map.class);
@@ -174,7 +174,7 @@ public class ObjectConverter {
      * @param methodName
      * @param fieldValue
      */
-    private void subFieldValueIsNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue) {
+    private static void subFieldValueIsNullAssignment(Object baseObj, Class subAttributeClass, String methodName, Object fieldValue) {
         try {
             if (subAttributeClass == String.class) {
                 Method setMethod = baseObj.getClass().getMethod("set" + methodName, String.class);
@@ -226,7 +226,7 @@ public class ObjectConverter {
      * @param obj
      * @return
      */
-    private Field[] getObjectAllFields(Object obj) {
+    private static Field[] getObjectAllFields(Object obj) {
         Field[] fields = obj.getClass().getDeclaredFields();
         Field[] superFields = obj.getClass().getSuperclass().getDeclaredFields();
         List<Field> fieldList = CollUtil.newArrayList(fields);
@@ -242,7 +242,7 @@ public class ObjectConverter {
      * @param obj       object
      * @return Gets the value of the object's specified property
      */
-    public Object getFieldValueByName(String fieldName, Object obj) {
+    public static Object getFieldValueByName(String fieldName, Object obj) {
         try {
             String firstLetter = fieldName.substring(0, 1).toUpperCase();
             String getter = "get" + firstLetter + fieldName.substring(1);
@@ -260,7 +260,7 @@ public class ObjectConverter {
      * @param targetMap The target mapping relationship
      * @return The mapping relationship after superposition
      */
-    public Map<String, Object> mapExtendsKeyValue(Map sourceMap, Map targetMap) {
+    public static Map<String, Object> mapExtendsKeyValue(Map sourceMap, Map targetMap) {
         if (MapUtil.isEmpty(targetMap)) {
             targetMap = Maps.newHashMap();
         }

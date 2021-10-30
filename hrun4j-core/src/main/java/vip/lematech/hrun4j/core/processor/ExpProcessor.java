@@ -30,10 +30,8 @@ public class ExpProcessor<T> {
     private Map<String, Object> currentVariable = new HashMap<>();
     private Map<String, Object> configVars = new HashMap<>();
     private Map<String, Object> testStepVars = new HashMap<>();
-    private ObjectConverter objectConverter;
 
     public ExpProcessor() {
-        this.objectConverter = new ObjectConverter();
     }
 
     /**
@@ -197,7 +195,7 @@ public class ExpProcessor<T> {
             fields[index].setAccessible(true);
             String methodName = attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
             try {
-                Object fieldValue = objectConverter.getFieldValueByName(fields[index].getName(), object);
+                Object fieldValue = ObjectConverter.getFieldValueByName(fields[index].getName(), object);
                 if (StrUtil.isEmptyIfStr(fieldValue)) {
                     continue;
                 }

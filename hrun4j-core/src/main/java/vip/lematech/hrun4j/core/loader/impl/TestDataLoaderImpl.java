@@ -33,12 +33,11 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
     private Yaml yaml;
     private String extName;
     private ObjectMapper mapper;
-    private ObjectConverter objectConverter;
+
     public TestDataLoaderImpl(String extName) {
         this.extName = extName;
         this.yaml = new Yaml(new Constructor(JSONObject.class));
         mapper = new ObjectMapper();
-        objectConverter = new ObjectConverter();
     }
 
     /**
@@ -97,7 +96,7 @@ public class TestDataLoaderImpl<T> implements ITestDataLoader {
                     ApiModel apiModel = (ApiModel) fileSerialization2Object(fileName, ApiModel.class);
                     validateResult = SchemaValidator.validateJsonObjectFormat(ApiModel.class, apiModel);
                     if (StrUtil.isEmpty(validateResult)) {
-                        return (T) objectConverter.apiModel2TestCase(apiModel);
+                        return (T) ObjectConverter.apiModel2TestCase(apiModel);
                     } else {
                         throw new DefinedException(validateResult);
                     }
