@@ -104,8 +104,13 @@ public class PreAndPostProcessor {
     private void process(BaseModel baseModel, Object hookMeta) {
         Map result = expProcessor.handleHookExp(hookMeta);
         Map variablesMap = Maps.newHashMap();
-        variablesMap.putAll(MapUtil.isEmpty((Map) baseModel.getVariables()) ? Maps.newHashMap() : (Map) baseModel.getVariables());
-        variablesMap.putAll(MapUtil.isEmpty(result) ? Maps.newHashMap() : result);
+        if (MapUtil.isNotEmpty((Map)baseModel.getVariables())) {
+            variablesMap.putAll((Map)baseModel.getVariables());
+        }
+
+        if (MapUtil.isNotEmpty(result)) {
+            variablesMap.putAll(result);
+        }
         baseModel.setVariables(variablesMap);
     }
 }
