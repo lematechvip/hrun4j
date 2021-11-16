@@ -66,6 +66,8 @@
 - [bean-searcher官方文档](https://github.com/ejlchina/bean-searcher)
 - [DebugTalk](https://debugtalk.com/)
 - [TesterHome](https://testerhome.com/)
+- **[ OkHttps ]**：[ 一个轻量级http通信框架，API设计无比优雅，支持 WebSocket 以及 Stomp 协议](https://gitee.com/ejlchina-zhxu/okhttps)
+- **[ Bean Searcher ]**：[ 比 MyBatis 效率快 100 倍的条件检索引擎，天生支持联表，使一行代码实现复杂列表检索成为可能！](https://github.com/ejlchina/bean-searcher)
 
 ## 生态
 
