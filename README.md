@@ -56,8 +56,9 @@
 ### 联系方式
 
 微信：![-w376](http://cdn.lematech.vip/mweb/16257987099898.jpg)
-如果入群方式已关闭，框架使用上若有疑问，可先加微信【wytest】（请备注 hrun4j）再入群交流
-邮箱：lematech@foxmailc.om
+如果入群方式已关闭，框架使用上若有疑问，可先加微信【wytest】（请备注 公司+地区+昵称）再入群交流
+邮箱：lematech@foxmail.
+
 
 ### 友情链接
 
