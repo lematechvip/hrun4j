@@ -61,6 +61,8 @@
 
 ### 友情链接
 
+- [okhttps官方文档](https://github.com/ejlchina/okhttps)
+- [bean-searcher官方文档](https://github.com/ejlchina/bean-searcher)
 - [DebugTalk](https://debugtalk.com/)
 - [TesterHome](https://testerhome.com/)
 
