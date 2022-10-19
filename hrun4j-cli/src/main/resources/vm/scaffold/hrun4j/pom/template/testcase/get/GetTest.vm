@@ -13,6 +13,6 @@ import vip.lematech.hrun4j.entity.testcase.TestCase;
 public class GetTest extends Hrun4j {
     @Test(dataProvider = "dataProvider")
     public void getScene(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 }

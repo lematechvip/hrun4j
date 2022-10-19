@@ -30,9 +30,19 @@ import java.util.Objects;
 public class NGDataProvider {
     private Searcher searcher;
     private DataConstructor dataConstructor;
-    public NGDataProvider() {
-        searcher = new Searcher();
-        dataConstructor = new DataConstructor();
+    private String testSuiteName;
+    private String definePackageName ;
+    private RunnerConfig runnerConfig;
+    public NGDataProvider(String testSuiteName) {
+        this.testSuiteName = testSuiteName;
+
+        runnerConfig = RunnerConfig.getInstanceBySuiteName(testSuiteName);
+        definePackageName = runnerConfig.getPkgName();
+
+        searcher = new Searcher(runnerConfig);
+        dataConstructor = new DataConstructor(runnerConfig);
+
+
     }
 
     /**
@@ -44,18 +54,25 @@ public class NGDataProvider {
      */
     public Object[][] dataProvider(String pkgName, String testCaseName) {
         TestCase testCase = null;
-        if (RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.CLI) {
+
+        if (runnerConfig.getRunMode() == RunnerConfig.RunMode.CLI) {
             String namespace = getNamespace(pkgName, testCaseName);
             testCase = NamespaceMap.getDataObject(String.format("%s:%s", RunnerConfig.RunMode.CLI, namespace));
-        } else if(RunnerConfig.getInstance().getRunMode() == RunnerConfig.RunMode.POM){
+        } else if(runnerConfig.getRunMode() == RunnerConfig.RunMode.POM){
             File dataFilePath = searcher.quicklySearchFile(caseFilePath(pkgName, testCaseName));
-            String extName = RunnerConfig.getInstance().getTestCaseExtName();
+            String extName = runnerConfig.getTestCaseExtName();
             testCase = TestDataLoaderFactory.getLoader(extName)
                     .load(dataFilePath, TestCase.class);
+        }else if (runnerConfig.getRunMode() == RunnerConfig.RunMode.PLATFORM) {
+            //TODO 细化
+            // 当前模式下最好保证包名每次运行时唯一的，有两个好处
+            // 1. 数据隔离，因为不存在销毁情况，所有接口测试同学一个容器
+            String namespace = getNamespace(pkgName, testCaseName);
+            testCase = NamespaceMap.getDataObject(String.format("%s:%s", RunnerConfig.RunMode.PLATFORM, namespace));
         }
         if (Objects.isNull(testCase)) {
             String exceptionMsg = String.format("According to the current running mode %s and matching rules [pkgName:%s,caseName:%s], find the use case data is empty"
-                    , RunnerConfig.getInstance().getRunMode(), pkgName, testCaseName);
+                    , runnerConfig.getRunMode(), pkgName, testCaseName);
             throw new DefinedException(exceptionMsg);
         }
         Object[][] testCases = getObjects(testCase);
@@ -80,8 +97,6 @@ public class NGDataProvider {
         }
         return pkgName + File.separator + testCaseName;
     }
-
-    String definePackageName = RunnerConfig.getInstance().getPkgName();
 
     /**
      * Get the namespace by package name and method name

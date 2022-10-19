@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>vip.lematech</groupId>
     <artifactId>hrun4j-core</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <name>hrun4j-core</name>
     <url>https://lematech.vip</url>
     <properties>
