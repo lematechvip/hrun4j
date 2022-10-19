@@ -38,14 +38,18 @@ public class DataConstructor {
         if (Objects.isNull(parameterObj)) {
             return parameters;
         }
-        String paramsStr = JSON.toJSONString(parameterObj);
-        if (!JsonHelper.isJson(paramsStr)) {
-            String exceptionMsg = String.format("The parameters data %s json format is incorrect", paramsStr);
-            throw new DefinedException(exceptionMsg);
-        } else {
-            parameterObj = JSONObject.parseObject(paramsStr);
+        JSONObject jsonObject = null;
+        if (parameterObj instanceof JSONObject) {
+            jsonObject = (JSONObject) parameterObj;
+        }else {
+            String paramsStr = JSON.toJSONString(parameterObj);
+            if (!JsonHelper.isJson(paramsStr)) {
+                String exceptionMsg = String.format("The parameters data %s json format is incorrect", paramsStr);
+                throw new DefinedException(exceptionMsg);
+            }
+            jsonObject = JSONObject.parseObject(paramsStr);
         }
-        JSONObject jsonObject = (JSONObject) parameterObj;
+
         boolean isAssociationParameter = false;
         List<List<Object>> dimValue = new ArrayList<>();
         int paramNameIndex = 0;
