@@ -36,10 +36,16 @@ public class Searcher {
      */
     private String workDirectory;
 
+    /**
+     *
+     */
+    private RunnerConfig runnerConfig;
 
-    public Searcher() {
-        runMode = RunnerConfig.getInstance().getRunMode();
-        workDirectory = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
+
+    public Searcher(RunnerConfig runnerConfig) {
+        this.runnerConfig = runnerConfig;
+        runMode = runnerConfig.getRunMode();
+        workDirectory = runnerConfig.getWorkDirectory().getAbsolutePath();
     }
 
     /**
@@ -53,7 +59,7 @@ public class Searcher {
             throw new DefinedException(exceptionMsg);
         }
         if (StrUtil.isEmpty(FileUtil.extName(filePath))) {
-            filePath = filePath + Constant.DOT_PATH + RunnerConfig.getInstance().getTestCaseExtName();
+            filePath = filePath + Constant.DOT_PATH + runnerConfig.getTestCaseExtName();
         }
         File searchFile = null;
         if (runMode == RunnerConfig.RunMode.CLI) {
@@ -104,7 +110,7 @@ public class Searcher {
             dataFileType = Constant.DOT_PATH + dataFileType;
         }
         if (StrUtil.isEmpty(FileUtil.extName(dataFileType))) {
-            dataFileType = dataFileType + Constant.DOT_PATH + RunnerConfig.getInstance().getTestCaseExtName();
+            dataFileType = dataFileType + Constant.DOT_PATH + runnerConfig.getTestCaseExtName();
         }
         return dataFileType;
     }

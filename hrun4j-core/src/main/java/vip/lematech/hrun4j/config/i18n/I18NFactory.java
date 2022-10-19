@@ -25,6 +25,7 @@ public class I18NFactory {
         return ResourceBundle.getBundle("locales.message", localeLang);
     }
     public synchronized static String getLocaleMessage(String key) {
-        return getBundle(RunnerConfig.getInstance().getI18n()).getString(key);
+        //TODO fix
+        return getBundle(RunnerConfig.i18n).getString(key);
     }
 }

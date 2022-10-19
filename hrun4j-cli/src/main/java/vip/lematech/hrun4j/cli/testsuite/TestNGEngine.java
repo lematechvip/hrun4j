@@ -33,27 +33,30 @@ import java.util.*;
 
 @Data
 public class TestNGEngine {
-    private static TestNG testNG;
-    private static String suiteName;
-    public static Map<String, Set<String>> testCasePkgGroup = new HashMap<>();
+    private TestNG testNG;
+    private String suiteName;
+    private RunnerConfig runnerConfig;
+    public Map<String, Set<String>> testCasePkgGroup = new HashMap<>();
 
-    public static TestNG getInstance() {
-        if (testNG == null) {
-            testNG = new TestNG();
-            setDefaultProperties();
-        }
-        return testNG;
+    public TestNGEngine(RunnerConfig runnerConfig) {
+        this.runnerConfig = runnerConfig;
+        this.testNG = new TestNG();
+        setDefaultProperties();
     }
 
     /**
      * Setting Default Properties
      */
-    private static void setDefaultProperties() {
-        testNG.setDefaultSuiteName("hrun4j");
+    private void setDefaultProperties() {
+        testNG.setDefaultSuiteName(RunnerConfig.DEFAULT_TEST_SUITE_NAME);
         HTMLReporter htmlReporter = new HTMLReporter();
         JUnitXMLReporter jUnitXMLReporter = new JUnitXMLReporter();
         testNG.addListener(htmlReporter);
         testNG.addListener(jUnitXMLReporter);
+    }
+
+    public void setSuiteName(String name) {
+        testNG.setDefaultSuiteName(name);
     }
 
     /**
@@ -61,21 +64,20 @@ public class TestNGEngine {
      * @param testListenerList testListenerList
      * @return TestNG
      */
-    public static TestNG addListener(List<ITestListener> testListenerList) {
-        getInstance();
+    public TestNGEngine addListener(List<ITestListener> testListenerList) {
         if (testListenerList.size() > 0) {
             for (ITestListener testListener : testListenerList) {
                 testNG.addListener(testListener);
             }
         }
-        return testNG;
+        return this;
     }
 
     /**
      * init testng classes and testng  run
      */
-    public static void run() {
-        List<String> testCasePaths = RunnerConfig.getInstance().getTestCasePaths();
+    public void run() {
+        List<String> testCasePaths = runnerConfig.getTestCasePaths();
         testCasePkgGroup = fileList2TestClass(testCasePaths);
         if (MapUtil.isEmpty(testCasePkgGroup)) {
             LogHelper.warn("No valid test cases were found on the current path: {}", testCasePaths);
@@ -84,14 +86,14 @@ public class TestNGEngine {
         runNG();
     }
 
-    private static void runNG() {
-        getInstance().run();
+    private void runNG() {
+        testNG.run();
     }
 
     /**
      * Dynamically construct test cases
      */
-    private static void addTestClasses() {
+    private void addTestClasses() {
         List<Class> classes = new ArrayList<>();
         for (Map.Entry<String, Set<String>> entry : testCasePkgGroup.entrySet()) {
             String fullTestClassName = entry.getKey();
@@ -109,7 +111,7 @@ public class TestNGEngine {
             LogHelper.debug("Class full path：'{}',package path：'{}',class name：{} added done.", fullTestClassName, pkgName, className);
         }
         Class[] execClass = classes.toArray(new Class[0]);
-        getInstance().setTestClasses(execClass);
+        testNG.setTestClasses(execClass);
     }
 
 
@@ -118,7 +120,7 @@ public class TestNGEngine {
      */
     private static boolean filePathFlag = true;
 
-    private static void fileToTestClassMap(Map<String, Set<String>> fileTestClassMap, File file) {
+    private void fileToTestClassMap(Map<String, Set<String>> fileTestClassMap, File file) {
         String extName = FileUtil.extName(file);
         if (Constant.SUPPORT_TEST_CASE_FILE_EXT_JSON_NAME.equalsIgnoreCase(extName)
                 || Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME.equalsIgnoreCase(extName)) {
@@ -130,11 +132,11 @@ public class TestNGEngine {
             }
             String fileParentCanonicalPath = FileUtil.getAbsolutePath(file.getParentFile());
             StringBuffer pkgName = new StringBuffer();
-            pkgName.append(RunnerConfig.getInstance().getPkgName());
+            pkgName.append(runnerConfig.getPkgName());
             String filePath;
             if (filePathFlag) {
                 pkgName.append("_");
-                String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+                String workDirPath = FileUtil.getAbsolutePath(runnerConfig.getWorkDirectory());
                 workDirPath =  LittleHelper.escapeRegexTransfer(workDirPath);
                 filePath = fileParentCanonicalPath.replaceFirst(workDirPath, "");
             } else {
@@ -171,7 +173,7 @@ public class TestNGEngine {
      * @param files
      * @param fileTestClassMap
      */
-    private static void fileTraverse(File files, Map<String, Set<String>> fileTestClassMap) {
+    private void fileTraverse(File files, Map<String, Set<String>> fileTestClassMap) {
         if (files.isFile()) {
             fileToTestClassMap(fileTestClassMap, files);
         } else {
@@ -191,7 +193,7 @@ public class TestNGEngine {
      * @param listFile directories file list
      * @return file to map
      */
-    public static Map<String, Set<String>> fileList2TestClass(List<String> listFile) {
+    public Map<String, Set<String>> fileList2TestClass(List<String> listFile) {
         Map<String, Set<String>> fileTestClassMap = Maps.newHashMap();
         for (String fileStr : listFile) {
             File file = new File(fileStr);
@@ -199,7 +201,7 @@ public class TestNGEngine {
                 filePathFlag = false;
             }
             if (filePathFlag) {
-                file = new File(RunnerConfig.getInstance().getWorkDirectory().getPath(), file.getPath());
+                file = new File(runnerConfig.getWorkDirectory().getPath(), file.getPath());
             }
             FilesHelper.checkFileExists(file);
             fileTraverse(file, fileTestClassMap);

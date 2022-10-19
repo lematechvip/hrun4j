@@ -9,7 +9,7 @@ import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvRow;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.util.StrUtil;
-import com.googlecode.aviator.AviatorEvaluator;
+import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
@@ -42,26 +42,33 @@ import java.util.Objects;
  */
 @Slf4j
 public class BuiltInAviatorEvaluator {
-    static {
-        AviatorEvaluator.addFunction(new BuiltInFunctionEnv());
-        AviatorEvaluator.addFunction(new BuiltInFunctionParameterize());
-        AviatorEvaluator.addFunction(new BuiltInFunctionHelloWorld());
-        AviatorEvaluator.addFunction(new BuiltInFunctionBeanShell());
-    }
 
-    public static Object execute(String expression, Map<String, Object> env) {
+    public static Object execute(AviatorEvaluatorInstance aviatorEvaluatorInstance, String expression, Map<String, Object> env) {
         try {
-            return AviatorEvaluator.execute(expression, env, false);
+            return aviatorEvaluatorInstance.execute(expression, env, false);
         } catch (Exception e) {
             String exceptionMsg = String.format("Execute exp %s occur error: %s", expression, e.getLocalizedMessage());
             throw new DefinedException(exceptionMsg);
         }
     }
 
+    public static abstract class BaseBuiltInFunction extends AbstractFunction {
+        protected RunnerConfig runnerConfig;
+
+        public BaseBuiltInFunction(RunnerConfig runnerConfig){
+            this.runnerConfig = runnerConfig;
+        }
+    }
+
     /**
      * built-in helloWorld
      */
-    public static class BuiltInFunctionHelloWorld extends AbstractFunction {
+    public static class BuiltInFunctionHelloWorld extends BaseBuiltInFunction {
+
+        public BuiltInFunctionHelloWorld(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
+
         @Override
         public AviatorObject call(Map<String, Object> env) {
             String output = "Hello,hrun4j";
@@ -77,10 +84,15 @@ public class BuiltInAviatorEvaluator {
     /**
      * built-in $ENV
      */
-    public static class BuiltInFunctionEnv extends AbstractFunction {
+    public static class BuiltInFunctionEnv extends BaseBuiltInFunction {
+
+        public BuiltInFunctionEnv(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
+
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1) {
-            Object envValue = arg1.getValue(Env.getEnvMap());
+            Object envValue = arg1.getValue(runnerConfig.getEnv().getEnvMap());
             if (Objects.isNull(envValue)) {
                 String exceptionMsg = String.format("env not found key : %s", arg1);
                 throw new DefinedException(exceptionMsg);
@@ -97,7 +109,12 @@ public class BuiltInAviatorEvaluator {
     /**
      * built-in $BSH
      */
-    public static class BuiltInFunctionBeanShell extends AbstractFunction {
+    public static class BuiltInFunctionBeanShell extends BaseBuiltInFunction {
+
+        public BuiltInFunctionBeanShell(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
+
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject bshFilePathObj) {
             Object bshFile = bshFilePathObj.getValue(env);
@@ -111,7 +128,7 @@ public class BuiltInAviatorEvaluator {
                 throw new DefinedException(exceptionMsg);
             }
             String workDirPath;
-            RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
+            RunnerConfig.RunMode runMode = runnerConfig.getRunMode();
             File bshFilePath = null;
             if (runMode == RunnerConfig.RunMode.POM) {
                 workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
@@ -122,7 +139,7 @@ public class BuiltInAviatorEvaluator {
                     throw new DefinedException(exceptionMsg);
                 }
             } else if (runMode == RunnerConfig.RunMode.CLI) {
-                workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+                workDirPath = FileUtil.getAbsolutePath(runnerConfig.getWorkDirectory());
                 if (!FileUtil.isAbsolutePath(bshFilePathValue)) {
                     bshFilePath = new File(workDirPath, bshFilePathValue);
                     if (!bshFilePath.exists() || !bshFilePath.isFile()) {
@@ -171,7 +188,12 @@ public class BuiltInAviatorEvaluator {
     /**
      * built-in $P
      */
-    public static class BuiltInFunctionParameterize extends AbstractFunction {
+    public static class BuiltInFunctionParameterize extends BaseBuiltInFunction {
+
+        public BuiltInFunctionParameterize(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
+
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject csvFilePathObj) {
             Object csvFile = csvFilePathObj.getValue(env);
@@ -181,7 +203,7 @@ public class BuiltInAviatorEvaluator {
             }
             String csvFilePathValue = csvFile.toString();
             String workDirPath;
-            RunnerConfig.RunMode runMode = RunnerConfig.getInstance().getRunMode();
+            RunnerConfig.RunMode runMode = runnerConfig.getRunMode();
             File csvFilePath = null;
             if (runMode == RunnerConfig.RunMode.POM) {
                 workDirPath = TestBase.class.getClassLoader().getResource("").getPath();
@@ -192,7 +214,7 @@ public class BuiltInAviatorEvaluator {
                     throw new DefinedException(exceptionMsg);
                 }
             } else if (runMode == RunnerConfig.RunMode.CLI) {
-                workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+                workDirPath = FileUtil.getAbsolutePath(runnerConfig.getWorkDirectory());
                 if (!FileUtil.isAbsolutePath(csvFilePathValue)) {
                     csvFilePath = new File(workDirPath, csvFilePathValue);
                     if (!csvFilePath.exists() || !csvFilePath.isFile()) {

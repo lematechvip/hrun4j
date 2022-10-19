@@ -3,6 +3,7 @@ package vip.lematech.hrun4j.core.runner;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import vip.lematech.hrun4j.config.RunnerConfig;
 import vip.lematech.hrun4j.config.i18n.I18NFactory;
 import vip.lematech.hrun4j.helper.LogHelper;
 import vip.lematech.hrun4j.helper.OkHttpsHelper;
@@ -66,10 +67,16 @@ public class TestCaseRunner {
      */
     private DataExtractor dataExtractor;
 
-    public TestCaseRunner() {
-        this.expProcessor = new ExpProcessor();
+    /**
+     *
+     */
+    private RunnerConfig runnerConfig;
+
+    public TestCaseRunner(RunnerConfig runnerConfig) {
+        this.runnerConfig = runnerConfig;
+        this.expProcessor = new ExpProcessor(runnerConfig);
         this.testContextVariable = Maps.newHashMap();
-        this.searcher = new Searcher();
+        this.searcher = new Searcher(runnerConfig);
         this.assertChecker = new AssertChecker(expProcessor);
         this.preAndPostProcessor = new PreAndPostProcessor(expProcessor);
         this.dataExtractor = new DataExtractor(expProcessor, testContextVariable);
@@ -100,7 +107,7 @@ public class TestCaseRunner {
                 RequestEntity requestEntity = (RequestEntity) expProcessor.dynHandleContainsExpObject(initializeRequestEntity);
                 requestEntity.setUrl(getUrl(config.getBaseUrl(), testStep.getRequest().getUrl()));
                 formatRequestFiles(requestEntity);
-                ResponseEntity responseEntity = OkHttpsHelper.executeReq(requestEntity);
+                ResponseEntity responseEntity = OkHttpsHelper.executeReq(runnerConfig, requestEntity);
                 testStepConfigVariable.put(Constant.RESPONSE_VARIABLE_NAME, initializeRequestEntity);
                 preAndPostProcessor.postProcess(testStep, responseEntity);
                 List<Map<String, Object>> validateList = testStep.getValidate();

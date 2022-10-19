@@ -3,14 +3,11 @@ package vip.lematech.hrun4j.cli.commands;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import vip.lematech.hrun4j.helper.FilesHelper;
 import vip.lematech.hrun4j.helper.JavaIdentifierHelper;
 import vip.lematech.hrun4j.helper.LittleHelper;
 import vip.lematech.hrun4j.helper.LogHelper;
 import vip.lematech.hrun4j.cli.testsuite.TestNGEngine;
-import vip.lematech.hrun4j.config.Env;
 import vip.lematech.hrun4j.config.NamespaceMap;
 import vip.lematech.hrun4j.config.RunnerConfig;
 import vip.lematech.hrun4j.core.converter.ObjectConverter;
@@ -26,7 +23,6 @@ import vip.lematech.hrun4j.common.DefinedException;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -65,9 +61,14 @@ public class Run extends Command {
     String i18n = Constant.I18N_CN;
 
     private Searcher searcher;
+
+    private RunnerConfig runnerConfig;
     @Override
     public int execute(PrintWriter out, PrintWriter err) {
-        RunnerConfig.getInstance().setRunMode(RunnerConfig.RunMode.CLI);
+
+        //TODO 初始化 runnerConfig，保证初始化的名字是 testSuiteName
+        runnerConfig = RunnerConfig.getInstance();
+        runnerConfig.setRunMode(RunnerConfig.RunMode.CLI);
         LogHelper.info("Run mode: {}", RunnerConfig.RunMode.CLI);
 
 
@@ -86,7 +87,7 @@ public class Run extends Command {
 
 
         validateOrSetParams();
-        String workDirPath = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory());
+        String workDirPath = FileUtil.getAbsolutePath(runnerConfig.getWorkDirectory());
 
         File testSuitePath = null  ;
         if(Objects.nonNull(testSuitePathValue)){
@@ -95,7 +96,7 @@ public class Run extends Command {
         LogHelper.info("The workspace path：{}", workDirPath);
         initEnvPath(workDirPath);
         TestSuite testSuite = new TestSuite();
-        searcher = new Searcher();
+        searcher = new Searcher(runnerConfig);
         List<String> testCaseMapFiles = new ArrayList<>();
         if (CollUtil.isNotEmpty(testCasePaths)) {
             Config config = new Config();
@@ -154,7 +155,7 @@ public class Run extends Command {
             testCaseConfig.setParameters(null);
             Config resultConfig = (Config) ObjectConverter.objectsExtendsPropertyValue(testSuiteConfig, testCaseConfig);
             testCase.setConfig(resultConfig);
-            Map environment = Env.getEnvMap();
+            Map environment = runnerConfig.getEnv().getEnvMap();
             if (environment.containsKey(namespace)) {
                 String exceptionMsg = String.format("If the same path case %s already exists, only the last one can be retained", caseRelativePath);
                 LogHelper.warn(exceptionMsg);
@@ -166,8 +167,9 @@ public class Run extends Command {
             LogHelper.error(exceptionMsg);
             return 1;
         }
-        RunnerConfig.getInstance().setTestCasePaths(testCaseMapFiles);
-        TestNGEngine.run();
+        runnerConfig.setTestCasePaths(testCaseMapFiles);
+        TestNGEngine engine = new TestNGEngine(runnerConfig);
+        engine.run();
         return 0;
     }
 
@@ -213,9 +215,9 @@ public class Run extends Command {
             }
             if (!FileUtil.isAbsolutePath(dotEnvPath.getPath())) {
                 File dotFilePath = new File(workDirPath, Constant.ENV_FILE_NAME);
-                RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
+                runnerConfig.setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
             } else {
-                RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotEnvPath));
+                runnerConfig.setDotEnvPath(FileUtil.getAbsolutePath(dotEnvPath));
             }
         } else {
             File dotFilePath = new File(workDirPath);
@@ -224,7 +226,7 @@ public class Run extends Command {
                         , FileUtil.getAbsolutePath(dotFilePath));
                 LogHelper.warn(exceptionMsg);
             }
-            RunnerConfig.getInstance().setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
+            runnerConfig.setDotEnvPath(FileUtil.getAbsolutePath(dotFilePath));
         }
     }
 
@@ -234,7 +236,7 @@ public class Run extends Command {
     private void validateOrSetParams() {
 
         if (Objects.isNull(rootBsh)) {
-            RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
+            runnerConfig.setWorkDirectory(new File(Constant.DOT_PATH));
         } else {
             if (!rootBsh.exists() || !rootBsh.isFile() || !Constant.BEANSHELL_BSH_END_SUFFIX.endsWith(FileUtil.extName(rootBsh))) {
                 String exceptionMsg = String.format("The rootBsh file %s does not exist or the suffix does not end in `.bsh`"
@@ -245,16 +247,16 @@ public class Run extends Command {
             String workDirPath = FileUtil.getAbsolutePath(workFile);
             Properties property = System.getProperties();
             property.setProperty("user.dir", workDirPath);
-            RunnerConfig.getInstance().setWorkDirectory(new File(workDirPath));
+            runnerConfig.setWorkDirectory(new File(workDirPath));
         }
         if (!StrUtil.isEmpty(pkgName)) {
-            RunnerConfig.getInstance().setPkgName(pkgName);
+            runnerConfig.setPkgName(pkgName);
         }
         if (!StrUtil.isEmpty(extName)) {
-            RunnerConfig.getInstance().setTestCaseExtName(extName);
+            runnerConfig.setTestCaseExtName(extName);
         }
         if (!StrUtil.isEmpty(i18n)) {
-            RunnerConfig.getInstance().setI18n(i18n);
+            RunnerConfig.i18n = i18n;
         }
 
     }

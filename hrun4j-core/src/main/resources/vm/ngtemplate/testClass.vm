@@ -9,7 +9,7 @@ public class $className extends TestBase {
     #foreach($methodName in $methodList)
         @Test(dataProvider = "dataProvider")
         public void $methodName(TestCase testCase){
-            TestCaseExecutorEngine.getInstance().execute(testCase);
+            getTestCaseRunner().execute(testCase);
         }
      #end
 }

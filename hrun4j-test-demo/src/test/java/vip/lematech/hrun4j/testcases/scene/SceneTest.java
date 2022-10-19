@@ -1,7 +1,6 @@
 package vip.lematech.hrun4j.testcases.scene;
 
 import vip.lematech.hrun4j.Hrun4j;
-import vip.lematech.hrun4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.hrun4j.entity.testcase.TestCase;
 import org.testng.annotations.Test;
 
@@ -18,7 +17,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void loginAndResetAll(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -28,7 +27,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void loginAndAddUser(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -38,7 +37,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void queryAssignUserInfo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -48,7 +47,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void delAssignUserInfo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -59,7 +58,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void loginAndUpdateUser(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -69,7 +68,7 @@ public class SceneTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void loginAndUploadUser(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 

@@ -2,7 +2,6 @@ package vip.lematech.hrun4j.testcases.demo;
 
 import vip.lematech.hrun4j.Hrun4j;
 import vip.lematech.hrun4j.config.RunnerConfig;
-import vip.lematech.hrun4j.core.engine.TestCaseExecutorEngine;
 import vip.lematech.hrun4j.entity.testcase.TestCase;
 import vip.lematech.hrun4j.common.Constant;
 import org.testng.annotations.BeforeClass;
@@ -21,7 +20,7 @@ public class DemoTest extends Hrun4j {
 
     @BeforeClass
     public void configRunner() {
-        RunnerConfig.getInstance().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
+        getRunnerConfig().setTestCaseExtName(Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME);
     }
 
 
@@ -32,7 +31,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void 测试接口定义应用中文(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -43,7 +42,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testSimpleSingleDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -53,7 +52,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testComplexSingleDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -63,7 +62,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testMoreComplexSingleDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -73,7 +72,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testVariablePriorityDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -83,7 +82,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testApiReferenceDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -93,7 +92,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testDefineRequestConfigDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -103,7 +102,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testTestCaseReferenceDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -113,7 +112,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testMultipleGetDataDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -124,7 +123,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testCurrentStepRequestAndResponseDataDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -135,7 +134,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testReferenceEnvDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -146,7 +145,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testAviatorExpDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -157,7 +156,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testDataProviderFromCsvDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -167,7 +166,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testDataAssociatedProviderDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -177,7 +176,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testBeanShellDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
     /**
@@ -187,7 +186,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testJsonSchemaValidateTest(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -198,7 +197,7 @@ public class DemoTest extends Hrun4j {
      */
     @Test(dataProvider = "dataProvider")
     public void testJsonValidateTest(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 
 
@@ -210,7 +209,7 @@ public class DemoTest extends Hrun4j {
      */
    /* @Test(dataProvider = "dataProvider")
     public void testFileDownloadDemo(TestCase testCase) {
-        TestCaseExecutorEngine.getInstance().execute(testCase);
+        getTestCaseRunner().execute(testCase);
     }
 */
 }

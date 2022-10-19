@@ -5,8 +5,10 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.googlecode.aviator.AviatorEvaluatorInstance;
 import vip.lematech.hrun4j.common.Constant;
 import vip.lematech.hrun4j.common.DefinedException;
+import vip.lematech.hrun4j.config.RunnerConfig;
 import vip.lematech.hrun4j.core.converter.ObjectConverter;
 import vip.lematech.hrun4j.entity.base.BaseModel;
 import vip.lematech.hrun4j.entity.http.RequestEntity;
@@ -30,8 +32,13 @@ public class ExpProcessor<T> {
     private Map<String, Object> currentVariable = new HashMap<>();
     private Map<String, Object> configVars = new HashMap<>();
     private Map<String, Object> testStepVars = new HashMap<>();
+    private RunnerConfig runnerConfig;
+    private AviatorEvaluatorInstance aviatorEvaluatorInstance;
 
-    public ExpProcessor() {
+    public ExpProcessor(RunnerConfig runnerConfig) {
+        this.runnerConfig = runnerConfig;
+        this.aviatorEvaluatorInstance = runnerConfig.getAviatorEvaluatorInstance();
+
     }
 
     /**
@@ -96,7 +103,7 @@ public class ExpProcessor<T> {
                 if (matchList.size() == 1) {
                     String onlyExp = String.format("${%s}", matchExp);
                     if (exp.equals(onlyExp)) {
-                        return BuiltInAviatorEvaluator.execute(matchExp, currentVariable);
+                        return BuiltInAviatorEvaluator.execute(aviatorEvaluatorInstance, matchExp, currentVariable);
                     } else {
                         exp = getExpString(exp, matchList);
                     }
@@ -116,7 +123,7 @@ public class ExpProcessor<T> {
     private String getExpString(String exp, List<String> matchList) {
         List<String> matchedList = new ArrayList<>();
         for (String subExp : matchList) {
-            Object result = BuiltInAviatorEvaluator.execute(subExp, currentVariable);
+            Object result = BuiltInAviatorEvaluator.execute(aviatorEvaluatorInstance, subExp, currentVariable);
             String handleResult = String.valueOf(result);
             matchedList.add(handleResult);
         }
@@ -248,7 +255,7 @@ public class ExpProcessor<T> {
             List tempList = (List) obj;
             for (Object elementObj : tempList) {
                 if (elementObj instanceof String) {
-                    Object executeResult = BuiltInAviatorEvaluator.execute(String.valueOf(obj), this.currentVariable);
+                    Object executeResult = BuiltInAviatorEvaluator.execute(aviatorEvaluatorInstance, String.valueOf(obj), this.currentVariable);
                     if (executeResult instanceof Map) {
                         result.putAll((Map) executeResult);
                     }

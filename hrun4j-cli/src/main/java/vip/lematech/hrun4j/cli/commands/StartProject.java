@@ -52,8 +52,8 @@ public class StartProject extends Command {
         JavaIdentifierHelper.isValidJavaFullClassName(groupId);
         ProjectInfo projectInfo = new ProjectInfo(groupId, projectName
                 , version, projectName, String.format("Demo project for %s", projectName));
-        RunnerConfig.getInstance().setWorkDirectory(new File(Constant.DOT_PATH));
-        String projectRoot = FileUtil.getAbsolutePath(RunnerConfig.getInstance().getWorkDirectory()) + File.separator;
+
+        String projectRoot = FileUtil.getAbsolutePath(new File(Constant.DOT_PATH)) + File.separator;
         LogHelper.info("工作区路径：{}", projectRoot);
         IProjectGenerator projectGenerator = new ProjectGeneratorImpl();
         if (CliConstants.SRPINGBOOT_PROJECT_TYPE.equalsIgnoreCase(type)) {

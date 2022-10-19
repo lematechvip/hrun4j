@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import vip.lematech.hrun4j.config.RunnerConfig;
 import vip.lematech.hrun4j.helper.JsonHelper;
 import vip.lematech.hrun4j.helper.RegExpHelper;
 import vip.lematech.hrun4j.common.Constant;
@@ -22,8 +23,8 @@ public class DataConstructor {
 
     private ExpProcessor expProcessor;
 
-    public DataConstructor() {
-        this.expProcessor = new ExpProcessor();
+    public DataConstructor(RunnerConfig runnerConfig) {
+        this.expProcessor = new ExpProcessor(runnerConfig);
     }
 
     /**

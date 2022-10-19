@@ -7,6 +7,8 @@ import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorBigInt;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorString;
+import vip.lematech.hrun4j.config.RunnerConfig;
+import vip.lematech.hrun4j.core.processor.BuiltInAviatorEvaluator;
 import vip.lematech.hrun4j.helper.LogHelper;
 
 import java.util.Map;
@@ -21,7 +23,12 @@ public class MyFunction {
     /**
     * Custom function, set the function name will be implemented in the call supplement function
     */
-    public static class SetupHookFunction extends AbstractFunction {
+    public static class SetupHookFunction extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public SetupHookFunction(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
+
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject page, AviatorObject type, AviatorObject count) {
             LogHelper.info("正在执行：{}方法，方法参数：page={},count={},type={}",this.getName(), page,count,type);
@@ -40,7 +47,11 @@ public class MyFunction {
     /**
     * Custom function, set the function name will be implemented in the call supplement function
     */
-    public static class TearDownHookFunction extends AbstractFunction {
+    public static class TearDownHookFunction extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public TearDownHookFunction(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env,AviatorObject type) {
             LogHelper.info("正在执行：{}方法，方法参数：{}",this.getName(),type.toString());
@@ -56,7 +67,11 @@ public class MyFunction {
 
 
     public static final String TOKEN_KEY = "hrun4j";
-    public static class RequestAndResponseHook extends AbstractFunction {
+    public static class RequestAndResponseHook extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public RequestAndResponseHook(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
             LogHelper.info("当前请求详细信息：{}", env.get("$REQUEST"));
@@ -69,7 +84,11 @@ public class MyFunction {
         }
     }
 
-    public static class DefinedHookFunction extends AbstractFunction {
+    public static class DefinedHookFunction extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public DefinedHookFunction(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg) {
             LogHelper.info("当前方法名：{},入参信息：{},环境变量：{}", this.getName(), arg.getAviatorType(), env);
@@ -81,7 +100,11 @@ public class MyFunction {
         }
     }
 
-    public static class DefinedFunctionAdd extends AbstractFunction {
+    public static class DefinedFunctionAdd extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public DefinedFunctionAdd(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
             Number left = FunctionUtils.getNumberValue(arg1, env);
@@ -93,7 +116,11 @@ public class MyFunction {
             return "add";
         }
     }
-    public static class DefinedFunctionSubtract extends AbstractFunction {
+    public static class DefinedFunctionSubtract extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public DefinedFunctionSubtract(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
             Number left = FunctionUtils.getNumberValue(arg1, env);
@@ -105,7 +132,11 @@ public class MyFunction {
             return "subtract";
         }
     }
-    public static class DefinedFunctionMultiply extends AbstractFunction {
+    public static class DefinedFunctionMultiply extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public DefinedFunctionMultiply(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
             Number left = FunctionUtils.getNumberValue(arg1, env);
@@ -117,7 +148,11 @@ public class MyFunction {
             return "multiply";
         }
     }
-    public static class DefinedFunctionDivide extends AbstractFunction {
+    public static class DefinedFunctionDivide extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public DefinedFunctionDivide(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
             Number left = FunctionUtils.getNumberValue(arg1, env);
@@ -129,7 +164,11 @@ public class MyFunction {
             return "divide";
         }
     }
-    public static class SignGenerateFunction extends AbstractFunction {
+    public static class SignGenerateFunction extends BuiltInAviatorEvaluator.BaseBuiltInFunction {
+
+        public SignGenerateFunction(RunnerConfig runnerConfig) {
+            super(runnerConfig);
+        }
         @Override
         public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
             StringBuffer content = new StringBuffer();

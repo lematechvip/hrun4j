@@ -1,10 +1,15 @@
 package vip.lematech.hrun4j.config;
 
 import cn.hutool.core.util.StrUtil;
+import com.googlecode.aviator.AviatorEvaluator;
+import com.googlecode.aviator.AviatorEvaluatorInstance;
+import vip.lematech.hrun4j.core.processor.BuiltInAviatorEvaluator;
+import vip.lematech.hrun4j.core.runner.TestCaseRunner;
 import vip.lematech.hrun4j.helper.JavaIdentifierHelper;
 import vip.lematech.hrun4j.common.Constant;
 import vip.lematech.hrun4j.common.DefinedException;
 import lombok.Data;
+import vip.lematech.hrun4j.helper.LogHelper;
 
 import java.io.File;
 import java.util.*;
@@ -20,10 +25,32 @@ import java.util.*;
 @Data
 public class RunnerConfig {
 
+    public static final String DEFAULT_TEST_SUITE_NAME = "hrun4j";
+
     /**
      * internationalization support，support en/zh
      */
-    private String i18n;
+    public static String i18n;
+
+    /**
+     *
+     */
+    private String testSuiteName;
+
+    /**
+     *
+     */
+    private TestCaseRunner testCaseRunner;
+
+    /**
+     *
+     */
+    private AviatorEvaluatorInstance aviatorEvaluatorInstance;
+
+    /**
+     *
+     */
+    private Env env;
 
     public String getDotEnvPath() {
         return dotEnvPath;
@@ -70,7 +97,7 @@ public class RunnerConfig {
      */
     private List<String> testCasePaths;
 
-    private static RunnerConfig instance = new RunnerConfig();
+    private static RunnerConfig instance = new RunnerConfig(DEFAULT_TEST_SUITE_NAME);
 
     /**
      * set package name
@@ -84,12 +111,33 @@ public class RunnerConfig {
         this.pkgName = pkgName;
     }
 
-    private RunnerConfig() {
+    private RunnerConfig(String testSuiteName) {
+        this.testSuiteName = testSuiteName;
+        this.env = new Env(this);
         testCasePaths = new ArrayList<>();
         testCaseExtName = Constant.SUPPORT_TEST_CASE_FILE_EXT_YML_NAME;
+        aviatorEvaluatorInstance = AviatorEvaluator.newInstance();
+        testCaseRunner = new TestCaseRunner(this);
+        init();
+    }
+
+    private void init() {
+        aviatorEvaluatorInstance.addFunction(new BuiltInAviatorEvaluator.BuiltInFunctionEnv(this));
+        aviatorEvaluatorInstance.addFunction(new BuiltInAviatorEvaluator.BuiltInFunctionParameterize(this));
+        aviatorEvaluatorInstance.addFunction(new BuiltInAviatorEvaluator.BuiltInFunctionHelloWorld(this));
+        aviatorEvaluatorInstance.addFunction(new BuiltInAviatorEvaluator.BuiltInFunctionBeanShell(this));
+    }
+
+    public void addBuiltInAviatorEvaluator(BuiltInAviatorEvaluator.BaseBuiltInFunction baseBuiltInFunction) {
+        aviatorEvaluatorInstance.addFunction(baseBuiltInFunction);
     }
 
     public static RunnerConfig getInstance() {
+        return instance;
+    }
+
+    public static RunnerConfig getInstanceBySuiteName(String testSuiteName) {
+        LogHelper.info("==xxx==={}====", testSuiteName);
         return instance;
     }
 

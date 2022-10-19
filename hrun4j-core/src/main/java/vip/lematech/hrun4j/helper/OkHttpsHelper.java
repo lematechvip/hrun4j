@@ -105,7 +105,7 @@ public class OkHttpsHelper {
      * @param requestEntity request entity
      * @return ResponseEntity
      */
-    public static ResponseEntity executeReq(RequestEntity requestEntity) {
+    public static ResponseEntity executeReq(RunnerConfig runnerConfig, RequestEntity requestEntity) {
         String method = requestEntity.getMethod();
         String url = requestEntity.getUrl();
         Map<String, String> headers = handleHeadersCookie(requestEntity);
@@ -134,7 +134,7 @@ public class OkHttpsHelper {
             throw new DefinedException("The interface response information cannot be empty!");
         }
         Boolean streamObj = requestEntity.getStream();
-        ResponseEntity responseEntity = wrapperResponseEntity(httpResult, streamObj, elapsedTime);
+        ResponseEntity responseEntity = wrapperResponseEntity(runnerConfig, httpResult, streamObj, elapsedTime);
         LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.status.code"), LittleHelper.emptyIfNull(responseEntity.getStatusCode())));
         LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.body"), LittleHelper.emptyIfNull(responseEntity.getBody())));
         LogHelper.info(String.format(I18NFactory.getLocaleMessage("response.content.length"), LittleHelper.emptyIfNull(responseEntity.getContentLength())));
@@ -260,7 +260,7 @@ public class OkHttpsHelper {
      * @param elapsedTime
      * @return
      */
-    private static ResponseEntity wrapperResponseEntity(HttpResult httpResult
+    private static ResponseEntity wrapperResponseEntity(RunnerConfig runnerConfig, HttpResult httpResult
             , boolean stream, long elapsedTime) {
         ResponseEntity responseEntity = new ResponseEntity();
         if (httpResult.isSuccessful()) {
@@ -277,7 +277,7 @@ public class OkHttpsHelper {
             responseEntity.setHeaders(headersMap);
             HttpResult.Body body = httpResult.getBody();
             if (!stream) {
-                String workDir = RunnerConfig.getInstance().getWorkDirectory().getAbsolutePath();
+                String workDir = runnerConfig.getWorkDirectory().getAbsolutePath();
                 if (workDir.endsWith(Constant.DOT_PATH)) {
                     workDir = LittleHelper.replaceLast(workDir, Constant.DOT_PATH, "");
                 }
